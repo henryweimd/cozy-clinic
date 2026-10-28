@@ -1,32 +1,45 @@
-# CHECKPOINT.md — Art & feel chunk (phase-01 follow-up)
+# CHECKPOINT.md — Layout & composition pass (fix-layout-01)
 
-- Phase: art/feel fix only. No phase-02 / Milestone 2 work started.
-- Spend: ledger cumulative before this chunk $0.0304 (one phase-01
-  watchdog entry); image spend this chunk $0.00 (no image generation —
-  room is finished code-drawn art, Mochi sprite reused). Next $20 gate
-  is far off. At >= $120, STOP — not reached.
-- Files: `src/scenes/ClinicScene.ts` (room redraw + bubble layout),
-  `src/clinical/conditions.ts` (Maple line fixed),
-  `src/clinical/engine.test.ts` (patient-name guard test),
-  `ART_BIBLE.md` (Vision section), `PROGRESS.md` (chunk record).
-  Commit `271da24`, pushed to `main`.
-- Tests: `npm test` 29/29 pass (28 existing + 1 new copy guard);
-  `npm run build` green.
-- Deployment URL: https://cozy-clinic.vercel.app/ (auto-deployed from
-  the `main` push). Verified live: served bundle contains the new
-  room code and the fixed line, zero "Maple".
-- Playtest (deployed URL, phone viewport 540×960, real tap): room
-  reads as a coherent furnished clinic — plank floor, baseboard,
-  finished window/cabinet/plant, exam bed, stool, rug; Mochi fully
-  grounded, body clear of the wall line; tap opens the complaint
-  bubble with the correct patient text; zero console errors.
-- Improvement loop on the deployed path: one defect found and fixed
-  before pushing — bubble hint text overlapped the complaint; bubble
-  now sizes itself to its text. Re-tested locally and on production.
-- Remaining feel risks for the operator's gate: (1) room art is
-  code-drawn vector-plush, not AI-generated — cohesive with Mochi
-  but simpler in texture; (2) no phone-in-hand test by the builder
-  (headless screenshots only); (3) wallpaper dots may read busy on a
-  small physical screen — operator to judge.
+- Phase: layout/composition fix only. No phase-02 / Milestone 2
+  work started. No new patients, conditions, features, or art
+  assets (one dado trim line as recomposition glue, same palette).
+- Spend: ledger cumulative before this chunk $0.0544
+  ($0.0304 phase-01 + $0.024 fix-art-01); image spend this chunk
+  $0.00 (no generations). Next $20 gate is far off.
+  At >= $120, STOP — not reached.
+- Files: `src/scenes/ClinicScene.ts` (recomposition: window +16x/+14y
+  onto SIDE=24 margin and WALL_BASE=352 sill line; cabinet +24x;
+  dado trim line at y352; dots row dropped below trim; stool
+  removed; plant -18x into solo corner anchor; Mochi 240->212
+  recentered (270,614); rug 340x80; nametag to rug center y748;
+  bubble width 492 bottom-docked at 936, still sizes to text),
+  `PROGRESS.md` (step-1 audit, fix plan, outcome).
+  Commit `d004960`, pushed to `main`.
+- Tests: `npm test` 29/29 pass; `npm run build` green.
+- Deployment URL: https://cozy-clinic.vercel.app/ (auto-deployed
+  from the `main` push; live screenshots confirm the new layout:
+  stool gone, shifted furniture, trim line, docked bubble).
+- Playtest (deployed URL, phone viewport 540x960, idle + tap):
+  Mochi unmistakably focal with walking space both sides; window
+  and cabinet share margins and the sill baseline; no overflows,
+  no clusters, no overlaps; tap opens the complaint bubble with
+  correct text, framed with 24px margins; zero console errors.
+- Before/after spacing fixes: (1) window finial clip + 8/48 margin
+  asymmetry -> 24/24; (2) sill/cabinet baselines 338/350 ->
+  shared dado line; (3) dead band A -> wainscot reveal;
+  (4) Mochi 0/6px sprite gaps -> ~14/~78 (visual ~34+);
+  (5) stool-plant cluster -> stool removed, open lane;
+  (6) plant canopy overflow x544 -> inside screen;
+  (7) bubble bleed to bottom edge -> docked 24px margins;
+  (8) Mochi 240 vs bed 196 crib-read -> 212, mattress at hip
+  height. Door considered and rejected (recorded in PROGRESS.md).
+- Improvement loop on the deployed path: played the tap path,
+  zero errors, no new defect found — no redeploy needed.
+- Remaining feel risks for the operator's gate: (1) floor
+  foreground intentionally empty as walking space — operator
+  judges deliberate vs. empty; (2) bed still compact but at
+  believable scale; (3) builder verification is headless
+  screenshots only, no phone-in-hand test.
 - STOP. Feel gate stays open until the operator confirms
-  cute/friendly/inviting/professional. Do not start phase-02.
+  professional mobile framing on a real phone. Do not start
+  phase-02.

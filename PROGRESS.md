@@ -128,6 +128,29 @@ idle + tapped states, zero console errors. Element-by-element
   a door at x~250-370 would sit 20-40px off Mochi's axis and add
   noise behind the focal point. Not required by acceptance.
 
+### Outcome (verified on the LIVE deploy, 540x960, idle + tapped)
+
+- Every audit defect resolved: window/cabinet margins 24/24, no
+  edge overflow (finial + canopy inside screen), sill and cabinet
+  sit on the shared dado line, dead band A reads as a wainscot
+  reveal, stool cluster gone (right lane is open walking space),
+  Mochi focal with clear gaps both sides, bubble docked with
+  24px margins on three sides and sized to its text (wording
+  unchanged — no clinical-copy change).
+- Round-1 local screenshots + round-2 live-deploy screenshots both
+  confirm; zero console errors in all four captures. Tap opens the
+  complaint bubble with correct text; no overlap with Mochi,
+  nametag, rug, or edges.
+- Improvement-loop pass on the deployed URL: played (tap path),
+  no new defect found, no redeploy needed.
+- `npm test` 29/29 pass; `npm run build` green. Commit `d004960`,
+  pushed to `main` (Vercel auto-deploy verified live).
+- Remaining feel risks for the operator: (1) floor foreground is
+  intentionally empty walking space — operator judges whether it
+  reads deliberate or empty; (2) bed still compact vs Mochi but
+  now at believable hip-height scale; (3) no phone-in-hand test by
+  the builder (headless screenshots only).
+
 ## Done (art & feel chunk)
 
 - File ownership this chunk: single agent, all files above.
