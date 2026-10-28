@@ -5,12 +5,21 @@ import { ClinicalEngine, CONDITIONS } from '../clinical';
 const INK = 0x8a5a3b;
 
 /**
- * Milestone 1 clinic scene: a cozy, finished clinic room and Mochi,
- * the first patient. Tap Mochi to see the complaint.
+ * Milestone 1 clinic scene: a cozy clinic room and Mochi, the first
+ * patient. Tap Mochi to see the complaint.
  *
- * Room art is code-drawn finished art in the bible's plush language:
- * cream forms, one warm-brown outline, matte pastels, soft grounding
- * shadows. Mochi is the finished AI-generated sprite (see ART_BIBLE.md).
+ * P1: the room shell (walls, floor, window, cabinet) is the
+ * AI-generated background `assets/room/room-shell-01.png` in the
+ * bible's plush language (see art/manifest.json backgrounds[0]).
+ * Furniture still on canvas (exam bed, plant, rug) stays code-drawn
+ * until P2 replaces it with plush prop sprites. Mochi is the
+ * finished AI-generated sprite (see ART_BIBLE.md).
+ *
+ * Layout contract (fix-layout-01 spacing system): SIDE = 24,
+ * GROUND = 724, Mochi 212px at (270, 614), bubble 492 wide docked
+ * at 936. The old WALL_BASE = 352 / code-floor-466 geometry left
+ * with the deleted code passes; only Mochi/bubble geometry must
+ * still fit the painted room.
  */
 export class ClinicScene extends Phaser.Scene {
   private mochi!: Phaser.GameObjects.Image;
@@ -27,6 +36,7 @@ export class ClinicScene extends Phaser.Scene {
   preload(): void {
     this.load.image('mochi-idle', 'assets/characters/mochi-idle.png');
     this.load.image('mochi-blink', 'assets/characters/mochi-blink.png');
+    this.load.image('room-shell', 'assets/room/room-shell-01.png');
   }
 
   create(): void {
@@ -53,189 +63,16 @@ export class ClinicScene extends Phaser.Scene {
     void delta;
   }
 
-  // -- room (finished art: perspectival walls/floor, plush furniture) --
+  // -- room (P1: AI room-shell bg + code-drawn furniture until P2) --
 
   private drawRoom(): void {
-    this.drawWallsAndFloor();
-    this.drawWindow();
-    this.drawCabinet();
+    // Room shell: AI-generated 1080x1920 (2x) background, centered to
+    // fill the 540x960 canvas exactly. Replaces the deleted
+    // drawWallsAndFloor/drawWindow/drawCabinet code passes.
+    this.add.image(270, 480, 'room-shell').setDisplaySize(540, 960);
     this.drawExamBed();
     this.drawPlant();
     this.drawRug();
-  }
-
-  /** Wall with faint wallpaper dots, baseboard, and a plank floor. */
-  private drawWallsAndFloor(): void {
-    const g = this.add.graphics();
-
-    // Wall: warm pale cream, ending well above the character.
-    g.fillStyle(0xfcebd6, 1);
-    g.fillRect(0, 0, 540, 440);
-    // Soft light wash from the upper left (bible lighting).
-    g.fillStyle(0xffffff, 0.16);
-    g.fillEllipse(120, 60, 420, 260);
-    // Wallpaper: faint dots, never busy. Rows stop above the dado
-    // line so the reveal strip (352-440) stays clean cream.
-    g.fillStyle(0xe9cfa8, 0.5);
-    for (let row = 0; row < 4; row++) {
-      for (let col = 0; col < 9; col++) {
-        const x = 30 + col * 60 + (row % 2 === 0 ? 0 : 30);
-        const y = 150 + row * 58;
-        if (x > 510) continue;
-        g.fillCircle(x, y, 5);
-      }
-    }
-
-    // Floor: warm wood plane the characters stand on.
-    g.fillStyle(0xe8c9a0, 1);
-    g.fillRect(0, 466, 540, 494);
-    // Plank seams: horizontal boards plus staggered joints.
-    g.lineStyle(3, 0xd9a86c, 0.55);
-    for (const y of [560, 656, 758, 866]) {
-      g.lineBetween(0, y, 540, y);
-    }
-    g.lineStyle(3, 0xd9a86c, 0.45);
-    const joints: Array<[number, number]> = [
-      [80, 560], [300, 560], [470, 560],
-      [190, 656], [420, 656],
-      [120, 758], [360, 758],
-      [240, 866], [450, 866],
-    ];
-    for (const [x, y] of joints) {
-      g.lineBetween(x, y, x, y + 34);
-    }
-
-    // Dado trim line at the shared sill baseline (WALL_BASE = 352):
-    // window sill and cabinet sit on it; the strip below reads as
-    // an intentional wainscot reveal, not leftover space.
-    g.lineStyle(4, INK, 1);
-    g.lineBetween(0, 352, 540, 352);
-
-    // Baseboard where wall meets floor.
-    g.fillStyle(0xfff3e2, 1);
-    g.fillRect(0, 440, 540, 26);
-    g.lineStyle(4, INK, 1);
-    g.lineBetween(0, 442, 540, 442);
-  }
-
-  /**
-   * Finished window: panes, sill, curtains on a rod, clouds and sun.
-   * Left wall anchor (SIDE = 24); sill bottom sits on WALL_BASE = 352.
-   */
-  private drawWindow(): void {
-    const g = this.add.graphics();
-
-    // Curtain rod with finials.
-    g.fillStyle(0xd9a86c, 1);
-    g.fillRoundedRect(24, 132, 204, 14, 7);
-    g.fillCircle(24, 139, 9);
-    g.fillCircle(228, 139, 9);
-    g.lineStyle(4, INK, 1);
-    g.strokeRoundedRect(24, 132, 204, 14, 7);
-    g.strokeCircle(24, 139, 9);
-    g.strokeCircle(228, 139, 9);
-
-    // Curtains flank the frame, tied back.
-    for (const cx of [32, 182]) {
-      g.fillStyle(0xf5a0ac, 1);
-      g.fillRoundedRect(cx, 146, 38, 196, 12);
-      g.lineStyle(5, INK, 1);
-      g.strokeRoundedRect(cx, 146, 38, 196, 12);
-      g.fillStyle(0xd98e73, 1);
-      g.fillRoundedRect(cx, 236, 38, 16, 8);
-      g.lineStyle(3, INK, 1);
-      g.strokeRoundedRect(cx, 236, 38, 16, 8);
-    }
-
-    // Sky glass.
-    g.fillStyle(0xa9cce3, 1);
-    g.fillRoundedRect(56, 164, 150, 170, 14);
-    // Clouds in the top-left pane.
-    g.fillStyle(0xffffff, 1);
-    g.fillCircle(82, 206, 12);
-    g.fillCircle(96, 200, 16);
-    g.fillCircle(110, 207, 11);
-    // Sun in the top-right pane.
-    g.fillStyle(0xf9dc8a, 1);
-    g.fillCircle(174, 196, 16);
-    g.fillStyle(0xffffff, 0.9);
-    g.fillCircle(168, 190, 5);
-    // Small cloud in the bottom-right pane.
-    g.fillStyle(0xffffff, 1);
-    g.fillCircle(156, 296, 10);
-    g.fillCircle(168, 292, 13);
-    g.fillCircle(180, 297, 9);
-    // Crossbars.
-    g.fillStyle(0xfff3e2, 1);
-    g.fillRect(127, 164, 8, 170);
-    g.fillRect(56, 245, 150, 8);
-    g.lineStyle(3, INK, 1);
-    g.strokeRect(127, 164, 8, 170);
-    g.strokeRect(56, 245, 150, 8);
-    // Frame outline.
-    g.lineStyle(6, INK, 1);
-    g.strokeRoundedRect(56, 164, 150, 170, 14);
-
-    // Sill with a soft shadow on the wall beneath it.
-    g.fillStyle(INK, 0.15);
-    g.fillRoundedRect(50, 346, 162, 12, 6);
-    g.fillStyle(0xfff3e2, 1);
-    g.fillRoundedRect(44, 334, 174, 18, 9);
-    g.lineStyle(5, INK, 1);
-    g.strokeRoundedRect(44, 334, 174, 18, 9);
-  }
-
-  /**
-   * Finished wall cabinet: open shelf with bottles, double doors.
-   * Right wall anchor (right margin SIDE = 24); base sits on
-   * WALL_BASE = 352 within 2px.
-   */
-  private drawCabinet(): void {
-    const g = this.add.graphics();
-
-    // Soft drop shadow on the wall.
-    g.fillStyle(INK, 0.15);
-    g.fillRoundedRect(400, 194, 124, 164, 14);
-
-    // Body.
-    g.fillStyle(0xfdf6ec, 1);
-    g.fillRoundedRect(392, 186, 124, 164, 14);
-
-    // Open shelf with three pastel bottles.
-    g.fillStyle(0xf3e2c9, 1);
-    g.fillRoundedRect(400, 194, 108, 56, 8);
-    const bottles: Array<[number, number]> = [
-      [420, 0xa9c6a2],
-      [450, 0xa9cce3],
-      [480, 0xf5a0ac],
-    ];
-    for (const [bx, color] of bottles) {
-      g.fillStyle(color, 1);
-      g.fillRoundedRect(bx - 9, 222, 18, 28, 5);
-      g.fillRoundedRect(bx - 5, 214, 10, 8, 3);
-      g.lineStyle(3, INK, 1);
-      g.strokeRoundedRect(bx - 9, 222, 18, 28, 5);
-    }
-    // Shelf board.
-    g.fillStyle(0xd9a86c, 1);
-    g.fillRoundedRect(400, 250, 108, 10, 5);
-    g.lineStyle(3, INK, 1);
-    g.strokeRoundedRect(400, 250, 108, 10, 5);
-
-    // Double doors with seam and handles — all inside the frame.
-    g.fillStyle(0xfff3e2, 1);
-    g.fillRoundedRect(400, 268, 108, 74, 8);
-    g.lineStyle(4, INK, 1);
-    g.strokeRoundedRect(400, 268, 108, 74, 8);
-    g.lineStyle(3, INK, 1);
-    g.lineBetween(454, 272, 454, 338);
-    g.fillStyle(0xd98e73, 1);
-    g.fillCircle(444, 305, 6);
-    g.fillCircle(464, 305, 6);
-
-    // Body outline.
-    g.lineStyle(6, INK, 1);
-    g.strokeRoundedRect(392, 186, 124, 164, 14);
   }
 
   /** Plush examination bed with headboard, pillow, and folded blanket. */

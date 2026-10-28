@@ -170,3 +170,65 @@ idle + tapped states, zero console errors. Element-by-element
   cozy and unified, bubble opens with correct text, zero console
   errors. One loop fix applied: bubble hint no longer overlaps the
   complaint (bubble now sizes to its text).
+
+## Active chunk: P1 AI room shell (bg artist workstream)
+
+- P1 OWNERSHIP (declared BEFORE generating, per AGENTS.md workflow
+  law): the P1 bg-artist agent owns `art/source/room/*`,
+  `public/assets/room/*`, `art/contact-sheets/room-*`, and
+  `art/manifest.json` room-bg additions ONLY. Nobody else writes
+  those paths this run. The P1 bg artist makes NO scene-code edits
+  (`src/scenes/ClinicScene.ts` belongs to the integrator).
+- Scope: generate ONE 540x960 (or 2x 1080x1920) cozy clinic
+  room-shell background, validate it, write master + export +
+  contact sheet, update manifest with prompt hash + spend.
+- Layout contract preserved for the integrator: SIDE=24,
+  WALL_BASE=352, GROUND=724, Mochi 212px at (270,614), bubble
+  492 wide docked at 936 (see fix-layout-01 spacing system above).
+- P1 RESULT (bg artist): generated ONE room shell, 1 image x $0.01
+  = $0.01 spend this workstream (ledger was $0.0544 before P1).
+  Master `art/source/room/room-shell-01-master.png` (1152x2048),
+  export `public/assets/room/room-shell-01.png` (1080x1920 2x),
+  contact sheet `art/contact-sheets/room-shell-contact-sheet.png`
+  (plain + Mochi-composite panels), manifest `backgrounds[0]`
+  entry with prompt hash + validation + fallback note.
+  Validation: exact 9:16, no characters/text, plush match to
+  Mochi, Mochi footprint clear, feet at painted floor edge.
+  Integrator notes: (1) code rug ellipse y708-788 overlaps the
+  painted rug (y735-897) — hide the code rug or accept a double
+  rug until P2; (2) window is right / cabinet is left in the bg
+  (mirrored vs code passes, which are deleted anyway);
+  (3) in-game render check still needs the integrator's deploy +
+  operator phone playtest; (4) bg style-block variant for
+  ART_BIBLE.md still owned by the spec author (roadmap D3).
+
+## Active chunk: P1 AI room shell (integrator workstream)
+
+- P1 OWNERSHIP (integrator): owns `src/scenes/ClinicScene.ts`,
+  `PROGRESS.md`, `CHECKPOINT.md` this run. No `art/*` edits
+  (bg artist owns those paths); sequential after art, no
+  concurrent writers.
+- P1 RESULT (integrator): real background file existed
+  (`public/assets/room/room-shell-01.png`, 1080x1920 RGB verified),
+  so integrated it as the room shell: preload `room-shell` +
+  centered 540x960 image at (270,480) as the first drawRoom draw;
+  DELETED the replaced procedural passes `drawWallsAndFloor`
+  (wall/dots/baseboard/floor), `drawWindow`, `drawCabinet`
+  (~174 lines). Header comment fixed (no longer claims code-drawn
+  "finished art"; records P1 bg + P2 furniture plan + layout
+  contract). KEPT byte-identical in behavior: Mochi 212px at
+  (270,614) + nametag, code rug ellipse (P2 scope; accepted soft
+  overlap with the painted rug per artist note — code rug reads
+  as Mochi's standing pad, painted rug as the room rug),
+  bubble 492 wide docked at 936 sizing upward, tap-to-complaint
+  + happy bounce, blink/bob. No clinical-copy change.
+- Tests/build: `npm test` 29/29 pass; `npm run build` green
+  (room-shell-01.png bundled into `dist/assets/room/`).
+- Spend: integrator image spend $0.00 (no generations); P1 total
+  stays $0.01 (bg artist's one generation). Ledger ~$0.0644.
+  Next $20 gate far off; at >= $120, STOP — not reached.
+- Not done by integrator: deploy + operator phone playtest
+  (headless screenshot impossible in sandbox per prior audit;
+  render check needs the deployed URL on a phone); P2 props,
+  P3 poses, P4 font, P5 fx all out of scope. STOP after
+  CHECKPOINT.md.
