@@ -60,7 +60,6 @@ export class ClinicScene extends Phaser.Scene {
     this.drawWindow();
     this.drawCabinet();
     this.drawExamBed();
-    this.drawStool();
     this.drawPlant();
     this.drawRug();
   }
@@ -75,9 +74,10 @@ export class ClinicScene extends Phaser.Scene {
     // Soft light wash from the upper left (bible lighting).
     g.fillStyle(0xffffff, 0.16);
     g.fillEllipse(120, 60, 420, 260);
-    // Wallpaper: faint dots, never busy.
+    // Wallpaper: faint dots, never busy. Rows stop above the dado
+    // line so the reveal strip (352-440) stays clean cream.
     g.fillStyle(0xe9cfa8, 0.5);
-    for (let row = 0; row < 5; row++) {
+    for (let row = 0; row < 4; row++) {
       for (let col = 0; col < 9; col++) {
         const x = 30 + col * 60 + (row % 2 === 0 ? 0 : 30);
         const y = 150 + row * 58;
@@ -105,6 +105,12 @@ export class ClinicScene extends Phaser.Scene {
       g.lineBetween(x, y, x, y + 34);
     }
 
+    // Dado trim line at the shared sill baseline (WALL_BASE = 352):
+    // window sill and cabinet sit on it; the strip below reads as
+    // an intentional wainscot reveal, not leftover space.
+    g.lineStyle(4, INK, 1);
+    g.lineBetween(0, 352, 540, 352);
+
     // Baseboard where wall meets floor.
     g.fillStyle(0xfff3e2, 1);
     g.fillRect(0, 440, 540, 26);
@@ -112,89 +118,96 @@ export class ClinicScene extends Phaser.Scene {
     g.lineBetween(0, 442, 540, 442);
   }
 
-  /** Finished window: panes, sill, curtains on a rod, clouds and sun. */
+  /**
+   * Finished window: panes, sill, curtains on a rod, clouds and sun.
+   * Left wall anchor (SIDE = 24); sill bottom sits on WALL_BASE = 352.
+   */
   private drawWindow(): void {
     const g = this.add.graphics();
 
     // Curtain rod with finials.
     g.fillStyle(0xd9a86c, 1);
-    g.fillRoundedRect(8, 118, 204, 14, 7);
-    g.fillCircle(8, 125, 9);
-    g.fillCircle(212, 125, 9);
+    g.fillRoundedRect(24, 132, 204, 14, 7);
+    g.fillCircle(24, 139, 9);
+    g.fillCircle(228, 139, 9);
     g.lineStyle(4, INK, 1);
-    g.strokeRoundedRect(8, 118, 204, 14, 7);
-    g.strokeCircle(8, 125, 9);
-    g.strokeCircle(212, 125, 9);
+    g.strokeRoundedRect(24, 132, 204, 14, 7);
+    g.strokeCircle(24, 139, 9);
+    g.strokeCircle(228, 139, 9);
 
     // Curtains flank the frame, tied back.
-    for (const cx of [16, 166]) {
+    for (const cx of [32, 182]) {
       g.fillStyle(0xf5a0ac, 1);
-      g.fillRoundedRect(cx, 132, 38, 196, 12);
+      g.fillRoundedRect(cx, 146, 38, 196, 12);
       g.lineStyle(5, INK, 1);
-      g.strokeRoundedRect(cx, 132, 38, 196, 12);
+      g.strokeRoundedRect(cx, 146, 38, 196, 12);
       g.fillStyle(0xd98e73, 1);
-      g.fillRoundedRect(cx, 222, 38, 16, 8);
+      g.fillRoundedRect(cx, 236, 38, 16, 8);
       g.lineStyle(3, INK, 1);
-      g.strokeRoundedRect(cx, 222, 38, 16, 8);
+      g.strokeRoundedRect(cx, 236, 38, 16, 8);
     }
 
     // Sky glass.
     g.fillStyle(0xa9cce3, 1);
-    g.fillRoundedRect(40, 150, 150, 170, 14);
+    g.fillRoundedRect(56, 164, 150, 170, 14);
     // Clouds in the top-left pane.
     g.fillStyle(0xffffff, 1);
-    g.fillCircle(66, 192, 12);
-    g.fillCircle(80, 186, 16);
-    g.fillCircle(94, 193, 11);
+    g.fillCircle(82, 206, 12);
+    g.fillCircle(96, 200, 16);
+    g.fillCircle(110, 207, 11);
     // Sun in the top-right pane.
     g.fillStyle(0xf9dc8a, 1);
-    g.fillCircle(158, 182, 16);
+    g.fillCircle(174, 196, 16);
     g.fillStyle(0xffffff, 0.9);
-    g.fillCircle(152, 176, 5);
+    g.fillCircle(168, 190, 5);
     // Small cloud in the bottom-right pane.
     g.fillStyle(0xffffff, 1);
-    g.fillCircle(140, 282, 10);
-    g.fillCircle(152, 278, 13);
-    g.fillCircle(164, 283, 9);
+    g.fillCircle(156, 296, 10);
+    g.fillCircle(168, 292, 13);
+    g.fillCircle(180, 297, 9);
     // Crossbars.
     g.fillStyle(0xfff3e2, 1);
-    g.fillRect(111, 150, 8, 170);
-    g.fillRect(40, 231, 150, 8);
+    g.fillRect(127, 164, 8, 170);
+    g.fillRect(56, 245, 150, 8);
     g.lineStyle(3, INK, 1);
-    g.strokeRect(111, 150, 8, 170);
-    g.strokeRect(40, 231, 150, 8);
+    g.strokeRect(127, 164, 8, 170);
+    g.strokeRect(56, 245, 150, 8);
     // Frame outline.
     g.lineStyle(6, INK, 1);
-    g.strokeRoundedRect(40, 150, 150, 170, 14);
+    g.strokeRoundedRect(56, 164, 150, 170, 14);
 
     // Sill with a soft shadow on the wall beneath it.
     g.fillStyle(INK, 0.15);
-    g.fillRoundedRect(34, 332, 162, 12, 6);
+    g.fillRoundedRect(50, 346, 162, 12, 6);
     g.fillStyle(0xfff3e2, 1);
-    g.fillRoundedRect(28, 320, 174, 18, 9);
+    g.fillRoundedRect(44, 334, 174, 18, 9);
     g.lineStyle(5, INK, 1);
-    g.strokeRoundedRect(28, 320, 174, 18, 9);
+    g.strokeRoundedRect(44, 334, 174, 18, 9);
   }
 
-  /** Finished wall cabinet: open shelf with bottles, double doors. */
+  /**
+   * Finished wall cabinet: open shelf with bottles, double doors.
+   * Right wall anchor (right margin SIDE = 24); base sits on
+   * WALL_BASE = 352 within 2px.
+   */
   private drawCabinet(): void {
     const g = this.add.graphics();
 
     // Soft drop shadow on the wall.
     g.fillStyle(INK, 0.15);
-    g.fillRoundedRect(376, 194, 124, 164, 14);
+    g.fillRoundedRect(400, 194, 124, 164, 14);
 
     // Body.
     g.fillStyle(0xfdf6ec, 1);
-    g.fillRoundedRect(368, 186, 124, 164, 14);
+    g.fillRoundedRect(392, 186, 124, 164, 14);
 
     // Open shelf with three pastel bottles.
     g.fillStyle(0xf3e2c9, 1);
-    g.fillRoundedRect(376, 194, 108, 56, 8);
+    g.fillRoundedRect(400, 194, 108, 56, 8);
     const bottles: Array<[number, number]> = [
-      [396, 0xa9c6a2],
-      [426, 0xa9cce3],
-      [456, 0xf5a0ac],
+      [420, 0xa9c6a2],
+      [450, 0xa9cce3],
+      [480, 0xf5a0ac],
     ];
     for (const [bx, color] of bottles) {
       g.fillStyle(color, 1);
@@ -205,24 +218,24 @@ export class ClinicScene extends Phaser.Scene {
     }
     // Shelf board.
     g.fillStyle(0xd9a86c, 1);
-    g.fillRoundedRect(376, 250, 108, 10, 5);
+    g.fillRoundedRect(400, 250, 108, 10, 5);
     g.lineStyle(3, INK, 1);
-    g.strokeRoundedRect(376, 250, 108, 10, 5);
+    g.strokeRoundedRect(400, 250, 108, 10, 5);
 
     // Double doors with seam and handles — all inside the frame.
     g.fillStyle(0xfff3e2, 1);
-    g.fillRoundedRect(376, 268, 108, 74, 8);
+    g.fillRoundedRect(400, 268, 108, 74, 8);
     g.lineStyle(4, INK, 1);
-    g.strokeRoundedRect(376, 268, 108, 74, 8);
+    g.strokeRoundedRect(400, 268, 108, 74, 8);
     g.lineStyle(3, INK, 1);
-    g.lineBetween(430, 272, 430, 338);
+    g.lineBetween(454, 272, 454, 338);
     g.fillStyle(0xd98e73, 1);
-    g.fillCircle(420, 305, 6);
-    g.fillCircle(440, 305, 6);
+    g.fillCircle(444, 305, 6);
+    g.fillCircle(464, 305, 6);
 
     // Body outline.
     g.lineStyle(6, INK, 1);
-    g.strokeRoundedRect(368, 186, 124, 164, 14);
+    g.strokeRoundedRect(392, 186, 124, 164, 14);
   }
 
   /** Plush examination bed with headboard, pillow, and folded blanket. */
@@ -274,49 +287,31 @@ export class ClinicScene extends Phaser.Scene {
     g.lineBetween(78, 568, 78, 602);
   }
 
-  /** Small round doctor's stool beside the patient. */
-  private drawStool(): void {
-    const g = this.add.graphics();
-
-    g.fillStyle(INK, 0.18);
-    g.fillEllipse(426, 736, 84, 18);
-
-    g.fillStyle(0xd9a86c, 1);
-    g.fillRoundedRect(404, 662, 12, 68, 5);
-    g.fillRoundedRect(436, 662, 12, 68, 5);
-    g.fillRoundedRect(404, 694, 44, 10, 5);
-    g.lineStyle(4, INK, 1);
-    g.strokeRoundedRect(404, 662, 12, 68, 5);
-    g.strokeRoundedRect(436, 662, 12, 68, 5);
-    g.strokeRoundedRect(404, 694, 44, 10, 5);
-
-    g.fillStyle(0xf9dc8a, 1);
-    g.fillRoundedRect(396, 636, 60, 28, 12);
-    g.lineStyle(5, INK, 1);
-    g.strokeRoundedRect(396, 636, 60, 28, 12);
-  }
-
-  /** Leafy plant, pot sitting on the floor with soil and shadow. */
+  /**
+   * Leafy plant, solo right-corner floor anchor (pot right margin
+   * >= SIDE = 24, canopy inside the screen). The stool that used to
+   * crowd this corner is gone — this lane is walking space now.
+   */
   private drawPlant(): void {
     const g = this.add.graphics();
 
     g.fillStyle(INK, 0.18);
-    g.fillEllipse(496, 722, 76, 16);
+    g.fillEllipse(478, 722, 76, 16);
 
     // Stems.
     g.lineStyle(5, INK, 1);
-    g.lineBetween(496, 660, 478, 596);
-    g.lineBetween(496, 660, 496, 588);
-    g.lineBetween(496, 660, 514, 600);
+    g.lineBetween(478, 660, 460, 596);
+    g.lineBetween(478, 660, 478, 588);
+    g.lineBetween(478, 660, 496, 600);
 
     // Leaves.
     g.fillStyle(0xa9c6a2, 1);
     const leaves: Array<[number, number, number, number]> = [
-      [470, 590, 44, 34],
-      [496, 572, 48, 38],
-      [522, 592, 44, 34],
-      [482, 620, 46, 32],
-      [512, 622, 44, 30],
+      [452, 590, 44, 34],
+      [478, 572, 48, 38],
+      [504, 592, 44, 34],
+      [464, 620, 46, 32],
+      [494, 622, 44, 30],
     ];
     for (const [x, y, w, h] of leaves) {
       g.fillEllipse(x, y, w, h);
@@ -326,28 +321,28 @@ export class ClinicScene extends Phaser.Scene {
       g.strokeEllipse(x, y, w, h);
     }
     g.fillStyle(0xffffff, 0.5);
-    g.fillCircle(488, 562, 4);
-    g.fillCircle(514, 584, 3);
+    g.fillCircle(470, 562, 4);
+    g.fillCircle(496, 584, 3);
 
     // Pot with rim, planted on the floor.
     g.fillStyle(0xd98e73, 1);
-    g.fillRoundedRect(468, 672, 56, 48, 10);
-    g.fillRoundedRect(462, 656, 68, 20, 8);
+    g.fillRoundedRect(450, 672, 56, 48, 10);
+    g.fillRoundedRect(444, 656, 68, 20, 8);
     g.lineStyle(5, INK, 1);
-    g.strokeRoundedRect(468, 672, 56, 48, 10);
-    g.strokeRoundedRect(462, 656, 68, 20, 8);
+    g.strokeRoundedRect(450, 672, 56, 48, 10);
+    g.strokeRoundedRect(444, 656, 68, 20, 8);
     // Soil.
     g.fillStyle(0x5c4633, 1);
-    g.fillRoundedRect(470, 652, 52, 12, 6);
+    g.fillRoundedRect(452, 652, 52, 12, 6);
   }
 
-  /** Soft round rug Mochi stands on. */
+  /** Soft round rug Mochi stands on, centered under the focal point. */
   private drawRug(): void {
     const g = this.add.graphics();
     g.fillStyle(0xf5a0ac, 0.45);
-    g.fillEllipse(270, 748, 360, 84);
+    g.fillEllipse(270, 748, 340, 80);
     g.lineStyle(4, 0xf5a0ac, 0.8);
-    g.strokeEllipse(270, 748, 320, 60);
+    g.strokeEllipse(270, 748, 300, 56);
   }
 
   private drawTitle(): void {
@@ -369,16 +364,18 @@ export class ClinicScene extends Phaser.Scene {
 
   private drawMochi(): void {
     // Mochi stands fully on the floor: feet and shadow on the rug,
-    // body clear of the wall/baseboard line above.
-    this.add.ellipse(270, 724, 190, 34, 0x8a5a3b, 0.18);
+    // body clear of the wall/baseboard line above. At 212px Mochi is
+    // still the largest visual weight, with clear walking space to
+    // the bed (left) and the plant lane (right).
+    this.add.ellipse(270, 724, 170, 30, 0x8a5a3b, 0.18);
 
-    this.mochi = this.add.image(270, 600, 'mochi-idle');
-    this.mochi.setDisplaySize(240, 240);
+    this.mochi = this.add.image(270, 614, 'mochi-idle');
+    this.mochi.setDisplaySize(212, 212);
     this.mochiBaseY = this.mochi.y;
     this.mochi.setInteractive({ useHandCursor: true });
 
     this.add
-      .text(270, 766, 'Mochi · first patient', {
+      .text(270, 748, 'Mochi · first patient', {
         fontFamily: 'Georgia, serif',
         fontSize: '24px',
         color: '#5c4633',
@@ -394,30 +391,36 @@ export class ClinicScene extends Phaser.Scene {
     const stage = def.stages[state.stageIndex];
     const complaint = `Mochi feels ${stage.label.toLowerCase()}: ${stage.blurb} ${def.plainWords}`;
 
-    const w = 460;
+    // Bottom-edge-anchored dialogue card: side margins match SIDE,
+    // bottom docks at 936 (24px margin), and the card always sizes
+    // to its text upward — never overlapping Mochi or the edges.
+    const w = 492;
     const x = 270;
-    const top = 798;
+    const dockBottom = 936;
+    const padTop = 20;
+    const gapMid = 16;
+    const padBottom = 20;
     const label = this.add
-      .text(x, top, complaint, {
+      .text(x, padTop, complaint, {
         fontFamily: 'Georgia, serif',
-        fontSize: '21px',
+        fontSize: '20px',
         color: '#5c4633',
         align: 'center',
         wordWrap: { width: w - 40 },
       })
       .setOrigin(0.5, 0);
     const hint = this.add
-      .text(x, top + label.height + 16, 'The doctor will see you now.', {
+      .text(x, padTop + label.height + gapMid, 'The doctor will see you now.', {
         fontFamily: 'Georgia, serif',
         fontSize: '18px',
         color: '#8a6f52',
       })
       .setOrigin(0.5, 0);
-    const bottom = top + label.height + 16 + hint.height + 20;
+    const totalH = padTop + label.height + gapMid + hint.height + padBottom;
     const bg = this.add
-      .rectangle(x, (top + bottom) / 2, w, bottom - top, 0xfdf6ec)
+      .rectangle(x, totalH / 2, w, totalH, 0xfdf6ec)
       .setStrokeStyle(4, 0x8a5a3b);
-    this.bubble = this.add.container(0, 0, [bg, label, hint]);
+    this.bubble = this.add.container(0, dockBottom - totalH, [bg, label, hint]);
     this.bubble.setVisible(false);
     this.bubble.setAlpha(0);
   }
