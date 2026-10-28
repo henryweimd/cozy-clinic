@@ -1,3 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Local env — real values live here (operator-created), never committed
 .env
 .env.local
+
+# Image tool output / raw art (masters live in the studio folder, never the repo)
+generated-images/
+art/source/
+
+# Studio files (private bundle sits beside the repo, never inside it)
+cozy-clinic-studio/
+MASTER_PROMPT_V4.md
+AGENTS_PRIVATE.md
+AGENTS_PUBLIC.md
+watchdog.py
+watchdog-ledger.jsonl
+tasks/
+
+# OS / editor
 .DS_Store
