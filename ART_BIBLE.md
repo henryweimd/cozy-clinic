@@ -4,6 +4,24 @@ The law for every asset. No asset enters the game unless it matches this
 file and its character's master reference, and has passed validation
 (transparency, dimensions, alignment, contact sheet, in-game render check).
 
+## Vision (operator's words, locked for this chunk and all later phases)
+
+- Room STRUCTURE like Animal Crossing: a coherent, lived-in room with
+  real floor/wall perspective and grounded furniture — not a flat card,
+  not a prop catalog.
+- Visual AESTHETIC of Muse Jolly's character applied to EVERYTHING:
+  background and props in the same soft sculpted plush language as
+  Mochi (cream-rounded forms, thin warm-brown outline, matte texture,
+  restrained pastels). The character and the room must look like one game.
+- Clean, obvious, minimal: every graphic instantly readable at phone
+  size, generous negative space, and only objects in the character's
+  vicinity or of relevance to the scene. Minimalism is deliberate — the
+  focus stays on the character and the relevant objects. Empty space is
+  fine; flat, mismatched, unfinished space is not.
+- Finish quality is the bar: consistent outline weight, soft grounding
+  shadows, clean silhouettes, nothing floating, overflowing, or
+  straddling lines. Nothing ships looking placeholder or amateur.
+
 ## Fixed style block (verbatim in EVERY image prompt)
 
 > Soft sculpted plush-toy character, cream-colored rounded body, small

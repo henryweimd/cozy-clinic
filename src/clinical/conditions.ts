@@ -11,7 +11,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   dehydration: {
     id: 'dehydration',
     name: 'Dehydration',
-    plainWords: 'Not enough water in the body — Maple perks up with fluids.',
+    plainWords: 'Not enough water in the body — small sips of fluids perk patients right up.',
     stages: [
       { id: 'sipped', label: 'Sipped', blurb: 'Feeling good and bouncy.' },
       { id: 'thirsty', label: 'Thirsty', blurb: 'A bit dry and slow.' },

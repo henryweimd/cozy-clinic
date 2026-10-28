@@ -129,3 +129,24 @@ describe('engine veto (model output can never override the engine)', () => {
     expect(() => engine.applyAction(engine.initialState('asthma'), 'nope')).toThrow(/unknown action/);
   });
 });
+
+describe('shipped copy', () => {
+  // The scene supplies the shown patient's name; clinical copy must never
+  // name a patient, or the wrong name can ship in another patient's line.
+  const PATIENT_NAMES = ['Mochi', 'Maple', 'Pip', 'Boba', 'Clover', 'Nori'];
+
+  it('names no patient in any condition text', () => {
+    for (const def of Object.values(CONDITIONS)) {
+      const lines = [
+        def.plainWords,
+        ...def.stages.flatMap((s) => [s.label, s.blurb]),
+        ...def.actions.flatMap((a) => [a.label, a.hootLine]),
+      ];
+      for (const line of lines) {
+        for (const name of PATIENT_NAMES) {
+          expect(line).not.toMatch(new RegExp(`\\b${name}\\b`));
+        }
+      }
+    }
+  });
+});

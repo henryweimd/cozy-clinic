@@ -30,5 +30,25 @@
 
 ## Next
 
-Operator: `vercel --prod` or dashboard deploy, open URL at phone size,
-confirm cute/friendly/inviting, then launch Phase 02.
+Operator: open production URL at phone size, confirm the scene feels
+cute/friendly/inviting/professional (feel gate), then launch Phase 02.
+
+## Done (art & feel chunk)
+
+- File ownership this chunk: single agent, all files above.
+- Room redraw (`src/scenes/ClinicScene.ts`): perspectival room —
+  wallpaper-dot wall, baseboard, plank floor; finished window
+  (panes, sill, curtains, clouds + sun), cabinet (open shelf with
+  bottles, double doors, handles; pink band fixed inside frame),
+  plant grounded on floor (stems, leaves, soil, shadow); new exam
+  bed, doctor's stool, rug. Mochi stands fully on the floor
+  (feet/shadow on rug, body clear of wall line). Palette unchanged.
+- Dialogue fix: `dehydration.plainWords` no longer names Maple;
+  new `engine.test.ts` guard fails on any patient name in shipped
+  clinical copy. No other shipped line named a patient (grep audit).
+- Vision section recorded in `ART_BIBLE.md` for all later phases.
+- Tests: `npm test` 29/29 pass; `npm run build` green.
+- Playtest (local prod build, phone viewport, real tap): room reads
+  cozy and unified, bubble opens with correct text, zero console
+  errors. One loop fix applied: bubble hint no longer overlaps the
+  complaint (bubble now sizes to its text).
