@@ -1221,3 +1221,103 @@ run starts.
 - GROUP 5 (daily from first stable build): D demo packaging.
 - Freeze Nov 3 noon ET: C4-C5 first cut, then L2/L3 yield, D
   protected. Ledger ~$0.3144; STOP >= $120; operator cap $20.
+
+## Active chunk: H2 backend simulation (patients + trajectories)
+
+- H2 OWNERSHIP (declared BEFORE editing, per AGENTS.md workflow
+  law): this run owns ONLY `supabase/migrations/**` (via MCP),
+  `supabase/functions/seed-patients/**`,
+  `supabase/functions/extend-trajectory/**`, `supabase/seed/**`
+  (audit notes), `src/data/fallbackPack.ts` (DERIVED export of
+  the H2 seed — WS-D is amended to exclude this one file),
+  `docs/AI_PROXY.md` (contract updates), plus this PROGRESS.md
+  entry and CHECKPOINT.md. No scene, no art, no manifest, no
+  other code. Nobody else writes those paths this run.
+- GATE 0 CLEARED (2026-10-29): operator installed a full-access
+  `sbp_` token in local `.env`; `supabase link` succeeds and
+  `secrets list` confirms META_API_KEY present server-side
+  (name + digest only — value never exposed).
+
+## Correction (2026-10-29): Playwright audit REVISED — screenshots work
+
+- SUPERSEDES the Oct 28 "prior audit" lines above ("headless
+  screenshot impossible in sandbox"): that finding was
+  overgeneralized. Re-tested 2026-10-29, verified end to end.
+- Still true: Chromium CANNOT launch inside Muse's SANDBOXED
+  shell runner (seatbelt denies its Mach IPC rendezvous; the
+  browser process gets SIGABRT, re-confirmed today). This
+  affects interactive sessions with sandbox on (the default).
+  Do not retry screenshot commands there.
+- Now verified: headless Chromium screenshots WORK in any
+  UNSANDBOXED runner — watchdog headless chunks (`muse exec
+  --yolo`, sandbox off) and the operator's own terminal.
+  Proof: default `p.chromium.launch()`, 540x960 capture of the
+  live deploy with tap + zero console errors, pixels inspected.
+- Setup fixed: `python3 -m playwright install chromium`
+  installed the v1223 builds Playwright 1.60.0 expects
+  (previously only orphan 1243/1248 builds from a removed
+  newer Playwright were present, so default launch failed
+  before even reaching the browser).
+- Standing path: studio `tools/shot.py`
+  (`python3 tools/shot.py <url> <out.png> [w h]`, `--no-tap`
+  to skip the tap), REQUIRED wherever the brief demands a
+  playtest. Rule recorded in studio AGENTS_PRIVATE.md
+  Model-and-tool law + brief step 5. Never again skip a render
+  check citing the old audit — run the screenshot in an
+  unsandboxed chunk, or ask the operator to run the one-liner.
+
+## Queued: V1 dev-view asset browser (operator request 2026-10-29)
+
+- Sometime fitting (after GROUP 3 modules, before/inside GROUP 4
+  integration): extend the secret dev view (MABEL staff terminal)
+  with an asset-review tab — tap through ALTERNATE graphic assets
+  (plate A/B variants, expression sprites, future portraits, tool
+  icons) rendered live on-device, plus an "implement" panel that
+  shows the exact code change each choice needs (file, constant,
+  snippet — e.g. `PLATE_PIN = { visit: 'exam-b' }`). The operator
+  pastes that snippet back into the main Muse Code session to
+  apply it. Files (planned): `src/ui/assetBrowser.ts` (new) +
+  minimal ClinicScene wiring at integration time.
+
+## Browser-test dead end (evidence, 2026-10-29)
+
+Operator asked for parallel Chromium testing. All four engines
+tried, all die on sandbox-denied macOS services (NOT game bugs):
+1. Chrome.app headless: SIGABRT in TransformProcessType →
+   _RegisterApplication (no WindowServer session).
+2. Firefox.app headless: identical SIGABRT signature.
+3. Playwright chromium_headless_shell-1248: FATAL
+   bootstrap_check_in MachPortRendezvousServer Permission denied.
+4. Same shell --single-process: past rendezvous, then killed on
+   HIServices XPC / LaunchServices denial. No screenshot.
+Local static serving also impossible (bind: Operation not
+permitted, even loopback). Pivot (same run, non-blocking):
+programmatic layout auditor — rect overlaps, spacing-system
+compliance, Baloo-measured text-in-pill fit, plate-landmark
+clearance — then a polish fix loop for real findings.
+- H2 RESULT (2026-10-29): backend simulation live end-to-end.
+  Schema: `h2_patient_simulation_schema` migration (6 tables,
+  RLS on, anon SELECT). Functions deployed via CLI:
+  `seed-patients` + `extend-trajectory` (Deno, verify_jwt on,
+  Meta contract recorded from dev.meta.ai/docs: POST
+  api.meta.ai/v1/chat/completions, Bearer META_API_KEY,
+  muse-spark-1.3, json_object). Cast: 12 patients (3 bands x 4
+  conditions, Mabel/Milo/June/Theo fur canon kept), 204 nodes /
+  192 edges depth-2, one patient per call (12-call batch hit
+  WORKER_RESOURCE_LIMIT at 6/12 — wiped, reseeded 1-by-1).
+  Vetoes: 0/204, spot-check stage-faithful. Static seeds: 4
+  treatment classes, 4 MedlinePlus resources (all curl-200),
+  Mabel visits 1-4. Offline: `src/data/fallbackPack.ts` (204KB
+  snapshot, read back over anon REST) + 5 shape tests.
+  `docs/AI_PROXY.md` records the live contract;
+  `supabase/seed/audit-h2.md` is the audit.
+- Tests: `npm test` 34/34 (29 engine + 5 pack); `npm run build`
+  green (benign chunk warning). `.gitignore` += supabase/.temp/
+  (pooler-url holds credentials — never committed).
+- Spend: image $0.00; ~12 small Meta calls (cents). Ledger
+  ~$0.3144; STOP >= $120 far off; $20 cap respected.
+- P-polish (same run, parallel): browsers impossible (4 engines,
+  evidence above); programmatic layout audit ran 40+ checks
+  (overlaps, spacing, Baloo-measured fit, landmarks) — 0
+  findings. Tightest clearance: title ink 3.5px below strip.
+  No polish commit (nothing to fix). STOP.

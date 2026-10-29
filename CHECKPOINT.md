@@ -1,22 +1,23 @@
-# CHECKPOINT.md — chrome-3 icon/simplify pass
+# CHECKPOINT.md — H2 backend simulation + P-polish audit
 
-- Phase: chrome-3 (operator UI feedback: narration quotes, HUD
-  placement, mode/profile submenu, icon-led simplification).
-- Files changed: `src/scenes/ClinicScene.ts` (say/tell panel,
-  HUD-in-top-strip, code-drawn nav icons),
-  `docs/UI_PROTOTYPE.md` (top bar / nav / panel / Visit-HUD),
-  `PROGRESS.md` (ownership + result + parallel queue),
-  `CHECKPOINT.md` (this file).
-- Test result: `npm test` 29/29 pass; `npm run build` green
-  (benign chunk-size warning only).
-- Deployment URL: `https://cozy-clinic.vercel.app/` (auto-deploy
-  from `main`; live-poll verified below).
+- Phase: H2 (patients + pre-computed trajectories, Supabase
+  primary, local fallback) + P-polish (programmatic layout audit;
+  browsers impossible — evidence in PROGRESS.md).
+- Files changed: `supabase/functions/seed-patients/index.ts`,
+  `supabase/functions/extend-trajectory/index.ts` (both deployed),
+  `supabase/seed/audit-h2.md`, `src/data/fallbackPack.ts` +
+  `fallbackPack.test.ts` (new), `docs/AI_PROXY.md` (live contract),
+  `.gitignore` (+supabase/.temp/), `PROGRESS.md`, `CHECKPOINT.md`.
+  DB: migration `h2_patient_simulation_schema` (6 tables, RLS).
+- Test result: `npm test` 34/34; `npm run build` green (benign
+  chunk warning). Seed: 12/12 patients, 204 nodes, vetoes 0/204.
+- Deployment URL: `https://cozy-clinic.vercel.app/` (game
+  unchanged this phase — backend + data only; live-poll below).
 - Playtest result: NOT playtested (no browser in sandbox) —
-  operator phone playtest pending: untagged unquoted narration
-  at open, HUD in top strip, no "You"/"Gentle" on main screen,
-  tab icons legible, Nora tag on blocked moves.
-- Spend: image $0.00 this chunk; ledger ~$0.3144 (STOP >= $120).
-- Next: GROUP 1 (WS-A art, WS-D content, WS-E systems,
-  parallel-safe) or GATE 0 token widen → GROUP 2 (H2 backend).
+  operator phone playtest pending; nothing player-visible
+  changed except the shipped fallback data.
+- Spend: image $0.00; Meta seed calls a few cents. Ledger ~$0.3144.
+- Next: GROUP 1 (WS-A art, WS-D content, WS-E systems) or GROUP 3
+  frontend modules, then GROUP 4 integration (game reads live).
 
 STOP.

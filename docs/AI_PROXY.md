@@ -45,3 +45,26 @@ No free-text clinical input in either direction, ever.
 No live fetch exists in `src/ai/` yet. Endpoint URLs, auth headers, and
 deploy steps for the function belong to Milestone 3, which will record
 the real contract version from Meta's docs before implementing.
+
+## H2 LIVE (2026-10-29): seed-patients + extend-trajectory
+
+The real Meta contract, recorded from dev.meta.ai/docs before
+implementing: `POST https://api.meta.ai/v1/chat/completions`,
+`Authorization: Bearer <META_API_KEY>`, OpenAI-compatible JSON,
+model `muse-spark-1.3`, `response_format: { type: 'json_object' }`.
+
+- `seed-patients` (deployed, verify_jwt on): caller sends roster +
+  engine-computed tree STRUCTURE (stages/vitals/moods/grades/
+  edges); the model authors ONLY per-node flesh (narrative +
+  teaching). One patient per call (multi-patient calls hit
+  WORKER_RESOURCE_LIMIT). Veto: missing/empty flesh falls back
+  to engine copy per node; dangling edges dropped; model never
+  touches structure.
+- `extend-trajectory` (deployed, verify_jwt on): same law for
+  growing one tree forward (`patientId` + `fromNodeId` +
+  engine-computed children) after a visit.
+- Secrets: `META_API_KEY` + auto-injected `SUPABASE_URL` /
+  `SUPABASE_SERVICE_ROLE_KEY`, server-side only. RLS: anon
+  SELECT on all 6 tables (synthetic data), writes via functions.
+- Audit: `supabase/seed/audit-h2.md` (0/204 vetoes). Offline
+  snapshot: `src/data/fallbackPack.ts` (+ shape tests).
