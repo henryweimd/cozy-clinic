@@ -1392,3 +1392,24 @@ clearance — then a polish fix loop for real findings.
   rows now idle-current. In-game render check pending (no
   browser) — roster/encounter wiring at next integration.
 - Tests: 48/48; build green. Spend $0.02 (ledger ~$0.3344).
+
+## Active chunk: WS-A2 expression sets (continuous run)
+
+- WS-A2 OWNERSHIP (declared BEFORE editing): this phase owns ONLY
+  `public/assets/characters/{june,milo}-{blink,happy,sick,pained,relieved}.png`,
+  `art/manifest.json` (append 10 entries),
+  `art/contact-sheets/*ws-a2*`, plus PROGRESS.md and CHECKPOINT.md.
+  Identity edits of the WS-A idle masters. Cap $0.10.
+
+## Active chunk: tray-hotfix (user bug report, continuous run)
+
+- TRAY-HOTFIX OWNERSHIP: this fix owns ONLY `src/ui/toolTrays.ts`
+  plus PROGRESS.md and CHECKPOINT.md. WS-A2 art stays queued.
+- TRAY-HOTFIX RESULT (user bug: tray started open + floated
+  mid-screen): root cause — the panel was painted relative to
+  the sliding container, so it showed on-screen at both ends of
+  the tween. Rewrite: fixed handle tab (x516-540, depth 23) +
+  panel sliding 540 (fully off-screen) <-> 348 (anchored right
+  edge, depth 22); rows live in the panel's left 168px clear of
+  the handle; glyph ‹/› swaps. Auditor 0 findings, 48/48, build
+  green. Spend $0.00.

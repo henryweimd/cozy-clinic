@@ -8,10 +8,12 @@ import { THEME } from './chromeTheme';
  * tap a tool to pick it up (the integration wires sounds, exam
  * loops, and result lines — this module only reports the pick).
  *
- * Geometry: closed = 24px handle at x516-540, y300-560 (abuts
- * the panel's right edge, never overlaps); open = panel x348-540.
- * Depth 22 (above views, below admin). Visit-only chrome: exam
- * tools make no sense through a video call.
+ * Geometry: the HANDLE is fixed at x516-540 (24px tab,
+ * y300-560, depth 23); the PANEL slides behind it from x540
+ * (fully off-screen, closed) to x348 (open, 192 wide, depth 22).
+ * Closed shows the tab only; open keeps the tab riding the
+ * panel's right edge. Visit-only chrome: exam tools make no
+ * sense through a video call.
  */
 
 export interface ToolDef {
@@ -27,68 +29,74 @@ export const EXAM_TOOLS: readonly ToolDef[] = [
   { id: 'penlight', label: 'Light', hint: 'eyes + throat' },
 ];
 
-const CLOSED_X = 516;
-const OPEN_X = 348;
+const HANDLE_X = 516;
+const HANDLE_W = 24;
+const PANEL_W = 192;
+const PANEL_CLOSED_X = 540;
+const PANEL_OPEN_X = 540 - PANEL_W;
 const TRAY_TOP = 300;
 const TRAY_H = 260;
 
 export class ToolTray {
-  private root: Phaser.GameObjects.Container;
-  private panel: Phaser.GameObjects.Graphics;
-  private handleText: Phaser.GameObjects.Text;
-  private toolRows: Phaser.GameObjects.Container[] = [];
+  private panel: Phaser.GameObjects.Container;
+  private panelBg: Phaser.GameObjects.Graphics;
+  private handle: Phaser.GameObjects.Container;
+  private handleGlyph: Phaser.GameObjects.Text;
   private open = false;
   onPick: (tool: ToolDef) => void = () => {};
 
   constructor(private scene: Phaser.Scene) {
-    this.panel = this.scene.add.graphics();
-    this.handleText = this.scene.add
-      .text(0, 0, '\u2039', {
+    // Sliding panel: starts fully off-screen right.
+    this.panelBg = this.scene.add.graphics();
+    this.panelBg.fillStyle(THEME.cream, 0.92);
+    this.panelBg.lineStyle(3, THEME.outline, 1);
+    this.panelBg.fillRoundedRect(0, TRAY_TOP, PANEL_W, TRAY_H, {
+      tl: 20,
+      tr: 0,
+      bl: 20,
+      br: 0,
+    });
+    this.panelBg.strokeRoundedRect(0, TRAY_TOP, PANEL_W, TRAY_H, {
+      tl: 20,
+      tr: 0,
+      bl: 20,
+      br: 0,
+    });
+    this.panel = this.scene.add.container(PANEL_CLOSED_X, 0, [this.panelBg]);
+    this.panel.setDepth(22);
+    EXAM_TOOLS.forEach((tool, i) => this.buildRow(tool, i));
+
+    // Fixed handle tab: always anchored at the right edge, above
+    // the panel so it stays tappable open or closed.
+    const tab = this.scene.add.graphics();
+    tab.fillStyle(THEME.cream, 0.92);
+    tab.lineStyle(3, THEME.outline, 1);
+    tab.fillRoundedRect(0, TRAY_TOP, HANDLE_W, TRAY_H, { tl: 8, tr: 0, bl: 8, br: 0 });
+    tab.strokeRoundedRect(0, TRAY_TOP, HANDLE_W, TRAY_H, { tl: 8, tr: 0, bl: 8, br: 0 });
+    this.handleGlyph = this.scene.add
+      .text(HANDLE_W / 2, TRAY_TOP + TRAY_H / 2, '\u2039', {
         fontFamily: THEME.font,
         fontStyle: 'bold',
         fontSize: '28px',
         color: THEME.cocoa,
       })
       .setOrigin(0.5, 0.5);
-    this.root = this.scene.add.container(CLOSED_X, 0, [this.panel, this.handleText]);
-    this.root.setDepth(22);
-    this.paint();
-    EXAM_TOOLS.forEach((tool, i) => this.buildRow(tool, i));
     const zone = this.scene.add
-      .zone(12, TRAY_TOP + TRAY_H / 2, 24, TRAY_H)
+      .zone(HANDLE_W / 2, TRAY_TOP + TRAY_H / 2, HANDLE_W, TRAY_H)
       .setInteractive({ useHandCursor: true });
     zone.on('pointerdown', () => this.toggle());
-    this.root.add(zone);
-  }
-
-  private paint(): void {
-    // Panel spans the full open width left of the handle; the
-    // handle tab always shows (translucent cream, opaque glyph).
-    this.panel.clear();
-    this.panel.fillStyle(THEME.cream, 0.92);
-    this.panel.lineStyle(3, THEME.outline, 1);
-    this.panel.fillRoundedRect(OPEN_X - CLOSED_X, TRAY_TOP, CLOSED_X - OPEN_X + 28, TRAY_H, {
-      tl: 20,
-      tr: 0,
-      bl: 20,
-      br: 0,
-    });
-    this.panel.strokeRoundedRect(OPEN_X - CLOSED_X, TRAY_TOP, CLOSED_X - OPEN_X + 28, TRAY_H, {
-      tl: 20,
-      tr: 0,
-      bl: 20,
-      br: 0,
-    });
-    this.handleText.setPosition(12, TRAY_TOP + TRAY_H / 2);
-    this.handleText.setText(this.open ? '\u203a' : '\u2039');
+    this.handle = this.scene.add.container(HANDLE_X, 0, [tab, this.handleGlyph, zone]);
+    this.handle.setDepth(23);
   }
 
   private buildRow(tool: ToolDef, i: number): void {
+    // Rows live in the panel's left 168px (the handle covers the
+    // right 24px when open).
     const cy = TRAY_TOP + 40 + i * 60;
     const icon = this.scene.add.graphics();
-    drawToolIcon(icon, tool.id, OPEN_X - CLOSED_X + 44, cy);
+    drawToolIcon(icon, tool.id, 44, cy);
     const label = this.scene.add
-      .text(OPEN_X - CLOSED_X + 76, cy - 12, tool.label, {
+      .text(76, cy - 12, tool.label, {
         fontFamily: THEME.font,
         fontStyle: 'bold',
         fontSize: '17px',
@@ -96,7 +104,7 @@ export class ToolTray {
       })
       .setOrigin(0, 0);
     const hint = this.scene.add
-      .text(OPEN_X - CLOSED_X + 76, cy + 8, tool.hint, {
+      .text(76, cy + 8, tool.hint, {
         fontFamily: THEME.font,
         fontSize: '13px',
         color: THEME.secondary,
@@ -104,28 +112,28 @@ export class ToolTray {
       .setOrigin(0, 0);
     const row = this.scene.add.container(0, 0, [icon, label, hint]);
     const zone = this.scene.add
-      .zone(OPEN_X - CLOSED_X + 82, cy, 164, 56)
+      .zone(82, cy, 164, 56)
       .setInteractive({ useHandCursor: true });
     zone.on('pointerdown', () => this.onPick(tool));
     row.add(zone);
-    this.root.add(row);
-    this.toolRows.push(row);
+    this.panel.add(row);
   }
 
   toggle(): void {
     this.open = !this.open;
-    this.paint();
-    this.scene.tweens.killTweensOf(this.root);
+    this.handleGlyph.setText(this.open ? '\u203a' : '\u2039');
+    this.scene.tweens.killTweensOf(this.panel);
     this.scene.tweens.add({
-      targets: this.root,
-      x: this.open ? OPEN_X : CLOSED_X,
+      targets: this.panel,
+      x: this.open ? PANEL_OPEN_X : PANEL_CLOSED_X,
       duration: 220,
       ease: 'Sine.easeInOut',
     });
   }
 
   setVisible(visible: boolean): void {
-    this.root.setVisible(visible);
+    this.panel.setVisible(visible);
+    this.handle.setVisible(visible);
   }
 }
 
