@@ -17,6 +17,7 @@ import { ToolTray } from '../ui/toolTrays';
 import { LivingChart } from '../ui/livingChart';
 import { LearnList } from '../ui/learnList';
 import { AssetBrowser } from '../ui/assetBrowser';
+import { ChartDrawer } from '../ui/chartDrawer';
 import {
   childFor,
   childSpecs,
@@ -133,6 +134,17 @@ import type { UndoStack } from '../game/undo';
  * card row; other conditions show their first 3 live actions.
  * Same geometry, same motion, same 212px stage for everyone.
  *
+ * UNCLUTTER (2026-10-29): vitals chips REMOVED from the main view
+ * (dev-facing values) — replaced by a Medical Chart left drawer
+ * (name, visit type + #, condition + stage, one-line blurb),
+ * auto-open on each patient's first appearance, handle toggles.
+ * The Choose tab is replaced by a decision CORRAL: an outline
+ * frame around the card row with a legend pill on its top edge
+ * (also fixes the old tab's scale-about-origin jump). Nav bar
+ * is Waiting Room + Visit only (Telemed/Portal parked, views
+ * dormant but intact). Geometry: nametag 736, cards y772 h74,
+ * corral y764-856, legend y753-775.
+ *
  * Reboot landmark survey (re-measured from
  * art/contact-sheets/bg-reboot-contact-sheet.png + pixel scans
  * of the plate, 540x960 space): baseboard/wall-floor ~696 at
@@ -226,8 +238,10 @@ const WALLET_STORAGE_KEY = 'cozy-wallet-v1';
 type LineKind = 'say' | 'tell';
 
 const TAB_X: Record<ViewName, number> = {
-  waiting: 67,
-  visit: 202,
+  waiting: 135,
+  visit: 405,
+  // Telemed + Portal tabs are parked (views kept dormant, code
+  // intact) — the bar is Waiting + Visit until they earn fun.
   telemed: 337,
   portal: 472,
 };
@@ -310,16 +324,14 @@ export class ClinicScene extends Phaser.Scene {
   private panelBody!: Phaser.GameObjects.Text;
   private panelOpen = false;
 
-  // Decision card row + vitals chips.
+  // Decision card row + corral legend.
   private cardRow!: Phaser.GameObjects.Container;
   private cards: CardWidgets[] = [];
   private revealedStage = -1;
-  private promptTab!: Phaser.GameObjects.Container;
-  private promptText!: Phaser.GameObjects.Text;
+  private legend!: Phaser.GameObjects.Container;
   private lastCardTapMs = 0;
   private nudging = false;
-  private chips!: Phaser.GameObjects.Container;
-  private chipTexts: Phaser.GameObjects.Text[] = [];
+  private chartDrawer!: ChartDrawer;
 
   // Chrome-2 progress HUD (Visit only; coins + context are MOCK, the
   // timer is a display-only readout — nothing gameplay reads it).
@@ -423,8 +435,7 @@ export class ClinicScene extends Phaser.Scene {
     this.drawPatient();
     this.drawConversationPanel();
     this.drawCardRow();
-    this.drawPromptTab();
-    this.drawVitalsChips();
+    this.drawCorral();
     this.drawHud();
     this.drawWaitingView();
     this.drawTelemedChrome();
@@ -444,6 +455,8 @@ export class ClinicScene extends Phaser.Scene {
     });
     this.loadWallet();
     this.showView('visit', true);
+    // The chart defaults OPEN on the patient's first appearance.
+    this.chartDrawer.setOpen(true);
   }
 
   update(_time: number, delta: number): void {
@@ -629,7 +642,7 @@ export class ClinicScene extends Phaser.Scene {
     this.patient.setInteractive({ useHandCursor: true });
 
     this.nametag = this.add
-      .text(270, 740, 'Mabel · first patient', {
+      .text(270, 736, 'Mabel · first patient', {
         fontFamily: FONT_FAMILY,
         fontSize: '22px',
         color: COCOA,
@@ -838,7 +851,7 @@ export class ClinicScene extends Phaser.Scene {
       this.drawSpine(card, card.revealed);
     });
     this.patient.setTexture(this.steadyFace());
-    this.refreshChips();
+    this.refreshChart();
     this.refreshHud();
     this.closeConversation();
     this.setConversation(
@@ -875,7 +888,7 @@ export class ClinicScene extends Phaser.Scene {
     this.buildCards();
   }
 
-  /** (Re)builds the tappable cards; the prompt tab is re-added by drawPromptTab. */
+  /** (Re)builds the tappable cards; the corral is re-added by drawCorral. */
   private buildCards(): void {
     this.cards = [];
     this.cardRowIds().forEach((actionId, i) => {
@@ -883,7 +896,7 @@ export class ClinicScene extends Phaser.Scene {
       const action = def.actions.find((a) => a.id === actionId);
       const label = action ? action.label : actionId;
       const cx = 24 + i * 168 + 78;
-      const cy = 788 + 37;
+      const cy = 772 + 37;
       const face = this.add.graphics();
       face.fillStyle(CARD_FILL, 1);
       face.lineStyle(3, OUTLINE, 1);
@@ -911,43 +924,40 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   /**
-   * Choose-prompt tab: a small attached label straddling the card
-   * row's top edge (y780-802, centered), so the row reads as an
-   * invitation. Display-only (no zone — taps pass to the cards).
-   * Lives inside cardRow: fades + shifts with the row. Text is
-   * tier-worded (CHOOSE_PROMPT_WORDING); width follows the text.
+   * Decision corral: an outline frame around the card row (x16-524,
+   * y764-856) that reads "these are your choices", with a small
+   * tier-worded legend pill straddling its top edge (display-only,
+   * taps pass to the cards). Lives inside cardRow: fades + shifts
+   * with the row. The legend anchors at (270, 764) with RELATIVE
+   * children so the nudge swell grows about its own center (the
+   * old tab scaled about 0,0 and jumped — fixed here).
    */
-  private drawPromptTab(): void {
-    const bg = this.add.graphics();
-    this.promptText = this.add
-      .text(270, 791, '', {
+  private drawCorral(): void {
+    const frame = this.add.graphics();
+    frame.lineStyle(3, OUTLINE, 1);
+    frame.strokeRoundedRect(16, 764, 508, 92, 18);
+    const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+    const label = this.add
+      .text(0, 0, CHOOSE_PROMPT_WORDING[tier], {
         fontFamily: FONT_FAMILY,
         fontStyle: 'bold',
         fontSize: '14px',
         color: COCOA,
       })
       .setOrigin(0.5, 0.5);
-    this.promptTab = this.add.container(0, 0, [bg, this.promptText]);
-    this.promptTab.setData('bg', bg);
-    this.cardRow.add(this.promptTab);
-    this.refreshPromptTab();
-  }
-
-  private refreshPromptTab(): void {
-    const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
-    this.promptText.setText(CHOOSE_PROMPT_WORDING[tier]);
-    const w = Math.max(120, this.promptText.width + 32);
-    const bg = this.promptTab.getData('bg') as Phaser.GameObjects.Graphics;
-    bg.clear();
-    bg.fillStyle(CARD_FILL, 1);
-    bg.lineStyle(2, OUTLINE, 1);
-    bg.fillRoundedRect(270 - w / 2, 780, w, 22, 11);
-    bg.strokeRoundedRect(270 - w / 2, 780, w, 22, 11);
+    const w = Math.max(110, label.width + 28);
+    const pill = this.add.graphics();
+    pill.fillStyle(CARD_FILL, 1);
+    pill.lineStyle(2, OUTLINE, 1);
+    pill.fillRoundedRect(-w / 2, -11, w, 22, 11);
+    pill.strokeRoundedRect(-w / 2, -11, w, 22, 11);
+    this.legend = this.add.container(270, 764, [pill, label]);
+    this.cardRow.add([frame, this.legend]);
   }
 
   /**
    * Idle nudge: after 6s without a card tap (Visit/Telemed, cards
-   * visible, no admin), the cards lift in a stagger + the tab
+   * visible, no admin), the cards lift in a stagger + the legend
    * swells once — a glimmer with no glow (taste law). Re-arms
    * every 6s until the player taps. Y-only tweens, so the press
    * squash (scale) never fights them.
@@ -970,9 +980,9 @@ export class ClinicScene extends Phaser.Scene {
       });
     });
     this.tweens.add({
-      targets: this.promptTab,
-      scaleX: 1.05,
-      scaleY: 1.05,
+      targets: this.legend,
+      scaleX: 1.06,
+      scaleY: 1.06,
       duration: 200,
       yoyo: true,
       ease: 'Sine.easeInOut',
@@ -1062,7 +1072,7 @@ export class ClinicScene extends Phaser.Scene {
     }
     card.revealed = grade;
     this.drawSpine(card, grade);
-    this.refreshChips();
+    this.refreshChart();
     if (grade === 'BEST') {
       // Care Coins wallet: +1 per correct (BEST) resolve. Blocked
       // moves and lesser grades pay nothing. Persisted locally;
@@ -1152,11 +1162,12 @@ export class ClinicScene extends Phaser.Scene {
     this.nametag.setText(`${name} · ${row?.persona ?? 'first patient'}`);
     this.cardRow.removeAll(true);
     this.buildCards();
-    this.drawPromptTab();
+    this.drawCorral();
     this.closeConversation();
-    this.refreshChips();
+    this.refreshChart();
     this.refreshHud();
     this.showView('visit');
+    this.chartDrawer.setOpen(true);
     this.showToast(`${name} is with you!`);
   }
 
@@ -1292,43 +1303,6 @@ export class ClinicScene extends Phaser.Scene {
     });
   }
 
-  // -- vitals chips (Visit only; LIVE values) --
-
-  private drawVitalsChips(): void {
-    this.chips = this.add.container(0, 0, []).setDepth(10);
-    const centers = [138, 270, 402];
-    for (const cx of centers) {
-      const bg = this.add.graphics();
-      bg.fillStyle(CARD_FILL, 1);
-      bg.lineStyle(2, OUTLINE, 1);
-      bg.fillRoundedRect(cx - 60, 758, 120, 22, 11);
-      bg.strokeRoundedRect(cx - 60, 758, 120, 22, 11);
-      const label = this.add
-        .text(cx, 769, '', {
-          fontFamily: FONT_FAMILY,
-          fontSize: '14px',
-          color: COCOA,
-        })
-        .setOrigin(0.5, 0.5);
-      this.chips.add([bg, label]);
-      this.chipTexts.push(label);
-    }
-    this.refreshChips();
-  }
-
-  private refreshChips(): void {
-    // Breath leads: the asthma opener moves breathing on every card.
-    const texts = [
-      `• breath ${this.patientState.vitals.breathing}`,
-      `• comfort ${this.patientState.vitals.comfort}`,
-      `visit #${PROTOTYPE_SEEDS.visitNo}`,
-    ];
-    this.chipTexts.forEach((label, i) => {
-      const text = texts[i];
-      if (text !== undefined) label.setText(text);
-    });
-  }
-
   // -- progress HUD (Visit only; chrome-3: lives IN the top strip) --
 
   private drawHud(): void {
@@ -1414,6 +1388,19 @@ export class ClinicScene extends Phaser.Scene {
     if (PROTOTYPE_SEEDS.visitNo <= 1) return 'new-patient';
     if (this.patientState.stageIndex >= 2) return 'sick-visit';
     return 'follow-up';
+  }
+
+  /** Medical Chart contents: name, visit type + #, condition, blurb. */
+  private refreshChart(): void {
+    const def = CONDITIONS[this.patientState.conditionId];
+    const stage = def.stages[this.patientState.stageIndex];
+    const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+    this.chartDrawer.setContent({
+      name: this.activeName,
+      visit: `${VISIT_CONTEXT_WORDING[this.visitContext()][tier]} · #${PROTOTYPE_SEEDS.visitNo}`,
+      cond: `${def.name} · ${stage.label}`,
+      blurb: stage.blurb,
+    });
   }
 
   private refreshHud(): void {
@@ -1810,10 +1797,8 @@ export class ClinicScene extends Phaser.Scene {
     nav.setDepth(20);
 
     const tabs: { view: ViewName; label: string }[] = [
-      { view: 'waiting', label: 'Waiting' },
+      { view: 'waiting', label: 'Waiting Room' },
       { view: 'visit', label: 'Visit' },
-      { view: 'telemed', label: 'Telemed' },
-      { view: 'portal', label: 'Portal' },
     ];
     for (const tab of tabs) {
       const cx = TAB_X[tab.view];
@@ -1830,7 +1815,7 @@ export class ClinicScene extends Phaser.Scene {
         .setOrigin(0.5, 0.5);
       this.tabTexts[tab.view] = [label];
       const zone = this.add
-        .zone(cx, 924, 135, 72)
+        .zone(cx, 924, 270, 72)
         .setInteractive({ useHandCursor: true });
       zone.on('pointerdown', () => this.showView(tab.view));
       nav.add([icon, label, zone]);
@@ -1912,10 +1897,14 @@ export class ClinicScene extends Phaser.Scene {
       this.showToast(`${tool.label} (${tool.hint}) — exam loops later (mock)`);
     };
 
+    // Chart drawer: succinct Medical Chart, left side.
+    this.chartDrawer = new ChartDrawer(this);
+    this.refreshChart();
+
     // Living Chart: tap the nametag to open.
     this.chart = new LivingChart(this);
     const nametagZone = this.add
-      .zone(270, 740, 220, 30)
+      .zone(270, 736, 220, 30)
       .setInteractive({ useHandCursor: true });
     nametagZone.on('pointerdown', () => {
       if (this.adminOpen) return;
@@ -2000,15 +1989,15 @@ export class ClinicScene extends Phaser.Scene {
     this.fadeSwap(this.portalView, next === 'portal', instant);
     this.fadeSwap(this.telemedView, next === 'telemed', instant);
     this.fadeSwap(this.cardRow, next === 'visit' || next === 'telemed', instant);
-    this.fadeSwap(this.chips, next === 'visit', instant);
     this.fadeSwap(this.hud, next === 'visit', instant);
     // G4 module visibility: ticker everywhere except Telemed (call
-    // buttons own that bottom band); tray Visit-only (no hands
-    // through a video call); book on the sheet views whose strip
-    // sits empty.
+    // buttons own that bottom band); tray + chart drawer Visit-only
+    // (no hands through a video call); book where the strip sits
+    // empty (Waiting — Portal is parked).
     this.ticker.setVisible(next !== 'telemed');
     this.tray.setVisible(next === 'visit');
-    this.bookBtn.setVisible(next === 'waiting' || next === 'portal');
+    this.chartDrawer.setVisible(next === 'visit');
+    this.bookBtn.setVisible(next === 'waiting');
     // Overlays close on any view change (both no-op when shut).
     this.chart.hide();
     this.learnList.hide();

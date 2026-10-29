@@ -87,11 +87,13 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
 - Four tabs, each 135 wide x 72 tall (tap target 135x72):
   Waiting (center x67), Visit (x202), Telemed (x337), Portal (x472).
 - Each tab: code-drawn icon (chrome-3, $0 — waiting = queue
-  dots, visit = care cross on sage, telemed = video play,
-  portal = envelope) + short label (Baloo 2 15px semibold)
-  stacked; icon + label dim together (inactive 60%, active 100%
-  on a sage pill w118 h60 centered in the tab cell). Icons do
-  the lifting, words anchor.
+  dots, visit = care cross on sage) + Baloo 2 15px semibold
+  labels stacked; icon + label dim together (inactive 60%,
+  active 100% on a sage pill w118 h60). Two tabs only
+  (unclutter): Waiting Room (cx135) + Visit (cx405), 270px
+  cells. Telemed + Portal tabs are PARKED (views dormant but
+  intact) until they earn fun — their icons stay in the icon
+  set for the return.
 - Behavior: tap = fade current view out 150ms, fade new view in
   180ms; tab pill slides 200ms `Sine.easeInOut`. Default view: Visit.
 
@@ -129,10 +131,16 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
 
 ### Decision / action card row (Visit + Telemed)
 
-- Geometry (G4): x24–516 (w492), y788–862 (h74). Two cards:
-  each w240, gap 12. Three cards: each w156, gaps 12. Tap
-  target = full card (≥156x74 — generous). Shifted up to clear
-  the F1 ticker row (y870–888).
+- Geometry (unclutter): x24–516 (w492), y772–846 (h74). Two
+  cards: each w240, gap 12. Three cards: each w156, gaps 12. Tap
+  target = full card (≥156x74 — generous).
+- Decision corral: an outline frame around the row (x16–524,
+  y764–856, r18) that reads "these are your choices", with a
+  tier-worded legend pill ("Choose care…" etc., 14px bold)
+  straddling its top edge (display-only). The old overlapping
+  Choose tab is retired (its scale-about-origin jump fixed by
+  the legend's centered anchor). Corral + legend ride inside
+  the card row container (fade + Telemed shift together).
 - Style: white-cream `#FFF9EF` card r16, 3px outline; grade-tinted
   left spine 8px (BEST sage, NOT_GREAT sky, WRONG amber `#D9A441`,
   DANGEROUS rose — prototype shows the spine ONLY after tap, so
@@ -157,10 +165,15 @@ VIEW 1 — VISIT (default; today's Mabel scene):
   — the old bubble dock is RETIRED in this prototype; its content
   moves up so the card row + nav own the bottom), decision card
   row (y796–876), nav bar (y888–960).
-- Nametag (y740, G4 — tap it for the Living Chart) gains a
-  mock vitals chip row beneath it: y758–780, three pills (w~120
-  h~22, 14px): e.g. "• breath 3", "• comfort 2", "visit #4".
-  Decorative mock, ticks on resolve.
+- Nametag (y736 — tap it for the Living Chart). The old vitals
+  chip row (breath/comfort/visit#) is REMOVED from the main view
+  (unclutter: dev-facing values) — its content moves into the
+  Medical Chart drawer: a left drawer mirroring the exam tray
+  (handle x0–24, panel x0–192, y300–560), auto-open on each
+  patient's first appearance, handle toggles. Contents: name,
+  visit type + # ("Sick Visit · #4", tier-worded), condition +
+  stage ("Asthma · Wheezy"), one-line blurb (stage blurb).
+  Visit-only; refreshes on resolve/switch.
 - Progress HUD (chrome-3: moved OFF the mid-screen band INTO the
   top strip; Visit-faded, strip persistent). Coin cluster left
   (pill x24–124, h24 r12): code-drawn coin+ icon + mock count
@@ -200,7 +213,7 @@ VIEW 2 — WAITING ROOM (roster):
   the active patient toasts "already with you"; Theo stays mock.
 - Tap target: full row 460x120.
 
-VIEW 3 — TELEMEDICINE (video-call frame):
+VIEW 3 — TELEMEDICINE (video-call frame) — PARKED (unclutter):
 
 - Same live scene as Visit (Mabel, panel, cards, nav all keep
   their Visit geometry) PLUS a call frame: dark rounded rect
@@ -219,7 +232,7 @@ VIEW 3 — TELEMEDICINE (video-call frame):
 - Scanline/vignette: none (keep the photo plate clean); the frame
   + pills alone must sell "video call".
 
-VIEW 4 — PORTAL (secure messages):
+VIEW 4 — PORTAL (secure messages) — PARKED (unclutter):
 
 - Opaque cream sheet x24–516, y136–876 (r24), same shell as
   Waiting. Header y136–184: "Patient Portal" 26px bold + lock
