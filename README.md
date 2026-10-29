@@ -29,7 +29,7 @@ the operator creates the real `.env` locally — it is never committed.
 
 ## What is here (Milestone 1)
 
-- Warm clinic room, Mochi (cream bunny nurse-helper) arriving as the
+- Warm clinic room, Mabel (rose-taupe nurse-helper in a pink cap) arriving as the
   first patient, tap-to-see-complaint interaction.
 - Deterministic clinical engine (`src/clinical/`): asthma, viral
   respiratory illness, dehydration, hypertension as tested state

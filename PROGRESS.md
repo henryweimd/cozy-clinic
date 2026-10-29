@@ -719,3 +719,27 @@ idle + tapped states, zero console errors. Element-by-element
   on the photo plate at 212px, single-shadow grounding holds,
   happy/blink clean). No commit/push (main agent merges).
   STOP after CHECKPOINT.md.
+
+## Active chunk: name refresh (rename-01, operator-ordered)
+
+- Direction: names stay friendly but less silly. Mochi (mascot,
+  first patient) → Mabel; patient roster Maple/Pip/Boba/Clover/
+  Nori → Milo/June/Theo/Nora (guard list is now Mabel, Milo,
+  June, Theo, Nora). Roster matrix rows named: June (gentle
+  first-timer), Milo (curious kid), Theo (sleepy toddler),
+  Dr. Nora (AI colleague doctor).
+- File ownership this chunk: single agent (main). Files touched:
+  `src/scenes/ClinicScene.ts` (display strings, identifiers,
+  texture keys `mabel-*`), `src/clinical/engine.test.ts`
+  (PATIENT_NAMES guard), `docs/CHARACTER_BIBLE.md` (full
+  Mabel + named roster), `ART_BIBLE.md`, `docs/ANIMATION.md`
+  (key refs), `art/manifest.json` (prose/name fields),
+  `README.md`, `PROGRESS.md`, `CHECKPOINT.md`.
+- Deliberately UNCHANGED (stability + provenance): asset file
+  slugs (`mochi-reboot-*.png`, masters, sources, contact
+  sheets incl. baked labels), `prompt_full`/`prompt_full_rev1`
+  texts (sha256-attested as-run history), rev-1 backups,
+  PROGRESS.md history above. Manifest carries a rename note.
+- Outcome: `npm test` 29/29 pass (guard covers the new names;
+  no condition text names a patient); `npm run build` green.
+  No geometry/motion/copy change — strings + docs only.

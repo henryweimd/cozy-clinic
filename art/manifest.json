@@ -1,5 +1,6 @@
 {
  "art_bible": "ART_BIBLE.md",
+ "names_note_2026_10_29": "Mochi->Mabel rename (rename-01): character name is Mabel everywhere shown/documented. Asset slugs (mochi-*.png, masters, sources, contact sheets) and prompt_full/prompt_full_rev1 texts (sha256-attested as-run history) intentionally keep the mochi working name.",
  "assets": [
   {
    "dimensions": "192x192",
@@ -74,7 +75,7 @@
     "style_match": "ART_BIBLE fixed style block carried verbatim in prompt; plush/outline/pastel match idle (visual)"
    },
    "spend_usd": 0.01,
-   "fallback": "if export missing, integrator keeps code scale-bounce on mochi-idle (offline-safe)",
+   "fallback": "if export missing, integrator keeps code scale-bounce on mabel-idle (offline-safe)",
    "status": "SUPERSEDED 2026-10-29 by art-direction reboot (Jolly mascots + photoreal clinic); file left on disk, do not ship"
   },
   {
@@ -120,7 +121,7 @@
     "distinction_vs_jolly": "PASS 6/6 \u2014 (1) fur muted rose-taupe #A2766B mid (#926A60-#C69C8F) vs oatmeal #F1E7D4; (2) eyes larger + closer + higher vs small wide-set; (3) smile wider warm upturned vs thin curve; (4) blush larger lower-outer #E2B7A4; (5) pink pouch kept + ADDED pastel-pink nurse cap w/ white cross (pouch reads plain, cross lives on cap); (6) Block C render language shared (reminiscent) but silhouette+palette+face+accessories owned. Verified from descriptors only \u2014 no jolly image opened as reference this run."
    },
    "spend_usd": 0.01,
-   "fallback": "if export missing, integrator keeps current plush mochi sprites (offline-safe)",
+   "fallback": "if export missing, integrator keeps current plush mabel sprites (offline-safe)",
    "refine_run": "mascot-refinement-2026-10-29",
    "source_file_rev1": "mochi-reboot-idle-20261028-231805-1.png",
    "prompt_full_rev1": "Using the attached reference images for the character's 3D render style, oatmeal fleece texture, and chibi proportions, create the mascot Mochi: the same oatmeal-cream fleece body and smooth porcelain face plate as the references, standing facing forward with stubby mitten arms relaxed at its sides and nub feet planted, bead eyes open, gentle smile, one small plain pink belly pouch centered on the belly, no costume, no props, no sunglasses, no sign, no suitcase, no logos, no text. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
@@ -181,7 +182,7 @@
     "distinction_vs_jolly": "PASS 6/6 \u2014 (1) fur muted rose-taupe #A2766B mid (#926A60-#C69C8F) vs oatmeal #F1E7D4; (2) eyes larger + closer + higher vs small wide-set; (3) smile wider warm upturned vs thin curve; (4) blush larger lower-outer #E2B7A4; (5) pink pouch kept + ADDED pastel-pink nurse cap w/ white cross (pouch reads plain, cross lives on cap); (6) Block C render language shared (reminiscent) but silhouette+palette+face+accessories owned. Verified from descriptors only \u2014 no jolly image opened as reference this run."
    },
    "spend_usd": 0.01,
-   "fallback": "if export missing, integrator keeps current plush mochi sprites (offline-safe)",
+   "fallback": "if export missing, integrator keeps current plush mabel sprites (offline-safe)",
    "refine_run": "mascot-refinement-2026-10-29",
    "source_file_rev1": "mochi-reboot-blink-20261028-231834-1.png",
    "prompt_full_rev1": "Edit this mascot sprite into a blink variant: change ONLY the eyes \u2014 both eyes closed, each closed eye a single short dark curved lash line sitting in exactly the same position as the open bead eyes. Keep everything else EXACTLY the same: same oatmeal fleece body, same porcelain face plate, same blush, same smile, same arms, legs, and pink belly pouch, same body position, size, framing, and warm-white background. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
@@ -242,7 +243,7 @@
     "distinction_vs_jolly": "PASS 6/6 \u2014 (1) fur muted rose-taupe #A2766B mid (#926A60-#C69C8F) vs oatmeal #F1E7D4; (2) eyes larger + closer + higher vs small wide-set; (3) smile wider warm upturned vs thin curve; (4) blush larger lower-outer #E2B7A4; (5) pink pouch kept + ADDED pastel-pink nurse cap w/ white cross (pouch reads plain, cross lives on cap); (6) Block C render language shared (reminiscent) but silhouette+palette+face+accessories owned. Verified from descriptors only \u2014 no jolly image opened as reference this run."
    },
    "spend_usd": 0.01,
-   "fallback": "if export missing, integrator keeps current plush mochi sprites (offline-safe)",
+   "fallback": "if export missing, integrator keeps current plush mabel sprites (offline-safe)",
    "refine_run": "mascot-refinement-2026-10-29",
    "source_file_rev1": "mochi-reboot-happy-20261028-231855-1.png",
    "prompt_full_rev1": "Edit this mascot sprite into a joyful happy tap-reaction: change ONLY the face \u2014 happy closed eyes shaped like ^ ^ (two upward-curved dark arcs), a bigger joyful curved smile, slightly rosier pink blush cheeks. Keep everything else EXACTLY the same: same oatmeal fleece body, same porcelain face plate, same arms, legs, and pink belly pouch, same body position, size, framing, and warm-white background. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
@@ -267,8 +268,8 @@
     "code_rug_ellipse_y": "708-788 (OVERLAPS painted rug top; integrator: hide code rug or accept double rug until P2)",
     "dado_trim_y": 478,
     "floor_edge_y": 718,
-    "mochi_footprint_xy": "x164-376 y508-720 all clear cream (negative space OK)",
-    "note": "WALL_BASE=352/code-floor-466 geometry is deleted with the code passes; only Mochi/bubble geometry must still fit",
+    "mabel_footprint_xy": "x164-376 y508-720 all clear cream (negative space OK)",
+    "note": "WALL_BASE=352/code-floor-466 geometry is deleted with the code passes; only Mabel/bubble geometry must still fit",
     "painted_rug_y": "735-897",
     "title_zone_y": "0-130 clear cream (title/subtitle OK)"
    },
@@ -286,10 +287,10 @@
    "source_tool": "muse-image-mcp generate_image",
    "spend_usd": 0.01,
    "validation": {
-    "alignment": "Mochi 212px @(270,614) composite sits in clear space, feet at floor edge (see contact sheet)",
+    "alignment": "Mabel 212px @(270,614) composite sits in clear space, feet at floor edge (see contact sheet)",
     "characters_text": "none (visual inspection)",
     "dimensions": "1152x2048 exact 9:16; export 1080x1920 exact 2x of 540x960",
-    "style_match": "cream/plush/pastel, thin warm-brown outlines, matte texture - reads as one game with Mochi (visual inspection)",
+    "style_match": "cream/plush/pastel, thin warm-brown outlines, matte texture - reads as one game with Mabel (visual inspection)",
     "transparency": "N/A opaque background"
    },
    "status": "SUPERSEDED 2026-10-29 by art-direction reboot (Jolly mascots + photoreal clinic); file left on disk, do not ship"
@@ -311,7 +312,7 @@
    "cutout": "N/A - opaque RGB background, no key-out needed (never hand-cut)",
    "alignment_960sp": {
     "title_zone_y": "0-130 clear wall/ceiling (center std 10.8); window glass only at x490-539 y95-199 - keep title centered",
-    "mochi_footprint_xy": "x164-376 y508-720 clear except bench right leg x189-197 (thin leg BEHIND mascot; sprite pad 24 + fur edge ~x190 make it a <=7px depth sliver, accepted)",
+    "mabel_footprint_xy": "x164-376 y508-720 clear except bench right leg x189-197 (thin leg BEHIND mascot; sprite pad 24 + fur edge ~x190 make it a <=7px depth sliver, accepted)",
     "plant_pot_x": "foliage/pot mass from x415 (39px clear of footprint); cabinet bright from x465 to right edge (photo-cropped, margin 0 accepted for plates)",
     "wall_floor_boundary_y": "~672-692 center (baseboard); GROUND=724 lands on rug upper third - feet grounded",
     "bubble_zone": "y800-936 rug + floor only, no furniture",
@@ -322,13 +323,13 @@
     "transparency": "N/A opaque background",
     "characters_text": "none (visual inspection)",
     "style_match": "photoreal minimal clinic, hard surfaces, no plush/fuzz, no outline - matches reboot direction (visual)",
-    "alignment": "Mochi 212px @(270,614) composite grounded on rug, clear of furniture (see contact sheet)"
+    "alignment": "Mabel 212px @(270,614) composite grounded on rug, clear of furniture (see contact sheet)"
    },
    "spend_usd": 0.01,
    "fallback": "if export missing, integrator keeps room-shell-01.png plush bg (offline-safe; direction mismatch until integrated)"
   }
  ],
- "character": "Mochi (cream bunny nurse-helper, pink cheeks)",
+ "character": "Mabel (cream bunny nurse-helper, pink cheeks)",
  "cutout": "programmatic key-out + flood-fill verification (SAM 3.1 unavailable in this session \u2014 no SAM tool exposed; generator plain-background alpha with automated checks instead; never hand-cut)",
  "masters": "studio folder art/source/mochi/ (never in repo)",
  "style_block": "verbatim from ART_BIBLE.md in every prompt",
@@ -374,10 +375,10 @@
    "validation": {
     "dimensions": "560x320 trimmed+keyed export, aspect 1.75",
     "alpha": "border flood-fill keyout tol=28 from bg (253,240,224); assert bbox exact + corners transparent",
-    "style_match": "cream plush + warm-brown outline + sage blanket, reads as one game with Mochi and room shell (visual)",
+    "style_match": "cream plush + warm-brown outline + sage blanket, reads as one game with Mabel and room shell (visual)",
     "alignment": "composite feet at GROUND=724, floor-left x12-152 (see contact sheet)"
    },
-   "scale_note": "140x80 reads small next to 212px Mochi; integrator may playtest up to ~170w if doll-sized, verifying visual gap to Mochi; bed sits in front of bg cabinet lower-left (acceptable, confirm on device)",
+   "scale_note": "140x80 reads small next to 212px Mabel; integrator may playtest up to ~170w if doll-sized, verifying visual gap to Mabel; bed sits in front of bg cabinet lower-left (acceptable, confirm on device)",
    "spend_usd": 0.02,
    "fallback": "if export missing, integrator keeps code-drawn drawExamBed (offline-safe)",
    "status": "SUPERSEDED 2026-10-29 by art-direction reboot (Jolly mascots + photoreal clinic); file left on disk, do not ship"
@@ -434,7 +435,7 @@
  "props_contact_sheet": "art/contact-sheets/props-contact-sheet.png",
  "props_spend_usd": 0.05,
  "props_spend_note": "4 final images (2 gen + 2 edit) x $0.01 + $0.01 probe generation after tool-arg failures; ledger ~$0.1144 cumulative; at >= $120 STOP - not reached",
- "reboot_character": "Mochi rev-2 (owned identity: muted rose-taupe fur #A2766B family + warm-cream plate #F5E0C8, pink belly pouch + pastel-pink nurse cap w/ white cross, larger closer-higher eyes, wider warm smile, lower-outer blush; no outline)",
+ "reboot_character": "Mabel rev-2 (owned identity: muted rose-taupe fur #A2766B family + warm-cream plate #F5E0C8, pink belly pouch + pastel-pink nurse cap w/ white cross, larger closer-higher eyes, wider warm smile, lower-outer blush; no outline)",
  "reboot_contact_sheets": [
   "art/contact-sheets/mochi-reboot-poses-v2.png (current rev-2)",
   "art/contact-sheets/mochi-reboot-poses.png (rev-1 evidence, superseded art)",

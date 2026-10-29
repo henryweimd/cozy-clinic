@@ -2,21 +2,22 @@ import Phaser from 'phaser';
 import { ClinicalEngine, CONDITIONS } from '../clinical';
 
 /**
- * Milestone 1 clinic scene: a cozy clinic room and Mochi, the first
- * patient. Tap Mochi to see the complaint.
+ * Milestone 1 clinic scene: a cozy clinic room and Mabel, the first
+ * patient. Tap Mabel to see the complaint.
  *
  * ART-DIRECTION REBOOT (2026-10-29): the room shell is the
  * photorealistic minimal clinic plate
  * `assets/room/clinic-shell-reboot-01.png` (1080x1920, Block B;
- * see art/manifest.json backgrounds[] reboot entry), and Mochi
+ * see art/manifest.json backgrounds[] reboot entry), and Mabel
  * is the Jolly-style redesign (`mochi-reboot-idle/blink/happy.png`,
  * 192px class, Block C; rev-2 refinement 2026-10-29: same files,
  * same geometry, owned rose-taupe identity + smooth edges — no
- * layout change). Texture keys (`mochi-idle`, `room-shell`,
- * ...) are unchanged — only the file paths moved. The old plush
- * room-shell + plush Mochi + plush props are SUPERSEDED (files
- * left on disk, manifest-flagged); old plush-room constants are
- * retired (see the reboot landmark survey below).
+ * layout change). Texture keys (`mabel-idle`, `room-shell`,
+ * ...) follow the Mochi→Mabel rename; file paths (the
+ * `mochi-reboot-*.png` slugs) are unchanged for stability. The old
+ * plush room-shell + plush Mabel + plush props are SUPERSEDED
+ * (files left on disk, manifest-flagged); old plush-room constants
+ * are retired (see the reboot landmark survey below).
  * Motion implements docs/ANIMATION.md exactly (bob 3px @ 1.8
  * rad/s; blink 120ms per 3-5s randomized; tap bounce 110ms squash
  * +-0.06 + 80ms overshoot +-0.03, Sine easings, token-guarded).
@@ -27,14 +28,14 @@ import { ClinicalEngine, CONDITIONS } from '../clinical';
  * of the plate, 540x960 space): baseboard/wall-floor ~696 at
  * center; rug top ~712, rug widest ~x40-500 (y~800); bench left
  * x0-160, seat y~620-660, legs to ~700 (right-leg sliver
- * x189-197 sits behind Mochi's left edge — accepted depth, per
+ * x189-197 sits behind Mabel's left edge — accepted depth, per
  * asset artist); plant mass x~415+, cabinet x~465+; window glass
  * x490+ y95-199 (title stays centered); title zone + bubble zone
- * clear. GROUND = 724 kept: Mochi feet at 720 land ~8px inside
+ * clear. GROUND = 724 kept: Mabel feet at 720 land ~8px inside
  * the rug, shadow ellipse at 724 on the rug.
  *
  * Layout contract (fix-layout-01 spacing system, survives the
- * reboot): SIDE = 24, GROUND = 724, Mochi 212px at (270, 614),
+ * reboot): SIDE = 24, GROUND = 724, Mabel 212px at (270, 614),
  * bubble 492 wide docked at 936.
  */
 /**
@@ -46,8 +47,8 @@ const FONT_FAMILY =
   '"Baloo 2", "Comic Sans MS", "Chalkboard SE", system-ui, sans-serif';
 
 export class ClinicScene extends Phaser.Scene {
-  private mochi!: Phaser.GameObjects.Image;
-  private mochiBaseY = 0;
+  private mabel!: Phaser.GameObjects.Image;
+  private mabelBaseY = 0;
   private blinkAt = 0;
   private showingHappy = false;
   private happyToken = 0;
@@ -60,10 +61,10 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   preload(): void {
-    // Reboot: Jolly-style Mochi + photoreal plate. Keys unchanged.
-    this.load.image('mochi-idle', 'assets/characters/mochi-reboot-idle.png');
-    this.load.image('mochi-blink', 'assets/characters/mochi-reboot-blink.png');
-    this.load.image('mochi-happy', 'assets/characters/mochi-reboot-happy.png');
+    // Reboot: Jolly-style Mabel + photoreal plate.
+    this.load.image('mabel-idle', 'assets/characters/mochi-reboot-idle.png');
+    this.load.image('mabel-blink', 'assets/characters/mochi-reboot-blink.png');
+    this.load.image('mabel-happy', 'assets/characters/mochi-reboot-happy.png');
     this.load.image('room-shell', 'assets/room/clinic-shell-reboot-01.png');
     // No prop preloads: the plush P2 props clash with the photoreal
     // plate (which paints its own bench/plant/cabinet) — removed,
@@ -74,15 +75,15 @@ export class ClinicScene extends Phaser.Scene {
     this.drawRoom();
     this.drawLightOverlays();
     this.drawTitle();
-    this.drawMochi();
+    this.drawMabel();
     this.drawBubble();
     this.scheduleBlink();
   }
 
   update(_time: number, delta: number): void {
-    // Idle bob: ANIMATION.md — 3px @ 1.8 rad/s, owns mochi.y.
+    // Idle bob: ANIMATION.md — 3px @ 1.8 rad/s, owns mabel.y.
     const t = this.time.now / 1000;
-    this.mochi.y = this.mochiBaseY + Math.sin(t * 1.8) * 3;
+    this.mabel.y = this.mabelBaseY + Math.sin(t * 1.8) * 3;
 
     // Blink: ANIMATION.md — eyes closed 120ms every 3–5s, randomized.
     // Swaps idle<->blink only when the happy pose is not showing, so a
@@ -90,14 +91,14 @@ export class ClinicScene extends Phaser.Scene {
     if (
       this.time.now >= this.blinkAt &&
       !this.showingHappy &&
-      this.mochi.texture.key === 'mochi-idle'
+      this.mabel.texture.key === 'mabel-idle'
     ) {
-      this.mochi.setTexture('mochi-blink');
+      this.mabel.setTexture('mabel-blink');
       this.time.delayedCall(120, () => {
         // A tap during the 120ms window swaps in happy; only restore
         // idle when blink still owns the texture.
-        if (this.mochi.texture.key === 'mochi-blink') {
-          this.mochi.setTexture('mochi-idle');
+        if (this.mabel.texture.key === 'mabel-blink') {
+          this.mabel.setTexture('mabel-idle');
         }
         this.scheduleBlink();
       });
@@ -121,8 +122,8 @@ export class ClinicScene extends Phaser.Scene {
   /**
    * Code-only warmth: a window-light gradient plus a warm
    * vignette, both pure Graphics fills ($0.00 spend). Called after
-   * drawRoom and before title/Mochi/bubble, so the overlays tint
-   * only the room — text and Mochi render above and cannot wash
+   * drawRoom and before title/Mabel/bubble, so the overlays tint
+   * only the room — text and Mabel render above and cannot wash
    * out. Reboot re-tune vs the photo plate (which carries its own
    * sunlight): light 0.12 -> 0.07 max, vignette 0.10 -> 0.07,
    * so the photo keeps its clean minimal read. Cozy, not hazy.
@@ -170,7 +171,7 @@ export class ClinicScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
     this.add
-      .text(270, 100, 'Tap Mochi to say hello', {
+      .text(270, 100, 'Tap Mabel to say hello', {
         fontFamily: FONT_FAMILY,
         fontSize: '22px',
         color: '#8a6f52',
@@ -178,41 +179,41 @@ export class ClinicScene extends Phaser.Scene {
       .setOrigin(0.5);
   }
 
-  private drawMochi(): void {
-    // Mochi stands fully on the painted rug: feet at 720 (~8px
+  private drawMabel(): void {
+    // Mabel stands fully on the painted rug: feet at 720 (~8px
     // inside the rug top ~712) and the fixed shadow ellipse at
     // GROUND = 724 on the rug, body clear of the baseboard (~696)
-    // above. At 212px Mochi is still the largest visual weight,
+    // above. At 212px Mabel is still the largest visual weight,
     // with clear walking space to the bench (left) and the
     // plant/cabinet lane (right). Same 212px@(270,614) geometry
     // the reboot contact-sheet composite validated.
     this.add.ellipse(270, 724, 170, 30, 0x8a5a3b, 0.18);
 
-    this.mochi = this.add.image(270, 614, 'mochi-idle');
-    this.mochi.setDisplaySize(212, 212);
-    this.mochiBaseY = this.mochi.y;
-    this.mochi.setInteractive({ useHandCursor: true });
+    this.mabel = this.add.image(270, 614, 'mabel-idle');
+    this.mabel.setDisplaySize(212, 212);
+    this.mabelBaseY = this.mabel.y;
+    this.mabel.setInteractive({ useHandCursor: true });
 
     this.add
-      .text(270, 748, 'Mochi · first patient', {
+      .text(270, 748, 'Mabel · first patient', {
         fontFamily: FONT_FAMILY,
         fontSize: '24px',
         color: '#5c4633',
       })
       .setOrigin(0.5);
 
-    this.mochi.on('pointerdown', () => this.onMochiTap());
+    this.mabel.on('pointerdown', () => this.onMabelTap());
   }
 
   private drawBubble(): void {
     const def = CONDITIONS['dehydration'];
     const state = this.engine.initialState('dehydration');
     const stage = def.stages[state.stageIndex];
-    const complaint = `Mochi feels ${stage.label.toLowerCase()}: ${stage.blurb} ${def.plainWords}`;
+    const complaint = `Mabel feels ${stage.label.toLowerCase()}: ${stage.blurb} ${def.plainWords}`;
 
     // Bottom-edge-anchored dialogue card: side margins match SIDE,
     // bottom docks at 936 (24px margin), and the card always sizes
-    // to its text upward — never overlapping Mochi or the edges.
+    // to its text upward — never overlapping Mabel or the edges.
     const w = 492;
     const x = 270;
     const dockBottom = 936;
@@ -249,7 +250,7 @@ export class ClinicScene extends Phaser.Scene {
     this.bubble.setAlpha(0);
   }
 
-  private onMochiTap(): void {
+  private onMabelTap(): void {
     this.bubbleOpen = !this.bubbleOpen;
     if (this.bubbleOpen) {
       this.bubble.setVisible(true);
@@ -260,13 +261,13 @@ export class ClinicScene extends Phaser.Scene {
       this.happyToken += 1;
       const token = this.happyToken;
       this.showingHappy = true;
-      this.mochi.setTexture('mochi-happy');
+      this.mabel.setTexture('mabel-happy');
       // Happy bounce, ANIMATION.md exact: 110ms squash yoyo
       // (+-0.06) then a chained 80ms overshoot yoyo (+-0.03),
       // Sine.easeInOut, scale-only (the update() bob owns
-      // mochi.y, so no y-tween). Same token guard on both steps.
+      // mabel.y, so no y-tween). Same token guard on both steps.
       this.tweens.add({
-        targets: this.mochi,
+        targets: this.mabel,
         scaleY: '-=0.06',
         scaleX: '+=0.06',
         duration: 110,
@@ -275,7 +276,7 @@ export class ClinicScene extends Phaser.Scene {
         onComplete: () => {
           if (token !== this.happyToken) return;
           this.tweens.add({
-            targets: this.mochi,
+            targets: this.mabel,
             scaleY: '+=0.03',
             scaleX: '-=0.03',
             duration: 80,
@@ -284,8 +285,8 @@ export class ClinicScene extends Phaser.Scene {
             onComplete: () => {
               if (token !== this.happyToken) return;
               this.showingHappy = false;
-              if (this.mochi.texture.key === 'mochi-happy') {
-                this.mochi.setTexture('mochi-idle');
+              if (this.mabel.texture.key === 'mabel-happy') {
+                this.mabel.setTexture('mabel-idle');
               }
             },
           });

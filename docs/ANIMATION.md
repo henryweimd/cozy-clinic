@@ -27,7 +27,7 @@ Idle bob:
 
 - Wave: `y = baseY + sin(t * 1.8) * 3` — amplitude 3 px,
   angular speed 1.8 rad/s (period ≈ 3.49 s).
-- Runs every frame in `update()`; owns `mochi.y` exclusively —
+- Runs every frame in `update()`; owns `mabel.y` exclusively —
   no other tween may touch y.
 - Shadow ellipse stays fixed (it is the grounding reference).
 
@@ -37,7 +37,7 @@ Blink:
   rescheduled after every blink so a cast never blinks in unison.
 - Closed duration: exactly 120 ms (`delayedCall(120)`).
 - Swap rule: idle→blink only when happy is NOT showing AND the
-  current texture is `mochi-idle`; restore blink→idle only if blink
+  current texture is `mabel-idle`; restore blink→idle only if blink
   still owns the texture (a tap during the 120 ms window wins).
 
 Happy tap-react bounce (squash-stretch + overshoot):
@@ -46,8 +46,8 @@ Happy tap-react bounce (squash-stretch + overshoot):
   110 ms, yoyo, `Sine.easeInOut`, scale-only (no y-tween).
 - Step 2 — overshoot: `scaleY += 0.03`, `scaleX -= 0.03`,
   80 ms, yoyo, `Sine.easeInOut`, chained in step 1's onComplete.
-- Texture sequencing: set `mochi-happy` at tap; restore
-  `mochi-idle` in step 2's onComplete. A monotonic `happyToken`
+- Texture sequencing: set `mabel-happy` at tap; restore
+  `mabel-idle` in step 2's onComplete. A monotonic `happyToken`
   guards both onCompletes so a stale bounce never clears a newer
   happy on rapid re-taps; the blink swap is suspended while
   `showingHappy` is true.

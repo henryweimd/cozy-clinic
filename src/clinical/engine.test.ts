@@ -133,7 +133,7 @@ describe('engine veto (model output can never override the engine)', () => {
 describe('shipped copy', () => {
   // The scene supplies the shown patient's name; clinical copy must never
   // name a patient, or the wrong name can ship in another patient's line.
-  const PATIENT_NAMES = ['Mochi', 'Maple', 'Pip', 'Boba', 'Clover', 'Nori'];
+  const PATIENT_NAMES = ['Mabel', 'Milo', 'June', 'Theo', 'Nora'];
 
   it('names no patient in any condition text', () => {
     for (const def of Object.values(CONDITIONS)) {

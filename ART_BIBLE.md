@@ -6,7 +6,7 @@ file and its character's master reference, and has passed validation
 
 > DIRECTION REBOOT — 2026-10-29. The old "plush room" direction
 > (background and props in the same soft sculpted plush language as
-> Mochi, thin warm-brown outline on everything, painted plush
+> Mabel, thin warm-brown outline on everything, painted plush
 > room-shell, `no photorealism` ban) is SUPERSEDED as of this date.
 > It is preserved in git history only. The new direction below is
 > authoritative: 3D Jolly-style mascots on clean modern photorealistic
@@ -131,8 +131,9 @@ Mascot sprites:
 - Transparent background in game-ready exports (alpha verified
   programmatically, never trusted from the generator).
 - Naming: `public/assets/characters/<name>-<state>.png`
-  (e.g. `mochi-idle.png`).
-- Display geometry (survives the reboot [R]): Mochi 212 px display
+  (e.g. `mabel-idle.png`; shipped slugs keep the `mochi-*`
+  working name for stability — see the manifest rename note).
+- Display geometry (survives the reboot [R]): Mabel 212 px display
   size centered at (270,614), feet on GROUND=724; shadow ellipse
   under feet; nametag below on the rug zone.
 
