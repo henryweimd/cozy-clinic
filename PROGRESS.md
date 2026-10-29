@@ -877,3 +877,98 @@ idle + tapped states, zero console errors. Element-by-element
   Baloo overflow in pills/cards/threads, asthma opener feels
   clinical-but-cozy). No commit/push (main agent merges).
   STOP after CHECKPOINT.md.
+
+## Active chunk: Mabel expression system (design only, no code/art)
+
+- EXPRESSION-SYSTEM OWNERSHIP (declared BEFORE editing, per
+  AGENTS.md workflow law): the expression-system designer owns
+  ONLY the expression sections of `docs/CHARACTER_BIBLE.md` and
+  `docs/ANIMATION.md`, plus this PROGRESS.md entry. No code, no
+  images, no other files. Operator order: Mabel's face reflects
+  illness/health status.
+- No commit/push (main agent merges). STOP after bibles updated.
+
+## Active chunk: Mabel expression art (sick/pained/relieved)
+
+- EXPRESSION-ART OWNERSHIP (declared BEFORE generating, per
+  AGENTS.md workflow law): the expression artist owns ONLY these
+  new files: `public/assets/characters/mochi-reboot-sick.png`,
+  `public/assets/characters/mochi-reboot-pained.png`,
+  `public/assets/characters/mochi-reboot-relieved.png`,
+  `art/source/mochi-reboot/mochi-reboot-{sick,pained,relieved}-master.png`,
+  `art/contact-sheets/mochi-reboot-expressions.png`, the 3 new
+  entries appended to `art/manifest.json` assets[], plus this
+  PROGRESS.md entry. No code, no bible docs. Nobody else writes
+  those paths this run. Base: OUR rev-2 idle master only —
+  never any jolly-* image as reference.
+- Image budget this workstream: $0.05 cap (3 gens max); ledger
+  ~$0.1944 before this chunk. At >= $120, STOP — not reached.
+- No commit/push (main agent merges). STOP after manifest updated.
+- EXPRESSION-ART RESULT (2026-10-29): all 3 ordered expressions
+  shipped as identity edits of OUR rev-2 idle master (no jolly-*
+  reference anywhere). Exports `public/assets/characters/
+  mochi-reboot-{sick,pained,relieved}.png` (192x192 RGBA) via
+  the rev-2 recipe (flood-fill keyout 32 + despeckle +
+  edge-band despill, no interior despill, shadow-ectomy,
+  shared union window, bottom row 184). Gates: bbox deltas vs
+  idle [1,2,1,0]/[1,2,1,1]/[1,2,1,0] (all <=2px); opaque ratios
+  0.4248/0.4243/0.4250 vs 0.4254 (all within 0.01); pad >=8,
+  corners alpha 0; stair-jump j2+j3p 11/15/11 vs idle 15
+  (at/below; max-25 at cap-notch rows is threshold snap on the
+  shallow dome gradient, visually identical per 6x strip+XOR);
+  silhouette XOR vs idle ~0.5% (1px edge snap only); palette
+  fur +/-2, plate +/-6, pouch +/-4; eye-band dark px
+  sick 53 / pained 9 / relieved 119 vs idle 128 (spec reads
+  confirmed); sick-vs-pained-vs-happy confusion check PASSES
+  in the face zoom. Pained v1 rejected (asymmetric brow tick),
+  r2 shipped with a no-marks clause. Contact sheet
+  `art/contact-sheets/mochi-reboot-expressions.png` (6 faces +
+  checker row + face zoom + sick-in-room composite) viewed by
+  eye. Manifest: 3 entries with full prompt text (Block C
+  verified EXACT vs ART_BIBLE.md) + sha256 + metrics.
+- Spend: $0.04 this workstream (4 images x $0.01; cap $0.05
+  respected). Ledger ~$0.2344 cumulative. At >= $120, STOP —
+  not reached.
+- Not done by artist: ClinicScene integration + in-game render
+  check of the new faces (follow-on work, explicitly out of
+  scope; no code touched). No commit/push (main agent merges).
+  STOP.
+
+## Active chunk: Mabel expression integration (ClinicScene wiring)
+
+- EXPRESSION-INTEGRATOR OWNERSHIP (declared BEFORE editing, per
+  AGENTS.md workflow law): the expression integrator owns ONLY
+  `src/scenes/ClinicScene.ts` (+ `src/ui/mockData.ts` if seeds
+  need it, + this PROGRESS.md entry + CHECKPOINT.md). No
+  engine/clinical edits — the expression map is presentation
+  over existing state. Steady map + transient rules implemented
+  exactly per `docs/ANIMATION.md` (normative) using the shipped
+  `mochi-reboot-{sick,pained,relieved}.png` exports.
+- EXPRESSION-INTEGRATOR RESULT (2026-10-29): state machine LIVE
+  in `src/scenes/ClinicScene.ts` exactly per `docs/ANIMATION.md`
+  (normative): preload mabel-sick/mabel-pained/mabel-relieved;
+  steadyFace() = stage map (0 relieved / 1 idle / 2 sick /
+  3 pained) + any-vital<=2 one-step-worse shift; Mabel opens on
+  steady (sick at the stage-2 asthma opener); resolve flashes
+  driven by the engine animationCue (happy->happy+bounce,
+  recovery->relieved+bounce, sick->pained 600ms still hold,
+  worried/idle/blocked->hold steady); shared standard bounce
+  (110ms +-0.06 + 80ms +-0.03, scale-only) with the monotonic
+  flashToken guard on both onCompletes + texture-ownership
+  settle to the steady map; blink fires only over idle steady
+  with no flash, else reschedules. Geometry untouched (212px @
+  (270,614), shadow, nametag, panel, nav, monitor, offline).
+  Zero new display copy (patient-name guard + Baloo vacuous).
+  `src/ui/mockData.ts` untouched — no seed change needed.
+- Tests: `npm test` 29/29 pass; `npm run build` green (same two
+  known benign warnings: font-URL + chunk-size). No expression
+  regressions.
+- Spend: image spend $0.00 (code only, 0 generations). Ledger
+  stays ~$0.2344 — far under the operator's $20 cap; at
+  >= $120, STOP (not reached).
+- Playtest: NOT playtested in-game (no browser in sandbox).
+  Operator: open the deployed URL at phone size — Mabel should
+  open sick, flash relieved+bounce on rescue-puffer (2->1),
+  flash pained-still on dusty-blanket (2->3), bounce happy on
+  full recovery, and hold steady on the DANGEROUS veto.
+- No commit/push (main agent merges). STOP after CHECKPOINT.md.

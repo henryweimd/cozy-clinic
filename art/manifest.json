@@ -260,6 +260,149 @@
     "pouch_pink": "#EBAFAF"
    },
    "contact_sheet": "art/contact-sheets/mochi-reboot-poses-v2.png"
+  },
+  {
+   "sprite": "mochi-reboot-sick.png",
+   "export": "public/assets/characters/mochi-reboot-sick.png",
+   "master": "art/source/mochi-reboot/mochi-reboot-sick-master.png",
+   "source_file": "mochi-expr-sick-20261029-072332-1.png",
+   "source_tool": "muse-image-mcp edit_image (identity edit of OUR rev-2 idle master mochi-reboot-idle-master.png; NO jolly-* image used as reference per IP law)",
+   "revision": 2,
+   "direction": "reboot-2026-10-29",
+   "status": "current",
+   "dimensions": "192x192",
+   "frame": "sick rev2 (half-lidded droopy beads, flat closed mouth, pale blush; same cap/pouch/fur)",
+   "prompt_full": "Edit this Mabel mascot sprite into a sick variant: change ONLY the face \u2014 sick unwell-but-cozy face: half-lidded droopy bead eyes, the beads smaller and set LOWER than idle with the upper lid overlapping the top third of each bead (the lid shaded in the rose-taupe fur tones, never a drawn line); mouth a smaller FLATTER closed curve with level ends (the smile gone flat, not a frown); blush fainter and paler than baseline, washed-out cheeks. Mouth stays closed, never open. Keep everything else EXACTLY the same: same muted rose-taupe fleece body, same warm-cream porcelain face plate, same stubby mitten arms and nub legs, same small plain pink belly pouch centered on the belly, same small pastel-pink nurse cap tilted on the upper-left of the head with one tiny white cross emblem, same body position, size, framing, and plain solid warm-white studio void background. Clean smooth silhouette with gentle antialiased falloff, no jagged edges, no halo. Mabel's owned identity deltas (all six hold): (1) muted rose-taupe fleece, mid #A2766B (range #926A60-#C69C8F), dense visible short-pile strands with soft volumetric shading; (2) bead eyes LARGER, set CLOSER together and HIGHER on the face plate, one white highlight dot each; (3) smile a WIDER warm closed curve with gently upturned ends, #805446; (4) blush circles LARGER, placed LOWER and more OUTWARD on the cheeks, #E2B7A4; (5) TWO fixed traits: small plain pink belly pouch centered on the belly AND small pastel-pink nurse cap tilted on the upper-left of the head with one tiny white cross emblem (cross on the cap ONLY, pouch reads plain); (6) warm-cream porcelain face plate #F5E0C8. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
+   "prompt_hash_sha256": "0b1170c4c0f765af9778a8bbefcf8a00595c5ac110bf55db717d0fd26d828231",
+   "export_sha256": "fd298da49165e616b65f4d29564b1712be66eed60efea4b72b377f2dfe7751a2",
+   "opacity_check": {
+    "bbox": [
+     26,
+     11,
+     164,
+     182
+    ],
+    "opaque_ratio": 0.4248,
+    "opaque_ratio_def": "alpha>=128 over 192x192",
+    "corners_transparent": true,
+    "pad_px": {
+     "left": 26,
+     "top": 11,
+     "right": 27,
+     "bottom": 9
+    }
+   },
+   "foot_anchor": "bottom-center (Phaser origin 0.5,1.0); union-crop window shared with the rev-2 set, bottom-aligned at export row 184",
+   "validation": {
+    "dimensions": "192x192 RGBA exact",
+    "alpha": "border flood-fill keyout thresh=32 from 8 edge seeds on 1600x1600 master + binary-opening despeckle; edge-band-only despill (<=2px of transparent, 20% push from bg median); NO interior despill; shadow-ectomy below y=1350 (keep dist>64 from bg); LANCZOS shared union window (246,112,1353,1476 master px), scale-to-height-176, bottom row 184, centered-x (paste x=24); corners alpha 0. Reimplementation check: this pipeline on the rev-2 idle master reproduces the shipped export within (1,1,0,0) px with opaque ratio matching to 0.0001.",
+    "bbox_vs_idle": "sick [26,11,164,182] vs rev-2 idle [25,9,165,182] (alpha>0): delta [1,2,1,0], within 2px all sides; opaque ratio 0.4248 vs 0.4254 (delta 0.0006, within 0.01)",
+    "identity_match": "same rose-taupe fur/cap/pouch/pose/scale by eye (see expressions contact sheet); silhouette XOR vs idle 194px (0.5%), all 1px edge snap; palette means vs idle: fur +/-2, plate +/-5, pouch +/-3 per channel; cap cross crisp, pouch plain",
+    "style_match": "Block C carried verbatim (verified programmatically EXACT vs ART_BIBLE.md); all six Mabel deltas carried in prompt",
+    "face_spec": "half-lidded droopy beads (smaller, lower, fur-shaded lids, never a line), smaller flatter closed curve with level ends, fainter/paler blush; mouth closed, never open. Eye-band dark px 53 vs idle 128 (half-lidded read confirmed)",
+    "edge_after": "right-silhouette |dx| histogram j0/j1/j2/j3p 94/65/4/7 (j2+j3p=11 vs idle 15, at/below); max-jump 25 at rows 14-15 cap-notch/dome-top, same anatomy as idle's max-17 -- 6x strip + XOR confirm visually identical (threshold snap on the shallow dome gradient, not a shape change)",
+    "distinction_check": "sick vs pained vs happy confusion check PASS in the contact-sheet face zoom: droopy fur-lidded beads vs scrunched > < vs arched ^ ^ read apart at phone size"
+   },
+   "spend_usd": 0.01,
+   "fallback": "if export missing, integrator keeps mabel-idle for that state (offline-safe)",
+   "expression_run": "expression-art-2026-10-29",
+   "contact_sheet": "art/contact-sheets/mochi-reboot-expressions.png"
+  },
+  {
+   "sprite": "mochi-reboot-pained.png",
+   "export": "public/assets/characters/mochi-reboot-pained.png",
+   "master": "art/source/mochi-reboot/mochi-reboot-pained-master.png",
+   "source_file": "mochi-expr-pained-r2-20261029-072516-1.png",
+   "source_tool": "muse-image-mcp edit_image (identity edit of OUR rev-2 idle master mochi-reboot-idle-master.png; NO jolly-* image used as reference per IP law)",
+   "revision": 2,
+   "direction": "reboot-2026-10-29",
+   "status": "current",
+   "dimensions": "192x192",
+   "frame": "pained rev2 (shut > < eyes, downturned closed mouth, baseline blush; same cap/pouch/fur)",
+   "prompt_full": "Edit this Mabel mascot sprite into a pained variant: change ONLY the eyes and mouth \u2014 eyes SHUT as two scrunched closed curves slanting DOWN toward the center like > < (angled and pinched shut, visually distinct from happy up-arched ^ ^ curves); mouth a small downturned closed curve, gentle droopy frown-fun, never grim; blush kept at baseline position and tone (pain reads in the eyes and mouth, not the cheeks). IMPORTANT: no eyebrows, no brow marks, no forehead lines, no extra lines, ticks, or marks anywhere on the face plate \u2014 only the two shut eye curves, the downturned mouth, and the baseline blush. Mouth stays closed, never open. Keep everything else EXACTLY the same: same muted rose-taupe fleece body, same warm-cream porcelain face plate, same stubby mitten arms and nub legs, same small plain pink belly pouch centered on the belly, same small pastel-pink nurse cap tilted on the upper-left of the head with one tiny white cross emblem, same body position, size, framing, and plain solid warm-white studio void background. Clean smooth silhouette with gentle antialiased falloff, no jagged edges, no halo. Mabel's owned identity deltas (all six hold): (1) muted rose-taupe fleece, mid #A2766B (range #926A60-#C69C8F), dense visible short-pile strands with soft volumetric shading; (2) bead eyes LARGER, set CLOSER together and HIGHER on the face plate, one white highlight dot each; (3) smile a WIDER warm closed curve with gently upturned ends, #805446; (4) blush circles LARGER, placed LOWER and more OUTWARD on the cheeks, #E2B7A4; (5) TWO fixed traits: small plain pink belly pouch centered on the belly AND small pastel-pink nurse cap tilted on the upper-left of the head with one tiny white cross emblem (cross on the cap ONLY, pouch reads plain); (6) warm-cream porcelain face plate #F5E0C8. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
+   "prompt_hash_sha256": "cfeccc379b380ddd0dd508942b219fa52b028d1332d2ea5c9926354d619d7c52",
+   "export_sha256": "de76eba93eefdc7a20228bcf103d6fdea5935f6d9c592275036e47ed7eb8b954",
+   "opacity_check": {
+    "bbox": [
+     26,
+     11,
+     164,
+     181
+    ],
+    "opaque_ratio": 0.4243,
+    "opaque_ratio_def": "alpha>=128 over 192x192",
+    "corners_transparent": true,
+    "pad_px": {
+     "left": 26,
+     "top": 11,
+     "right": 27,
+     "bottom": 10
+    }
+   },
+   "foot_anchor": "bottom-center (Phaser origin 0.5,1.0); union-crop window shared with the rev-2 set, bottom-aligned at export row 184",
+   "validation": {
+    "dimensions": "192x192 RGBA exact",
+    "alpha": "border flood-fill keyout thresh=32 from 8 edge seeds on 1600x1600 master + binary-opening despeckle; edge-band-only despill (<=2px of transparent, 20% push from bg median); NO interior despill; shadow-ectomy below y=1350 (keep dist>64 from bg); LANCZOS shared union window (246,112,1353,1476 master px), scale-to-height-176, bottom row 184, centered-x (paste x=24); corners alpha 0. Reimplementation check: this pipeline on the rev-2 idle master reproduces the shipped export within (1,1,0,0) px with opaque ratio matching to 0.0001.",
+    "bbox_vs_idle": "pained [26,11,164,181] vs rev-2 idle [25,9,165,182] (alpha>0): delta [1,2,1,1], within 2px all sides; opaque ratio 0.4243 vs 0.4254 (delta 0.0011, within 0.01)",
+    "identity_match": "same rose-taupe fur/cap/pouch/pose/scale by eye (see expressions contact sheet); silhouette XOR vs idle 195px (0.5%), all 1px edge snap; palette means vs idle: fur +/-2, plate +/-5, pouch +/-4 per channel; cap cross crisp, pouch plain",
+    "style_match": "Block C carried verbatim (verified programmatically EXACT vs ART_BIBLE.md); all six Mabel deltas carried in prompt",
+    "face_spec": "eyes SHUT as scrunched > < slanting DOWN toward center (distinct from happy ^ ^), small downturned closed curve, baseline blush kept; mouth closed, never open. Eye-band dark px 9 vs idle 128 (shut read confirmed)",
+    "edge_after": "right-silhouette |dx| histogram j0/j1/j2/j3p 97/58/9/6 (j2+j3p=15 vs idle 15, equal); max-jump 25 at rows 14-15 cap-notch/dome-top, same anatomy as idle's max-17 -- 6x strip + XOR confirm visually identical (threshold snap on the shallow dome gradient, not a shape change)",
+    "distinction_check": "sick vs pained vs happy confusion check PASS in the contact-sheet face zoom: droopy fur-lidded beads vs scrunched > < vs arched ^ ^ read apart at phone size"
+   },
+   "spend_usd": 0.02,
+   "fallback": "if export missing, integrator keeps mabel-idle for that state (offline-safe)",
+   "expression_run": "expression-art-2026-10-29",
+   "contact_sheet": "art/contact-sheets/mochi-reboot-expressions.png",
+   "source_file_rejected": "mochi-expr-pained-20261029-072401-1.png",
+   "reject_reason": "asymmetric single brow tick above the left eye only -- not in the pained face spec; r2 keeps the prompt identical except an added no-eyebrows/no-marks clause, clean > < result shipped"
+  },
+  {
+   "sprite": "mochi-reboot-relieved.png",
+   "export": "public/assets/characters/mochi-reboot-relieved.png",
+   "master": "art/source/mochi-reboot/mochi-reboot-relieved-master.png",
+   "source_file": "mochi-expr-relieved-20261029-072422-1.png",
+   "source_tool": "muse-image-mcp edit_image (identity edit of OUR rev-2 idle master mochi-reboot-idle-master.png; NO jolly-* image used as reference per IP law)",
+   "revision": 2,
+   "direction": "reboot-2026-10-29",
+   "status": "current",
+   "dimensions": "192x192",
+   "frame": "relieved rev2 (open bright beads, wider warm smile, brighter blush; same cap/pouch/fur)",
+   "prompt_full": "Edit this Mabel mascot sprite into a relieved variant: change ONLY the face \u2014 relieved on-the-mend face: bead eyes OPEN and bright (an open-eye bright face \u2014 this separates relieved from happy's closed eyes); mouth a warm WIDER closed smile with upturned ends, between idle and happy in size; blush brighter and fuller than baseline, color back in the cheeks. Mouth stays closed, never open. Keep everything else EXACTLY the same: same muted rose-taupe fleece body, same warm-cream porcelain face plate, same stubby mitten arms and nub legs, same small plain pink belly pouch centered on the belly, same small pastel-pink nurse cap tilted on the upper-left of the head with one tiny white cross emblem, same body position, size, framing, and plain solid warm-white studio void background. Clean smooth silhouette with gentle antialiased falloff, no jagged edges, no halo. Mabel's owned identity deltas (all six hold): (1) muted rose-taupe fleece, mid #A2766B (range #926A60-#C69C8F), dense visible short-pile strands with soft volumetric shading; (2) bead eyes LARGER, set CLOSER together and HIGHER on the face plate, one white highlight dot each; (3) smile a WIDER warm closed curve with gently upturned ends, #805446; (4) blush circles LARGER, placed LOWER and more OUTWARD on the cheeks, #E2B7A4; (5) TWO fixed traits: small plain pink belly pouch centered on the belly AND small pastel-pink nurse cap tilted on the upper-left of the head with one tiny white cross emblem (cross on the cap ONLY, pouch reads plain); (6) warm-cream porcelain face plate #F5E0C8. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
+   "prompt_hash_sha256": "2c799ab61d3bc418e266edcab882c0d466a752074337265ea87cec9b7e1e4b87",
+   "export_sha256": "eae6a8a1153ba0717af183ed9e981fe7828f346030ea5623f9dae097d8c1336d",
+   "opacity_check": {
+    "bbox": [
+     26,
+     11,
+     164,
+     182
+    ],
+    "opaque_ratio": 0.425,
+    "opaque_ratio_def": "alpha>=128 over 192x192",
+    "corners_transparent": true,
+    "pad_px": {
+     "left": 26,
+     "top": 11,
+     "right": 27,
+     "bottom": 9
+    }
+   },
+   "foot_anchor": "bottom-center (Phaser origin 0.5,1.0); union-crop window shared with the rev-2 set, bottom-aligned at export row 184",
+   "validation": {
+    "dimensions": "192x192 RGBA exact",
+    "alpha": "border flood-fill keyout thresh=32 from 8 edge seeds on 1600x1600 master + binary-opening despeckle; edge-band-only despill (<=2px of transparent, 20% push from bg median); NO interior despill; shadow-ectomy below y=1350 (keep dist>64 from bg); LANCZOS shared union window (246,112,1353,1476 master px), scale-to-height-176, bottom row 184, centered-x (paste x=24); corners alpha 0. Reimplementation check: this pipeline on the rev-2 idle master reproduces the shipped export within (1,1,0,0) px with opaque ratio matching to 0.0001.",
+    "bbox_vs_idle": "relieved [26,11,164,182] vs rev-2 idle [25,9,165,182] (alpha>0): delta [1,2,1,0], within 2px all sides; opaque ratio 0.4250 vs 0.4254 (delta 0.0004, within 0.01)",
+    "identity_match": "same rose-taupe fur/cap/pouch/pose/scale by eye (see expressions contact sheet); silhouette XOR vs idle 188px (0.5%), all 1px edge snap; palette means vs idle: fur +/-2, plate +/-4, pouch +/-3 per channel; cap cross crisp, pouch plain",
+    "style_match": "Block C carried verbatim (verified programmatically EXACT vs ART_BIBLE.md); all six Mabel deltas carried in prompt",
+    "face_spec": "beads OPEN and bright (open-eye face separates relieved from happy's closed eyes), warm wider closed smile with upturned ends, brighter/fuller blush; mouth closed, never open. Eye-band dark px 119 vs idle 128 (open read confirmed)",
+    "edge_after": "right-silhouette |dx| histogram j0/j1/j2/j3p 96/63/4/7 (j2+j3p=11 vs idle 15, at/below); max-jump 25 at rows 14-15 cap-notch/dome-top, same anatomy as idle's max-17 -- 6x strip + XOR confirm visually identical (threshold snap on the shallow dome gradient, not a shape change)",
+    "distinction_check": "sick vs pained vs happy confusion check PASS in the contact-sheet face zoom: droopy fur-lidded beads vs scrunched > < vs arched ^ ^ read apart at phone size"
+   },
+   "spend_usd": 0.01,
+   "fallback": "if export missing, integrator keeps mabel-idle for that state (offline-safe)",
+   "expression_run": "expression-art-2026-10-29",
+   "contact_sheet": "art/contact-sheets/mochi-reboot-expressions.png"
   }
  ],
  "backgrounds": [
@@ -444,5 +587,8 @@
  "reboot_spend_usd": 0.04,
  "reboot_spend_note": "4 images (1 bg gen + 1 ref-guided idle + 2 identity edits) x $0.01; ledger ~$0.1644 cumulative; at >= $120 STOP - not reached",
  "refine_spend_usd": 0.03,
- "refine_spend_note": "3 images (1 differentiation idle + 2 identity edits) x $0.01; ledger ~$0.1944 cumulative; at >= $120 STOP - not reached"
+ "refine_spend_note": "3 images (1 differentiation idle + 2 identity edits) x $0.01; ledger ~$0.1944 cumulative; at >= $120 STOP - not reached",
+ "expression_spend_usd": 0.04,
+ "expression_spend_note": "4 images (3 identity edits + 1 pained regen after brow-tick reject) x $0.01; workstream cap $0.05 respected; ledger ~$0.2344 cumulative; at >= $120 STOP - not reached",
+ "expression_contact_sheet": "art/contact-sheets/mochi-reboot-expressions.png"
 }

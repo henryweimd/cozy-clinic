@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { ClinicalEngine, CONDITIONS } from '../clinical';
-import type { ChoiceGrade, PatientState } from '../clinical';
+import type { ChoiceGrade, PatientState, TrajectoryNode } from '../clinical';
 import {
   CARD_ROW_IDS,
   MOCK_ROSTER,
@@ -26,8 +26,11 @@ import {
  * (files left on disk, manifest-flagged); old plush-room constants
  * are retired (see the reboot landmark survey below).
  * Motion implements docs/ANIMATION.md exactly (bob 3px @ 1.8
- * rad/s; blink 120ms per 3-5s randomized; tap bounce 110ms squash
- * +-0.06 + 80ms overshoot +-0.03, Sine easings, token-guarded).
+ * rad/s; blink 120ms per 3-5s randomized, idle-only; tap bounce
+ * 110ms squash +-0.06 + 80ms overshoot +-0.03, Sine easings,
+ * token-guarded). Expression state machine is LIVE: Mabel rests
+ * on the steady face for the live stage/vitals (sick/pained/
+ * relieved/idle) and flashes happy/relieved/pained on resolves.
  *
  * UI PROTOTYPE (2026-10-29, docs/UI_PROTOTYPE.md): container
  * overlays on the ONE clinic scene — conversation panel, decision
@@ -124,8 +127,8 @@ export class ClinicScene extends Phaser.Scene {
   private mabel!: Phaser.GameObjects.Image;
   private mabelBaseY = 0;
   private blinkAt = 0;
-  private showingHappy = false;
-  private happyToken = 0;
+  private showingFlash = false;
+  private flashToken = 0;
   private engine = new ClinicalEngine();
   /** Live patient state — the single source the monitor reads. */
   private patientState!: PatientState;
@@ -192,6 +195,9 @@ export class ClinicScene extends Phaser.Scene {
     this.load.image('mabel-idle', 'assets/characters/mochi-reboot-idle.png');
     this.load.image('mabel-blink', 'assets/characters/mochi-reboot-blink.png');
     this.load.image('mabel-happy', 'assets/characters/mochi-reboot-happy.png');
+    this.load.image('mabel-sick', 'assets/characters/mochi-reboot-sick.png');
+    this.load.image('mabel-pained', 'assets/characters/mochi-reboot-pained.png');
+    this.load.image('mabel-relieved', 'assets/characters/mochi-reboot-relieved.png');
     this.load.image('room-shell', 'assets/room/clinic-shell-reboot-01.png');
     // No prop preloads: the plush P2 props clash with the photoreal
     // plate (which paints its own bench/plant/cabinet) — removed,
@@ -225,22 +231,27 @@ export class ClinicScene extends Phaser.Scene {
     this.mabel.y = this.mabelBaseY + Math.sin(t * 1.8) * 3;
 
     // Blink: ANIMATION.md — eyes closed 120ms every 3–5s, randomized.
-    // Swaps idle<->blink only when the happy pose is not showing, so a
-    // tap-react never fights the blink timer.
-    if (
-      this.time.now >= this.blinkAt &&
-      !this.showingHappy &&
-      this.mabel.texture.key === 'mabel-idle'
-    ) {
-      this.mabel.setTexture('mabel-blink');
-      this.time.delayedCall(120, () => {
-        // A tap during the 120ms window swaps in happy; only restore
-        // idle when blink still owns the texture.
-        if (this.mabel.texture.key === 'mabel-blink') {
-          this.mabel.setTexture('mabel-idle');
-        }
+    // Fires ONLY when the steady face is idle AND no flash is showing
+    // AND the current texture is mabel-idle; otherwise reschedules
+    // without swapping, so a flash never fights the blink timer.
+    if (this.time.now >= this.blinkAt) {
+      if (
+        !this.showingFlash &&
+        this.steadyFace() === 'mabel-idle' &&
+        this.mabel.texture.key === 'mabel-idle'
+      ) {
+        this.mabel.setTexture('mabel-blink');
+        this.time.delayedCall(120, () => {
+          // A tap/flash during the 120ms window wins; only restore
+          // when blink still owns the texture.
+          if (this.mabel.texture.key === 'mabel-blink') {
+            this.settleToSteady();
+          }
+          this.scheduleBlink();
+        });
+      } else {
         this.scheduleBlink();
-      });
+      }
     }
     void delta;
   }
@@ -336,7 +347,9 @@ export class ClinicScene extends Phaser.Scene {
     // the reboot contact-sheet composite validated.
     this.add.ellipse(270, 722, 150, 24, 0x8a5a3b, 0.18).setDepth(4);
 
-    this.mabel = this.add.image(270, 614, 'mabel-idle');
+    // Mabel opens on her steady face for the live state (sick at the
+    // stage-2 asthma opener) — idle is one steady state, not the home.
+    this.mabel = this.add.image(270, 614, this.steadyFace());
     this.mabel.setDisplaySize(212, 212);
     this.mabel.setDepth(5);
     this.mabelBaseY = this.mabel.y;
@@ -574,6 +587,7 @@ export class ClinicScene extends Phaser.Scene {
         ease: 'Sine.easeInOut',
       });
       this.setConversation('DR. NORA', result.blockReason ?? action.hootLine);
+      this.holdSteady();
       return;
     }
     this.patientState = result.node.state;
@@ -587,7 +601,54 @@ export class ClinicScene extends Phaser.Scene {
     this.drawSpine(card, grade);
     this.refreshChips();
     this.setConversation('MABEL', `${result.node.narrative} ${result.node.teaching}`);
-    this.playHappyBounce();
+    this.playResolveFlash(result.node.animationCue);
+  }
+
+  // -- expression state machine (ANIMATION.md normative) --
+
+  /** Steady face for the LIVE state: stage map + vitals shift. */
+  private steadyFace(): string {
+    const ladder = ['mabel-relieved', 'mabel-idle', 'mabel-sick', 'mabel-pained'];
+    let idx = Math.min(3, Math.max(0, this.patientState.stageIndex));
+    const v = this.patientState.vitals;
+    // One rule: ANY vital <= 2 shifts one step worse (floor pained).
+    if (v.energy <= 2 || v.comfort <= 2 || v.breathing <= 2) {
+      idx = Math.min(3, idx + 1);
+    }
+    return ladder[idx] ?? 'mabel-idle';
+  }
+
+  /** Every flash settles here — the steady map, never hard-coded idle. */
+  private settleToSteady(): void {
+    this.mabel.setTexture(this.steadyFace());
+  }
+
+  /** HOLD steady: no flash, no bounce — the face reflects state. */
+  private holdSteady(): void {
+    if (this.showingFlash) return;
+    if (this.mabel.texture.key === 'mabel-blink') return;
+    this.settleToSteady();
+  }
+
+  /** Transient flash on a decision resolve, driven by the engine cue. */
+  private playResolveFlash(cue: TrajectoryNode['animationCue']): void {
+    if (cue === 'happy') {
+      // Full recovery: happy + standard bounce, then settle relieved.
+      this.playBounceFlash('mabel-happy');
+      return;
+    }
+    if (cue === 'recovery') {
+      // Partial improvement: relieved flash + standard bounce.
+      this.playBounceFlash('mabel-relieved');
+      return;
+    }
+    if (cue === 'sick') {
+      // Worsened: pained 600ms still hold, no bounce.
+      this.playPainedFlash();
+      return;
+    }
+    // 'worried' (no change) and 'idle' (resting at stage 0): hold.
+    this.holdSteady();
   }
 
   // -- shared tap-resolve motion (ANIMATION.md exact, both tap paths) --
@@ -598,8 +659,8 @@ export class ClinicScene extends Phaser.Scene {
     if (!this.panelOpen) {
       this.setConversation('MABEL', this.complaintText());
       // Happy tap-react: show the happy pose for the bounce, then
-      // restore idle. The token guards rapid re-taps so a stale
-      // bounce never clears a newer happy.
+      // settle to steady. The token guards rapid re-taps so a stale
+      // bounce never clears a newer flash.
       this.playHappyBounce();
     } else {
       this.closeConversation();
@@ -607,14 +668,22 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   private playHappyBounce(): void {
-    this.happyToken += 1;
-    const token = this.happyToken;
-    this.showingHappy = true;
-    this.mabel.setTexture('mabel-happy');
-    // Happy bounce, ANIMATION.md exact: 110ms squash yoyo
-    // (+-0.06) then a chained 80ms overshoot yoyo (+-0.03),
-    // Sine.easeInOut, scale-only (the update() bob owns
-    // mabel.y, so no y-tween). Same token guard on both steps.
+    this.playBounceFlash('mabel-happy');
+  }
+
+  /**
+   * Standard bounce shared by the happy tap-react AND the relieved
+   * flash, ANIMATION.md exact: 110ms squash yoyo (+-0.06) then a
+   * chained 80ms overshoot yoyo (+-0.03), Sine.easeInOut,
+   * scale-only (the update() bob owns mabel.y, so no y-tween).
+   * Settles to the STEADY-map face; the monotonic token guards
+   * both onCompletes so a stale bounce never clears a newer flash.
+   */
+  private playBounceFlash(face: 'mabel-happy' | 'mabel-relieved'): void {
+    this.flashToken += 1;
+    const token = this.flashToken;
+    this.showingFlash = true;
+    this.mabel.setTexture(face);
     this.tweens.add({
       targets: this.mabel,
       scaleY: '-=0.06',
@@ -623,7 +692,7 @@ export class ClinicScene extends Phaser.Scene {
       yoyo: true,
       ease: 'Sine.easeInOut',
       onComplete: () => {
-        if (token !== this.happyToken) return;
+        if (token !== this.flashToken) return;
         this.tweens.add({
           targets: this.mabel,
           scaleY: '+=0.03',
@@ -632,14 +701,32 @@ export class ClinicScene extends Phaser.Scene {
           yoyo: true,
           ease: 'Sine.easeInOut',
           onComplete: () => {
-            if (token !== this.happyToken) return;
-            this.showingHappy = false;
-            if (this.mabel.texture.key === 'mabel-happy') {
-              this.mabel.setTexture('mabel-idle');
+            if (token !== this.flashToken) return;
+            this.showingFlash = false;
+            if (this.mabel.texture.key === face) {
+              this.settleToSteady();
             }
           },
         });
       },
+    });
+  }
+
+  /**
+   * Pained flash: 600ms still hold, NO bounce, NO shake on Mabel
+   * (scale stays 1 — pain reads in the face, not the body), then
+   * settle to the steady map. Same token guard as the bounce.
+   */
+  private playPainedFlash(): void {
+    this.flashToken += 1;
+    const token = this.flashToken;
+    this.showingFlash = true;
+    this.mabel.setTexture('mabel-pained');
+    this.time.delayedCall(600, () => {
+      if (token !== this.flashToken) return;
+      if (this.mabel.texture.key !== 'mabel-pained') return;
+      this.showingFlash = false;
+      this.settleToSteady();
     });
   }
 
