@@ -16,7 +16,8 @@
    "revision": 1,
    "source_file": "mochi-blink-20261028-004407-1.png",
    "source_tool": "muse-image-mcp edit_image",
-   "sprite": "mochi-blink.png"
+   "sprite": "mochi-blink.png",
+   "status": "SUPERSEDED 2026-10-29 by art-direction reboot (Jolly mascots + photoreal clinic); file left on disk, do not ship"
   },
   {
    "dimensions": "192x192",
@@ -33,7 +34,8 @@
    "revision": 1,
    "source_file": "mochi-concept-20261028-004346-1.png",
    "source_tool": "muse-image-mcp generate_image",
-   "sprite": "mochi-idle.png"
+   "sprite": "mochi-idle.png",
+   "status": "SUPERSEDED 2026-10-29 by art-direction reboot (Jolly mascots + photoreal clinic); file left on disk, do not ship"
   },
   {
    "sprite": "mochi-happy.png",
@@ -44,25 +46,159 @@
    "revision": 1,
    "dimensions": "192x192",
    "frame": "happy tap-react (closed ^ ^ eyes, bigger smile, rosier blush; same body/cap/pouch/outline)",
-   "prompt_full": "Edit this plush bunny nurse sprite into a joyful happy tap-reaction: change ONLY the face — happy closed eyes shaped like ^ ^ (two upward-curved dark warm-brown arcs), a bigger open joyful smile, slightly rosier pink blush cheeks. Keep everything else EXACTLY the same: cream-colored rounded plush body, long floppy ears, pink nurse cap with cross badge, pink neckerchief, pink front pouch bag, short limbs, rounded base, same body position, size, and framing. Soft sculpted plush-toy character, cream-colored rounded body, small dark bead eyes, pink blush cheeks, simple gentle smile, thin warm-brown outline, matte fabric texture, warm pastel palette, clean uncluttered design, full body, plain solid pale background, centered, game sprite. No text, no busy background, no extra limbs, no photorealism, no neon colors, no clutter.",
+   "prompt_full": "Edit this plush bunny nurse sprite into a joyful happy tap-reaction: change ONLY the face \u2014 happy closed eyes shaped like ^ ^ (two upward-curved dark warm-brown arcs), a bigger open joyful smile, slightly rosier pink blush cheeks. Keep everything else EXACTLY the same: cream-colored rounded plush body, long floppy ears, pink nurse cap with cross badge, pink neckerchief, pink front pouch bag, short limbs, rounded base, same body position, size, and framing. Soft sculpted plush-toy character, cream-colored rounded body, small dark bead eyes, pink blush cheeks, simple gentle smile, thin warm-brown outline, matte fabric texture, warm pastel palette, clean uncluttered design, full body, plain solid pale background, centered, game sprite. No text, no busy background, no extra limbs, no photorealism, no neon colors, no clutter.",
    "prompt_hash_sha256": "0d18799748630177db8c47ca61a976817ad3539bc821ea575433ca093379f567",
    "export_sha256": "e38581277df8d5d37163333bb94ba0cb4619e4c6f7ebe72990aea7cb049b1184",
    "opacity_check": {
-    "bbox": [20, 32, 168, 184],
+    "bbox": [
+     20,
+     32,
+     168,
+     184
+    ],
     "opaque_ratio": 0.335,
     "corners_transparent": true,
-    "pad_px": {"left": 20, "top": 32, "right": 24, "bottom": 8}
+    "pad_px": {
+     "left": 20,
+     "top": 32,
+     "right": 24,
+     "bottom": 8
+    }
    },
    "foot_anchor": "bottom-center (Phaser origin 0.5,1.0); feet row = export bottom - 8px pad (same class as idle/blink)",
    "validation": {
     "dimensions": "192x192 RGBA exact",
     "alpha": "border flood-fill keyout tol=28 from bg median (245,239,233) on 1600x1600 master; corners transparent; interior gaps (ear/head, between legs) match idle/blink treatment",
     "bbox_vs_idle": "happy [20,32,168,184] vs idle [21,32,170,184]: within 2px on all sides; opaque ratio 0.335 vs 0.336",
-    "identity_match": "same cap/ears/pouch/limbs/outline/scale/position by eye (see contact sheet); minor: pouch carries a small white cross emblem, idle pouch reads plain at 192px — same pink pouch shape, accepted",
+    "identity_match": "same cap/ears/pouch/limbs/outline/scale/position by eye (see contact sheet); minor: pouch carries a small white cross emblem, idle pouch reads plain at 192px \u2014 same pink pouch shape, accepted",
     "style_match": "ART_BIBLE fixed style block carried verbatim in prompt; plush/outline/pastel match idle (visual)"
    },
    "spend_usd": 0.01,
-   "fallback": "if export missing, integrator keeps code scale-bounce on mochi-idle (offline-safe)"
+   "fallback": "if export missing, integrator keeps code scale-bounce on mochi-idle (offline-safe)",
+   "status": "SUPERSEDED 2026-10-29 by art-direction reboot (Jolly mascots + photoreal clinic); file left on disk, do not ship"
+  },
+  {
+   "sprite": "mochi-reboot-idle.png",
+   "export": "public/assets/characters/mochi-reboot-idle.png",
+   "master": "art/source/mochi-reboot/mochi-reboot-idle-master.png",
+   "source_file": "mochi-reboot-idle-20261028-231805-1.png",
+   "source_tool": "muse-image-mcp edit_image (ref-guided by jolly-trip.jpg + jolly-sunglasses.webp)",
+   "revision": 1,
+   "direction": "reboot-2026-10-29",
+   "status": "current",
+   "dimensions": "192x192",
+   "frame": "idle (eyes open; ref-guided from jolly-trip + jolly-sunglasses)",
+   "prompt_full": "Using the attached reference images for the character's 3D render style, oatmeal fleece texture, and chibi proportions, create the mascot Mochi: the same oatmeal-cream fleece body and smooth porcelain face plate as the references, standing facing forward with stubby mitten arms relaxed at its sides and nub feet planted, bead eyes open, gentle smile, one small plain pink belly pouch centered on the belly, no costume, no props, no sunglasses, no sign, no suitcase, no logos, no text. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
+   "prompt_hash_sha256": "e134a67206366bf1ebb3cc786745e73c833c3eafeab3531e44b82eee2c203853",
+   "export_sha256": "65827ca6607125350788918feefc5ab6effdbf524050fe1cbbd0b8f5e349599c",
+   "opacity_check": {
+    "bbox": [
+     24,
+     9,
+     168,
+     183
+    ],
+    "opaque_ratio": 0.4489,
+    "corners_transparent": true,
+    "pad_px": {
+     "left": 24,
+     "top": 9,
+     "right": 23,
+     "bottom": 8
+    }
+   },
+   "foot_anchor": "bottom-center (Phaser origin 0.5,1.0); union-crop window shared by all 3 poses, bottom-aligned at export row 184",
+   "validation": {
+    "dimensions": "192x192 RGBA exact",
+    "alpha": "border flood-fill keyout tol=28 from bg median on 1600x1600 master; corners transparent; between-legs gap keyed",
+    "bbox_vs_idle": "idle [24, 9, 168, 183] vs idle [24, 9, 168, 183]: delta [0, 0, 0, 0]; opaque ratio 0.4489 vs 0.4489",
+    "identity_match": "same pouch/fur/pose/scale by eye (see mochi-reboot-poses contact sheet); blink left eye has slight lash flick, accepted",
+    "style_match": "Block C carried verbatim; oatmeal fleece + porcelain plate + no outline match jolly refs (visual)"
+   },
+   "spend_usd": 0.01,
+   "fallback": "if export missing, integrator keeps current plush mochi sprites (offline-safe)"
+  },
+  {
+   "sprite": "mochi-reboot-blink.png",
+   "export": "public/assets/characters/mochi-reboot-blink.png",
+   "master": "art/source/mochi-reboot/mochi-reboot-blink-master.png",
+   "source_file": "mochi-reboot-blink-20261028-231834-1.png",
+   "source_tool": "muse-image-mcp edit_image (identity edit of mochi-reboot idle master)",
+   "revision": 1,
+   "direction": "reboot-2026-10-29",
+   "status": "current",
+   "dimensions": "192x192",
+   "frame": "blink (eyes closed, identity-matched edit of reboot idle master)",
+   "prompt_full": "Edit this mascot sprite into a blink variant: change ONLY the eyes \u2014 both eyes closed, each closed eye a single short dark curved lash line sitting in exactly the same position as the open bead eyes. Keep everything else EXACTLY the same: same oatmeal fleece body, same porcelain face plate, same blush, same smile, same arms, legs, and pink belly pouch, same body position, size, framing, and warm-white background. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
+   "prompt_hash_sha256": "666f0fd3f8d682d388f02defcf70b3203f9568a919e604da52448d5fe60e4e32",
+   "export_sha256": "1df68892ca6ea44b679f23fd4312b7936a13315738b7fa6195404622f29bf268",
+   "opacity_check": {
+    "bbox": [
+     25,
+     9,
+     167,
+     182
+    ],
+    "opaque_ratio": 0.4449,
+    "corners_transparent": true,
+    "pad_px": {
+     "left": 25,
+     "top": 9,
+     "right": 24,
+     "bottom": 9
+    }
+   },
+   "foot_anchor": "bottom-center (Phaser origin 0.5,1.0); union-crop window shared by all 3 poses, bottom-aligned at export row 184",
+   "validation": {
+    "dimensions": "192x192 RGBA exact",
+    "alpha": "border flood-fill keyout tol=28 from bg median on 1600x1600 master; corners transparent; between-legs gap keyed",
+    "bbox_vs_idle": "blink [25, 9, 167, 182] vs idle [24, 9, 168, 183]: delta [1, 0, 1, 1]; opaque ratio 0.4449 vs 0.4489",
+    "identity_match": "same pouch/fur/pose/scale by eye (see mochi-reboot-poses contact sheet); blink left eye has slight lash flick, accepted",
+    "style_match": "Block C carried verbatim; oatmeal fleece + porcelain plate + no outline match jolly refs (visual)"
+   },
+   "spend_usd": 0.01,
+   "fallback": "if export missing, integrator keeps current plush mochi sprites (offline-safe)"
+  },
+  {
+   "sprite": "mochi-reboot-happy.png",
+   "export": "public/assets/characters/mochi-reboot-happy.png",
+   "master": "art/source/mochi-reboot/mochi-reboot-happy-master.png",
+   "source_file": "mochi-reboot-happy-20261028-231855-1.png",
+   "source_tool": "muse-image-mcp edit_image (identity edit of mochi-reboot idle master)",
+   "revision": 1,
+   "direction": "reboot-2026-10-29",
+   "status": "current",
+   "dimensions": "192x192",
+   "frame": "happy tap-react (closed ^ ^ eyes, bigger smile, rosier blush; same body/pouch)",
+   "prompt_full": "Edit this mascot sprite into a joyful happy tap-reaction: change ONLY the face \u2014 happy closed eyes shaped like ^ ^ (two upward-curved dark arcs), a bigger joyful curved smile, slightly rosier pink blush cheeks. Keep everything else EXACTLY the same: same oatmeal fleece body, same porcelain face plate, same arms, legs, and pink belly pouch, same body position, size, framing, and warm-white background. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
+   "prompt_hash_sha256": "ecd20d3b6d956fb045280bf69c13123e4a61275a27a94a112babb3270863013f",
+   "export_sha256": "66421e3100ab75b3fa49491d265e59dd0e6e31b5d6c52c4a3aa19d2ac46d6f0c",
+   "opacity_check": {
+    "bbox": [
+     24,
+     8,
+     167,
+     182
+    ],
+    "opaque_ratio": 0.4483,
+    "corners_transparent": true,
+    "pad_px": {
+     "left": 24,
+     "top": 8,
+     "right": 24,
+     "bottom": 9
+    }
+   },
+   "foot_anchor": "bottom-center (Phaser origin 0.5,1.0); union-crop window shared by all 3 poses, bottom-aligned at export row 184",
+   "validation": {
+    "dimensions": "192x192 RGBA exact",
+    "alpha": "border flood-fill keyout tol=28 from bg median on 1600x1600 master; corners transparent; between-legs gap keyed",
+    "bbox_vs_idle": "happy [24, 8, 167, 182] vs idle [24, 9, 168, 183]: delta [0, 1, 1, 1]; opaque ratio 0.4483 vs 0.4489",
+    "identity_match": "same pouch/fur/pose/scale by eye (see mochi-reboot-poses contact sheet); blink left eye has slight lash flick, accepted",
+    "style_match": "Block C carried verbatim; oatmeal fleece + porcelain plate + no outline match jolly refs (visual)"
+   },
+   "spend_usd": 0.01,
+   "fallback": "if export missing, integrator keeps current plush mochi sprites (offline-safe)"
   }
  ],
  "backgrounds": [
@@ -95,7 +231,41 @@
     "dimensions": "1152x2048 exact 9:16; export 1080x1920 exact 2x of 540x960",
     "style_match": "cream/plush/pastel, thin warm-brown outlines, matte texture - reads as one game with Mochi (visual inspection)",
     "transparency": "N/A opaque background"
-   }
+   },
+   "status": "SUPERSEDED 2026-10-29 by art-direction reboot (Jolly mascots + photoreal clinic); file left on disk, do not ship"
+  },
+  {
+   "export": "public/assets/room/clinic-shell-reboot-01.png",
+   "master": "art/source/room-reboot/clinic-shell-reboot-01-master.png (1152x2048 as generated)",
+   "source_file": "bg-reboot-20261028-231746-1.png",
+   "source_tool": "muse-image-mcp generate_image",
+   "revision": 1,
+   "direction": "reboot-2026-10-29",
+   "status": "current",
+   "dimensions": "1080x1920 (2x export, LANCZOS from 1152x2048 master, 9:16 exact)",
+   "frame": "photoreal minimal clinic shell, no characters, no text (visual check pass)",
+   "prompt_full": "Cozy modern pediatric clinic exam room photographed in soft morning daylight: light neutral wall with one small high window at the upper right, a low modern wooden bench against the left wall, a small green potted plant in the right corner on the floor, pale wood floor, a flat round woven cream rug centered on the floor, the center floor kept completely empty for a standing character, the upper wall band kept clear and empty for a title. Modern photorealistic minimal clinic interior, clean hard surfaces, light neutral walls, pale wood floor, simple modern furniture, soft daylight, gentle grounding shadows, generous negative space, vertical 9:16 composition, no characters, no plush or fuzzy surfaces anywhere, no outline or line art, no text, no clutter.",
+   "prompt_hash_sha256": "023e26a38644f2dfaa3c40717e09c5b3195f4eacd0e936c27fdd4872d20e38c5",
+   "export_sha256": "e7125af252f0f3b49e78f8a763ac44d5e1fea87be411baff1c2c143db0567063",
+   "contact_sheet": "art/contact-sheets/bg-reboot-contact-sheet.png",
+   "cutout": "N/A - opaque RGB background, no key-out needed (never hand-cut)",
+   "alignment_960sp": {
+    "title_zone_y": "0-130 clear wall/ceiling (center std 10.8); window glass only at x490-539 y95-199 - keep title centered",
+    "mochi_footprint_xy": "x164-376 y508-720 clear except bench right leg x189-197 (thin leg BEHIND mascot; sprite pad 24 + fur edge ~x190 make it a <=7px depth sliver, accepted)",
+    "plant_pot_x": "foliage/pot mass from x415 (39px clear of footprint); cabinet bright from x465 to right edge (photo-cropped, margin 0 accepted for plates)",
+    "wall_floor_boundary_y": "~672-692 center (baseboard); GROUND=724 lands on rug upper third - feet grounded",
+    "bubble_zone": "y800-936 rug + floor only, no furniture",
+    "walking_space": "center floor + right lane open"
+   },
+   "validation": {
+    "dimensions": "1152x2048 exact 9:16; export 1080x1920 exact 2x of 540x960",
+    "transparency": "N/A opaque background",
+    "characters_text": "none (visual inspection)",
+    "style_match": "photoreal minimal clinic, hard surfaces, no plush/fuzz, no outline - matches reboot direction (visual)",
+    "alignment": "Mochi 212px @(270,614) composite grounded on rug, clear of furniture (see contact sheet)"
+   },
+   "spend_usd": 0.01,
+   "fallback": "if export missing, integrator keeps room-shell-01.png plush bg (offline-safe; direction mismatch until integrated)"
   }
  ],
  "character": "Mochi (cream bunny nurse-helper, pink cheeks)",
@@ -149,7 +319,8 @@
    },
    "scale_note": "140x80 reads small next to 212px Mochi; integrator may playtest up to ~170w if doll-sized, verifying visual gap to Mochi; bed sits in front of bg cabinet lower-left (acceptable, confirm on device)",
    "spend_usd": 0.02,
-   "fallback": "if export missing, integrator keeps code-drawn drawExamBed (offline-safe)"
+   "fallback": "if export missing, integrator keeps code-drawn drawExamBed (offline-safe)",
+   "status": "SUPERSEDED 2026-10-29 by art-direction reboot (Jolly mascots + photoreal clinic); file left on disk, do not ship"
   },
   {
    "sprite": "plant.png",
@@ -196,10 +367,18 @@
     "alignment": "composite feet at GROUND=724, right corner x406-516, right margin 24 (see contact sheet)"
    },
    "spend_usd": 0.02,
-   "fallback": "if export missing, integrator keeps code-drawn drawPlant (offline-safe)"
+   "fallback": "if export missing, integrator keeps code-drawn drawPlant (offline-safe)",
+   "status": "SUPERSEDED 2026-10-29 by art-direction reboot (Jolly mascots + photoreal clinic); file left on disk, do not ship"
   }
  ],
  "props_contact_sheet": "art/contact-sheets/props-contact-sheet.png",
  "props_spend_usd": 0.05,
- "props_spend_note": "4 final images (2 gen + 2 edit) x $0.01 + $0.01 probe generation after tool-arg failures; ledger ~$0.1144 cumulative; at >= $120 STOP - not reached"
+ "props_spend_note": "4 final images (2 gen + 2 edit) x $0.01 + $0.01 probe generation after tool-arg failures; ledger ~$0.1144 cumulative; at >= $120 STOP - not reached",
+ "reboot_character": "Mochi (Jolly-style: oatmeal fleece #F1E7D4 family + porcelain face plate, pink belly pouch, no outline)",
+ "reboot_contact_sheets": [
+  "art/contact-sheets/mochi-reboot-poses.png",
+  "art/contact-sheets/bg-reboot-contact-sheet.png"
+ ],
+ "reboot_spend_usd": 0.04,
+ "reboot_spend_note": "4 images (1 bg gen + 1 ref-guided idle + 2 identity edits) x $0.01; ledger ~$0.1644 cumulative; at >= $120 STOP - not reached"
 }

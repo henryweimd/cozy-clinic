@@ -490,3 +490,133 @@ idle + tapped states, zero console errors. Element-by-element
   Mochi, vignette edges subtle, happy overshoot reads as
   one bounce with no flicker vs blink). No commit/push
   (main agent merges). STOP after CHECKPOINT.md.
+
+## Active chunk: art-direction reboot (direction author workstream)
+
+- DIRECTION-REBOOT OWNERSHIP (declared BEFORE editing, per
+  AGENTS.md workflow law): the direction-author agent owns
+  `ART_BIBLE.md`, `docs/CHARACTER_BIBLE.md`, `docs/ANIMATION.md`,
+  and `PROGRESS.md` direction-reboot additions ONLY. Nobody else
+  writes those paths this run. Doc edits only — no images, no
+  scene code, no asset files.
+- DIRECTION-REBOOT RESULT (direction author, 2026-10-29):
+  rewrote the art direction around recon (13 Jolly refs, all
+  readable — no blocker). `ART_BIBLE.md`: CHARACTERS = animated
+  3D Jolly-style mascots (oatmeal fleece + porcelain face plate,
+  1:1 chibi, bead eyes/blush/one-curve smile, NO outline);
+  BACKDROP = modern photorealistic minimal clinic (clean, NOT
+  plush). TWO fixed style blocks (C = character, B = backdrop)
+  for all future prompts, verbatim. Palettes: mascot oatmeal
+  family (`#F1E7D4`/`#FBF2E2`/`#1A1512`/`#F6B8C1`/`#3A2E2A`)
+  + clinic neutrals (`#F4F1EA`/`#E4CFA8`/`#A9C6A2`/`#A9CCE3`).
+  Asset specs: 192px mascot class (foot anchor, 8px pad), 9:16
+  plates; layout contract survives (540x960, GROUND=724, Mochi
+  212 at (270,614), bubble 492@936, SIDE=24). Validation gate:
+  dimensions/alpha/alignment/contact-sheet/in-game-render. Old
+  plush-room direction marked SUPERSEDED with date.
+  `docs/CHARACTER_BIBLE.md` (NEW): Mochi Jolly redesign brief +
+  roster matrix (fur tint / accessory / subtle trait; only Mochi
+  ships). `docs/ANIMATION.md` (NEW): idle/blink/happy pose list
+  + exact code-motion numbers (bob 3px @ 1.8 rad/s; blink 120ms
+  per 3-5s; bounce 110ms squash +-0.06 + 80ms overshoot +-0.03,
+  Sine easings, token-guarded tap sequencing) matching the
+  shipped ClinicScene.ts. No images, no code — doc edits only,
+  $0.00 spend. Follow-ups for later workstreams: P5 warm
+  overlays need re-tuning vs photo plates; existing plush
+  room-shell/props predate the reboot (replace, don't patch).
+
+## Active chunk: art-direction reboot (reboot asset-artist workstream)
+
+- REBOOT-ASSET OWNERSHIP (declared BEFORE generating, per
+  AGENTS.md workflow law): the reboot asset-artist agent owns
+  `public/assets/room/clinic-shell-reboot-01.png` (NEW),
+  `public/assets/characters/mochi-reboot-<idle,blink,happy>.png`
+  (NEW), `art/contact-sheets/*reboot*` (NEW), and
+  `art/manifest.json` reboot additions + superseded flags ONLY.
+  Nobody else writes those paths this run. The reboot asset
+  artist makes NO scene-code edits and NO bible-doc edits, and
+  never rewrites existing asset bytes (old plush files stay on
+  disk, flagged superseded in the manifest only).
+- Scope: ONE photorealistic minimal clinic backdrop (Block B
+  verbatim, 9:16, no characters/text) + Mochi Jolly redesign
+  idle/blink/happy (Block C verbatim each, ref-guided from the
+  Jolly images, identity-consistent edits, 192px class,
+  transparent bg). Validate all, write contact sheets +
+  manifest entries with FULL PROMPT TEXT + sha256 + spend.
+  Ledger was ~$0.1244; STOP at >= $120.
+- REBOOT-ASSET RESULT (asset artist, 2026-10-29): 4 images x
+  $0.01 = $0.04 this workstream (ledger ~$0.1644, $120 STOP
+  far off). Backdrop `public/assets/room/clinic-shell-reboot-01.png`
+  (1080x1920 RGB, Block B verbatim; photoreal minimal clinic:
+  bench left, plant + cabinet right, window upper-right, woven
+  rug center). Mochi redesign `mochi-reboot-idle/blink/happy.png`
+  (192x192 RGBA, Block C verbatim each; idle ref-guided from
+  jolly-trip + jolly-sunglasses, blink/happy identity edits of
+  the idle master; oatmeal fleece + porcelain plate + plain
+  pink pouch, no outline). Validation: mascot corners
+  transparent, pad >= 8px all sides, bbox parity <= 1px vs
+  idle, opaque delta <= 0.004; bg 9:16 exact, no
+  characters/text, title center + bubble zone + walking space
+  clear (window glass only x490-539 y95-199, keep title
+  centered; bench leg x189-197 is a <= 7px depth sliver behind
+  the mascot's left edge, accepted). Contact sheets
+  `art/contact-sheets/mochi-reboot-poses.png` (poses +
+  alpha-checker row) + `bg-reboot-contact-sheet.png` (plain +
+  212px@(270,614) composite, grounded on rug). Manifest:
+  3 assets[] + 1 backgrounds[] reboot entries with FULL
+  PROMPT TEXT + prompt/export sha256 (blocks verified
+  verbatim vs ART_BIBLE.md programmatically); all 6 old
+  plush entries flagged SUPERSEDED, files left on disk
+  byte-identical. Masters in studio `art/source/mochi-reboot/`
+  + `art/source/room-reboot/` (git-ignored, correct).
+  Integrator notes: (1) swap preloads to the reboot files;
+  same 212px@(270,614) geometry, no re-layout; (2) P5 warm
+  overlays still need re-tuning vs the photo plate (known);
+  (3) in-game render check needs deploy + operator phone
+  playtest. No scene-code or bible-doc edits (untouched).
+
+## Active chunk: art-direction reboot (reboot integrator workstream)
+
+- REBOOT-INTEGRATOR OWNERSHIP (declared BEFORE editing, per
+  AGENTS.md workflow law): the reboot integrator agent owns
+  `src/scenes/ClinicScene.ts`, `src/main.ts`, `index.html`
+  (only if needed), `PROGRESS.md`, `CHECKPOINT.md` this run.
+  No `art/*` or `public/assets/*` edits (asset artists own
+  those paths); sequential after art, no concurrent writers.
+- REBOOT-INTEGRATOR RESULT (integrator, 2026-10-29): real reboot
+  files existed (bg 1080x1920 RGB + 3 poses 192x192 RGBA,
+  verified on disk), so integrated them in
+  `src/scenes/ClinicScene.ts`: preloads swapped to
+  `clinic-shell-reboot-01.png` + `mochi-reboot-<idle,blink,
+  happy>.png` (texture keys unchanged — only paths moved);
+  `drawProps()` + prop preloads DELETED (per-asset call: the
+  plate paints its own bench/plant/cabinet/rug, so the plush P2
+  props would clash in style AND double every piece — removed,
+  not re-pointed); P5 overlays re-tuned vs the photo plate
+  (light 0.12 -> 0.07 max, vignette 0.10 -> 0.07 — the photo
+  carries its own sunlight); motion verified == ANIMATION.md
+  exact numbers (bob 3px@1.8rad/s, blink 120ms/3-5s, bounce
+  110ms +-0.06 + 80ms +-0.03 Sine, token guard) — code already
+  matched, comments now cite the spec. KEPT identical: Mochi
+  212px@(270,614), bubble w492/dockBottom936 sizing-upward,
+  all clinical copy, Baloo 2, tap-toggle. No `src/main.ts` /
+  `index.html` change needed (font gate + markup unaffected).
+  Re-measured reboot landmarks (contact sheet + pixel scans,
+  540x960): baseboard ~696 center, rug top ~712 (feet 720 land
+  ~8px inside), rug widest ~x40-500, bench x0-160 + accepted
+  leg sliver x189-197, plant x415+, cabinet x465+, window glass
+  x490+ y95-199, title + bubble zones clear. GROUND=724 kept.
+  Old plush constants retired (recorded in code comments).
+- Tests/build: `npm test` 29/29 pass; `npm run build` green
+  (tsc + vite; reboot bg + 3 poses bundled into dist; only the
+  known benign public/font-URL warning). Zero reboot
+  regressions — no fixes needed.
+- Spend: integrator image spend $0.00 (no generations). Ledger
+  stays ~$0.1644. Next $20 gate far off; at >= $120, STOP —
+  not reached.
+- Not done by integrator: deploy + operator phone playtest
+  (headless screenshot impossible in sandbox per prior audit;
+  in-game render check needs the deployed URL on a phone —
+  confirm Jolly Mochi reads cute on the photo plate, rug
+  grounding holds, no haze from overlays, happy/blink clean).
+  No commit/push (main agent merges). STOP after CHECKPOINT.md.

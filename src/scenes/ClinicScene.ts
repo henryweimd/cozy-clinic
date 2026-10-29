@@ -5,35 +5,35 @@ import { ClinicalEngine, CONDITIONS } from '../clinical';
  * Milestone 1 clinic scene: a cozy clinic room and Mochi, the first
  * patient. Tap Mochi to see the complaint.
  *
- * P1: the room shell (walls, floor, window, cabinet) is the
- * AI-generated background `assets/room/room-shell-01.png` in the
- * bible's plush language (see art/manifest.json backgrounds[0]).
- * P2: furniture is plush prop sprites
- * (`assets/props/exam-bed.png`, `assets/props/plant.png`, see
- * art/manifest.json props[]) feet-anchored to GROUND; the code rug
- * is deleted (the painted bg rug suffices). Mochi is the
- * finished AI-generated sprite (see ART_BIBLE.md).
- * P3: tap-react shows the happy pose
- * (`assets/characters/mochi-happy.png`, see art/manifest.json
- * assets[2]) during the bounce, then restores idle; blink swaps
- * idle<->blink only while happy is not showing.
- * P4: all text in Baloo 2 (OFL, vendored offline at
- * `assets/fonts/Baloo2.ttf`, boot-gated in main.ts); the bubble
- * is a plush rounded panel in palette cream with the one thin
- * warm-brown outline — same w492/dockBottom936 sizing-upward
- * geometry and same clinical copy.
- * P5: code-only warmth — a window-light gradient overlay plus a
- * warm vignette (see drawLightOverlays), drawn above the room
- * but below title/Mochi/bubble so text and Mochi cannot wash
- * out; the happy bounce gains a tiny scale overshoot (bible:
- * squash, rise, tiny overshoot, settle). No layout, copy, or
- * other behavior change.
+ * ART-DIRECTION REBOOT (2026-10-29): the room shell is the
+ * photorealistic minimal clinic plate
+ * `assets/room/clinic-shell-reboot-01.png` (1080x1920, Block B;
+ * see art/manifest.json backgrounds[] reboot entry), and Mochi
+ * is the Jolly-style redesign (`mochi-reboot-idle/blink/happy.png`,
+ * 192px class, Block C). Texture keys (`mochi-idle`, `room-shell`,
+ * ...) are unchanged — only the file paths moved. The old plush
+ * room-shell + plush Mochi + plush props are SUPERSEDED (files
+ * left on disk, manifest-flagged); old plush-room constants are
+ * retired (see the reboot landmark survey below).
+ * Motion implements docs/ANIMATION.md exactly (bob 3px @ 1.8
+ * rad/s; blink 120ms per 3-5s randomized; tap bounce 110ms squash
+ * +-0.06 + 80ms overshoot +-0.03, Sine easings, token-guarded).
+ * Bubble behavior + clinical copy identical to P4.
  *
- * Layout contract (fix-layout-01 spacing system): SIDE = 24,
- * GROUND = 724, Mochi 212px at (270, 614), bubble 492 wide docked
- * at 936. The old WALL_BASE = 352 / code-floor-466 geometry left
- * with the deleted code passes; only Mochi/bubble geometry must
- * still fit the painted room.
+ * Reboot landmark survey (re-measured from
+ * art/contact-sheets/bg-reboot-contact-sheet.png + pixel scans
+ * of the plate, 540x960 space): baseboard/wall-floor ~696 at
+ * center; rug top ~712, rug widest ~x40-500 (y~800); bench left
+ * x0-160, seat y~620-660, legs to ~700 (right-leg sliver
+ * x189-197 sits behind Mochi's left edge — accepted depth, per
+ * asset artist); plant mass x~415+, cabinet x~465+; window glass
+ * x490+ y95-199 (title stays centered); title zone + bubble zone
+ * clear. GROUND = 724 kept: Mochi feet at 720 land ~8px inside
+ * the rug, shadow ellipse at 724 on the rug.
+ *
+ * Layout contract (fix-layout-01 spacing system, survives the
+ * reboot): SIDE = 24, GROUND = 724, Mochi 212px at (270, 614),
+ * bubble 492 wide docked at 936.
  */
 /**
  * P4: the one plush face for every text object — Baloo 2 (vendored
@@ -58,12 +58,14 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.image('mochi-idle', 'assets/characters/mochi-idle.png');
-    this.load.image('mochi-blink', 'assets/characters/mochi-blink.png');
-    this.load.image('mochi-happy', 'assets/characters/mochi-happy.png');
-    this.load.image('room-shell', 'assets/room/room-shell-01.png');
-    this.load.image('prop-bed', 'assets/props/exam-bed.png');
-    this.load.image('prop-plant', 'assets/props/plant.png');
+    // Reboot: Jolly-style Mochi + photoreal plate. Keys unchanged.
+    this.load.image('mochi-idle', 'assets/characters/mochi-reboot-idle.png');
+    this.load.image('mochi-blink', 'assets/characters/mochi-reboot-blink.png');
+    this.load.image('mochi-happy', 'assets/characters/mochi-reboot-happy.png');
+    this.load.image('room-shell', 'assets/room/clinic-shell-reboot-01.png');
+    // No prop preloads: the plush P2 props clash with the photoreal
+    // plate (which paints its own bench/plant/cabinet) — removed,
+    // not re-pointed. See drawRoom.
   }
 
   create(): void {
@@ -76,11 +78,11 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   update(_time: number, delta: number): void {
-    // Idle bob: a few pixels, calm enough to watch for minutes.
+    // Idle bob: ANIMATION.md — 3px @ 1.8 rad/s, owns mochi.y.
     const t = this.time.now / 1000;
     this.mochi.y = this.mochiBaseY + Math.sin(t * 1.8) * 3;
 
-    // Blink: eyes closed ~120ms every 3–5s, randomized (art bible).
+    // Blink: ANIMATION.md — eyes closed 120ms every 3–5s, randomized.
     // Swaps idle<->blink only when the happy pose is not showing, so a
     // tap-react never fights the blink timer.
     if (
@@ -101,70 +103,58 @@ export class ClinicScene extends Phaser.Scene {
     void delta;
   }
 
-  // -- room (P1 AI room-shell bg + P2 plush prop sprites) --
+  // -- room (reboot photoreal plate; NO prop sprites) --
 
   private drawRoom(): void {
-    // Room shell: AI-generated 1080x1920 (2x) background, centered to
-    // fill the 540x960 canvas exactly. Replaces the deleted
-    // drawWallsAndFloor/drawWindow/drawCabinet code passes.
+    // Room shell: photorealistic minimal clinic plate, 1080x1920
+    // (2x), centered to fill the 540x960 canvas exactly.
+    // Per-asset prop call (reboot): the P2 plush props are GONE —
+    // the plate paints its own bench (left), plant + cabinet
+    // (right), window, and rug, so plush furniture would clash in
+    // style AND double up every piece. drawProps() deleted with
+    // the P2 pass; nothing is re-pointed.
     this.add.image(270, 480, 'room-shell').setDisplaySize(540, 960);
-    this.drawProps();
   }
 
   /**
-   * P2 plush prop sprites, feet-anchored to GROUND = 724 via
-   * origin (0.5, 1). Replaces the deleted drawExamBed/drawPlant/
-   * drawRug code passes; the painted bg rug suffices (no double rug).
-   * Bed 160 wide at cx88 (left floor anchor, clear of Mochi's 212px
-   * box at x164+); plant 110 wide at cx461 (right corner anchor,
-   * box right margin 24). Both keep the P1 composition and Mochi's
-   * focal gaps.
-   */
-  private drawProps(): void {
-    const bed = this.add.image(88, 724, 'prop-bed').setOrigin(0.5, 1);
-    bed.setScale(160 / bed.width);
-    const plant = this.add.image(461, 724, 'prop-plant').setOrigin(0.5, 1);
-    plant.setScale(110 / plant.width);
-  }
-
-  /**
-   * P5 code-only warmth: a window-light gradient plus a warm
-   * vignette, both pure Graphics fills in palette colors (no
-   * generated images, $0.00 spend). Called after drawRoom and
-   * before title/Mochi/bubble, so the overlays tint only the
-   * room and props — text and Mochi render above and cannot
-   * wash out. Alphas stay <= 0.12: cozy, not hazy.
+   * Code-only warmth: a window-light gradient plus a warm
+   * vignette, both pure Graphics fills ($0.00 spend). Called after
+   * drawRoom and before title/Mochi/bubble, so the overlays tint
+   * only the room — text and Mochi render above and cannot wash
+   * out. Reboot re-tune vs the photo plate (which carries its own
+   * sunlight): light 0.12 -> 0.07 max, vignette 0.10 -> 0.07,
+   * so the photo keeps its clean minimal read. Cozy, not hazy.
    */
   private drawLightOverlays(): void {
     // Window light: full-screen gradient, strongest upper-left
-    // (bible: soft light from upper left) in palette cream.
+    // (plate light dir) in warm cream.
     const light = this.add.graphics();
     light.fillGradientStyle(
       0xfcebd6,
       0xfcebd6,
       0xfff3e2,
       0xfff3e2,
-      0.12,
-      0.05,
-      0.05,
+      0.07,
+      0.03,
+      0.03,
       0.0,
     );
     light.fillRect(0, 0, 540, 960);
 
-    // Warm vignette: four feathered edge strips in the one thin
-    // outline warm-brown, ~0.10 at the screen edge fading to 0
-    // inward over a 56px band. Corners double up slightly, as a
-    // real vignette should.
+    // Warm vignette: four feathered edge strips in warm-brown,
+    // 0.07 at the screen edge fading to 0 inward over a 56px
+    // band. Corners double up slightly, as a real vignette
+    // should.
     const edge = 0x8a5a3b;
     const band = 56;
     const v = this.add.graphics();
-    v.fillGradientStyle(edge, edge, edge, edge, 0.1, 0.1, 0.0, 0.0);
+    v.fillGradientStyle(edge, edge, edge, edge, 0.07, 0.07, 0.0, 0.0);
     v.fillRect(0, 0, 540, band);
-    v.fillGradientStyle(edge, edge, edge, edge, 0.0, 0.0, 0.1, 0.1);
+    v.fillGradientStyle(edge, edge, edge, edge, 0.0, 0.0, 0.07, 0.07);
     v.fillRect(0, 960 - band, 540, band);
-    v.fillGradientStyle(edge, edge, edge, edge, 0.1, 0.0, 0.1, 0.0);
+    v.fillGradientStyle(edge, edge, edge, edge, 0.07, 0.0, 0.07, 0.0);
     v.fillRect(0, 0, band, 960);
-    v.fillGradientStyle(edge, edge, edge, edge, 0.0, 0.1, 0.0, 0.1);
+    v.fillGradientStyle(edge, edge, edge, edge, 0.0, 0.07, 0.0, 0.07);
     v.fillRect(540 - band, 0, band, 960);
   }
 
@@ -187,10 +177,13 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   private drawMochi(): void {
-    // Mochi stands fully on the floor: feet and shadow on the rug,
-    // body clear of the wall/baseboard line above. At 212px Mochi is
-    // still the largest visual weight, with clear walking space to
-    // the bed (left) and the plant lane (right).
+    // Mochi stands fully on the painted rug: feet at 720 (~8px
+    // inside the rug top ~712) and the fixed shadow ellipse at
+    // GROUND = 724 on the rug, body clear of the baseboard (~696)
+    // above. At 212px Mochi is still the largest visual weight,
+    // with clear walking space to the bench (left) and the
+    // plant/cabinet lane (right). Same 212px@(270,614) geometry
+    // the reboot contact-sheet composite validated.
     this.add.ellipse(270, 724, 170, 30, 0x8a5a3b, 0.18);
 
     this.mochi = this.add.image(270, 614, 'mochi-idle');
@@ -266,11 +259,10 @@ export class ClinicScene extends Phaser.Scene {
       const token = this.happyToken;
       this.showingHappy = true;
       this.mochi.setTexture('mochi-happy');
-      // One small happy bounce (squash, rise, tiny overshoot), then settle.
-      // P5 tuning: the squash keeps its 110ms yoyo, then a tiny
-      // scale overshoot (bible follow-through) before restoring
-      // idle. Scale-only — the update() bob owns mochi.y, so no
-      // y-tween. Same token guard on both steps.
+      // Happy bounce, ANIMATION.md exact: 110ms squash yoyo
+      // (+-0.06) then a chained 80ms overshoot yoyo (+-0.03),
+      // Sine.easeInOut, scale-only (the update() bob owns
+      // mochi.y, so no y-tween). Same token guard on both steps.
       this.tweens.add({
         targets: this.mochi,
         scaleY: '-=0.06',

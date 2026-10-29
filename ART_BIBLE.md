@@ -2,113 +2,173 @@
 
 The law for every asset. No asset enters the game unless it matches this
 file and its character's master reference, and has passed validation
-(transparency, dimensions, alignment, contact sheet, in-game render check).
+(dimensions, alpha, alignment, contact sheet, in-game render check).
 
-## Vision (operator's words, locked for this chunk and all later phases)
+> DIRECTION REBOOT — 2026-10-29. The old "plush room" direction
+> (background and props in the same soft sculpted plush language as
+> Mochi, thin warm-brown outline on everything, painted plush
+> room-shell, `no photorealism` ban) is SUPERSEDED as of this date.
+> It is preserved in git history only. The new direction below is
+> authoritative: 3D Jolly-style mascots on clean modern photorealistic
+> clinic backdrops. Grounded in recon of 13 Jolly reference images
+> (all readable; evidence cited inline as [R]).
 
-- Room STRUCTURE like Animal Crossing: a coherent, lived-in room with
-  real floor/wall perspective and grounded furniture — not a flat card,
-  not a prop catalog.
-- Visual AESTHETIC of Muse Jolly's character applied to EVERYTHING:
-  background and props in the same soft sculpted plush language as
-  Mochi (cream-rounded forms, thin warm-brown outline, matte texture,
-  restrained pastels). The character and the room must look like one game.
+## Vision (locked for this chunk and all later phases)
+
+- CHARACTERS are animated 3D Jolly-style mascots: soft 3D clay/Pixar-like
+  render, dense short-pile oatmeal fleece body, smooth matte porcelain
+  face plate, chibi egg/bean proportions, bead eyes + blush + one-curve
+  smile. The mascot is the ONLY plush thing on screen [R].
+- BACKDROP is a modern photorealistic minimal clinic: clean
+  hard-surface 3D or photographic plates (light walls, pale wood floor,
+  simple modern furniture), generous negative space — explicitly NOT
+  fuzzy, NOT plush, NOT outlined [R].
 - Clean, obvious, minimal: every graphic instantly readable at phone
-  size, generous negative space, and only objects in the character's
-  vicinity or of relevance to the scene. Minimalism is deliberate — the
-  focus stays on the character and the relevant objects. Empty space is
-  fine; flat, mismatched, unfinished space is not.
-- Finish quality is the bar: consistent outline weight, soft grounding
-  shadows, clean silhouettes, nothing floating, overflowing, or
-  straddling lines. Nothing ships looking placeholder or amateur.
+  size. Minimalism is deliberate — the focus stays on the character
+  and the relevant objects. Empty space is fine; flat, mismatched,
+  unfinished space is not.
+- Finish quality is the bar: clean silhouettes, soft grounding
+  shadows, nothing floating, overflowing, or straddling lines.
+  Nothing ships looking placeholder or amateur.
 
-## Fixed style block (verbatim in EVERY image prompt)
+## Fixed style blocks (verbatim in EVERY image prompt)
 
-> Soft sculpted plush-toy character, cream-colored rounded body, small
-> dark bead eyes, pink blush cheeks, simple gentle smile, thin warm-brown
-> outline, matte fabric texture, warm pastel palette, clean uncluttered
-> design, full body, plain solid pale background, centered, game sprite.
-> No text, no busy background, no extra limbs, no photorealism, no neon
-> colors, no clutter.
+Character prompts carry block C verbatim; backdrop prompts carry
+block B verbatim. Never mix them; never drop the negative clauses.
+
+> BLOCK C — CHARACTER (verbatim):
+> Soft 3D animated mascot character, chibi egg-shaped body, head and
+> body merged with no neck, dense short-pile oatmeal-cream fleece fur
+> with visible fur strands and soft volumetric shading, smooth matte
+> porcelain face plate inset into the fur, small round glossy black
+> bead eyes with white highlight dots set wide, soft diffused pink
+> blush circles, one thin dark curved smile, stubby mitten arms and
+> nub legs, no fingers or toes, no outline or line art of any kind,
+> no cel shading, soft rim light, soft floor shadow, full body,
+> centered, plain solid warm-white studio void background, game sprite.
+> No text, no busy background, no extra limbs, no open mouth,
+> no outline, no flat 2D, no neon colors, no clutter.
+
+> BLOCK B — BACKDROP (verbatim):
+> Modern photorealistic minimal clinic interior, clean hard surfaces,
+> light neutral walls, pale wood floor, simple modern furniture,
+> soft daylight, gentle grounding shadows, generous negative space,
+> vertical 9:16 composition, no characters, no plush or fuzzy
+> surfaces anywhere, no outline or line art, no text, no clutter.
 
 ## Palette (exact hex)
 
+Mascot palette (sampled from refs [R]; spirit-compatible with the
+old creams, shifted oatmeal-neutral):
+
 | Swatch | Hex | Use |
 |---|---|---|
-| Cream base | `#FFF3E2` | Character bodies, plush forms |
-| Warm background pale | `#FCEBD6` | Source-art backdrops, room walls light |
-| Bead-eye dark | `#3A2E2A` | Eyes (near-black warm brown) |
-| Outline warm brown | `#8A5A3B` | The one thin outline on everything |
-| Blush pink | `#F5A0AC` | Cheeks, recovery warmth |
-| Soft sage | `#A9C6A2` | Scrubs, plants, calm accents |
-| Sky blue | `#A9CCE3` | UI, blankets, daytime accents |
-| Butter yellow | `#F9DC8A` | Stars, lamps, happy accents |
-| Terracotta | `#D98E73` | Pots, roofs, warm accents |
-| Floor warm wood | `#E8C9A0` | Clinic floor |
+| Fur oatmeal | `#F1E7D4` | Mascot body fur (midpoint of `#F3EAD9`–`#EFE3D0`) |
+| Face plate cream | `#FBF2E2` | Smooth face plate (between `#FBF0DC`–`#FFF6E8`) |
+| Bead-eye near-black | `#1A1512` | Eyes |
+| Blush pink | `#F6B8C1` | Cheeks (soft, diffused, almost always present) |
+| Mouth cocoa | `#3A2E2A` | Smile curve |
+| Studio void | `#FAF5EC` | Source-art character backdrops |
+
+Photoreal clinic neutrals (backdrops; clean, NOT plush):
+
+| Swatch | Hex | Use |
+|---|---|---|
+| Clinic wall | `#F4F1EA` | Walls, light neutrals |
+| Clinic floor pale wood | `#E4CFA8` | Floor plates |
+| Clinic accent sage | `#A9C6A2` | Scrubs, plants, calm accents |
+| Clinic accent sky | `#A9CCE3` | Blankets, UI, daytime accents |
 | Text cocoa | `#5C4633` | All in-game text |
 
+Rules: all saturated color lives in props/outfits only [R]
+(old blazer-yellow `#FFD21F` / Trip-blue `#1A56DB` class of accents).
 Nothing neon, nothing dark or moody, nothing high-contrast or loud.
+NO outline color exists in this direction — there is no outline [R].
 
 ## Character proportions
 
-- Plump, rounded, toy-like. No sharp angles, no spindly limbs.
-- Roughly 1:1.5 head-to-body; short limbs; plump torso.
-- Outfit is part of the silhouette and must not change between views.
+- Chibi egg/bean: head + body merged, no neck, ~1:1 head-to-body;
+  the face dominates the upper half [R].
+- Plump torso; stubby mitten arms, nub legs; no fingers, no toes,
+  no sharp angles, no spindly limbs [R].
+- Outfit/accessory is part of the silhouette and must not change
+  between views of the same character.
 
 ## Face rules
 
-- Small dark bead eyes (`#3A2E2A`), round, glossy single highlight dot.
-- Pink blush cheeks (`#F5A0AC`), soft circles, always present.
-- Simple gentle smile, one curve.
+- Small round glossy black bead eyes (`#1A1512`), wide-set, one
+  white highlight dot each. Variants: closed happy curves
+  (`^ ^`), single wink — never an open mouth [R].
+- Soft diffused pink blush circles (`#F6B8C1`), almost always
+  present (may go faintest in formal/costumed shots) [R].
+- One thin dark curved smile (`#3A2E2A`), never open [R].
 - Faces carry almost all expression; one small change (eyes, mouth,
   blush) must read instantly at phone size.
 
 ## Outline
 
-- One thin consistent warm-brown (`#8A5A3B`) outline on every character
-  and object. Never heavy black, never varying thickness between assets.
-- At 192 px sprites: ~3 px outline; at 128 px: ~2 px.
+- NONE. Form is defined entirely by fur shading/AO and the
+  face-plate edge. No line art of any color or weight on any
+  character, prop, or backdrop [R].
 
 ## Camera, lighting, composition
 
 - Camera: slightly elevated 2.5D (front view with a hint of floor).
-- Lighting: soft, upper left, one gentle highlight per form.
-- Composition: one focal character per shot, plain or very simple
-  background in source art, generous negative space. If a scene feels
-  busy, remove something.
+- Lighting: soft daylight, upper left; one gentle highlight per
+  form; soft rim light + soft floor shadow on mascots [R].
+- Composition: one focal character per shot; plain warm-white void
+  in character source art; clean minimal plates in backdrops;
+  generous negative space. If a scene feels busy, remove something.
 
-## Sprite spec
+## Asset specs
 
-- Sizes: 128×128 or 192×192 px per frame; consistent foot anchor
-  (feet at bottom-center, grounded); consistent scale per character.
+Mascot sprites:
+
+- Sizes: 192×192 px per key pose (128×128 allowed for distant
+  variants); consistent foot anchor (feet at bottom-center,
+  grounded); consistent scale per character.
 - Frame padding: ≥8 px clear space inside the frame on all sides.
 - Transparent background in game-ready exports (alpha verified
   programmatically, never trusted from the generator).
 - Naming: `public/assets/characters/<name>-<state>.png`
   (e.g. `mochi-idle.png`).
+- Display geometry (survives the reboot [R]): Mochi 212 px display
+  size centered at (270,614), feet on GROUND=724; shadow ellipse
+  under feet; nametag below on the rug zone.
 
-## Modest-animation frame budgets (maximums, animated in code)
+Background plates (540×960 canvas, 2x 1080×1920 exports allowed):
 
-| State | Budget | Spec |
-|---|---|---|
-| Idle | 3–4 frames, loop | Gentle breathing bob (a few px), calm enough to watch for minutes |
-| Blink | 1 frame swapped in | Eyes closed ~120 ms every 3–5 s, randomized per character (never in unison) |
-| Walk | 4 frames, loop | Gentle bounce gait, feet alternate, body bobs per step, no sliding |
-| Worried | code pose | 1–2 px tremble, worried eyes, slight posture droop — readable, not distressing |
-| Happy | code bounce | One small celebratory bounce (squash, rise, tiny overshoot), then settle |
-| Sick | code pose | Drooped posture, half-closed eyes, slower bob, paler blush — cozy, not alarming |
-| Recovery | code transition | Posture lifts, smile returns, blush warms — not a dance |
-| Examine | code pose | Clinician leans in, patient holds still, one gentle tool motion, then settle |
+- Format: exact 9:16, photorealistic or clean hard-surface 3D —
+  never plush, never outlined, no characters, no text [R].
+- Landmark contract (survives the reboot [R]): SIDE=24 outer
+  margins; GROUND=724 (mascot/prop feet line); bubble 492 wide
+  docked at bottom 936 sizing upward; mascot footprint zone
+  (x164–376 at GROUND) kept clear of furniture.
+- Props sit feet-anchored on GROUND via origin (0.5,1); corner
+  anchors keep ≥24 px side margins and a clear walking gap to
+  the mascot box.
+- NOTE: P5 warm overlays (cream gradient + warm-brown vignette)
+  were tuned for a painted room and must be re-tuned against
+  photo/clean plates [R].
 
-Principles: subtle squash and stretch (a few percent), tiny anticipation
-dip before a bounce, follow-through on ears/tails/caps, ease-in/out on
-everything, one emotion at a time, always return to Idle.
+## Validation gate (every asset, no exceptions)
+
+1. Dimensions: exact size class (192² mascot / 9:16 plate).
+2. Alpha: mascot corners transparent, padding ≥8 px, bbox sane vs
+   the character's idle; plates fully opaque RGB, no characters.
+3. Alignment: foot anchor bottom-center; feet land on GROUND=724
+   in composite; mascot footprint clear of furniture.
+4. Contact sheet: idle/blink/happy (+alpha-checker row) for
+   characters; plain + mascot-composite panels for plates/props.
+5. In-game render check: deployed URL playtested at phone size —
+   readable, grounded, no overflow, no wash-out, no flicker.
 
 ## Pipeline (summary; brief Section 5 is canonical)
 
 Concepts → master reference per character (studio folder only) →
-turnaround with reference attached → key poses → SAM 3.1 cutout →
+turnaround with reference attached → key poses → cutout →
 programmatic validation → contact sheet → in-game render check.
-Key poses only from the image model; all motion is built in code.
-Masters live in the studio folder (`art/source/`); the repo holds
-game-ready exports only, under `public/assets/`.
+Key poses only from the image model; all motion is built in code
+(see `docs/ANIMATION.md`). Masters live in the studio folder
+(`art/source/`); the repo holds game-ready exports only, under
+`public/assets/`.

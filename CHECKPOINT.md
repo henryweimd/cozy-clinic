@@ -1,50 +1,50 @@
-# CHECKPOINT.md — P5 lighting/feel (implementer)
+# CHECKPOINT.md — art-direction reboot (integrator)
 
-- Phase: P5 lighting/feel POLISH ONLY. One phase per run. No
-  phase-02 / Milestone 2 work. No re-layout, no new features,
-  no new patients/conditions/art, no clinical-copy change.
-- Files changed (implementer): `src/scenes/ClinicScene.ts`
-  (NEW `drawLightOverlays()` pass + happy-bounce overshoot
-  tuning + header note — see below); `PROGRESS.md` (P5
-  ownership + fx list declared BEFORE editing, then outcome
-  block); `CHECKPOINT.md` (this file). No `OFL.txt`: the
-  license-glue retry failed both legs (google/fonts raw
-  curl-28 timeout; opensource.org returned an HTML page,
-  deleted), so `public/assets/fonts/LICENSE.txt` is kept
-  as-is. No commit/push (merges go through main agent only).
-- Lighting/fx shipped (code-only, $0.00 image spend):
-  (1) window-light gradient — full-screen `fillGradientStyle`
-  rect, palette `#FCEBD6` at 0.12 upper-left (bible light
-  dir) fading to `#FFF3E2` 0.0 lower-right;
-  (2) warm vignette — four 56px feathered edge strips in
-  `#8A5A3B`, 0.10 at the screen edge fading to 0 inward;
-  both drawn after room/props and BEFORE title/Mochi/bubble,
-  so text and Mochi render above and cannot wash out.
-  (3) Happy bounce: unchanged 110ms squash yoyo, then a
-  chained 80ms scale overshoot (+0.03/-0.03) yoyo before
-  idle restore — bible squash/rise/overshoot/settle,
-  scale-only (bob owns mochi.y), same token guard both
-  steps. Diff +67/-4; the 4 removed lines are the
-  restore-idle block re-indented into the nested onComplete.
+- Phase: reboot integration. One phase per run. No Milestone 2
+  work. No new features, patients, conditions, art, or
+  clinical-copy change. Art was REAL (bg 1080x1920 + 3 poses
+  192x192 verified on disk), so scene edits proceeded.
+- Files changed (integrator): `src/scenes/ClinicScene.ts`
+  (reboot preload swap, drawProps deletion, overlay re-tune,
+  ANIMATION.md comment citations, reboot header + landmark
+  survey — see below); `PROGRESS.md` (ownership declared
+  BEFORE editing, then this outcome block); `CHECKPOINT.md`
+  (this file). `src/main.ts` / `index.html` untouched (not
+  needed — font gate + markup unaffected). No `art/*` or
+  `public/assets/*` edits. No commit/push (main agent merges).
+- Integration shipped: preloads point at
+  `assets/room/clinic-shell-reboot-01.png` +
+  `assets/characters/mochi-reboot-<idle,blink,happy>.png`
+  (texture keys unchanged); `drawProps()` + `prop-bed` /
+  `prop-plant` preloads DELETED — per-asset call: the photo
+  plate paints its own bench/plant/cabinet/rug, so plush props
+  would clash AND double up (removed, not re-pointed); window
+  light 0.12 -> 0.07 max + vignette 0.10 -> 0.07 vs the photo
+  plate; motion verified == ANIMATION.md exact spec (bob
+  3px@1.8rad/s; blink 120ms/3-5s; bounce 110ms +-0.06 + 80ms
+  +-0.03 Sine, token-guarded) — code already matched.
+  Re-measured landmarks (540x960): baseboard ~696, rug top
+  ~712, bench x0-160 (+accepted leg sliver x189-197), plant
+  x415+, cabinet x465+, window glass x490+ y95-199, title +
+  bubble zones clear; GROUND=724 kept (feet 720 on rug).
+  Old plush constants retired (in code comments).
+- Behavior preserved (verified in code + diff): Mochi
+  212px@(270,614), bubble w492/dockBottom936 sizing-upward,
+  all clinical copy, Baloo 2, tap-toggle, blink/bob/bounce
+  timings identical.
 - Test result: `npm test` 29/29 pass; `npm run build` green
-  (tsc + vite; only the known benign public/font-URL
-  warning). Zero P5 regressions — no fixes needed.
-- Art spend: implementer $0.00 (no generations). P5 total
-  $0.00. Ledger stays ~$0.1244 cumulative. Next $20 gate far
-  off; at >= $120, STOP.
-- Behavior preserved (verified in code + diff, not
-  screenshots): every layout constant, sprite position
-  (Mochi 212px at (270,614)), bubble w492/dockBottom936
-  sizing-upward geometry, copy, font, blink/bob, and
-  tap-toggle identical; overlays add tint below Mochi/text
-  only; bounce keeps the same squash + guard with one added
-  overshoot pulse.
-- Playtest note: NO headless screenshot possible in sandbox
-  (Chromium Abort/Mach denial per prior audit). In-game
-  render check + operator phone playtest (540x960) still
-  REQUIRED on the deployed URL after the parent
-  merges/deploys: confirm the room reads warmer/cozier with
-  no haze on text or Mochi, vignette edges subtle, and the
-  happy overshoot reads as one bounce with no flicker vs
-  blink.
-- STOP.
+  (tsc + vite; reboot bg + 3 poses bundled into `dist/`;
+  only the known benign public/font-URL warning). Zero
+  reboot regressions — no fixes needed.
+- Art spend: integrator $0.00 (no generations). Ledger stays
+  ~$0.1644 cumulative. Next $20 gate far off; at >= $120, STOP.
+- Playtest result: NOT DONE by integrator — headless
+  screenshot impossible in sandbox per prior audit. Needs
+  deploy + operator phone playtest at the deployment URL:
+  confirm Jolly Mochi reads cute on the photo plate, rug
+  grounding holds, overlays add warmth with no haze, happy /
+  blink clean, bubble clears nametag/Mochi/edges.
+- Deployment URL: none from this run (main agent merges +
+  deploys).
+
+STOP.
