@@ -232,3 +232,78 @@ idle + tapped states, zero console errors. Element-by-element
   render check needs the deployed URL on a phone); P2 props,
   P3 poses, P4 font, P5 fx all out of scope. STOP after
   CHECKPOINT.md.
+
+## Active chunk: P2 prop sprites (prop-artist workstream)
+
+- P2 OWNERSHIP (declared BEFORE generating, per AGENTS.md workflow
+  law): the P2 prop-artist agent owns `art/source/props/*`,
+  `public/assets/props/*`, `art/contact-sheets/props-*`, and
+  `art/manifest.json` props additions ONLY. Nobody else writes
+  those paths this run. The P2 prop artist makes NO scene-code
+  edits (`src/scenes/ClinicScene.ts` belongs to the integrator).
+- Scope: exam-bed + potted-plant plush prop sprites (transparent
+  PNG, foot-anchored, GROUND=724 aligned), validation + contact
+  sheet + manifest props[] entries with FULL PROMPT TEXT.
+- Rug verdict (from bg inspection): the painted rug in
+  room-shell-01.png (large cream scalloped oval, centered) suffices
+  — NO rug prop will be generated (avoids double-rug).
+- P2 RESULT (prop artist): 2 sprites shipped, 5 images x $0.01 =
+  $0.05 this workstream (2 gen + 2 fix edits + 1 probe after
+  tool-arg failures; ledger ~$0.1144, $120 STOP far off).
+  Exports `public/assets/props/exam-bed.png` (560x320, empty bed,
+  headboard-left) + `plant.png` (418x560, faceless pot);
+  masters in studio `art/source/props/` (git-ignored, correct);
+  contact sheet `art/contact-sheets/props-contact-sheet.png`
+  (checker cutout panels + room composite, feet at GROUND=724);
+  manifest `props[]` with FULL PROMPT TEXT + hashes (P1 lesson).
+  Fixes applied: bed gen had a sleeper (removed via edit — bed
+  must be empty, patients are Mochi/future cast); plant gen had
+  a pot face (removed via edit — props stay faceless furniture).
+  Validation: border flood-fill keyout, assert bbox/padding(24px)/
+  corners, foot-anchor bottom-center, composite alignment pass.
+  Integrator notes: (1) bed 140x80 @cx82 reads small next to
+  212px Mochi — may playtest up to ~170w, verify Mochi gap;
+  (2) bed sits in front of bg cabinet lower-left, confirm on
+  device; (3) plant 110x147 @cx461 corner-anchored, right
+  margin 24; (4) delete code drawExamBed/drawPlant/drawRug on
+  integration (painted rug replaces code rug — no double-rug).
+
+## Active chunk: P2 prop sprites (integrator workstream)
+
+- P2 OWNERSHIP (integrator): owns `src/scenes/ClinicScene.ts`,
+  `PROGRESS.md`, `CHECKPOINT.md` this run. No `art/*` or
+  `public/assets/*` edits (prop artist owns those paths);
+  sequential after art, no concurrent writers.
+- P2 RESULT (integrator): real prop files existed
+  (`public/assets/props/exam-bed.png` 560x320 RGBA +
+  `plant.png` 418x560 RGBA, verified on disk), so integrated
+  them: preload `prop-bed` + `prop-plant`; new `drawProps()`
+  places both feet-anchored to GROUND=724 via origin (0.5,1) —
+  bed 160 wide at cx88 (left floor anchor; middle ground between
+  the artist's 140 composite and the ~170 playtest suggestion,
+  keeps a clear visual gap to Mochi's 212px box at x164+),
+  plant 110 wide at cx461 (right corner anchor, box right
+  margin 24). DELETED the replaced procedural passes
+  `drawExamBed`/`drawPlant`/`drawRug` (~107 lines) plus the
+  now-unused `INK` constant (build fix); code rug gone so no
+  double rug with the painted bg rug. Header + drawRoom
+  comments updated (P2 sprites + layout note). KEPT
+  byte-identical in behavior: Mochi shadow ellipse + Mochi
+  212px at (270,614) + nametag, bubble 492 wide docked at 936
+  sizing upward, tap-to-complaint + happy bounce, blink/bob.
+  No clinical-copy change.
+- Tests/build: `npm test` 29/29 pass; `npm run build` green
+  (tsc + vite; both props bundled into `dist/assets/props/`).
+  One P2 regression fixed: `INK` unused after the pass
+  deletions broke tsc — removed the constant (Mochi/bubble
+  use the same hex as literals, behavior unchanged).
+- Spend: integrator image spend $0.00 (no generations); P2
+  total stays $0.05 (prop artist's 2 gen + 2 fix edits +
+  1 probe). Ledger ~$0.1144. Next $20 gate far off; at >=
+  $120, STOP — not reached.
+- Not done by integrator: deploy + operator phone playtest
+  (headless screenshot impossible in sandbox per prior audit;
+  render check needs the deployed URL on a phone — confirm
+  bed scale vs Mochi, bed-vs-bg-cabinet overlap lower-left,
+  plant corner fit); P3 poses, P4 font, P5 fx out of scope.
+  STOP after CHECKPOINT.md.

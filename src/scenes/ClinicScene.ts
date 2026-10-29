@@ -1,9 +1,6 @@
 import Phaser from 'phaser';
 import { ClinicalEngine, CONDITIONS } from '../clinical';
 
-/** The one thin warm-brown outline on everything (ART_BIBLE.md). */
-const INK = 0x8a5a3b;
-
 /**
  * Milestone 1 clinic scene: a cozy clinic room and Mochi, the first
  * patient. Tap Mochi to see the complaint.
@@ -11,8 +8,10 @@ const INK = 0x8a5a3b;
  * P1: the room shell (walls, floor, window, cabinet) is the
  * AI-generated background `assets/room/room-shell-01.png` in the
  * bible's plush language (see art/manifest.json backgrounds[0]).
- * Furniture still on canvas (exam bed, plant, rug) stays code-drawn
- * until P2 replaces it with plush prop sprites. Mochi is the
+ * P2: furniture is plush prop sprites
+ * (`assets/props/exam-bed.png`, `assets/props/plant.png`, see
+ * art/manifest.json props[]) feet-anchored to GROUND; the code rug
+ * is deleted (the painted bg rug suffices). Mochi is the
  * finished AI-generated sprite (see ART_BIBLE.md).
  *
  * Layout contract (fix-layout-01 spacing system): SIDE = 24,
@@ -37,6 +36,8 @@ export class ClinicScene extends Phaser.Scene {
     this.load.image('mochi-idle', 'assets/characters/mochi-idle.png');
     this.load.image('mochi-blink', 'assets/characters/mochi-blink.png');
     this.load.image('room-shell', 'assets/room/room-shell-01.png');
+    this.load.image('prop-bed', 'assets/props/exam-bed.png');
+    this.load.image('prop-plant', 'assets/props/plant.png');
   }
 
   create(): void {
@@ -63,123 +64,30 @@ export class ClinicScene extends Phaser.Scene {
     void delta;
   }
 
-  // -- room (P1: AI room-shell bg + code-drawn furniture until P2) --
+  // -- room (P1 AI room-shell bg + P2 plush prop sprites) --
 
   private drawRoom(): void {
     // Room shell: AI-generated 1080x1920 (2x) background, centered to
     // fill the 540x960 canvas exactly. Replaces the deleted
     // drawWallsAndFloor/drawWindow/drawCabinet code passes.
     this.add.image(270, 480, 'room-shell').setDisplaySize(540, 960);
-    this.drawExamBed();
-    this.drawPlant();
-    this.drawRug();
-  }
-
-  /** Plush examination bed with headboard, pillow, and folded blanket. */
-  private drawExamBed(): void {
-    const g = this.add.graphics();
-
-    g.fillStyle(INK, 0.18);
-    g.fillEllipse(85, 724, 150, 24);
-
-    // Legs and crossbar stand on the floor.
-    g.fillStyle(0xd9a86c, 1);
-    g.fillRoundedRect(28, 628, 14, 88, 6);
-    g.fillRoundedRect(122, 628, 14, 88, 6);
-    g.fillRoundedRect(28, 676, 108, 12, 6);
-    g.lineStyle(4, INK, 1);
-    g.strokeRoundedRect(28, 628, 14, 88, 6);
-    g.strokeRoundedRect(122, 628, 14, 88, 6);
-    g.strokeRoundedRect(28, 676, 108, 12, 6);
-
-    // Headboard with a small care badge.
-    g.fillStyle(0xfff3e2, 1);
-    g.fillRoundedRect(12, 520, 32, 140, 12);
-    g.lineStyle(5, INK, 1);
-    g.strokeRoundedRect(12, 520, 32, 140, 12);
-    g.fillStyle(0xf5a0ac, 1);
-    g.fillCircle(28, 548, 10);
-    g.fillStyle(0xffffff, 1);
-    g.fillRect(25, 542, 6, 12);
-    g.fillRect(22, 545, 12, 6);
-
-    // Mattress.
-    g.fillStyle(0xfff3e2, 1);
-    g.fillRoundedRect(20, 576, 130, 52, 14);
-    g.lineStyle(5, INK, 1);
-    g.strokeRoundedRect(20, 576, 130, 52, 14);
-
-    // Pillow at the head end.
-    g.fillStyle(0xffffff, 1);
-    g.fillRoundedRect(28, 556, 52, 36, 12);
-    g.lineStyle(4, INK, 1);
-    g.strokeRoundedRect(28, 556, 52, 36, 12);
-
-    // Folded sage blanket over the foot half.
-    g.fillStyle(0xa9c6a2, 1);
-    g.fillRoundedRect(70, 560, 80, 50, 12);
-    g.lineStyle(5, INK, 1);
-    g.strokeRoundedRect(70, 560, 80, 50, 12);
-    g.lineStyle(3, INK, 0.7);
-    g.lineBetween(78, 568, 78, 602);
+    this.drawProps();
   }
 
   /**
-   * Leafy plant, solo right-corner floor anchor (pot right margin
-   * >= SIDE = 24, canopy inside the screen). The stool that used to
-   * crowd this corner is gone — this lane is walking space now.
+   * P2 plush prop sprites, feet-anchored to GROUND = 724 via
+   * origin (0.5, 1). Replaces the deleted drawExamBed/drawPlant/
+   * drawRug code passes; the painted bg rug suffices (no double rug).
+   * Bed 160 wide at cx88 (left floor anchor, clear of Mochi's 212px
+   * box at x164+); plant 110 wide at cx461 (right corner anchor,
+   * box right margin 24). Both keep the P1 composition and Mochi's
+   * focal gaps.
    */
-  private drawPlant(): void {
-    const g = this.add.graphics();
-
-    g.fillStyle(INK, 0.18);
-    g.fillEllipse(478, 722, 76, 16);
-
-    // Stems.
-    g.lineStyle(5, INK, 1);
-    g.lineBetween(478, 660, 460, 596);
-    g.lineBetween(478, 660, 478, 588);
-    g.lineBetween(478, 660, 496, 600);
-
-    // Leaves.
-    g.fillStyle(0xa9c6a2, 1);
-    const leaves: Array<[number, number, number, number]> = [
-      [452, 590, 44, 34],
-      [478, 572, 48, 38],
-      [504, 592, 44, 34],
-      [464, 620, 46, 32],
-      [494, 622, 44, 30],
-    ];
-    for (const [x, y, w, h] of leaves) {
-      g.fillEllipse(x, y, w, h);
-    }
-    g.lineStyle(3, INK, 1);
-    for (const [x, y, w, h] of leaves) {
-      g.strokeEllipse(x, y, w, h);
-    }
-    g.fillStyle(0xffffff, 0.5);
-    g.fillCircle(470, 562, 4);
-    g.fillCircle(496, 584, 3);
-
-    // Pot with rim, planted on the floor.
-    g.fillStyle(0xd98e73, 1);
-    g.fillRoundedRect(450, 672, 56, 48, 10);
-    g.fillRoundedRect(444, 656, 68, 20, 8);
-    g.lineStyle(5, INK, 1);
-    g.strokeRoundedRect(450, 672, 56, 48, 10);
-    g.strokeRoundedRect(444, 656, 68, 20, 8);
-    // Soil.
-    g.fillStyle(0x5c4633, 1);
-    g.fillRoundedRect(452, 652, 52, 12, 6);
-  }
-
-  /** Soft round rug Mochi stands on, centered under the focal point. */
-  private drawRug(): void {
-    const g = this.add.graphics();
-    g.fillStyle(0xf5a0ac, 0.45);
-    g.fillEllipse(270, 748, 340, 80);
-    g.lineStyle(4, 0xf5a0ac, 0.8);
-    g.strokeEllipse(270, 748, 300, 56);
+  private drawProps(): void {
+    const bed = this.add.image(88, 724, 'prop-bed').setOrigin(0.5, 1);
+    bed.setScale(160 / bed.width);
+    const plant = this.add.image(461, 724, 'prop-plant').setOrigin(0.5, 1);
+    plant.setScale(110 / plant.width);
   }
 
   private drawTitle(): void {
