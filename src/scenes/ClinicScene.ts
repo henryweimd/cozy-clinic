@@ -3,10 +3,17 @@ import { ClinicalEngine, CONDITIONS } from '../clinical';
 import type { ChoiceGrade, PatientState, TrajectoryNode } from '../clinical';
 import {
   CARD_ROW_IDS,
+  CHROME_TIER_BY_DIFFICULTY,
+  CHROME_TIER_LABEL,
+  MOCK_CARE_COINS_START,
+  MOCK_PROFILE_LABEL,
   MOCK_ROSTER,
   MOCK_THREADS,
   PROTOTYPE_SEEDS,
+  VISIT_CONTEXT_WORDING,
+  quoteIfSpoken,
 } from '../ui/mockData';
+import type { VisitContext } from '../ui/mockData';
 
 /**
  * Milestone 1 clinic scene: a cozy clinic room and Mabel, the first
@@ -45,6 +52,18 @@ import {
  * text read live from the ClinicalEngine/patient state; only the
  * roster, portal inbox, and visit-session seeds come from the
  * clearly-marked MOCK module (`src/ui/mockData.ts`).
+ *
+ * CHROME-2 (2026-10-29, docs/UI_PROTOTYPE.md): subtle translucent
+ * chrome — a slim top bar (mock profile chip + mock difficulty
+ * dots, middle left empty for future controls) and a translucent
+ * bottom toolbar (same 4 tabs, quieter); the conversation-panel
+ * tail is solid outline-color tucked under the panel; MABEL and
+ * DR. NORA lines render quoted (YOU/narration unquoted); a
+ * Visit-only progress HUD (mock care-coins pill, display-only
+ * mm:ss timer, tier-worded visit-context label). Only the two bar
+ * strips are translucent; every pill and every text stays opaque.
+ * Mabel geometry/motion/expressions, panel fades, admin stack,
+ * and offline behavior are untouched.
  *
  * Reboot landmark survey (re-measured from
  * art/contact-sheets/bg-reboot-contact-sheet.png + pixel scans
@@ -86,14 +105,18 @@ const CARD_FILL = 0xfff9ef;
 const OUTLINE = 0x8a5a3b;
 const SAGE = 0xa9c6a2;
 const SKY = 0xa9cce3;
+const AMBER = 0xd9a441;
+const ROSE = 0xc9706b;
 const COCOA = '#5c4633';
 const SECONDARY = '#8a6f52';
+// Chrome-2: bar-strip translucency only — pills + text stay opaque.
+const CHROME_ALPHA = 0.8;
 
 const GRADE_COLOR: Record<ChoiceGrade, number> = {
   BEST: SAGE,
   NOT_GREAT: SKY,
-  WRONG: 0xd9a441,
-  DANGEROUS: 0xc9706b,
+  WRONG: AMBER,
+  DANGEROUS: ROSE,
 };
 
 type ViewName = 'waiting' | 'visit' | 'telemed' | 'portal';
@@ -152,6 +175,16 @@ export class ClinicScene extends Phaser.Scene {
   private chips!: Phaser.GameObjects.Container;
   private chipTexts: Phaser.GameObjects.Text[] = [];
 
+  // Chrome-2 progress HUD (Visit only; coins + context are MOCK, the
+  // timer is a display-only readout — nothing gameplay reads it).
+  private hud!: Phaser.GameObjects.Container;
+  private coinsText!: Phaser.GameObjects.Text;
+  private contextText!: Phaser.GameObjects.Text;
+  private timerText!: Phaser.GameObjects.Text;
+  private careCoins = MOCK_CARE_COINS_START;
+  private visitStartMs = 0;
+  private lastTimerSecond = -1;
+
   // Views + nav.
   private currentView: ViewName = 'visit';
   private waitingView!: Phaser.GameObjects.Container;
@@ -207,6 +240,7 @@ export class ClinicScene extends Phaser.Scene {
   create(): void {
     this.patientState = this.engine.initialState(PROTOTYPE_SEEDS.conditionId);
     this.revealedStage = this.patientState.stageIndex;
+    this.visitStartMs = this.time.now;
     this.drawRoom();
     this.drawLightOverlays();
     this.drawTitle();
@@ -214,10 +248,12 @@ export class ClinicScene extends Phaser.Scene {
     this.drawConversationPanel();
     this.drawCardRow();
     this.drawVitalsChips();
+    this.drawHud();
     this.drawWaitingView();
     this.drawTelemedChrome();
     this.drawPortalView();
     this.drawNavBar();
+    this.drawTopBar();
     this.drawCodePad();
     this.drawMonitor();
     this.drawToast();
@@ -229,6 +265,16 @@ export class ClinicScene extends Phaser.Scene {
     // Idle bob: ANIMATION.md — 3px @ 1.8 rad/s, owns mabel.y.
     const t = this.time.now / 1000;
     this.mabel.y = this.mabelBaseY + Math.sin(t * 1.8) * 3;
+
+    // Visit timer: display-only mm:ss readout, urgency feel only —
+    // no rewards or penalties read it. Text updates once per second.
+    const elapsedS = Math.floor((this.time.now - this.visitStartMs) / 1000);
+    if (elapsedS !== this.lastTimerSecond) {
+      this.lastTimerSecond = elapsedS;
+      const mm = String(Math.floor(elapsedS / 60)).padStart(2, '0');
+      const ss = String(elapsedS % 60).padStart(2, '0');
+      this.timerText.setText(`${mm}:${ss}`);
+    }
 
     // Blink: ANIMATION.md — eyes closed 120ms every 3–5s, randomized.
     // Fires ONLY when the steady face is idle AND no flash is showing
@@ -397,17 +443,20 @@ export class ClinicScene extends Phaser.Scene {
     const top = 136;
     const w = 492;
     const x = 270;
-    this.panelBody.setText(text);
+    // Quoted speech: MABEL / DR. NORA lines wrap in quotes; YOU and
+    // narration stay unquoted (quoteIfSpoken). Quoted BEFORE the
+    // truncate pass so the "…" rule measures the shown string.
+    this.panelBody.setText(quoteIfSpoken(speaker, false, text));
     this.truncateToHeight(this.panelBody, 110);
     const h = Math.min(220, Math.max(96, 48 + this.panelBody.height + 20));
     const bottom = top + h;
 
     this.panelBg.clear();
-    // Tail triangle first (its top edge hides under the panel bg).
-    this.panelBg.fillStyle(CREAM, 1);
-    this.panelBg.lineStyle(3, OUTLINE, 1);
+    // Tail first: SOLID full-outline-color triangle, its top edge
+    // tucked under the panel bg (chrome-2 operator direction —
+    // replaces the old outlined tail).
+    this.panelBg.fillStyle(OUTLINE, 1);
     this.panelBg.fillTriangle(250, bottom - 2, 290, bottom - 2, 270, bottom + 14);
-    this.panelBg.strokeTriangle(250, bottom - 2, 290, bottom - 2, 270, bottom + 14);
     this.panelBg.fillStyle(CREAM, 1);
     this.panelBg.lineStyle(3, OUTLINE, 1);
     this.panelBg.fillRoundedRect(x - w / 2, top, w, h, 24);
@@ -600,6 +649,13 @@ export class ClinicScene extends Phaser.Scene {
     card.revealed = grade;
     this.drawSpine(card, grade);
     this.refreshChips();
+    if (grade === 'BEST') {
+      // Mock coins: +1 per correct (BEST) resolve. Blocked moves and
+      // lesser grades pay nothing. Real coin_ledger accrual later.
+      this.careCoins += 1;
+    }
+    // Stage may have moved — the context label re-derives (mock).
+    this.refreshHud();
     this.setConversation('MABEL', `${result.node.narrative} ${result.node.teaching}`);
     this.playResolveFlash(result.node.animationCue);
   }
@@ -765,6 +821,92 @@ export class ClinicScene extends Phaser.Scene {
       const text = texts[i];
       if (text !== undefined) label.setText(text);
     });
+  }
+
+  // -- progress HUD (Visit only; chrome-2, mock + display-only) --
+
+  private drawHud(): void {
+    // One row, y376–412: below the panel's max bottom (356) and
+    // above Mabel (top 508). Visit-only: Telemed's LIVE pills own
+    // this same band, so the HUD fades with the visit view.
+    // Radii vary with intent: coins = full-pill token (r18),
+    // context = label tag (r14), timer = instrument readout (r8).
+    // All pills opaque; translucency stays on the bar strips only.
+    const coinsBg = this.add.graphics();
+    coinsBg.fillStyle(CARD_FILL, 1);
+    coinsBg.lineStyle(2, OUTLINE, 1);
+    coinsBg.fillRoundedRect(24, 376, 132, 36, 18);
+    coinsBg.strokeRoundedRect(24, 376, 132, 36, 18);
+    const coin = this.add.graphics();
+    coin.fillStyle(AMBER, 1);
+    coin.lineStyle(2, OUTLINE, 1);
+    coin.fillCircle(50, 394, 9);
+    coin.strokeCircle(50, 394, 9);
+    this.coinsText = this.add
+      .text(66, 394, '', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '16px',
+        color: COCOA,
+      })
+      .setOrigin(0, 0.5);
+
+    const contextBg = this.add.graphics();
+    contextBg.fillStyle(CARD_FILL, 1);
+    contextBg.lineStyle(2, OUTLINE, 1);
+    contextBg.fillRoundedRect(168, 376, 204, 36, 14);
+    contextBg.strokeRoundedRect(168, 376, 204, 36, 14);
+    this.contextText = this.add
+      .text(270, 394, '', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '15px',
+        color: COCOA,
+      })
+      .setOrigin(0.5, 0.5);
+
+    const timerBg = this.add.graphics();
+    timerBg.fillStyle(CARD_FILL, 1);
+    timerBg.lineStyle(2, OUTLINE, 1);
+    timerBg.fillRoundedRect(384, 376, 132, 36, 8);
+    timerBg.strokeRoundedRect(384, 376, 132, 36, 8);
+    const dot = this.add.graphics();
+    dot.fillStyle(ROSE, 1);
+    dot.fillCircle(420, 394, 5);
+    this.timerText = this.add
+      .text(433, 394, '00:00', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '16px',
+        color: COCOA,
+      })
+      .setOrigin(0, 0.5);
+
+    this.hud = this.add.container(0, 0, [
+      coinsBg,
+      coin,
+      this.coinsText,
+      contextBg,
+      this.contextText,
+      timerBg,
+      dot,
+      this.timerText,
+    ]);
+    this.hud.setDepth(10);
+    this.refreshHud();
+  }
+
+  /** Mock context derivation: first visit → new, stage 2+ → sick. */
+  private visitContext(): VisitContext {
+    if (PROTOTYPE_SEEDS.visitNo <= 1) return 'new-patient';
+    if (this.patientState.stageIndex >= 2) return 'sick-visit';
+    return 'follow-up';
+  }
+
+  private refreshHud(): void {
+    this.coinsText.setText(`${this.careCoins}`);
+    const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+    this.contextText.setText(VISIT_CONTEXT_WORDING[this.visitContext()][tier]);
   }
 
   // -- VIEW 2: waiting room (MOCK roster) --
@@ -1040,7 +1182,10 @@ export class ClinicScene extends Phaser.Scene {
       const bubbleBg = this.add.graphics();
       extras.add(bubbleBg);
       for (const msg of thread.messages) {
-        const bubble = this.add.text(msg.me ? 484 : 56, ey + 8, msg.text, {
+        // Quoted speech (mock copy): Dr. Nora's lines wrap in quotes;
+        // player replies + Clinic system lines stay unquoted. Snippets
+        // stay bare (truncated previews, never full lines).
+        const bubble = this.add.text(msg.me ? 484 : 56, ey + 8, quoteIfSpoken(thread.from, msg.me, msg.text), {
           fontFamily: FONT_FAMILY,
           fontSize: '17px',
           color: COCOA,
@@ -1131,10 +1276,13 @@ export class ClinicScene extends Phaser.Scene {
 
   private drawNavBar(): void {
     const bg = this.add.graphics();
-    bg.fillStyle(CREAM, 1);
+    // Chrome-2 quieter toolbar: translucent fill lets the room show
+    // softly through; the divider thins to a 2px whisper line. Tabs
+    // + pill + text stay fully opaque.
+    bg.fillStyle(CREAM, CHROME_ALPHA);
     bg.fillRect(0, 888, 540, 72);
-    bg.fillStyle(OUTLINE, 0.4);
-    bg.fillRect(0, 888, 540, 3);
+    bg.fillStyle(OUTLINE, 0.25);
+    bg.fillRect(0, 888, 540, 2);
     const pillFace = this.add.graphics();
     pillFace.fillStyle(SAGE, 1);
     pillFace.fillRoundedRect(-59, -30, 118, 60, 30);
@@ -1174,6 +1322,76 @@ export class ClinicScene extends Phaser.Scene {
     }
   }
 
+  // -- top bar (persistent, all views; chrome-2, ALL mock) --
+
+  private drawTopBar(): void {
+    // Slim strip y0–32: translucent fill + whisper divider, opaque
+    // pills + text. Only the edges are used — profile left,
+    // difficulty right — the middle stays empty for future
+    // controls. Display-only: no zones, so title taps pass through.
+    const bg = this.add.graphics();
+    bg.fillStyle(CREAM, CHROME_ALPHA);
+    bg.fillRect(0, 0, 540, 32);
+    bg.fillStyle(OUTLINE, 0.25);
+    bg.fillRect(0, 32, 540, 2);
+
+    const profileBg = this.add.graphics();
+    profileBg.fillStyle(CARD_FILL, 1);
+    profileBg.lineStyle(2, OUTLINE, 1);
+    profileBg.fillRoundedRect(24, 4, 96, 24, 12);
+    profileBg.strokeRoundedRect(24, 4, 96, 24, 12);
+    const avatar = this.add.graphics();
+    avatar.fillStyle(SAGE, 1);
+    avatar.fillCircle(46, 16, 6);
+    const profile = this.add
+      .text(58, 16, MOCK_PROFILE_LABEL, {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '14px',
+        color: COCOA,
+      })
+      .setOrigin(0, 0.5);
+
+    const diffBg = this.add.graphics();
+    diffBg.fillStyle(CARD_FILL, 1);
+    diffBg.lineStyle(2, OUTLINE, 1);
+    diffBg.fillRoundedRect(400, 4, 116, 24, 12);
+    diffBg.strokeRoundedRect(400, 4, 116, 24, 12);
+    const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+    const diffLabel = this.add
+      .text(412, 16, CHROME_TIER_LABEL[tier], {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '13px',
+        color: COCOA,
+      })
+      .setOrigin(0, 0.5);
+    const dots = this.add.graphics();
+    for (let i = 0; i < 3; i += 1) {
+      const cx = 478 + i * 15;
+      if (i < PROTOTYPE_SEEDS.difficulty) {
+        dots.fillStyle(SAGE, 1);
+        dots.lineStyle(1, OUTLINE, 1);
+        dots.fillCircle(cx, 16, 4.5);
+        dots.strokeCircle(cx, 16, 4.5);
+      } else {
+        dots.lineStyle(1.5, OUTLINE, 0.7);
+        dots.strokeCircle(cx, 16, 4.5);
+      }
+    }
+
+    const bar = this.add.container(0, 0, [
+      bg,
+      profileBg,
+      avatar,
+      profile,
+      diffBg,
+      diffLabel,
+      dots,
+    ]);
+    bar.setDepth(20);
+  }
+
   private showView(next: ViewName, instant = false): void {
     if (next === this.currentView && !instant) return;
     if (this.adminOpen && !instant) return;
@@ -1198,6 +1416,7 @@ export class ClinicScene extends Phaser.Scene {
     this.fadeSwap(this.telemedView, next === 'telemed', instant);
     this.fadeSwap(this.cardRow, next === 'visit' || next === 'telemed', instant);
     this.fadeSwap(this.chips, next === 'visit', instant);
+    this.fadeSwap(this.hud, next === 'visit', instant);
     this.nametag.setVisible(next === 'visit');
     this.syncPanelVisibility();
     const cardY = next === 'telemed' ? -60 : 0;

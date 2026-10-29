@@ -27,6 +27,13 @@ import type { ChoiceGrade, ConditionId } from '../clinical';
  * grades, and consequence text are NEVER mocked — the scene reads
  * them live from the ClinicalEngine. Only the roster, the portal
  * inbox, and the visit-session seeds below are mock.
+ *
+ * CHROME-2 MOCK (same law): the top-bar profile/difficulty chips,
+ * the care-coins counter, the visit timer start, and the
+ * visit-context wordings below are ALL mock display seeds. The
+ * real Care Coins economy (docs/PROGRESSION.md) and the real
+ * wording system ship later and will replace this module's
+ * chrome-2 section without touching scene layout.
  */
 
 export type MockGrade = ChoiceGrade;
@@ -125,6 +132,81 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
     status: 'napping',
   },
 ];
+
+/**
+ * CHROME-2 display tiers, gentle → expert. Keyed by the mock
+ * `difficulty` seed (1 → gentle, 2 → steady, 3 → expert). These
+ * names match the future wording system's planned tiers; the
+ * legacy `wordingTier` seed (gentle/plain/clinical) still feeds
+ * the staff monitor until the backend owns wording.
+ */
+export type ChromeTier = 'gentle' | 'steady' | 'expert';
+
+export const CHROME_TIER_BY_DIFFICULTY: Record<1 | 2 | 3, ChromeTier> = {
+  1: 'gentle',
+  2: 'steady',
+  3: 'expert',
+};
+
+export const CHROME_TIER_LABEL: Record<ChromeTier, string> = {
+  gentle: 'Gentle',
+  steady: 'Steady',
+  expert: 'Expert',
+};
+
+/** Visit-context kinds for the HUD label (mock derivation in scene). */
+export type VisitContext = 'new-patient' | 'sick-visit' | 'follow-up';
+
+/**
+ * Visit-context label wordings: 3 cached wordings per context (one
+ * per chrome tier). Generic copy — no patient names, so the same
+ * table serves every patient when the roster grows. MOCK: the real
+ * wording system replaces this table later.
+ */
+export const VISIT_CONTEXT_WORDING: Record<VisitContext, Record<ChromeTier, string>> = {
+  'new-patient': {
+    gentle: 'A first hello',
+    steady: 'New Patient',
+    expert: 'New intake',
+  },
+  'sick-visit': {
+    gentle: 'Feeling poorly',
+    steady: 'Sick Visit',
+    expert: 'Acute visit',
+  },
+  'follow-up': {
+    gentle: 'Back for a check-in',
+    steady: 'Follow-Up Visit',
+    expert: 'Follow-up',
+  },
+};
+
+/**
+ * Mock care-coins stash at scene start. Ticks +1 per BEST resolve
+ * (scene-owned counter). MOCK — the real `coin_ledger` accrual
+ * (docs/PROGRESSION.md) replaces this later.
+ */
+export const MOCK_CARE_COINS_START = 12;
+
+/** Mock top-bar profile chip label (no real profile yet). */
+export const MOCK_PROFILE_LABEL = 'You';
+
+/**
+ * QUOTED-SPEECH RULE (chrome-2 display law): spoken lines by named
+ * cast (Mabel, Dr. Nora) render wrapped in straight double quotes;
+ * narration, player ("me"), and system (Clinic) lines stay
+ * unquoted — talking vs describing unmistakable. Applied at RENDER
+ * time (conversation panel + portal bubbles), never baked into row
+ * data, so future real Supabase rows inherit the rule.
+ */
+export function quoteIfSpoken(from: string, me: boolean, text: string): string {
+  if (me) return text;
+  const key = from.trim().toUpperCase();
+  if (key === 'MABEL' || key === 'DR. NORA' || key === 'DR NORA') {
+    return `"${text}"`;
+  }
+  return text;
+}
 
 /** Portal inbox threads, top to bottom (all pretend, stays on device). */
 export const MOCK_THREADS: readonly MockThread[] = [

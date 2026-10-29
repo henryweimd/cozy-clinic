@@ -62,10 +62,26 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
 
 ## (B) PLAYER CHROME
 
+### Top bar (persistent, all views; chrome-2)
+
+- Geometry: slim full-width strip, x0–540, y0–32. Cream fill at
+  80% alpha so the room shows softly through + 2px whisper
+  divider `#8A5A3B` at 25% alpha. Display-only (no tap zones),
+  so title taps pass through. Pills + text fully opaque.
+- Left: mock profile chip x24–120 (w96 h24 r12): sage dot +
+  "You" 14px bold. Right: mock difficulty pill x400–516 (w116
+  h24 r12): tier word 13px bold ("Gentle"/"Steady"/"Expert" from
+  the mock difficulty seed 1/2/3) + 3 dots (filled sage to the
+  seed, hollow rings after). Middle stays EMPTY — home for
+  future controls. Clear of the title (top ~y40) and the admin
+  trigger zone.
+
 ### Nav bar (persistent, all views)
 
-- Geometry: full-width dock, x0–540, y888–960 (h72). Cream fill,
-  3px top border `#8A5A3B` at 40% alpha. Safe: sits below today's
+- Geometry: full-width dock, x0–540, y888–960 (h72). Cream fill
+  at 80% alpha (chrome-2: was opaque), 2px top divider
+  `#8A5A3B` at 25% alpha (was 3px at 40%). Quieter styling,
+  same 4 tabs. Safe: sits below today's
   bubble dock (936) — the Visit view re-docks the bubble higher
   (see Visit).
 - Four tabs, each 135 wide x 72 tall (tap target 135x72):
@@ -83,8 +99,17 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
   (ends ~y118) or Mabel (top y508): guaranteed clear band.
 - Style: cream panel r24 + 3px warm-brown outline + small tail
   triangle pointing down toward Mabel (apex at (270, panel bottom
-  +14)). Speaker tag pill top-left inside ("MABEL" / "DR. NORA" /
+  +14)), SOLID full-outline-color tucked under the panel
+  (chrome-2 operator direction; was an outlined cream tail).
+  Speaker tag pill top-left inside ("MABEL" / "DR. NORA" /
   "YOU", 14px bold, sage/sky/cream fills).
+- Quoted speech (chrome-2 display law): MABEL and DR. NORA lines
+  render wrapped in straight double quotes; YOU lines and
+  narration stay unquoted — talking vs describing unmistakable.
+  Applied at render time, BEFORE the "…" truncate pass, so the
+  rule measures the shown string. Same rule in the portal:
+  Dr. Nora's message bubbles quote, player replies + Clinic
+  system lines + truncated snippets stay bare.
 - Body: Baloo 2 20px cocoa, left-aligned, max 4 lines at 20px
   within max-h; longer copy truncates with "…" (prototype rule —
   flag it in feedback if real copy ever needs scroll).
@@ -104,6 +129,8 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
 - Behavior: tap = card squash (scale 0.97, 90ms yoyo) then the
   EXISTING tap-resolve path (happy bounce + result line in the
   conversation panel + mock vitals tick). No new resolution logic.
+  Chrome-2: a BEST resolve also ticks the mock care-coins pill +1
+  (lesser grades and blocked moves pay nothing).
 - Disabled state (e.g. DANGEROUS blocked by the engine): card
   dims to 55% + shake 60ms x2 + Dr. Nora "stepped in" line —
   mirrors the shipped `hootLine` veto copy.
@@ -121,6 +148,23 @@ VIEW 1 — VISIT (default; today's Mabel scene):
 - Nametag (y744) gains a mock vitals chip row beneath it:
   y766–788, three pills (w~120 h~22, 14px): e.g. "• breath 3",
   "• comfort 2", "visit #4". Decorative mock, ticks on resolve.
+- Progress HUD row (chrome-2, Visit only — Telemed's LIVE pills
+  own this band there): y376–412, three OPAQUE pills (the clear
+  band below the panel's max bottom 356, above Mabel's top 508).
+  Coins x24–156 (w132 h36 r18 token): amber coin dot + mock
+  count 16px bold, starts at 12, +1 per BEST resolve (mock —
+  real `coin_ledger` accrual later). Context x168–372 (w204 h36
+  r14 tag): visit-context label 15px bold, worded per
+  gentle/steady/expert tier from the mock difficulty seed —
+  new-patient ("A first hello" / "New Patient" / "New intake"),
+  sick-visit ("Feeling poorly" / "Sick Visit" / "Acute visit"),
+  follow-up ("Back for a check-in" / "Follow-Up Visit" /
+  "Follow-up"); mock derivation (first visit → new, stage 2+ →
+  sick, else follow-up), re-derived per resolve. Timer x384–516
+  (w132 h36 r8 readout): rose dot + mm:ss 16px bold from scene
+  start, display-only — urgency feel, no rewards/penalties wired.
+  Radii vary with intent (18/14/8); translucency stays on the
+  bar strips, never on these pills or their text.
 
 VIEW 2 — WAITING ROOM (roster):
 
@@ -211,6 +255,15 @@ interface MockRosterEntry {
 
 interface MockThread { id: string; from: string; subject: string;
   snippet: string; unread: number; messages: { me: boolean; text: string }[]; }
+
+// Chrome-2 mock chrome (mockData.ts; real economy/wording later):
+type ChromeTier = 'gentle' | 'steady' | 'expert';  // from difficulty 1/2/3
+type VisitContext = 'new-patient' | 'sick-visit' | 'follow-up';
+const VISIT_CONTEXT_WORDING: Record<VisitContext, Record<ChromeTier, string>>;
+const MOCK_CARE_COINS_START = 12;
+const MOCK_PROFILE_LABEL = 'You';
+// quoteIfSpoken(from, me, text): named-cast speech ("Mabel",
+// "Dr. Nora") wraps in "..." at render; me/system bare.
 ```
 
 Seed values: Mabel / asthma @ stageIndex 2 ('wheezy') /

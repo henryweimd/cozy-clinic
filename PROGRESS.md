@@ -972,3 +972,61 @@ idle + tapped states, zero console errors. Element-by-element
   flash pained-still on dusty-blanket (2->3), bounce happy on
   full recovery, and hold steady on the DANGEROUS veto.
 - No commit/push (main agent merges). STOP after CHECKPOINT.md.
+
+## Active chunk: chrome-2 UI iteration (operator-ordered, code + copy only)
+
+- CHROME-2 OWNERSHIP (declared BEFORE editing, per AGENTS.md workflow
+  law): the chrome-2 builder owns ONLY `src/scenes/ClinicScene.ts`,
+  `src/ui/mockData.ts`, `docs/UI_PROTOTYPE.md` corrections,
+  `PROGRESS.md`, `CHECKPOINT.md` this run. Nobody else writes those
+  paths this run. $0.00 image spend — code + copy only, no generations.
+- Scope (ALL FIVE operator items): (1) subtle translucent chrome —
+  slim top bar (profile chip + difficulty indicator, mock, room left
+  for future controls) + translucent bottom toolbar, translucent
+  fills with opaque text; (2) conversation-panel tail restyled as
+  SOLID full-outline-color tucked under the panel; (3) quoted speech
+  — MABEL + DR. NORA lines wrapped in quotes, narration unquoted, in
+  conversation rendering + mock copy; (4) progress HUD — mock
+  care-coins pill (ticks on BEST resolves), display-only mm:ss visit
+  timer, visit-context label (new/sick/follow-up ×
+  gentle-to-expert tier from mock difficulty); (5) taste guardrails
+  on every added element. Mabel geometry/motion/expressions/panel
+  behavior/dev-view/offline stay intact. New copy passes the
+  patient-name guard + Baloo-2 cmap audit. No commit/push (main
+  agent merges).
+- CHROME-2 RESULT (builder, 2026-10-29): all five items shipped.
+  `src/ui/mockData.ts`: ChromeTier gentle/steady/expert keyed by
+  mock difficulty (+ labels), VISIT_CONTEXT_WORDING (3 contexts ×
+  3 tiers, generic copy, no patient names), MOCK_CARE_COINS_START
+  12, MOCK_PROFILE_LABEL, quoteIfSpoken render-time rule — all
+  documented mock. `src/scenes/ClinicScene.ts`: (1) slim top bar
+  y0–32 (cream 0.8 + whisper divider; profile chip left,
+  difficulty word + 3 dots right, middle empty, display-only) +
+  nav bar quieted (cream 0.8, 2px divider at 0.25; same 4 tabs,
+  opaque pill/text); (2) panel tail now solid OUTLINE tucked
+  under the panel; (3) renderPanel + portal bubbles quote
+  MABEL/DR. NORA via quoteIfSpoken (YOU/me/Clinic/snippets
+  bare), quoted before the truncate pass; (4) Visit-only HUD
+  y376–412 (coins r18 +1/BEST, context r14 re-derived per
+  resolve, timer r8 mm:ss display-only from scene start, 1Hz
+  text updates); (5) taste: palette-only accents, no
+  gradients/emoji/glow, 13→44px type steps, radii 8/12/14/18
+  with intent, translucency on bar strips only. Untouched:
+  Mabel geometry/motion/expressions, panel fades/toggle, admin
+  stack, offline (no fetches). Copy checks: patient-name guard
+  29/29 green (no conditions.ts edit; new copy name-free);
+  fontTools cmap audit (`/tmp/chrome2_audit.py`) — zero missing
+  Baloo-2 glyphs across all new strings incl. U+0022 + quoted
+  portal lines; conditions.ts holds no `"` so no double-wrap.
+- Tests/build: `npm test` 29/29 pass; `npm run build` green
+  (known benign font-URL + chunk-size warnings only). Zero
+  chrome-2 regressions — no fixes needed.
+- Spend: image spend $0.00 (code + copy only, 0 generations).
+  Ledger stays ~$0.2344 — far under the operator's $20 cap; at
+  >= $120, STOP (not reached).
+- Not done by builder: deploy + operator phone playtest (no
+  browser in sandbox — confirm top bar/HUD read quiet over the
+  photo plate, solid tail + quotes land, coins tick on BEST
+  only, timer counts, context says "Feeling poorly" at the
+  opener). No commit/push (main agent merges). STOP after
+  CHECKPOINT.md.
