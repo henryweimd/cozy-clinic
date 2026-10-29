@@ -307,3 +307,78 @@ idle + tapped states, zero console errors. Element-by-element
   bed scale vs Mochi, bed-vs-bg-cabinet overlap lower-left,
   plant corner fit); P3 poses, P4 font, P5 fx out of scope.
   STOP after CHECKPOINT.md.
+
+## Active chunk: P3 Mochi poses (character-artist workstream)
+
+- P3 OWNERSHIP (declared BEFORE generating, per AGENTS.md workflow
+  law): the P3 character-artist agent owns
+  `public/assets/characters/mochi-<pose>.png` ADDITIONS ONLY
+  (never modifies `mochi-idle.png` / `mochi-blink.png`),
+  `art/contact-sheets/mochi-poses-*`, and `art/manifest.json`
+  character additions ONLY. Nobody else writes those paths this
+  run. The P3 character artist makes NO scene-code edits
+  (`src/scenes/ClinicScene.ts` belongs to the integrator).
+- Scope: at most TWO key poses via edit_image from mochi-idle.png
+  (edits preserve identity): mochi-happy (joyful tap-react) and
+  ONLY a second pose if the demo needs it. Transparent bg,
+  192x192, same foot anchor/padding class. Style block verbatim
+  in every prompt. Ledger was ~$0.1144 after P2; STOP at >=$120.
+- P2 LESSON applied: manifest entry carries FULL PROMPT TEXT +
+  prompt sha256 + export sha256 (no hash-only entries).
+- P3 RESULT (character artist): ONE pose shipped — no second
+  pose, the demo only needs the happy tap-react. 1 image x
+  $0.01 = $0.01 this workstream (ledger ~$0.1244, $120 STOP
+  far off). Export `public/assets/characters/mochi-happy.png`
+  (192x192 RGBA, ^ ^ closed eyes, bigger smile, rosier blush);
+  master in studio `art/source/mochi/` (git-ignored, correct);
+  contact sheet `art/contact-sheets/mochi-poses-happy.png`
+  (idle/blink/happy + alpha-checker row); manifest `assets[2]`
+  with FULL PROMPT TEXT + hashes + validation + fallback.
+  Validation: bbox [20,32,168,184] within 2px of idle on all
+  sides, opaque ratio 0.335 vs 0.336, corners transparent,
+  pad >= 8px all sides, identity match by eye. Minor noted:
+  happy's pouch carries a small white cross emblem (idle
+  pouch reads plain) — same pink pouch shape, accepted.
+  Integrator notes: (1) preload `mochi-happy` + swap texture
+  during the tap bounce, then restore `mochi-idle` on settle;
+  (2) same 212px display size + (270,614) center as idle (bbox
+  matched, no re-layout); (3) blink timer should not fight
+  the happy swap — skip/suspend blink while happy shows;
+  (4) in-game render check needs deploy + operator phone
+  playtest; (5) `mochi-idle.png` / `mochi-blink.png` untouched
+  (byte-identical, never rewritten).
+
+## Active chunk: P3 Mochi poses (integrator workstream)
+
+- P3 OWNERSHIP (integrator): owns `src/scenes/ClinicScene.ts`,
+  `PROGRESS.md`, `CHECKPOINT.md` this run. No `art/*` or
+  `public/assets/*` edits (character artist owns those paths);
+  sequential after art, no concurrent writers.
+- P3 RESULT (integrator): real pose file existed
+  (`public/assets/characters/mochi-happy.png` 192x192 RGBA,
+  bbox (20,32,169,184) within 2px of idle on all sides,
+  verified on disk), so integrated it: preload `mochi-happy`;
+  tap-react sets the happy texture for the bounce and restores
+  `mochi-idle` on the bounce tween's onComplete (token-guarded
+  so a stale bounce never clears a newer happy on rapid
+  re-taps); blink now swaps idle<->blink ONLY when happy is
+  not showing (`showingHappy` flag + texture-key guards both
+  ways, so a tap during the 120ms blink window keeps happy and
+  a blink never cuts happy short). Header comment records P3.
+  KEPT byte-identical in behavior: idle bob, Mochi shadow
+  ellipse + Mochi 212px at (270,614) + nametag, bubble 492
+  wide docked at 936 sizing upward, tap-to-complaint toggle.
+  No clinical-copy change.
+- Tests/build: `npm test` 29/29 pass; `npm run build` green
+  (tsc + vite; mochi-happy.png bundled into
+  `dist/assets/characters/`). Zero P3 regressions — no fixes
+  needed.
+- Spend: integrator image spend $0.00 (no generations); P3
+  total stays $0.01 (character artist's one edit). Ledger
+  ~$0.1244. Next $20 gate far off; at >= $120, STOP — not
+  reached.
+- Not done by integrator: deploy + operator phone playtest
+  (headless screenshot impossible in sandbox per prior audit;
+  render check needs the deployed URL on a phone — confirm
+  happy face reads joyful mid-bounce, no flicker vs blink);
+  P4 font, P5 fx out of scope. STOP after CHECKPOINT.md.

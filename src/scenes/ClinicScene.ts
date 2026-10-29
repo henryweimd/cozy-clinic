@@ -13,6 +13,10 @@ import { ClinicalEngine, CONDITIONS } from '../clinical';
  * art/manifest.json props[]) feet-anchored to GROUND; the code rug
  * is deleted (the painted bg rug suffices). Mochi is the
  * finished AI-generated sprite (see ART_BIBLE.md).
+ * P3: tap-react shows the happy pose
+ * (`assets/characters/mochi-happy.png`, see art/manifest.json
+ * assets[2]) during the bounce, then restores idle; blink swaps
+ * idle<->blink only while happy is not showing.
  *
  * Layout contract (fix-layout-01 spacing system): SIDE = 24,
  * GROUND = 724, Mochi 212px at (270, 614), bubble 492 wide docked
@@ -24,6 +28,8 @@ export class ClinicScene extends Phaser.Scene {
   private mochi!: Phaser.GameObjects.Image;
   private mochiBaseY = 0;
   private blinkAt = 0;
+  private showingHappy = false;
+  private happyToken = 0;
   private bubble!: Phaser.GameObjects.Container;
   private bubbleOpen = false;
   private engine = new ClinicalEngine();
@@ -35,6 +41,7 @@ export class ClinicScene extends Phaser.Scene {
   preload(): void {
     this.load.image('mochi-idle', 'assets/characters/mochi-idle.png');
     this.load.image('mochi-blink', 'assets/characters/mochi-blink.png');
+    this.load.image('mochi-happy', 'assets/characters/mochi-happy.png');
     this.load.image('room-shell', 'assets/room/room-shell-01.png');
     this.load.image('prop-bed', 'assets/props/exam-bed.png');
     this.load.image('prop-plant', 'assets/props/plant.png');
@@ -54,10 +61,20 @@ export class ClinicScene extends Phaser.Scene {
     this.mochi.y = this.mochiBaseY + Math.sin(t * 1.8) * 3;
 
     // Blink: eyes closed ~120ms every 3–5s, randomized (art bible).
-    if (this.time.now >= this.blinkAt && this.mochi.texture.key !== 'mochi-blink') {
+    // Swaps idle<->blink only when the happy pose is not showing, so a
+    // tap-react never fights the blink timer.
+    if (
+      this.time.now >= this.blinkAt &&
+      !this.showingHappy &&
+      this.mochi.texture.key === 'mochi-idle'
+    ) {
       this.mochi.setTexture('mochi-blink');
       this.time.delayedCall(120, () => {
-        this.mochi.setTexture('mochi-idle');
+        // A tap during the 120ms window swaps in happy; only restore
+        // idle when blink still owns the texture.
+        if (this.mochi.texture.key === 'mochi-blink') {
+          this.mochi.setTexture('mochi-idle');
+        }
         this.scheduleBlink();
       });
     }
@@ -175,6 +192,13 @@ export class ClinicScene extends Phaser.Scene {
     if (this.bubbleOpen) {
       this.bubble.setVisible(true);
       this.tweens.add({ targets: this.bubble, alpha: 1, duration: 180, ease: 'Sine.easeOut' });
+      // Happy tap-react: show the happy pose for the bounce, then
+      // restore idle. The token guards rapid re-taps so a stale
+      // bounce never clears a newer happy.
+      this.happyToken += 1;
+      const token = this.happyToken;
+      this.showingHappy = true;
+      this.mochi.setTexture('mochi-happy');
       // One small happy bounce (squash, rise, tiny overshoot), then settle.
       this.tweens.add({
         targets: this.mochi,
@@ -183,6 +207,13 @@ export class ClinicScene extends Phaser.Scene {
         duration: 110,
         yoyo: true,
         ease: 'Sine.easeInOut',
+        onComplete: () => {
+          if (token !== this.happyToken) return;
+          this.showingHappy = false;
+          if (this.mochi.texture.key === 'mochi-happy') {
+            this.mochi.setTexture('mochi-idle');
+          }
+        },
       });
     } else {
       this.tweens.add({

@@ -34,6 +34,35 @@
    "source_file": "mochi-concept-20261028-004346-1.png",
    "source_tool": "muse-image-mcp generate_image",
    "sprite": "mochi-idle.png"
+  },
+  {
+   "sprite": "mochi-happy.png",
+   "export": "public/assets/characters/mochi-happy.png",
+   "master": "art/source/mochi/mochi-happy-master.png",
+   "source_file": "mochi-happy-20261028-220846-1.png",
+   "source_tool": "muse-image-mcp edit_image (identity edit of mochi-idle.png)",
+   "revision": 1,
+   "dimensions": "192x192",
+   "frame": "happy tap-react (closed ^ ^ eyes, bigger smile, rosier blush; same body/cap/pouch/outline)",
+   "prompt_full": "Edit this plush bunny nurse sprite into a joyful happy tap-reaction: change ONLY the face — happy closed eyes shaped like ^ ^ (two upward-curved dark warm-brown arcs), a bigger open joyful smile, slightly rosier pink blush cheeks. Keep everything else EXACTLY the same: cream-colored rounded plush body, long floppy ears, pink nurse cap with cross badge, pink neckerchief, pink front pouch bag, short limbs, rounded base, same body position, size, and framing. Soft sculpted plush-toy character, cream-colored rounded body, small dark bead eyes, pink blush cheeks, simple gentle smile, thin warm-brown outline, matte fabric texture, warm pastel palette, clean uncluttered design, full body, plain solid pale background, centered, game sprite. No text, no busy background, no extra limbs, no photorealism, no neon colors, no clutter.",
+   "prompt_hash_sha256": "0d18799748630177db8c47ca61a976817ad3539bc821ea575433ca093379f567",
+   "export_sha256": "e38581277df8d5d37163333bb94ba0cb4619e4c6f7ebe72990aea7cb049b1184",
+   "opacity_check": {
+    "bbox": [20, 32, 168, 184],
+    "opaque_ratio": 0.335,
+    "corners_transparent": true,
+    "pad_px": {"left": 20, "top": 32, "right": 24, "bottom": 8}
+   },
+   "foot_anchor": "bottom-center (Phaser origin 0.5,1.0); feet row = export bottom - 8px pad (same class as idle/blink)",
+   "validation": {
+    "dimensions": "192x192 RGBA exact",
+    "alpha": "border flood-fill keyout tol=28 from bg median (245,239,233) on 1600x1600 master; corners transparent; interior gaps (ear/head, between legs) match idle/blink treatment",
+    "bbox_vs_idle": "happy [20,32,168,184] vs idle [21,32,170,184]: within 2px on all sides; opaque ratio 0.335 vs 0.336",
+    "identity_match": "same cap/ears/pouch/limbs/outline/scale/position by eye (see contact sheet); minor: pouch carries a small white cross emblem, idle pouch reads plain at 192px — same pink pouch shape, accepted",
+    "style_match": "ART_BIBLE fixed style block carried verbatim in prompt; plush/outline/pastel match idle (visual)"
+   },
+   "spend_usd": 0.01,
+   "fallback": "if export missing, integrator keeps code scale-bounce on mochi-idle (offline-safe)"
   }
  ],
  "backgrounds": [
