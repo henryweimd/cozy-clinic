@@ -7,6 +7,17 @@
     <link rel="icon" href="data:," />
     <title>Little Lives: Cozy Clinic</title>
     <style>
+      /* P4: Baloo 2 vendored offline (public/assets/fonts/Baloo2.ttf,
+         OFL — see LICENSE.txt beside it). NO CDN fonts: the demo
+         must work fully offline. main.ts gates boot on
+         document.fonts.load() so no text ever draws before this
+         face is ready (no FOUT swap mid-game). */
+      @font-face {
+        font-family: 'Baloo 2';
+        src: url('assets/fonts/Baloo2.ttf') format('truetype');
+        font-weight: 400 800;
+        font-display: swap;
+      }
       html,
       body {
         margin: 0;

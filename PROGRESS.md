@@ -382,3 +382,50 @@ idle + tapped states, zero console errors. Element-by-element
   render check needs the deployed URL on a phone — confirm
   happy face reads joyful mid-bounce, no flicker vs blink);
   P4 font, P5 fx out of scope. STOP after CHECKPOINT.md.
+
+## Active chunk: P4 typography (implementer workstream)
+
+- P4 OWNERSHIP (declared BEFORE editing, per AGENTS.md workflow
+  law): the P4 typography agent owns `index.html`,
+  `src/main.ts` font loading, `src/scenes/ClinicScene.ts` text
+  styles, `public/assets/fonts/`, `PROGRESS.md`, `CHECKPOINT.md`
+  this run. Nobody else writes those paths this run.
+- P4 RESULT (implementer): Baloo 2 (OFL, Ek Type) vendored —
+  picked over Nunito/Quicksand for the roundest plush match.
+  `public/assets/fonts/Baloo2.ttf` (683200 bytes, variable
+  wght 400-800, curl'd from github.com/google/fonts raw;
+  sfnt header + `file` verified) + `LICENSE.txt` OFL note
+  (the follow-up OFL.txt curl timed out, so the note cites
+  the OFL 1.1 by name + source URLs instead of pasting it;
+  no @fontsource dependency needed). `index.html` gains a
+  `@font-face` (`font-weight: 400 800`, relative
+  `assets/fonts/` URL — NO CDN, fully offline). `src/main.ts`
+  boots only after `document.fonts.load()` for 500/22px +
+  700/44px resolves (3s timeout fallback, game still starts
+  on failure — no FOUT swap mid-game). `ClinicScene.ts`: all
+  5 Georgia sites (title/subtitle/nametag/bubble label+hint)
+  now use one `FONT_FAMILY` const (`"Baloo 2", "Comic Sans
+  MS", "Chalkboard SE", system-ui, sans-serif`); title adds
+  `fontStyle: bold`; sizes/colors/copy unchanged. Bubble
+  restyled as a plush panel: Graphics rounded rect (r24) in
+  palette cream `#FFF3E2` + the one thin 3px warm-brown
+  `#8A5A3B` outline (was: sharp rect, 4px stroke) — same
+  w492/dockBottom936 sizing-upward geometry, same clinical
+  copy.
+- Tests/build: `npm test` 29/29 pass; `npm run build` green
+  (tsc + vite; Baloo2.ttf + LICENSE.txt bundled into
+  `dist/assets/fonts/`, @font-face URL verified unchanged in
+  `dist/index.html`, fonts.load gate present in the bundle).
+  Zero P4 regressions — no fixes needed. (Vite's benign
+  "didn't resolve at build time" warning for the public/
+  font URL is expected — it stays runtime-relative.)
+- Spend: image spend $0.00 (no generations). P4 total $0.00.
+  Ledger stays ~$0.1244. Next $20 gate far off; at >= $120,
+  STOP — not reached.
+- Not done by implementer: deploy + operator phone playtest
+  (headless screenshot impossible in sandbox per prior audit;
+  render check needs the deployed URL on a phone — confirm
+  Baloo 2 renders in all 5 text sites with no FOUT, and the
+  rounded bubble still clears the nametag/Mochi/edges with
+  the new metrics); P5 fx out of scope. STOP after
+  CHECKPOINT.md.

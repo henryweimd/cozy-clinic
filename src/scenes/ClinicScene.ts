@@ -17,6 +17,11 @@ import { ClinicalEngine, CONDITIONS } from '../clinical';
  * (`assets/characters/mochi-happy.png`, see art/manifest.json
  * assets[2]) during the bounce, then restores idle; blink swaps
  * idle<->blink only while happy is not showing.
+ * P4: all text in Baloo 2 (OFL, vendored offline at
+ * `assets/fonts/Baloo2.ttf`, boot-gated in main.ts); the bubble
+ * is a plush rounded panel in palette cream with the one thin
+ * warm-brown outline — same w492/dockBottom936 sizing-upward
+ * geometry and same clinical copy.
  *
  * Layout contract (fix-layout-01 spacing system): SIDE = 24,
  * GROUND = 724, Mochi 212px at (270, 614), bubble 492 wide docked
@@ -24,6 +29,14 @@ import { ClinicalEngine, CONDITIONS } from '../clinical';
  * with the deleted code passes; only Mochi/bubble geometry must
  * still fit the painted room.
  */
+/**
+ * P4: the one plush face for every text object — Baloo 2 (vendored
+ * offline, boot-gated in main.ts) over a rounded-system fallback
+ * stack, so text stays friendly even if the font file ever fails.
+ */
+const FONT_FAMILY =
+  '"Baloo 2", "Comic Sans MS", "Chalkboard SE", system-ui, sans-serif';
+
 export class ClinicScene extends Phaser.Scene {
   private mochi!: Phaser.GameObjects.Image;
   private mochiBaseY = 0;
@@ -110,14 +123,15 @@ export class ClinicScene extends Phaser.Scene {
   private drawTitle(): void {
     this.add
       .text(270, 56, 'Cozy Clinic', {
-        fontFamily: 'Georgia, serif',
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
         fontSize: '44px',
         color: '#5c4633',
       })
       .setOrigin(0.5);
     this.add
       .text(270, 100, 'Tap Mochi to say hello', {
-        fontFamily: 'Georgia, serif',
+        fontFamily: FONT_FAMILY,
         fontSize: '22px',
         color: '#8a6f52',
       })
@@ -138,7 +152,7 @@ export class ClinicScene extends Phaser.Scene {
 
     this.add
       .text(270, 748, 'Mochi · first patient', {
-        fontFamily: 'Georgia, serif',
+        fontFamily: FONT_FAMILY,
         fontSize: '24px',
         color: '#5c4633',
       })
@@ -164,7 +178,7 @@ export class ClinicScene extends Phaser.Scene {
     const padBottom = 20;
     const label = this.add
       .text(x, padTop, complaint, {
-        fontFamily: 'Georgia, serif',
+        fontFamily: FONT_FAMILY,
         fontSize: '20px',
         color: '#5c4633',
         align: 'center',
@@ -173,15 +187,20 @@ export class ClinicScene extends Phaser.Scene {
       .setOrigin(0.5, 0);
     const hint = this.add
       .text(x, padTop + label.height + gapMid, 'The doctor will see you now.', {
-        fontFamily: 'Georgia, serif',
+        fontFamily: FONT_FAMILY,
         fontSize: '18px',
         color: '#8a6f52',
       })
       .setOrigin(0.5, 0);
     const totalH = padTop + label.height + gapMid + hint.height + padBottom;
-    const bg = this.add
-      .rectangle(x, totalH / 2, w, totalH, 0xfdf6ec)
-      .setStrokeStyle(4, 0x8a5a3b);
+    // P4 plush panel: palette cream fill + the one thin warm-brown
+    // outline (bible), with soft rounded corners. Same box (w 492,
+    // docked bottom 936, sizing upward) — only the finish changed.
+    const bg = this.add.graphics();
+    bg.fillStyle(0xfff3e2, 1);
+    bg.lineStyle(3, 0x8a5a3b, 1);
+    bg.fillRoundedRect(x - w / 2, 0, w, totalH, 24);
+    bg.strokeRoundedRect(x - w / 2, 0, w, totalH, 24);
     this.bubble = this.add.container(0, dockBottom - totalH, [bg, label, hint]);
     this.bubble.setVisible(false);
     this.bubble.setAlpha(0);

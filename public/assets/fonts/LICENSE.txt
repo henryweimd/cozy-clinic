@@ -1,0 +1,14 @@
+Baloo2.ttf — Baloo 2 variable font (weight 400-800), rounded casual
+display face used for ALL in-game text (title, subtitle, nametag,
+dialogue bubble).
+
+Designer: Ek Type (Ekta Shah).
+Source: https://github.com/google/fonts (ofl/baloo2/Baloo2[wght].ttf).
+License: SIL Open Font License 1.1 (OFL) — free to use, embed, and
+redistribute with this notice. Full text:
+https://openfontlicense.org / https://github.com/google/fonts/blob/main/ofl/baloo2/OFL.txt
+
+Vendored into the repo so the demo works FULLY OFFLINE — no CDN,
+no runtime webfont fetch. Phaser draws it via canvas fillText after
+the main.ts document.fonts.load() gate; fallback stack is
+'Comic Sans MS', 'Chalkboard SE', system-ui, sans-serif.
