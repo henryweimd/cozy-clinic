@@ -1030,3 +1030,121 @@ idle + tapped states, zero console errors. Element-by-element
   only, timer counts, context says "Feeling poorly" at the
   opener). No commit/push (main agent merges). STOP after
   CHECKPOINT.md.
+
+## Active chunk: backdrop plate library (art direction, spec only)
+
+- BACKDROP-DIRECTOR OWNERSHIP (declared BEFORE writing, per
+  AGENTS.md workflow law): the backdrop art director owns ONLY
+  the new "Appendix: plate library registry" section of
+  `ART_BIBLE.md`, plus this PROGRESS.md entry. No images, no
+  scene code, no other files. Nobody else writes those paths
+  this run. Operator order: additional backdrops for the
+  various settings + multiple alternatives, clean minimal
+  photorealistic style, MUST read as a modern INVITING
+  wellness clinic, never a generic office.
+- Registry location chosen: `ART_BIBLE.md` appendix (NOT
+  `docs/UI_PROTOTYPE.md` — plate specs are art law under the
+  validation gate; the prototype spec stays frozen).
+- BACKDROP-DIRECTOR RESULT (2026-10-29): 8-plate library specced
+  in the new `ART_BIBLE.md` appendix (4 settings x 2 variants;
+  `exam-a` = shipped `clinic-shell-reboot-01.png` stays the
+  Visit default, 7 new plates to generate). Each plate carries a
+  generation prefix (Block B verbatim appended), >=2 wellness
+  cues, the shared 540x960 clear-zone contract (title y0-136,
+  panel y136-356, HUD y376-412, footprint x164-376 y508-720,
+  GROUND=724, cards + nav floor-only), palette bounds measured
+  from the shipped plate (wall `#D3CCC5`/`#B7ACA0`, floor
+  `#D7C1AA`/`#AA9178`, wood `#C8A583`, rug `#DAC7B3`,
+  foliage `#655C47`, +/-14/channel), and the wiring rule (view
+  -> setting; A/B by visitNo parity so both variants surface in
+  normal play; one-line `PLATE_PIN` override; missing plates
+  fall back to `exam-a` offline). Read before writing:
+  ART_BIBLE Block B, the reboot manifest entry + contact sheet
+  (viewed), ClinicScene view/chrome geometry, PROGRESS tail.
+  Spend: image spend $0.00 (spec only, 0 generations). Ledger
+  stays ~$0.2344; at >= $120, STOP (not reached).
+- Not done by director: plate generation + manifest entries +
+  contact sheets (artist follow-on, 7 plates), ClinicScene
+  plate wiring + in-game render check (integrator follow-on).
+  No commit/push (main agent merges). STOP.
+
+## Active chunk: backdrop plate generation (artist run)
+
+- BACKDROP-ARTIST OWNERSHIP (declared BEFORE generating, per AGENTS.md
+  workflow law): the backdrop artist owns ONLY new
+  `public/assets/room/*.png` (7 plates), masters under
+  `art/source/room-reboot/`, contact sheet(s)
+  `art/contact-sheets/*bg-*`, `art/manifest.json` backgrounds[]
+  additions, plus this PROGRESS.md entry. No scene code, no other
+  files. Nobody else writes those paths this run. Cap: AT MOST 8
+  plates; generating the 7 SPEC plates (exam-a SHIPPED, stays).
+  Workstream image cap $0.08 (7 x $0.01); at >= $120, STOP.
+- BACKDROP-ARTIST RESULT (2026-10-29): all 7 SPEC plates generated,
+  validated, shipped. Files: `public/assets/room/clinic-{exam-b,
+  waiting-a, waiting-b, telemed-a, telemed-b, portal-a, portal-b}.png`
+  (1080x1920 RGB, LANCZOS from 1152x2048 9:16 masters in
+  `art/source/room-reboot/`), contact sheets
+  `art/contact-sheets/bg-plates-visit-waiting.png` (exam-b,
+  waiting-a, waiting-b) + `bg-plates-telemed-portal.png`
+  (telemed-a/b, portal-a/b), each plate with plain + Mabel rev-2
+  212px@(270,614) composite panels, 7 manifest backgrounds[]
+  entries (FULL prompt text + sha256 + 540-space landmarks +
+  view/variant role). Every prompt = registry prefix + Block B
+  VERBATIM (verified programmatically EXACT vs ART_BIBLE.md).
+  Validation per plate: dimensions exact; no people/text by eye
+  (full plate + window/center zooms); footprint x164-376 y508-720
+  clear (telemed-a zero dark px; exam-b stool leg to x170 + 
+  telemed-b credenza edge x343 = <=7px slivers behind mascot,
+  same class as shipped exam-a precedent, accepted);
+  GROUND=724 on rug (exam-b, waiting-b, telemed-b) or floor at
+  rug edge (waiting-a, telemed-a, portal-a/b) — all read
+  grounded in composites; title/panel bands calm (energy
+  1.4-2.7); cards/nav zones rug/floor only; style = one family
+  with shipped exam-a by eye; >=2 wellness cues each; no office
+  cues. Measured deviations (chrome-safe, documented in
+  manifest): window glass bottoms run below spec y199
+  (y220-365 by plate) but all at x432+ right edge, clear of
+  every chrome zone; palette bands trend brighter than shipped
+  anchors toward bible neutrals per the registry grade-toward
+  clause. REJECT: waiting-a r1 (table at center x204-418 behind
+  mascot) → r2 re-layout pinned furniture to edges, footprint
+  clear. Spend: 8 images x $0.01 = $0.08 — workstream cap $0.08
+  respected exactly; ledger ~$0.3144; at >= $120, STOP (not
+  reached). Not done by artist: ClinicScene plate wiring +
+  in-game render check (integrator follow-on). No commit/push
+  (main agent merges). STOP.
+
+## Active chunk: backdrop plate integration (integrator run)
+
+- PLATE-INTEGRATOR OWNERSHIP (declared BEFORE editing, per AGENTS.md
+  workflow law): the integrator owns ONLY `src/scenes/ClinicScene.ts`
+  bg handling, `src/ui/mockData.ts` plate map if needed, plus this
+  PROGRESS.md entry and CHECKPOINT.md. No art files, no manifest, no
+  other code. Nobody else writes those paths this run.
+- PLATE-INTEGRATOR RESULT (2026-10-29): per-view plate wiring live.
+  `src/scenes/ClinicScene.ts` only (no mockData change needed —
+  variant derives from the existing PROTOTYPE_SEEDS.visitNo):
+  PLATE_FILE registry (8 slugs -> local files; `exam-a` = shipped
+  `clinic-shell-reboot-01.png`, same pixels) + PLATE_SETTING
+  (visit->exam, waiting->waiting, telemed->telemed,
+  portal->portal) + one-line PLATE_PIN override (empty = parity
+  rule, documented in code) + plateForView (PLATE_PIN wins;
+  else even visitNo->A, odd->B). Preload loops the registry
+  (keys `plate-<slug>`, all local, offline-safe); drawRoom
+  stores roomBg and opens on the Visit plate; showView calls
+  swapPlate (same plate = no-op; else 150-out/set-texture/180-in
+  riding the existing fade durations); plateKey falls back to
+  `plate-exam-a` if a texture is missing. Opener (visitNo 4)
+  shows all A — the Visit opener is pixel-identical to before.
+  Mabel geometry/motion/expressions, all chrome, dev view,
+  panel, offline untouched. Zero new display copy: patient-name
+  guard and Baloo-glyph checks pass vacuously (29/29 incl. the
+  guard).
+- Tests: `npm test` 29/29 pass; `npm run build` green (known
+  benign font-URL + chunk-size warnings only). No plate
+  regressions.
+- Spend: image spend $0.00 (code only, 0 generations). Ledger
+  stays ~$0.3144; at >= $120, STOP (not reached).
+- Not done by integrator: in-game render check needs the
+  deployed URL (main agent merges + deploys + playtests). No
+  commit/push (main agent merges). STOP.

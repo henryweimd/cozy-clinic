@@ -26,7 +26,7 @@ import type { VisitContext } from '../ui/mockData';
  * is the Jolly-style redesign (`mochi-reboot-idle/blink/happy.png`,
  * 192px class, Block C; rev-2 refinement 2026-10-29: same files,
  * same geometry, owned rose-taupe identity + smooth edges — no
- * layout change). Texture keys (`mabel-idle`, `room-shell`,
+ * layout change). Texture keys (`mabel-idle`, `plate-<slug>`,
  * ...) follow the Mochi→Mabel rename; file paths (the
  * `mochi-reboot-*.png` slugs) are unchanged for stability. The old
  * plush room-shell + plush Mabel + plush props are SUPERSEDED
@@ -129,6 +129,42 @@ const TAB_X: Record<ViewName, number> = {
   portal: 472,
 };
 
+// Backdrop plate library (ART_BIBLE.md appendix: 4 settings x 2
+// variants). Texture keys are `plate-<slug>`; all files are local
+// so the demo path stays fully offline. `exam-a` is the SHIPPED
+// plate (same file, same pixels); the other 7 are new.
+const PLATE_FILE: Record<string, string> = {
+  'exam-a': 'assets/room/clinic-shell-reboot-01.png',
+  'exam-b': 'assets/room/clinic-exam-b.png',
+  'waiting-a': 'assets/room/clinic-waiting-a.png',
+  'waiting-b': 'assets/room/clinic-waiting-b.png',
+  'telemed-a': 'assets/room/clinic-telemed-a.png',
+  'telemed-b': 'assets/room/clinic-telemed-b.png',
+  'portal-a': 'assets/room/clinic-portal-a.png',
+  'portal-b': 'assets/room/clinic-portal-b.png',
+};
+const PLATE_SETTING: Record<ViewName, string> = {
+  waiting: 'waiting',
+  visit: 'exam',
+  telemed: 'telemed',
+  portal: 'portal',
+};
+// One-line pin: pin any view to any plate slug (e.g. { visit:
+// 'exam-b' }); empty = parity rule below. Unpinned views keep
+// rotating; unknown slugs are ignored (parity rule applies).
+const PLATE_PIN: Partial<Record<ViewName, string>> = {};
+/**
+ * Per-view wiring rule: each view shows its setting plate; the A/B
+ * variant rotates by visit-count parity (even visitNo -> A, odd ->
+ * B), so the opener (visitNo 4) shows all A and visit 5 shows all
+ * B. A PLATE_PIN entry wins for its view.
+ */
+function plateForView(view: ViewName, visitNo: number): string {
+  const pin = PLATE_PIN[view];
+  if (pin !== undefined && PLATE_FILE[pin] !== undefined) return pin;
+  return `${PLATE_SETTING[view]}-${visitNo % 2 === 0 ? 'a' : 'b'}`;
+}
+
 interface CardWidgets {
   root: Phaser.GameObjects.Container;
   face: Phaser.GameObjects.Graphics;
@@ -147,6 +183,7 @@ interface ThreadWidgets {
 }
 
 export class ClinicScene extends Phaser.Scene {
+  private roomBg!: Phaser.GameObjects.Image;
   private mabel!: Phaser.GameObjects.Image;
   private mabelBaseY = 0;
   private blinkAt = 0;
@@ -231,7 +268,11 @@ export class ClinicScene extends Phaser.Scene {
     this.load.image('mabel-sick', 'assets/characters/mochi-reboot-sick.png');
     this.load.image('mabel-pained', 'assets/characters/mochi-reboot-pained.png');
     this.load.image('mabel-relieved', 'assets/characters/mochi-reboot-relieved.png');
-    this.load.image('room-shell', 'assets/room/clinic-shell-reboot-01.png');
+    // Backdrop plate library: all 8 plates preload locally
+    // (offline-safe); keys `plate-<slug>`.
+    for (const [slug, file] of Object.entries(PLATE_FILE)) {
+      this.load.image(`plate-${slug}`, file);
+    }
     // No prop preloads: the plush P2 props clash with the photoreal
     // plate (which paints its own bench/plant/cabinet) — removed,
     // not re-pointed. See drawRoom.
@@ -306,13 +347,55 @@ export class ClinicScene extends Phaser.Scene {
 
   private drawRoom(): void {
     // Room shell: photorealistic minimal clinic plate, 1080x1920
-    // (2x), centered to fill the 540x960 canvas exactly.
+    // (2x), centered to fill the 540x960 canvas exactly. The live
+    // plate follows the per-view wiring rule (plateForView);
+    // showView swaps it per view — bg-only change, Mabel/chrome
+    // untouched.
     // Per-asset prop call (reboot): the P2 plush props are GONE —
     // the plate paints its own bench (left), plant + cabinet
     // (right), window, and rug, so plush furniture would clash in
     // style AND double up every piece. drawProps() deleted with
     // the P2 pass; nothing is re-pointed.
-    this.add.image(270, 480, 'room-shell').setDisplaySize(540, 960).setDepth(0);
+    this.roomBg = this.add
+      .image(270, 480, this.plateKey(this.currentView))
+      .setDisplaySize(540, 960)
+      .setDepth(0);
+  }
+
+  /**
+   * Texture key for a view's plate; a plate that failed to load
+   * falls back to `plate-exam-a` (the shipped plate), so the demo
+   * path stays fully offline even with a missing file.
+   */
+  private plateKey(view: ViewName): string {
+    const key = `plate-${plateForView(view, PROTOTYPE_SEEDS.visitNo)}`;
+    return this.textures.exists(key) ? key : 'plate-exam-a';
+  }
+
+  /** Bg swap rides the existing 180/150 view-fade durations. */
+  private swapPlate(next: ViewName, instant: boolean): void {
+    const key = this.plateKey(next);
+    if (this.roomBg.texture.key === key) return;
+    this.tweens.killTweensOf(this.roomBg);
+    if (instant) {
+      this.roomBg.setTexture(key).setAlpha(1);
+      return;
+    }
+    this.tweens.add({
+      targets: this.roomBg,
+      alpha: 0,
+      duration: 150,
+      ease: 'Sine.easeOut',
+      onComplete: () => {
+        this.roomBg.setTexture(key);
+        this.tweens.add({
+          targets: this.roomBg,
+          alpha: 1,
+          duration: 180,
+          ease: 'Sine.easeOut',
+        });
+      },
+    });
   }
 
   /**
@@ -1396,6 +1479,7 @@ export class ClinicScene extends Phaser.Scene {
     if (next === this.currentView && !instant) return;
     if (this.adminOpen && !instant) return;
     this.currentView = next;
+    this.swapPlate(next, instant);
     if (instant) {
       this.navPill.setX(TAB_X[next]);
     } else {

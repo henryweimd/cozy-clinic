@@ -173,3 +173,183 @@ Key poses only from the image model; all motion is built in code
 (see `docs/ANIMATION.md`). Masters live in the studio folder
 (`art/source/`); the repo holds game-ready exports only, under
 `public/assets/`.
+
+## Appendix: plate library registry (backdrop director, 2026-10-29)
+
+Operator order: additional backdrops for the various settings +
+multiple alternatives. Library cap: AT MOST 8 plates — 4
+settings × 2 variants. Clean minimal photorealistic style; every
+plate MUST read as a modern INVITING wellness clinic, never a
+generic office. This appendix is SPEC ONLY — no images were
+generated and no scene code was touched this run.
+
+### Shared contract (all 8 plates)
+
+- Format: 540×960 canvas, 2x 1080×1920 exports under
+  `public/assets/room/`; masters under `art/source/room-reboot/`.
+  Fully opaque RGB, exact 9:16.
+- Prompt law: each generation prompt = the plate's prefix below +
+  BLOCK B verbatim (never mixed, never dropped). Prefixes carry
+  "empty of people" as reinforcement; Block B's no-characters /
+  no-plush / no-outline / no-text / no-clutter clauses do the
+  rest.
+- Palette bounds (measured from the shipped plate
+  `public/assets/room/clinic-shell-reboot-01.png`, 540-space
+  bands; new plates verify the same way): wall lit `#D3CCC5` /
+  top `#B7ACA0`, floor lit `#D7C1AA` / shade `#AA9178`, wood
+  `#C8A583`, rug `#DAC7B3`, foliage `#655C47` — corresponding
+  band means within ±14 per channel. Grade toward the bible
+  neutrals (`#F4F1EA` walls / `#E4CFA8` floor) where the
+  generator allows; saturated color lives in small props only.
+- Clear zones (540×960, SAME landmark contract as the shipped
+  plate, so any plate works under any view): y0–136 title/chrome
+  band = flat calm wall (window glass ONLY x490+ y95–199, clear
+  of the title zone x150–390 y28–84 and top bar y0–32);
+  y136–356 panel band = flat calm wall; y376–412 HUD/LIVE band =
+  calm wall, no high-contrast edges; mascot footprint x164–376
+  y508–720 clear of furniture, GROUND=724 on rug/floor;
+  wall-floor boundary ~672–696 center, rug top ~712; card rows
+  (Visit y796–876, Telemed y736–816) and nav strip y888–960 =
+  floor/rug only; SIDE=24 margins. Visible art/furniture zone:
+  y412–508 band + side lanes x24–164 / x376–516 y508–720.
+  Waiting/Portal opaque sheets (x24–516 y136–876) cover center —
+  plates still honor the full contract so margin/top/bottom
+  slivers read calm and any future layout works.
+- Wellness-no-office rule: every plate carries ≥2 cues from
+  {warm wood, soft daylight, live plant, rounded furniture, calm
+  abstract wall art}. NEVER people, NEVER text/signage/logos,
+  NEVER office cues (blinds, cubicles, fluorescents, clutter,
+  dark/moody). Wall prints: small (≤90px wide), thin
+  light-wood frame, abstract only, in the visible zone.
+- Validation: the same 5-gate (dimensions, opaque + no
+  characters, GROUND/footprint fit, contact sheet plain +
+  mascot-composite panels, in-game render check at phone size).
+
+### The 8 plates
+
+| Slug | File (`public/assets/room/`) | View | Variant | Status |
+|---|---|---|---|---|
+| `exam-a` | `clinic-shell-reboot-01.png` | Visit | A default | SHIPPED (manifest `backgrounds[]` reboot entry; prompt on record) |
+| `exam-b` | `clinic-exam-b.png` | Visit | B alt | SPEC — generate |
+| `waiting-a` | `clinic-waiting-a.png` | Waiting | A default | SPEC — generate |
+| `waiting-b` | `clinic-waiting-b.png` | Waiting | B alt | SPEC — generate |
+| `telemed-a` | `clinic-telemed-a.png` | Telemed | A default | SPEC — generate |
+| `telemed-b` | `clinic-telemed-b.png` | Telemed | B alt | SPEC — generate |
+| `portal-a` | `clinic-portal-a.png` | Portal | A default | SPEC — generate |
+| `portal-b` | `clinic-portal-b.png` | Portal | B alt | SPEC — generate |
+
+`exam-a` (Visit default — SHIPPED, stays): exam room, bench
+left, plant + cabinet right, high window upper-right, round rug.
+Wellness cues: warm bench wood, morning daylight shaft, live
+plant, woven rug. No new art.
+
+`exam-b` (Visit alt): opposite-corner exam-room arrangement.
+Prefix: "Cozy modern pediatric clinic exam room photographed in
+soft morning daylight, alternate arrangement: a low modern
+wooden cabinet with a neatly folded sky-blue blanket on top
+against the left wall, a small rounded wooden exam stool beside
+it, a tall leafy green plant in a cream pot in the right corner,
+pale wood floor, a flat oval woven natural rug centered on the
+floor, one small calm abstract print of soft sage arcs in a thin
+light-wood frame on the left wall, a high narrow window at the
+upper right, the center floor kept completely empty for a
+standing character, the upper wall band kept clear and empty for
+a title, empty of people." Cues: warm wood (cabinet + stool),
+daylight, live plant, sage wall art.
+
+`waiting-a` (Waiting default): waiting lounge. Prefix: "Clean
+minimal pediatric clinic waiting lounge photographed in soft
+daylight: two small rounded armchairs with smooth cream
+upholstery angled at the left and right edges, a low round
+light-oak side table between them with one tiny succulent, a
+potted olive tree in the right corner, pale wood floor, a flat
+round woven cream rug centered on the floor, one small calm
+abstract print of a soft sky wash in a thin light-wood frame on
+the wall, a high narrow window at the upper right, the center
+floor kept completely empty for a standing character, the upper
+wall band kept clear and empty for a title, empty of people."
+Cues: rounded chairs, warm oak table, olive tree + succulent,
+sky-wash art.
+
+`waiting-b` (Waiting alt): bench lounge. Prefix: "Clean minimal
+pediatric clinic waiting lounge photographed in soft daylight,
+alternate arrangement: a long low light-oak bench with two
+smooth sage cushions along the left wall, a small round side
+table with a tiny fern on the right, a tall potted plant in the
+left corner, pale wood floor, a flat oval woven natural rug
+centered on the floor, one small calm abstract print of soft
+peach arcs in a thin light-wood frame on the right wall, a high
+narrow window at the upper right, the center floor kept
+completely empty for a standing character, the upper wall band
+kept clear and empty for a title, empty of people." Cues: warm
+bench wood, daylight, two live plants, peach-arc art.
+
+`telemed-a` (Telemed default): studio corner. Prefix: "Soft
+modern telemedicine studio corner in a pediatric wellness clinic
+photographed in soft daylight: one rounded cream armchair with a
+small folded amber throw at the left edge, a small round oak
+side table with a tiny succulent beside it, a modern arc floor
+lamp with a warm rounded shade on the right, a small potted
+plant in the right corner, pale wood floor, a flat round woven
+cream rug centered on the floor, one small calm abstract print
+of soft sky-and-sage waves on the wall, a high narrow frosted
+window at the upper right, the center floor kept completely
+empty for a standing character, the upper wall band kept clear
+and empty for a title, empty of people." Cues: rounded armchair,
+warm lamp glow + daylight, live plants, wave art.
+
+`telemed-b` (Telemed alt): credenza corner. Prefix: "Soft modern
+telemedicine studio corner in a pediatric wellness clinic
+photographed in soft daylight, alternate arrangement: a low
+light-oak credenza with two small potted plants and neatly
+folded sage and sky blankets on the right, one rounded cream
+chair at the left edge, a tall leafy plant in the left corner,
+pale wood floor, a flat oval woven natural rug centered on the
+floor, one small calm abstract print of soft green hills on the
+wall, a high narrow frosted window at the upper right, the
+center floor kept completely empty for a standing character, the
+upper wall band kept clear and empty for a title, empty of
+people." Cues: warm credenza wood, daylight, three live plants,
+hill art.
+
+`portal-a` (Portal default): wellness nook. Prefix: "Calm
+wellness reading nook in a pediatric clinic photographed in soft
+daylight: one low rounded cream armchair at the left edge, a
+small round light-oak side table with a tiny trailing plant
+beside it, a low oak shelf with folded cream and sage blankets
+and one small plant on the right, pale wood floor, a flat round
+woven cream rug centered on the floor, one small calm abstract
+print of a soft sunrise arc on the wall, a high narrow window at
+the upper right, the center floor kept completely empty for a
+standing character, the upper wall band kept clear and empty for
+a title, empty of people." Cues: rounded armchair, warm oak,
+trailing + shelf plants, sunrise art.
+
+`portal-b` (Portal alt): rocker nook. Prefix: "Calm wellness
+reading nook in a pediatric clinic photographed in soft daylight,
+alternate arrangement: a rounded modern light-oak rocking chair
+with a smooth cream cushion at the left edge, a small round side
+table with a tiny fern on the right, a tall potted fern in the
+right corner, pale wood floor, a flat oval woven natural rug
+centered on the floor, one small calm abstract print of soft
+blue rain arcs on the wall, a high narrow window at the upper
+right, the center floor kept completely empty for a standing
+character, the upper wall band kept clear and empty for a title,
+empty of people." Cues: warm rocker wood, daylight, two ferns,
+rain-arc art.
+
+### Per-view wiring rule (for the integrator; no code this run)
+
+- Each view shows its setting plate: Visit → exam, Waiting →
+  waiting, Telemed → telemed, Portal → portal.
+- B alternates rotate in by visit-count parity: variant =
+  even visitNo → A, odd visitNo → B. The opener (visitNo 4)
+  shows all A (`exam-a` = shipped plate); visit 5 shows all B —
+  both variants surface in normal play as visits increment.
+- One-line pin: an override map (e.g. `PLATE_PIN = { visit:
+  'exam-b' }`; empty = parity rule) pins any view to any plate
+  with one line; unpinned views keep rotating.
+- Transitions ride the existing 180/150 view fades; texture keys
+  `plate-<slug>`; all 8 plates preload locally and any missing
+  plate falls back to `exam-a`, so the demo path stays fully
+  offline.
