@@ -62,19 +62,19 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
 
 ## (B) PLAYER CHROME
 
-### Top bar (persistent, all views; chrome-2)
+### Top bar (persistent strip; chrome-3)
 
 - Geometry: slim full-width strip, x0–540, y0–32. Cream fill at
   80% alpha so the room shows softly through + 2px whisper
   divider `#8A5A3B` at 25% alpha. Display-only (no tap zones),
-  so title taps pass through. Pills + text fully opaque.
-- Left: mock profile chip x24–120 (w96 h24 r12): sage dot +
-  "You" 14px bold. Right: mock difficulty pill x400–516 (w116
-  h24 r12): tier word 13px bold ("Gentle"/"Steady"/"Expert" from
-  the mock difficulty seed 1/2/3) + 3 dots (filled sage to the
-  seed, hollow rings after). Middle stays EMPTY — home for
-  future controls. Clear of the title (top ~y40) and the admin
-  trigger zone.
+  so title taps pass through. Depth 19, under the HUD contents
+  (20). Clear of the title (top ~y40) and the admin trigger zone.
+- Chrome-3: the profile chip ("You") + difficulty pill ("Gentle"
+  + dots) LEFT the main screen for a future submenu (operator
+  direction — the submenu will read "Gentle Mode" etc.). The
+  strip now frames the Visit HUD contents (coin cluster left,
+  context words center, clock cluster right — see Visit); on
+  other views it rests empty.
 
 ### Nav bar (persistent, all views)
 
@@ -86,9 +86,12 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
   (see Visit).
 - Four tabs, each 135 wide x 72 tall (tap target 135x72):
   Waiting (center x67), Visit (x202), Telemed (x337), Portal (x472).
-- Each tab: emoji-free glyph drawn as text (Baloo 2 24px) + label
-  (Baloo 2 15px semibold) stacked, inactive cocoa 60%, active cocoa
-  100% on a sage pill (w118 h60 centered in the tab cell).
+- Each tab: code-drawn icon (chrome-3, $0 — waiting = queue
+  dots, visit = care cross on sage, telemed = video play,
+  portal = envelope) + short label (Baloo 2 15px semibold)
+  stacked; icon + label dim together (inactive 60%, active 100%
+  on a sage pill w118 h60 centered in the tab cell). Icons do
+  the lifting, words anchor.
 - Behavior: tap = fade current view out 150ms, fade new view in
   180ms; tab pill slides 200ms `Sine.easeInOut`. Default view: Visit.
 
@@ -101,15 +104,23 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
   triangle pointing down toward Mabel (apex at (270, panel bottom
   +14)), SOLID full-outline-color tucked under the panel
   (chrome-2 operator direction; was an outlined cream tail).
-  Speaker tag pill top-left inside ("MABEL" / "DR. NORA" /
-  "YOU", 14px bold, sage/sky/cream fills).
-- Quoted speech (chrome-2 display law): MABEL and DR. NORA lines
-  render wrapped in straight double quotes; YOU lines and
-  narration stay unquoted — talking vs describing unmistakable.
-  Applied at render time, BEFORE the "…" truncate pass, so the
-  rule measures the shown string. Same rule in the portal:
-  Dr. Nora's message bubbles quote, player replies + Clinic
-  system lines + truncated snippets stay bare.
+  Same tail both line kinds — the panel always talks about the
+  patient on screen.
+- SAY vs TELL (chrome-3 display law, replaces the chrome-2
+  quote rule for the panel): every line declares a LineKind.
+  'say' = direct speech in the speaker's own voice — quoted +
+  tagged ("MABEL" sage / "DR. NORA" sky / "YOU" cream, 14px
+  bold). 'tell' = third-person narration ABOUT the subject —
+  unquoted, and the tag hides when the subject is on screen
+  (Mabel); Nora's off-screen interventions keep her tag so the
+  player knows who stepped in. Untagged narration starts at
+  top+16 (tagged body stays top+48); panel height follows.
+  Quoting applies at render time, BEFORE the "…" truncate pass.
+  All current engine copy (complaint, narrative, teaching,
+  blocked reasons) is narrator voice, so every panel caller
+  passes 'tell' — quotes return with first-person trajectory
+  dialogue. Portal rule unchanged: Nora's message bubbles quote,
+  player replies + Clinic system lines + snippets stay bare.
 - Body: Baloo 2 20px cocoa, left-aligned, max 4 lines at 20px
   within max-h; longer copy truncates with "…" (prototype rule —
   flag it in feedback if real copy ever needs scroll).
@@ -148,23 +159,23 @@ VIEW 1 — VISIT (default; today's Mabel scene):
 - Nametag (y744) gains a mock vitals chip row beneath it:
   y766–788, three pills (w~120 h~22, 14px): e.g. "• breath 3",
   "• comfort 2", "visit #4". Decorative mock, ticks on resolve.
-- Progress HUD row (chrome-2, Visit only — Telemed's LIVE pills
-  own this band there): y376–412, three OPAQUE pills (the clear
-  band below the panel's max bottom 356, above Mabel's top 508).
-  Coins x24–156 (w132 h36 r18 token): amber coin dot + mock
-  count 16px bold, starts at 12, +1 per BEST resolve (mock —
-  real `coin_ledger` accrual later). Context x168–372 (w204 h36
-  r14 tag): visit-context label 15px bold, worded per
+- Progress HUD (chrome-3: moved OFF the mid-screen band INTO the
+  top strip; Visit-faded, strip persistent). Coin cluster left
+  (pill x24–124, h24 r12): code-drawn coin+ icon + mock count
+  14px bold, starts at 12, +1 per BEST resolve (mock — real
+  `coin_ledger` accrual later). Context center: BARE bold words
+  14px, no pill — the strip is the frame; worded per
   gentle/steady/expert tier from the mock difficulty seed —
   new-patient ("A first hello" / "New Patient" / "New intake"),
   sick-visit ("Feeling poorly" / "Sick Visit" / "Acute visit"),
   follow-up ("Back for a check-in" / "Follow-Up Visit" /
   "Follow-up"); mock derivation (first visit → new, stage 2+ →
-  sick, else follow-up), re-derived per resolve. Timer x384–516
-  (w132 h36 r8 readout): rose dot + mm:ss 16px bold from scene
-  start, display-only — urgency feel, no rewards/penalties wired.
-  Radii vary with intent (18/14/8); translucency stays on the
-  bar strips, never on these pills or their text.
+  sick, else follow-up), re-derived per resolve. Clock cluster
+  right (pill x416–516, h24 r12): code-drawn clock-hands icon +
+  mm:ss 14px bold from scene start, display-only — urgency feel,
+  no rewards/penalties wired. Pills + text opaque; translucency
+  stays on the strip. The old y376–412 band is clear (Telemed's
+  LIVE pills keep their y380 home).
 
 VIEW 2 — WAITING ROOM (roster):
 

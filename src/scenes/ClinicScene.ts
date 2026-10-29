@@ -4,9 +4,7 @@ import type { ChoiceGrade, PatientState, TrajectoryNode } from '../clinical';
 import {
   CARD_ROW_IDS,
   CHROME_TIER_BY_DIFFICULTY,
-  CHROME_TIER_LABEL,
   MOCK_CARE_COINS_START,
-  MOCK_PROFILE_LABEL,
   MOCK_ROSTER,
   MOCK_THREADS,
   PROTOTYPE_SEEDS,
@@ -65,6 +63,25 @@ import type { VisitContext } from '../ui/mockData';
  * Mabel geometry/motion/expressions, panel fades, admin stack,
  * and offline behavior are untouched.
  *
+ * CHROME-3 (2026-10-29, docs/UI_PROTOTYPE.md): icon-led
+ * simplification per operator feedback. (1) SAY vs TELL: the
+ * panel takes a LineKind — 'say' renders quoted + tagged direct
+ * speech, 'tell' renders unquoted narration with NO tag when
+ * its subject is on screen (Mabel); Nora's off-screen
+ * interventions keep her sky tag so the player knows who
+ * stepped in. All current engine copy is third-person narrator
+ * voice, so every panel caller passes 'tell' — quotes return
+ * when first-person trajectory dialogue ships (portal Nora
+ * bubbles already quote correctly). (2) The progress HUD moves
+ * OFF the mid-screen band into the slim top strip (coin cluster
+ * left, context center, clock cluster right; Visit-faded, strip
+ * persistent). The profile chip + difficulty pill leave the main
+ * screen for a future submenu. (3) Code-drawn icon set ($0,
+ * pixel-crisp at any DPI, offline-safe): coin+ and clock-hands
+ * in the top strip, cross / queue-dots / video / envelope
+ * tab icons replacing the text glyphs. Title, panel fades,
+ * admin stack, plates, and offline behavior untouched.
+ *
  * Reboot landmark survey (re-measured from
  * art/contact-sheets/bg-reboot-contact-sheet.png + pixel scans
  * of the plate, 540x960 space): baseboard/wall-floor ~696 at
@@ -121,6 +138,13 @@ const GRADE_COLOR: Record<ChoiceGrade, number> = {
 
 type ViewName = 'waiting' | 'visit' | 'telemed' | 'portal';
 type Speaker = 'MABEL' | 'DR. NORA' | 'YOU';
+/**
+ * SAY vs TELL (chrome-3): 'say' = direct speech in the speaker's
+ * own voice (quoted + tagged); 'tell' = third-person narration
+ * ABOUT the subject (unquoted; tag hidden when the subject is on
+ * screen, kept for Nora's off-screen interventions).
+ */
+type LineKind = 'say' | 'tell';
 
 const TAB_X: Record<ViewName, number> = {
   waiting: 67,
@@ -235,6 +259,12 @@ export class ClinicScene extends Phaser.Scene {
     visit: [],
     telemed: [],
     portal: [],
+  };
+  private tabIcons: Record<ViewName, Phaser.GameObjects.Graphics | null> = {
+    waiting: null,
+    visit: null,
+    telemed: null,
+    portal: null,
   };
   private muteOn = true;
   private camOn = true;
@@ -522,22 +552,29 @@ export class ClinicScene extends Phaser.Scene {
     this.panel.setDepth(10).setVisible(false).setAlpha(0);
   }
 
-  private renderPanel(speaker: Speaker, text: string): void {
+  private renderPanel(speaker: Speaker, text: string, kind: LineKind): void {
     const top = 136;
     const w = 492;
     const x = 270;
-    // Quoted speech: MABEL / DR. NORA lines wrap in quotes; YOU and
-    // narration stay unquoted (quoteIfSpoken). Quoted BEFORE the
-    // truncate pass so the "…" rule measures the shown string.
-    this.panelBody.setText(quoteIfSpoken(speaker, false, text));
+    // SAY vs TELL (chrome-3): 'say' quotes + tags direct speech;
+    // 'tell' shows narration bare, and hides the tag when the
+    // subject is on screen (Mabel) — Nora's off-screen
+    // interventions keep her tag so the player knows who stepped
+    // in. Quoting happens BEFORE the truncate pass so the "…"
+    // rule measures the shown string.
+    const spoken = kind === 'say' ? quoteIfSpoken(speaker, false, text) : text;
+    this.panelBody.setText(spoken);
     this.truncateToHeight(this.panelBody, 110);
-    const h = Math.min(220, Math.max(96, 48 + this.panelBody.height + 20));
+    const showTag = kind === 'say' || speaker === 'DR. NORA';
+    const bodyTop = showTag ? top + 48 : top + 16;
+    const h = Math.min(220, Math.max(96, bodyTop - top + this.panelBody.height + 20));
     const bottom = top + h;
 
     this.panelBg.clear();
     // Tail first: SOLID full-outline-color triangle, its top edge
     // tucked under the panel bg (chrome-2 operator direction —
-    // replaces the old outlined tail).
+    // replaces the old outlined tail). Same tail both kinds: the
+    // panel always talks about the patient on screen.
     this.panelBg.fillStyle(OUTLINE, 1);
     this.panelBg.fillTriangle(250, bottom - 2, 290, bottom - 2, 270, bottom + 14);
     this.panelBg.fillStyle(CREAM, 1);
@@ -545,24 +582,27 @@ export class ClinicScene extends Phaser.Scene {
     this.panelBg.fillRoundedRect(x - w / 2, top, w, h, 24);
     this.panelBg.strokeRoundedRect(x - w / 2, top, w, h, 24);
 
-    const tagFill = speaker === 'MABEL' ? SAGE : speaker === 'DR. NORA' ? SKY : CARD_FILL;
-    this.panelTagText.setText(speaker);
-    const tagW = this.panelTagText.width + 28;
     this.panelTag.clear();
-    this.panelTag.fillStyle(tagFill, 1);
-    this.panelTag.lineStyle(2, OUTLINE, 1);
-    this.panelTag.fillRoundedRect(40, top + 12, tagW, 28, 14);
-    this.panelTag.strokeRoundedRect(40, top + 12, tagW, 28, 14);
-    this.panelTagText.setPosition(40 + 14, top + 12 + 14).setOrigin(0, 0.5);
+    this.panelTagText.setText('');
+    if (showTag) {
+      const tagFill = speaker === 'MABEL' ? SAGE : speaker === 'DR. NORA' ? SKY : CARD_FILL;
+      this.panelTagText.setText(speaker);
+      const tagW = this.panelTagText.width + 28;
+      this.panelTag.fillStyle(tagFill, 1);
+      this.panelTag.lineStyle(2, OUTLINE, 1);
+      this.panelTag.fillRoundedRect(40, top + 12, tagW, 28, 14);
+      this.panelTag.strokeRoundedRect(40, top + 12, tagW, 28, 14);
+      this.panelTagText.setPosition(40 + 14, top + 12 + 14).setOrigin(0, 0.5);
+    }
 
-    this.panelBody.setPosition(40, top + 48).setOrigin(0, 0);
+    this.panelBody.setPosition(40, bodyTop).setOrigin(0, 0);
   }
 
-  private setConversation(speaker: Speaker, text: string): void {
+  private setConversation(speaker: Speaker, text: string, kind: LineKind): void {
     this.tweens.killTweensOf(this.panel);
     if (!this.panelOpen) {
       this.panelOpen = true;
-      this.renderPanel(speaker, text);
+      this.renderPanel(speaker, text, kind);
       this.syncPanelVisibility();
       this.panel.setAlpha(0);
       this.tweens.add({
@@ -579,7 +619,7 @@ export class ClinicScene extends Phaser.Scene {
       duration: 150,
       ease: 'Sine.easeOut',
       onComplete: () => {
-        this.renderPanel(speaker, text);
+        this.renderPanel(speaker, text, kind);
         this.tweens.add({
           targets: this.panel,
           alpha: 1,
@@ -718,7 +758,7 @@ export class ClinicScene extends Phaser.Scene {
         repeat: 3,
         ease: 'Sine.easeInOut',
       });
-      this.setConversation('DR. NORA', result.blockReason ?? action.hootLine);
+      this.setConversation('DR. NORA', result.blockReason ?? action.hootLine, 'tell');
       this.holdSteady();
       return;
     }
@@ -739,7 +779,7 @@ export class ClinicScene extends Phaser.Scene {
     }
     // Stage may have moved — the context label re-derives (mock).
     this.refreshHud();
-    this.setConversation('MABEL', `${result.node.narrative} ${result.node.teaching}`);
+    this.setConversation('MABEL', `${result.node.narrative} ${result.node.teaching}`, 'tell');
     this.playResolveFlash(result.node.animationCue);
   }
 
@@ -796,7 +836,7 @@ export class ClinicScene extends Phaser.Scene {
     if (this.adminOpen) return;
     if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
     if (!this.panelOpen) {
-      this.setConversation('MABEL', this.complaintText());
+      this.setConversation('MABEL', this.complaintText(), 'tell');
       // Happy tap-react: show the happy pose for the bounce, then
       // settle to steady. The token guards rapid re-taps so a stale
       // bounce never clears a newer flash.
@@ -906,44 +946,45 @@ export class ClinicScene extends Phaser.Scene {
     });
   }
 
-  // -- progress HUD (Visit only; chrome-2, mock + display-only) --
+  // -- progress HUD (Visit only; chrome-3: lives IN the top strip) --
 
   private drawHud(): void {
-    // One row, y376–412: below the panel's max bottom (356) and
-    // above Mabel (top 508). Visit-only: Telemed's LIVE pills own
-    // this same band, so the HUD fades with the visit view.
-    // Radii vary with intent: coins = full-pill token (r18),
-    // context = label tag (r14), timer = instrument readout (r8).
-    // All pills opaque; translucency stays on the bar strips only.
+    // Chrome-3: the mid-screen band (was y376-412) is RETIRED —
+    // the HUD now lives inside the slim top strip (y0-32, pill
+    // h24 at y4, centerline y16), above the title (top ~y40).
+    // Coin cluster left, bare context words center, clock cluster
+    // right. Visit-only: fades with the visit view (showView),
+    // while the strip itself stays persistent. Icons are
+    // code-drawn ($0, crisp, offline-safe): coin+ and clock-hands.
+    // Pills + text stay opaque; translucency is the strip's only.
     const coinsBg = this.add.graphics();
     coinsBg.fillStyle(CARD_FILL, 1);
     coinsBg.lineStyle(2, OUTLINE, 1);
-    coinsBg.fillRoundedRect(24, 376, 132, 36, 18);
-    coinsBg.strokeRoundedRect(24, 376, 132, 36, 18);
+    coinsBg.fillRoundedRect(24, 4, 100, 24, 12);
+    coinsBg.strokeRoundedRect(24, 4, 100, 24, 12);
     const coin = this.add.graphics();
     coin.fillStyle(AMBER, 1);
     coin.lineStyle(2, OUTLINE, 1);
-    coin.fillCircle(50, 394, 9);
-    coin.strokeCircle(50, 394, 9);
+    coin.fillCircle(44, 16, 8);
+    coin.strokeCircle(44, 16, 8);
+    coin.fillStyle(OUTLINE, 1);
+    coin.fillRect(43, 12, 2, 8);
+    coin.fillRect(40, 15, 8, 2);
     this.coinsText = this.add
-      .text(66, 394, '', {
+      .text(58, 16, '', {
         fontFamily: FONT_FAMILY,
         fontStyle: 'bold',
-        fontSize: '16px',
+        fontSize: '14px',
         color: COCOA,
       })
       .setOrigin(0, 0.5);
 
-    const contextBg = this.add.graphics();
-    contextBg.fillStyle(CARD_FILL, 1);
-    contextBg.lineStyle(2, OUTLINE, 1);
-    contextBg.fillRoundedRect(168, 376, 204, 36, 14);
-    contextBg.strokeRoundedRect(168, 376, 204, 36, 14);
+    // Context: bare bold words, no pill — the strip is the frame.
     this.contextText = this.add
-      .text(270, 394, '', {
+      .text(270, 16, '', {
         fontFamily: FONT_FAMILY,
         fontStyle: 'bold',
-        fontSize: '15px',
+        fontSize: '14px',
         color: COCOA,
       })
       .setOrigin(0.5, 0.5);
@@ -951,16 +992,21 @@ export class ClinicScene extends Phaser.Scene {
     const timerBg = this.add.graphics();
     timerBg.fillStyle(CARD_FILL, 1);
     timerBg.lineStyle(2, OUTLINE, 1);
-    timerBg.fillRoundedRect(384, 376, 132, 36, 8);
-    timerBg.strokeRoundedRect(384, 376, 132, 36, 8);
-    const dot = this.add.graphics();
-    dot.fillStyle(ROSE, 1);
-    dot.fillCircle(420, 394, 5);
+    timerBg.fillRoundedRect(416, 4, 100, 24, 12);
+    timerBg.strokeRoundedRect(416, 4, 100, 24, 12);
+    const clock = this.add.graphics();
+    clock.fillStyle(CARD_FILL, 1);
+    clock.lineStyle(2, OUTLINE, 1);
+    clock.fillCircle(436, 16, 8);
+    clock.strokeCircle(436, 16, 8);
+    clock.lineStyle(2, OUTLINE, 1);
+    clock.lineBetween(436, 16, 436, 11);
+    clock.lineBetween(436, 16, 440, 16);
     this.timerText = this.add
-      .text(433, 394, '00:00', {
+      .text(450, 16, '00:00', {
         fontFamily: FONT_FAMILY,
         fontStyle: 'bold',
-        fontSize: '16px',
+        fontSize: '14px',
         color: COCOA,
       })
       .setOrigin(0, 0.5);
@@ -969,13 +1015,14 @@ export class ClinicScene extends Phaser.Scene {
       coinsBg,
       coin,
       this.coinsText,
-      contextBg,
       this.contextText,
       timerBg,
-      dot,
+      clock,
       this.timerText,
     ]);
-    this.hud.setDepth(10);
+    // Depth 20 = above the strip bg (19), level with the nav bar
+    // (a different band, so no conflict).
+    this.hud.setDepth(20);
     this.refreshHud();
   }
 
@@ -1373,21 +1420,17 @@ export class ClinicScene extends Phaser.Scene {
     const nav = this.add.container(0, 0, [bg, this.navPill]);
     nav.setDepth(20);
 
-    const tabs: { view: ViewName; glyph: string; label: string }[] = [
-      { view: 'waiting', glyph: '…', label: 'Waiting' },
-      { view: 'visit', glyph: '+', label: 'Visit' },
-      { view: 'telemed', glyph: '>', label: 'Telemed' },
-      { view: 'portal', glyph: '@', label: 'Portal' },
+    const tabs: { view: ViewName; label: string }[] = [
+      { view: 'waiting', label: 'Waiting' },
+      { view: 'visit', label: 'Visit' },
+      { view: 'telemed', label: 'Telemed' },
+      { view: 'portal', label: 'Portal' },
     ];
     for (const tab of tabs) {
       const cx = TAB_X[tab.view];
-      const glyph = this.add
-        .text(cx, 910, tab.glyph, {
-          fontFamily: FONT_FAMILY,
-          fontSize: '24px',
-          color: COCOA,
-        })
-        .setOrigin(0.5, 0.5);
+      // Chrome-3: drawn icon (not a text glyph) + short label.
+      const icon = this.drawTabIcon(tab.view, cx, 910);
+      this.tabIcons[tab.view] = icon;
       const label = this.add
         .text(cx, 938, tab.label, {
           fontFamily: FONT_FAMILY,
@@ -1396,83 +1439,67 @@ export class ClinicScene extends Phaser.Scene {
           color: COCOA,
         })
         .setOrigin(0.5, 0.5);
-      this.tabTexts[tab.view] = [glyph, label];
+      this.tabTexts[tab.view] = [label];
       const zone = this.add
         .zone(cx, 924, 135, 72)
         .setInteractive({ useHandCursor: true });
       zone.on('pointerdown', () => this.showView(tab.view));
-      nav.add([glyph, label, zone]);
+      nav.add([icon, label, zone]);
     }
   }
 
-  // -- top bar (persistent, all views; chrome-2, ALL mock) --
+  /**
+   * Chrome-3 tab icon set, code-drawn ($0, crisp at any DPI,
+   * offline-safe): waiting = queue dots, visit = care cross,
+   * telemed = video play, portal = envelope. Palette-only fills
+   * (ART_BIBLE taste law: no gradients, no glow).
+   */
+  private drawTabIcon(view: ViewName, cx: number, cy: number): Phaser.GameObjects.Graphics {
+    const g = this.add.graphics();
+    if (view === 'waiting') {
+      g.fillStyle(OUTLINE, 1);
+      g.fillCircle(cx - 12, cy, 4);
+      g.fillCircle(cx, cy, 4);
+      g.fillCircle(cx + 12, cy, 4);
+    } else if (view === 'visit') {
+      g.fillStyle(SAGE, 1);
+      g.lineStyle(2, OUTLINE, 1);
+      g.fillRoundedRect(cx - 10, cy - 10, 20, 20, 6);
+      g.strokeRoundedRect(cx - 10, cy - 10, 20, 20, 6);
+      g.fillStyle(0xfff9ef, 1);
+      g.fillRect(cx - 6, cy - 2, 12, 4);
+      g.fillRect(cx - 2, cy - 6, 4, 12);
+    } else if (view === 'telemed') {
+      g.lineStyle(2, OUTLINE, 1);
+      g.strokeRoundedRect(cx - 16, cy - 11, 32, 22, 4);
+      g.fillStyle(OUTLINE, 1);
+      g.fillTriangle(cx - 4, cy - 6, cx - 4, cy + 6, cx + 7, cy);
+    } else {
+      g.lineStyle(2, OUTLINE, 1);
+      g.strokeRoundedRect(cx - 15, cy - 10, 30, 20, 3);
+      g.lineBetween(cx - 15, cy - 9, cx, cy);
+      g.lineBetween(cx + 15, cy - 9, cx, cy);
+    }
+    return g;
+  }
+
+  // -- top bar (persistent strip; chrome-3: HUD owns the contents) --
 
   private drawTopBar(): void {
-    // Slim strip y0–32: translucent fill + whisper divider, opaque
-    // pills + text. Only the edges are used — profile left,
-    // difficulty right — the middle stays empty for future
-    // controls. Display-only: no zones, so title taps pass through.
+    // Slim strip y0–32: translucent fill + whisper divider, depth
+    // 19 so the HUD contents (depth 20) sit on it. Chrome-3: the
+    // profile chip + difficulty pill LEFT the main screen for a
+    // future submenu (operator direction) — the strip now frames
+    // the Visit HUD (drawHud), and rests empty on other views.
+    // Display-only: no zones, so title taps pass through.
     const bg = this.add.graphics();
     bg.fillStyle(CREAM, CHROME_ALPHA);
     bg.fillRect(0, 0, 540, 32);
     bg.fillStyle(OUTLINE, 0.25);
     bg.fillRect(0, 32, 540, 2);
 
-    const profileBg = this.add.graphics();
-    profileBg.fillStyle(CARD_FILL, 1);
-    profileBg.lineStyle(2, OUTLINE, 1);
-    profileBg.fillRoundedRect(24, 4, 96, 24, 12);
-    profileBg.strokeRoundedRect(24, 4, 96, 24, 12);
-    const avatar = this.add.graphics();
-    avatar.fillStyle(SAGE, 1);
-    avatar.fillCircle(46, 16, 6);
-    const profile = this.add
-      .text(58, 16, MOCK_PROFILE_LABEL, {
-        fontFamily: FONT_FAMILY,
-        fontStyle: 'bold',
-        fontSize: '14px',
-        color: COCOA,
-      })
-      .setOrigin(0, 0.5);
-
-    const diffBg = this.add.graphics();
-    diffBg.fillStyle(CARD_FILL, 1);
-    diffBg.lineStyle(2, OUTLINE, 1);
-    diffBg.fillRoundedRect(400, 4, 116, 24, 12);
-    diffBg.strokeRoundedRect(400, 4, 116, 24, 12);
-    const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
-    const diffLabel = this.add
-      .text(412, 16, CHROME_TIER_LABEL[tier], {
-        fontFamily: FONT_FAMILY,
-        fontStyle: 'bold',
-        fontSize: '13px',
-        color: COCOA,
-      })
-      .setOrigin(0, 0.5);
-    const dots = this.add.graphics();
-    for (let i = 0; i < 3; i += 1) {
-      const cx = 478 + i * 15;
-      if (i < PROTOTYPE_SEEDS.difficulty) {
-        dots.fillStyle(SAGE, 1);
-        dots.lineStyle(1, OUTLINE, 1);
-        dots.fillCircle(cx, 16, 4.5);
-        dots.strokeCircle(cx, 16, 4.5);
-      } else {
-        dots.lineStyle(1.5, OUTLINE, 0.7);
-        dots.strokeCircle(cx, 16, 4.5);
-      }
-    }
-
-    const bar = this.add.container(0, 0, [
-      bg,
-      profileBg,
-      avatar,
-      profile,
-      diffBg,
-      diffLabel,
-      dots,
-    ]);
-    bar.setDepth(20);
+    const bar = this.add.container(0, 0, [bg]);
+    bar.setDepth(19);
   }
 
   private showView(next: ViewName, instant = false): void {
@@ -1493,6 +1520,7 @@ export class ClinicScene extends Phaser.Scene {
     (Object.keys(this.tabTexts) as ViewName[]).forEach((view) => {
       const active = view === next;
       for (const text of this.tabTexts[view]) text.setAlpha(active ? 1 : 0.6);
+      this.tabIcons[view]?.setAlpha(active ? 1 : 0.6);
     });
 
     this.fadeSwap(this.waitingView, next === 'waiting', instant);

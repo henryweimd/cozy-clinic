@@ -1148,3 +1148,76 @@ idle + tapped states, zero console errors. Element-by-element
 - Not done by integrator: in-game render check needs the
   deployed URL (main agent merges + deploys + playtests). No
   commit/push (main agent merges). STOP.
+
+## Active chunk: chrome-3 icon/simplify pass (operator UI feedback)
+
+- CHROME-3 OWNERSHIP (declared BEFORE editing, per AGENTS.md
+  workflow law): this run owns ONLY `src/scenes/ClinicScene.ts`
+  chrome/panel/nav, `docs/UI_PROTOTYPE.md` chrome-3 section, plus
+  this PROGRESS.md entry and CHECKPOINT.md. No art files, no
+  manifest, no clinical code, no backend. Nobody else writes those
+  paths this run.
+- CHROME-3 RESULT (2026-10-29): icon-led simplification live.
+  `src/scenes/ClinicScene.ts`: (1) SAY vs TELL — renderPanel +
+  setConversation take LineKind; 'say' quotes + tags, 'tell'
+  is bare narration with the tag hidden for on-screen Mabel
+  and kept for Nora's off-screen step-ins; all 3 callers pass
+  'tell' (every current engine line verified third-person
+  narrator voice — complaint, narrative, hootLine teaching,
+  blocked reasons). (2) HUD moved off the y376 band into the
+  top strip (coin+ cluster x24–124, bare context words center,
+  clock-hands cluster x416–516; Visit-faded, strip persistent
+  depth 19, contents 20); profile "You" chip + "Gentle"
+  difficulty pill REMOVED to a future submenu. (3) Code-drawn
+  icons: coin+, clock face+hands, 4 tab icons (queue dots /
+  care cross / video play / envelope) replacing text glyphs;
+  icons dim with labels. `docs/UI_PROTOTYPE.md`: top bar, nav,
+  panel, Visit-HUD sections rewritten to chrome-3.
+- Tests: `npm test` 29/29 pass; `npm run build` green (known
+  benign chunk-size warning only). No copy changes: patient-name
+  + glyph guards pass vacuously.
+- Spend: image spend $0.00 (code-drawn icons, 0 generations).
+  Ledger stays ~$0.3144; at >= $120, STOP (not reached);
+  operator $20 cap respected.
+- Not done: phone playtest (operator); profile/difficulty
+  submenu; first-person trajectory dialogue (returns quotes to
+  the panel). STOP.
+
+## Queued parallel workstreams (operator-approved 2026-10-29)
+
+One phase per run still holds (AGENTS.md) — the queue below runs
+back-to-back, and the marked groups MAY parallelize across
+worktrees because their file sets do not overlap. Main agent
+merges everything; ownership declared per workstream before each
+run starts.
+
+- GATE 0 (operator, blocks H2 deploy): the `sbp_` token in `.env`
+  is scope-narrow (CLI: missing projects_read, project_admin_read;
+  MCP: missing edge_functions_write, api_gateway_keys_read).
+  Operator: generate a FULL-access token (all scopes checked) and
+  replace SUPABASE_ACCESS_TOKEN in local `.env` (never chat).
+  Everything else below can run before this lands.
+- GROUP 1 (parallel-safe, no shared files):
+  WS-A art: C1 June/Milo portraits + T1 tool icons. Files:
+  `public/assets/**`, `art/manifest.json`, `art/contact-sheets/**`
+  only. Cap: <=6 portraits, <=8 plates total (plates done).
+  WS-D content: treatments DB seed + learning-resource seeds +
+  local fallback pack. Files: `data/**`, `src/data/**` (new).
+  WS-E systems: C3 progression + L2 spendable economy + L3
+  10-move undo. Files: `src/game/**` (new) + tests. No scene
+  wiring yet (integration phase does that).
+- GROUP 2 (after GATE 0): H2 backend — schema migration (6 tables)
+  via MCP `apply_migration`, `supabase/functions/seed-patients` +
+  `extend-trajectory` via CLI, 12-patient seed, veto audit, game
+  reads live (scene touches sequenced AFTER WS-C modules land).
+- GROUP 3 (parallel-safe vs GROUP 2, new files only): WS-C
+  frontend modules — F1 ticker (`src/ui/ticker.ts`), T1 tool
+  trays (`src/ui/toolTrays.ts`), L1 living chart
+  (`src/ui/livingChart.ts`), E1 learning list (`src/ui/learn.ts`).
+  NO ClinicScene.ts edits inside the group (integration wires).
+- GROUP 4 (sequential, after 2+3): integration — wire modules +
+  live reads into ClinicScene.ts, encounter rounds C2 on real
+  trajectories, full playtest.
+- GROUP 5 (daily from first stable build): D demo packaging.
+- Freeze Nov 3 noon ET: C4-C5 first cut, then L2/L3 yield, D
+  protected. Ledger ~$0.3144; STOP >= $120; operator cap $20.
