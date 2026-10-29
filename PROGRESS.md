@@ -1445,3 +1445,11 @@ clearance — then a polish fix loop for real findings.
   48/48, build green. Ledger ~$0.3744. QUEUED: maneuver-library
   (8 condition specials + illustrations), exam-loop UI wiring,
   ortho/neuro with encounter-variety conditions.
+- WS-A2 RESULT: full expression sets for June + Milo (blink, happy,
+  sick, pained, relieved x2 = 10). Identity edits of WS-A idle
+  masters, Block C verbatim, $0.10. Key-out clean all 10 (June
+  opaque ~0.50, Milo ~0.42, matching idles = pose locked); pads
+  9-10, corners clear. Contact strips reviewed: accessories
+  persist, all expressions read. june-pained v1 moderation-hit
+  on "winced/sweat" wording — reworded playful-scrunch r2
+  shipped. Manifest now 25 assets. Ledger ~$0.4744.
