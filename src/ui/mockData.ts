@@ -154,6 +154,18 @@ export const CHROME_TIER_LABEL: Record<ChromeTier, string> = {
   expert: 'Expert',
 };
 
+/**
+ * Card-row prompt wordings, one per chrome tier (MOCK — the real
+ * wording system replaces this table). The object varies by round
+ * type later (diagnose/ask/examine/watchful-waiting); today every
+ * round is an action round.
+ */
+export const CHOOSE_PROMPT_WORDING: Record<ChromeTier, string> = {
+  gentle: 'Choose care…',
+  steady: 'Choose an action…',
+  expert: 'Select intervention…',
+};
+
 /** Visit-context kinds for the HUD label (mock derivation in scene). */
 export type VisitContext = 'new-patient' | 'sick-visit' | 'follow-up';
 

@@ -1413,3 +1413,18 @@ clearance — then a polish fix loop for real findings.
   edge, depth 22); rows live in the panel's left 168px clear of
   the handle; glyph ‹/› swaps. Auditor 0 findings, 48/48, build
   green. Spend $0.00.
+
+## Active chunk: choose-nudge hotfix (continuous run)
+
+- CHOOSE-NUDGE OWNERSHIP: this fix owns ONLY `src/ui/mockData.ts`
+  (prompt wording table), `src/scenes/ClinicScene.ts` (prompt tab
+  + idle nudge), plus PROGRESS.md and CHECKPOINT.md. Round-type
+  content variety (diagnose/ask/examine/watchful-waiting) is
+  QUEUED as encounter-variety, not this fix.
+- CHOOSE-NUDGE RESULT: tier-worded "Choose…" tab (w173 max)
+  straddles the card row top (display-only, rides the row);
+  6s-idle staggered card lift + tab swell, re-arming, Y-only
+  tweens (never fights the press squash); grace on view change.
+  Auditor 0 findings, 48/48, build green. Spend $0.00. QUEUED:
+  encounter-variety (diagnose/ask/examine/watchful-waiting
+  round types + actions).

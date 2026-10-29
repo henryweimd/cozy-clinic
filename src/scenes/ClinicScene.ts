@@ -3,6 +3,7 @@ import { ClinicalEngine, CONDITIONS } from '../clinical';
 import type { ChoiceGrade, PatientState, TrajectoryNode } from '../clinical';
 import {
   CARD_ROW_IDS,
+  CHOOSE_PROMPT_WORDING,
   CHROME_TIER_BY_DIFFICULTY,
   MOCK_CARE_COINS_START,
   MOCK_ROSTER,
@@ -106,6 +107,13 @@ import type { CastData } from '../data/patients';
  * walking off the tree grows it in the background. Geometry:
  * nametag 740, chips 758, cards y788 h74, toast to the freed
  * y368 band — all gaps re-audited (auditor: 0 findings).
+ *
+ * CHOOSE-NUDGE (2026-10-29): the card row carries a tier-worded
+ * "Choose…" tab straddling its top edge (display-only, rides
+ * with the row), and after 6s idle the cards lift in a stagger
+ * + the tab swells once (no glow, taste law). Round-type
+ * content variety (diagnose/ask/examine/watchful-waiting) is a
+ * queued encounter-variety phase, not this fix.
  *
  * Reboot landmark survey (re-measured from
  * art/contact-sheets/bg-reboot-contact-sheet.png + pixel scans
@@ -258,6 +266,10 @@ export class ClinicScene extends Phaser.Scene {
   private cardRow!: Phaser.GameObjects.Container;
   private cards: CardWidgets[] = [];
   private revealedStage = -1;
+  private promptTab!: Phaser.GameObjects.Container;
+  private promptText!: Phaser.GameObjects.Text;
+  private lastCardTapMs = 0;
+  private nudging = false;
   private chips!: Phaser.GameObjects.Container;
   private chipTexts: Phaser.GameObjects.Text[] = [];
 
@@ -355,6 +367,7 @@ export class ClinicScene extends Phaser.Scene {
     this.drawMabel();
     this.drawConversationPanel();
     this.drawCardRow();
+    this.drawPromptTab();
     this.drawVitalsChips();
     this.drawHud();
     this.drawWaitingView();
@@ -367,6 +380,12 @@ export class ClinicScene extends Phaser.Scene {
     this.drawMonitor();
     this.drawToast();
     this.scheduleBlink();
+    this.lastCardTapMs = this.time.now;
+    this.time.addEvent({
+      delay: 1000,
+      loop: true,
+      callback: () => this.maybeNudge(),
+    });
     this.showView('visit', true);
   }
 
@@ -750,6 +769,78 @@ export class ClinicScene extends Phaser.Scene {
     });
   }
 
+  /**
+   * Choose-prompt tab: a small attached label straddling the card
+   * row's top edge (y780-802, centered), so the row reads as an
+   * invitation. Display-only (no zone — taps pass to the cards).
+   * Lives inside cardRow: fades + shifts with the row. Text is
+   * tier-worded (CHOOSE_PROMPT_WORDING); width follows the text.
+   */
+  private drawPromptTab(): void {
+    const bg = this.add.graphics();
+    this.promptText = this.add
+      .text(270, 791, '', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '14px',
+        color: COCOA,
+      })
+      .setOrigin(0.5, 0.5);
+    this.promptTab = this.add.container(0, 0, [bg, this.promptText]);
+    this.promptTab.setData('bg', bg);
+    this.cardRow.add(this.promptTab);
+    this.refreshPromptTab();
+  }
+
+  private refreshPromptTab(): void {
+    const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+    this.promptText.setText(CHOOSE_PROMPT_WORDING[tier]);
+    const w = Math.max(120, this.promptText.width + 32);
+    const bg = this.promptTab.getData('bg') as Phaser.GameObjects.Graphics;
+    bg.clear();
+    bg.fillStyle(CARD_FILL, 1);
+    bg.lineStyle(2, OUTLINE, 1);
+    bg.fillRoundedRect(270 - w / 2, 780, w, 22, 11);
+    bg.strokeRoundedRect(270 - w / 2, 780, w, 22, 11);
+  }
+
+  /**
+   * Idle nudge: after 6s without a card tap (Visit/Telemed, cards
+   * visible, no admin), the cards lift in a stagger + the tab
+   * swells once — a glimmer with no glow (taste law). Re-arms
+   * every 6s until the player taps. Y-only tweens, so the press
+   * squash (scale) never fights them.
+   */
+  private maybeNudge(): void {
+    if (this.adminOpen || this.nudging) return;
+    if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
+    if (!this.cardRow.visible || this.cardRow.alpha < 1) return;
+    if (this.time.now - this.lastCardTapMs < 6000) return;
+    this.nudging = true;
+    this.lastCardTapMs = this.time.now;
+    this.cards.forEach((card, i) => {
+      this.tweens.add({
+        targets: card.root,
+        y: '-=8',
+        duration: 160,
+        yoyo: true,
+        delay: i * 130,
+        ease: 'Sine.easeInOut',
+      });
+    });
+    this.tweens.add({
+      targets: this.promptTab,
+      scaleX: 1.05,
+      scaleY: 1.05,
+      duration: 200,
+      yoyo: true,
+      ease: 'Sine.easeInOut',
+    });
+    this.time.delayedCall(700, () => {
+      this.nudging = false;
+    });
+  }
+
   private drawSpine(card: CardWidgets, grade: ChoiceGrade | null): void {
     card.spine.clear();
     if (!grade) return;
@@ -771,6 +862,7 @@ export class ClinicScene extends Phaser.Scene {
     if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
     const card = this.cards[i];
     if (!card) return;
+    this.lastCardTapMs = this.time.now;
     this.tweens.add({
       targets: card.root,
       scaleX: 0.97,
@@ -1682,6 +1774,8 @@ export class ClinicScene extends Phaser.Scene {
     if (this.adminOpen && !instant) return;
     this.currentView = next;
     this.swapPlate(next, instant);
+    // Fresh 6s grace before the idle nudge may fire here.
+    if (next === 'visit' || next === 'telemed') this.lastCardTapMs = this.time.now;
     if (instant) {
       this.navPill.setX(TAB_X[next]);
     } else {
