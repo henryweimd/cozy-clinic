@@ -17,6 +17,7 @@ import { BackendTicker } from '../ui/ticker';
 import { ToolTray } from '../ui/toolTrays';
 import { LivingChart } from '../ui/livingChart';
 import { LearnList } from '../ui/learnList';
+import { AssetBrowser } from '../ui/assetBrowser';
 import {
   childFor,
   childSpecs,
@@ -355,6 +356,7 @@ export class ClinicScene extends Phaser.Scene {
   private monitor!: Phaser.GameObjects.Container;
   private monitorBackdrop!: Phaser.GameObjects.Container;
   private monitorContent!: Phaser.GameObjects.Container;
+  private assetBrowser!: AssetBrowser;
 
   // Toast.
   private toast!: Phaser.GameObjects.Container;
@@ -2180,6 +2182,8 @@ export class ClinicScene extends Phaser.Scene {
       xZone,
     ]);
     this.monitor.setDepth(31).setVisible(false);
+    // V1 asset browser: same terminal, depth 32, follows the monitor.
+    this.assetBrowser = new AssetBrowser(this);
   }
 
   /** Rebuilt on every open — every value below is a LIVE read. */
@@ -2251,7 +2255,21 @@ export class ClinicScene extends Phaser.Scene {
         color: '#9fe8b8',
       })
       .setOrigin(0, 0);
-    this.monitorContent.add([memKey, memValue, hint]);
+    const assetsBtn = this.add
+      .text(476, 648, '› ASSETS', {
+        fontFamily: MONO_FONT,
+        fontStyle: 'bold',
+        fontSize: '14px',
+        color: '#e8c96a',
+      })
+      .setOrigin(1, 0);
+    const assetsZone = this.add
+      .zone(440, 656, 80, 28)
+      .setInteractive({ useHandCursor: true });
+    assetsZone.on('pointerdown', () => {
+      this.assetBrowser.show('plates', this.prefix(), this.activeName);
+    });
+    this.monitorContent.add([memKey, memValue, hint, assetsBtn, assetsZone]);
   }
 
   private openMonitor(): void {
@@ -2268,6 +2286,7 @@ export class ClinicScene extends Phaser.Scene {
 
   private closeMonitor(): void {
     if (!this.monitor.visible) return;
+    if (this.assetBrowser.open) this.assetBrowser.hide();
     this.tweens.killTweensOf(this.monitor);
     this.tweens.add({
       targets: this.monitor,

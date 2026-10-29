@@ -330,6 +330,12 @@ glass, not a debug dump.
   (x452–500, y154–202), cream on walnut. Also closes on
   backdrop tap outside the monitor. Neither control is reachable
   without the code — the monitor never peeks otherwise.
+- V1 ASSET BROWSER: "› ASSETS" button bottom-right of the screen
+  opens a same-frame overlay (depth 32): PLATES tab (8 plates,
+  live thumbs) + FACES tab (active patient's 6 frames); tap a
+  thumb for a large preview + the verbatim paste-back snippet
+  (e.g. `PLATE_PIN = { visit: 'exam-b' }`). BACK returns to the
+  monitor; monitor close hides both.
 
 ## Responsive / edge notes
 

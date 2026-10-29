@@ -1468,3 +1468,18 @@ clearance — then a polish fix loop for real findings.
   rebuild per condition (asthma fixed demo row, else first 3
   live actions); waiting taps switch visits (Theo stays mock).
   Auditor 0 findings, 48/48, build green. Spend $0.00.
+
+## Active chunk: V1 asset browser (continuous run)
+
+- V1 OWNERSHIP: this phase owns ONLY `src/ui/assetBrowser.ts`
+  (new), `src/scenes/ClinicScene.ts` DEV SECTION ONLY (ASSETS
+  button + browser show/hide), plus PROGRESS.md and CHECKPOINT.md.
+  No player-chrome changes.
+- V1 RESULT: dev asset browser live. `src/ui/assetBrowser.ts`:
+  same-frame terminal overlay (depth 32), PLATES (8 live thumbs
+  + verbatim PLATE_PIN snippets) + FACES (active patient's 6
+  frames + steady-map notes) tabs, tap-to-preview + snippet
+  pane, BACK. Scene: ASSETS button in monitor content, browser
+  follows monitor close. Fixed a real leak found via tsc-never
+  (stray null assignment). Doc +1 section. 48/48, build green.
+  Spend $0.00.
