@@ -129,9 +129,10 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
 
 ### Decision / action card row (Visit + Telemed)
 
-- Geometry: x24–516 (w492), y796–876 (h80). Two cards: each w240,
-  gap 12. Three cards: each w156, gaps 12. Tap target = full card
-  (≥156x80 — generous).
+- Geometry (G4): x24–516 (w492), y788–862 (h74). Two cards:
+  each w240, gap 12. Three cards: each w156, gaps 12. Tap
+  target = full card (≥156x74 — generous). Shifted up to clear
+  the F1 ticker row (y870–888).
 - Style: white-cream `#FFF9EF` card r16, 3px outline; grade-tinted
   left spine 8px (BEST sage, NOT_GREAT sky, WRONG amber `#D9A441`,
   DANGEROUS rose — prototype shows the spine ONLY after tap, so
@@ -156,9 +157,10 @@ VIEW 1 — VISIT (default; today's Mabel scene):
   — the old bubble dock is RETIRED in this prototype; its content
   moves up so the card row + nav own the bottom), decision card
   row (y796–876), nav bar (y888–960).
-- Nametag (y744) gains a mock vitals chip row beneath it:
-  y766–788, three pills (w~120 h~22, 14px): e.g. "• breath 3",
-  "• comfort 2", "visit #4". Decorative mock, ticks on resolve.
+- Nametag (y740, G4 — tap it for the Living Chart) gains a
+  mock vitals chip row beneath it: y758–780, three pills (w~120
+  h~22, 14px): e.g. "• breath 3", "• comfort 2", "visit #4".
+  Decorative mock, ticks on resolve.
 - Progress HUD (chrome-3: moved OFF the mid-screen band INTO the
   top strip; Visit-faded, strip persistent). Coin cluster left
   (pill x24–124, h24 r12): code-drawn coin+ icon + mock count

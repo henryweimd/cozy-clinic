@@ -12,6 +12,20 @@ import {
   quoteIfSpoken,
 } from '../ui/mockData';
 import type { VisitContext } from '../ui/mockData';
+import { BackendTicker } from '../ui/ticker';
+import { ToolTray } from '../ui/toolTrays';
+import { LivingChart } from '../ui/livingChart';
+import { LearnList } from '../ui/learnList';
+import {
+  childFor,
+  childSpecs,
+  extendTree,
+  loadCast,
+  mergeExtension,
+  patientByName,
+  rootNode,
+} from '../data/patients';
+import type { CastData } from '../data/patients';
 
 /**
  * Milestone 1 clinic scene: a cozy clinic room and Mabel, the first
@@ -81,6 +95,17 @@ import type { VisitContext } from '../ui/mockData';
  * in the top strip, cross / queue-dots / video / envelope
  * tab icons replacing the text glyphs. Title, panel fades,
  * admin stack, plates, and offline behavior untouched.
+ *
+ * G4 INTEGRATION (2026-10-29): the G3 modules join the scene —
+ * backend ticker (1 row, everywhere except Telemed), exam tool
+ * tray (Visit only), Living Chart (nametag tap), Learning
+ * List (strip book button, Waiting/Portal). The cast loads live
+ * (Supabase, fallback offline): the opener reads Mabel's stored
+ * root, and resolves read stored children — engine state stays
+ * authoritative, words come from pre-computed futures, and
+ * walking off the tree grows it in the background. Geometry:
+ * nametag 740, chips 758, cards y788 h74, toast to the freed
+ * y368 band — all gaps re-audited (auditor: 0 findings).
  *
  * Reboot landmark survey (re-measured from
  * art/contact-sheets/bg-reboot-contact-sheet.png + pixel scans
@@ -246,6 +271,18 @@ export class ClinicScene extends Phaser.Scene {
   private visitStartMs = 0;
   private lastTimerSecond = -1;
 
+  // G4 live-read + modules (wired in wireModules, below).
+  private ticker!: BackendTicker;
+  private tray!: ToolTray;
+  private chart!: LivingChart;
+  private learnList!: LearnList;
+  private cast: CastData | null = null;
+  private mabelPatientId: string | null = null;
+  private currentNodeId: string | null = null;
+  private currentDepth = 0;
+  private extending = false;
+  private bookBtn!: Phaser.GameObjects.Container;
+
   // Views + nav.
   private currentView: ViewName = 'visit';
   private waitingView!: Phaser.GameObjects.Container;
@@ -325,6 +362,7 @@ export class ClinicScene extends Phaser.Scene {
     this.drawPortalView();
     this.drawNavBar();
     this.drawTopBar();
+    this.wireModules();
     this.drawCodePad();
     this.drawMonitor();
     this.drawToast();
@@ -515,7 +553,7 @@ export class ClinicScene extends Phaser.Scene {
     this.mabel.setInteractive({ useHandCursor: true });
 
     this.nametag = this.add
-      .text(270, 744, 'Mabel · first patient', {
+      .text(270, 740, 'Mabel · first patient', {
         fontFamily: FONT_FAMILY,
         fontSize: '22px',
         color: COCOA,
@@ -649,8 +687,16 @@ export class ClinicScene extends Phaser.Scene {
     this.panel.setVisible(this.panelOpen && inScene);
   }
 
-  /** Live complaint: today's formula, today's copy, live stage. */
+  /**
+   * Live complaint: the stored root narrative when the cast has
+   * loaded (live or fallback), else the engine formula. Same
+   * opener either way — the stored flesh IS the formula, grown.
+   */
   private complaintText(): string {
+    if (this.cast && this.mabelPatientId) {
+      const root = rootNode(this.cast, this.mabelPatientId);
+      if (root) return `${root.narrative}\nThe doctor will see you now.`;
+    }
     const def = CONDITIONS[this.patientState.conditionId];
     const stage = def.stages[this.patientState.stageIndex];
     const complaint =
@@ -677,12 +723,12 @@ export class ClinicScene extends Phaser.Scene {
       const action = def.actions.find((a) => a.id === actionId);
       const label = action ? action.label : actionId;
       const cx = 24 + i * 168 + 78;
-      const cy = 796 + 40;
+      const cy = 788 + 37;
       const face = this.add.graphics();
       face.fillStyle(CARD_FILL, 1);
       face.lineStyle(3, OUTLINE, 1);
-      face.fillRoundedRect(-78, -40, 156, 80, 16);
-      face.strokeRoundedRect(-78, -40, 156, 80, 16);
+      face.fillRoundedRect(-78, -37, 156, 74, 16);
+      face.strokeRoundedRect(-78, -37, 156, 74, 16);
       const spine = this.add.graphics();
       const labelText = this.add
         .text(0, 0, label, {
@@ -694,9 +740,9 @@ export class ClinicScene extends Phaser.Scene {
           wordWrap: { width: 144 },
         })
         .setOrigin(0.5, 0.5);
-      this.truncateToHeight(labelText, 46);
+      this.truncateToHeight(labelText, 44);
       const root = this.add.container(cx, cy, [face, spine, labelText]);
-      const zone = this.add.zone(0, 0, 156, 80).setInteractive({ useHandCursor: true });
+      const zone = this.add.zone(0, 0, 156, 74).setInteractive({ useHandCursor: true });
       zone.on('pointerdown', () => this.onCardTap(i));
       root.add(zone);
       this.cardRow.add(root);
@@ -709,7 +755,7 @@ export class ClinicScene extends Phaser.Scene {
     if (!grade) return;
     card.spine.fillStyle(GRADE_COLOR[grade], 1);
     // 8px left spine inside the card's rounded corner.
-    card.spine.fillRoundedRect(-78, -40, 8, 80, { tl: 16, tr: 0, bl: 16, br: 0 });
+    card.spine.fillRoundedRect(-78, -37, 8, 74, { tl: 16, tr: 0, bl: 16, br: 0 });
   }
 
   private clearReveals(): void {
@@ -779,8 +825,55 @@ export class ClinicScene extends Phaser.Scene {
     }
     // Stage may have moved — the context label re-derives (mock).
     this.refreshHud();
-    this.setConversation('MABEL', `${result.node.narrative} ${result.node.teaching}`, 'tell');
+    // G4 encounter rounds on REAL trajectories: the engine still
+    // computes state (physics), but the words come from the
+    // pre-computed stored child when one exists. A miss grows
+    // the tree in the background (never mid-tap waiting).
+    const stored =
+      this.cast && this.currentNodeId
+        ? childFor(this.cast, this.currentNodeId, action.label)
+        : null;
+    if (stored) {
+      this.currentNodeId = stored.node.id;
+      this.currentDepth = stored.node.depth;
+      this.setConversation(
+        'MABEL',
+        `${stored.node.narrative} ${stored.node.teaching}`,
+        'tell',
+      );
+    } else {
+      this.setConversation(
+        'MABEL',
+        `${result.node.narrative} ${result.node.teaching}`,
+        'tell',
+      );
+      void this.growTree();
+    }
     this.playResolveFlash(result.node.animationCue);
+  }
+
+  /**
+   * Background growth: when play walks off the pre-computed tree,
+   * compute children with the REAL engine and extend server-side.
+   * Best-effort (null offline) — play never waits on it.
+   */
+  private async growTree(): Promise<void> {
+    if (this.extending) return;
+    if (!this.cast || !this.mabelPatientId || !this.currentNodeId) return;
+    this.extending = true;
+    try {
+      const children = childSpecs(this.engine, this.patientState, this.currentDepth + 1);
+      const grown = await extendTree(this.mabelPatientId, this.currentNodeId, children);
+      if (grown) {
+        this.cast = mergeExtension(this.cast, grown.nodes, grown.edges);
+        this.ticker.setLines([
+          `grew ${grown.nodes.length} futures at depth ${this.currentDepth + 1}`,
+          'trajectories: instant reads continue',
+        ]);
+      }
+    } finally {
+      this.extending = false;
+    }
   }
 
   // -- expression state machine (ANIMATION.md normative) --
@@ -918,10 +1011,10 @@ export class ClinicScene extends Phaser.Scene {
       const bg = this.add.graphics();
       bg.fillStyle(CARD_FILL, 1);
       bg.lineStyle(2, OUTLINE, 1);
-      bg.fillRoundedRect(cx - 60, 766, 120, 22, 11);
-      bg.strokeRoundedRect(cx - 60, 766, 120, 22, 11);
+      bg.fillRoundedRect(cx - 60, 758, 120, 22, 11);
+      bg.strokeRoundedRect(cx - 60, 758, 120, 22, 11);
       const label = this.add
-        .text(cx, 777, '', {
+        .text(cx, 769, '', {
           fontFamily: FONT_FAMILY,
           fontSize: '14px',
           color: COCOA,
@@ -1502,6 +1595,88 @@ export class ClinicScene extends Phaser.Scene {
     bar.setDepth(19);
   }
 
+  // -- G4 module wiring (ticker, tray, chart, learn list, live cast) --
+
+  private wireModules(): void {
+    // Ticker: persistent chrome, 1 row by default (2-row expand
+    // arrives with the submenu toggle). Hidden in Telemed (the
+    // call buttons own the bottom band) and managed per view.
+    this.ticker = new BackendTicker(this);
+    this.ticker.setCollapsed(true);
+    this.ticker.setLines(['connecting…', '']);
+    this.time.addEvent({
+      delay: 4000,
+      loop: true,
+      callback: () => this.ticker.tickMock(),
+    });
+
+    // Tray: Visit-only exam chrome.
+    this.tray = new ToolTray(this);
+    this.tray.onPick = (tool) => {
+      this.showToast(`${tool.label} (${tool.hint}) — exam loops later (mock)`);
+    };
+
+    // Living Chart: tap the nametag to open.
+    this.chart = new LivingChart(this);
+    const nametagZone = this.add
+      .zone(270, 740, 220, 30)
+      .setInteractive({ useHandCursor: true });
+    nametagZone.on('pointerdown', () => {
+      if (this.adminOpen) return;
+      if (this.currentView !== 'visit') return;
+      if (this.chart.open) this.chart.hide();
+      else this.chart.show('Mabel', this.patientState.memory);
+    });
+
+    // Learning List: book button in the strip (waiting/portal).
+    this.learnList = new LearnList(this);
+    this.learnList.onOpen = (r) => {
+      this.showToast(`${r.title} opens in the reader later (mock)`);
+    };
+    this.drawBookButton();
+
+    // Live cast: Supabase first, fallback offline. Resolves read
+    // the loaded trees instantly — never mid-tap network.
+    void loadCast().then((cast) => {
+      this.cast = cast;
+      const mabel = patientByName(cast, 'Mabel');
+      this.mabelPatientId = mabel?.id ?? null;
+      const root = mabel ? rootNode(cast, mabel.id) : null;
+      this.currentNodeId = root?.id ?? null;
+      this.currentDepth = 0;
+      this.ticker.setLines([
+        `${cast.source}: ${cast.patients.length} patients \u00b7 ${cast.nodes.length} nodes`,
+        'trajectories: 2 turns ahead \u00b7 instant reads',
+      ]);
+      // The opener complaint re-reads live on next tap.
+      if (this.panelOpen) {
+        this.setConversation('MABEL', this.complaintText(), 'tell');
+      }
+    });
+  }
+
+  private drawBookButton(): void {
+    const bg = this.add.graphics();
+    bg.fillStyle(CARD_FILL, 1);
+    bg.lineStyle(2, OUTLINE, 1);
+    bg.fillRoundedRect(476, 4, 40, 24, 12);
+    bg.strokeRoundedRect(476, 4, 40, 24, 12);
+    const book = this.add.graphics();
+    book.lineStyle(2, OUTLINE, 1);
+    book.strokeRoundedRect(490, 9, 12, 14, 2);
+    book.lineBetween(493, 9, 493, 23);
+    const zone = this.add
+      .zone(496, 16, 40, 24)
+      .setInteractive({ useHandCursor: true });
+    zone.on('pointerdown', () => {
+      if (this.adminOpen) return;
+      const def = CONDITIONS[this.patientState.conditionId];
+      this.learnList.show(def.id, def.name);
+    });
+    this.bookBtn = this.add.container(0, 0, [bg, book, zone]);
+    this.bookBtn.setDepth(20);
+  }
+
   private showView(next: ViewName, instant = false): void {
     if (next === this.currentView && !instant) return;
     if (this.adminOpen && !instant) return;
@@ -1529,6 +1704,16 @@ export class ClinicScene extends Phaser.Scene {
     this.fadeSwap(this.cardRow, next === 'visit' || next === 'telemed', instant);
     this.fadeSwap(this.chips, next === 'visit', instant);
     this.fadeSwap(this.hud, next === 'visit', instant);
+    // G4 module visibility: ticker everywhere except Telemed (call
+    // buttons own that bottom band); tray Visit-only (no hands
+    // through a video call); book on the sheet views whose strip
+    // sits empty.
+    this.ticker.setVisible(next !== 'telemed');
+    this.tray.setVisible(next === 'visit');
+    this.bookBtn.setVisible(next === 'waiting' || next === 'portal');
+    // Overlays close on any view change (both no-op when shut).
+    this.chart.hide();
+    this.learnList.hide();
     this.nametag.setVisible(next === 'visit');
     this.syncPanelVisibility();
     const cardY = next === 'telemed' ? -60 : 0;
@@ -1913,7 +2098,7 @@ export class ClinicScene extends Phaser.Scene {
   private drawToast(): void {
     this.toastBg = this.add.graphics();
     this.toastText = this.add
-      .text(270, 770, '', {
+      .text(270, 390, '', {
         fontFamily: FONT_FAMILY,
         fontSize: '17px',
         color: '#fff9ef',
@@ -1930,7 +2115,7 @@ export class ClinicScene extends Phaser.Scene {
     const w = Math.min(492, this.toastText.width + 48);
     this.toastBg.clear();
     this.toastBg.fillStyle(0x3e2e22, 0.92);
-    this.toastBg.fillRoundedRect(270 - w / 2, 748, w, 44, 22);
+    this.toastBg.fillRoundedRect(270 - w / 2, 368, w, 44, 22);
     this.toast.setVisible(true).setAlpha(0);
     this.tweens.add({
       targets: this.toast,

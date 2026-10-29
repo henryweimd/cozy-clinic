@@ -1338,3 +1338,24 @@ clearance — then a polish fix loop for real findings.
   `src/ui/g3.test.ts` (4 pure-logic tests). G4 contract: card
   row shifts up 36px to clear the ticker.
 - Tests: 38/38; build green. Spend $0.00.
+
+## Active chunk: GROUP 4 integration (long-horizon run)
+
+- G4 OWNERSHIP (declared BEFORE editing): this phase owns ONLY
+  `src/data/patients.ts` + `src/data/patients.test.ts` (live-read
+  layer), `src/scenes/ClinicScene.ts` (module wiring, geometry
+  shifts, live resolve, extend trigger), plus PROGRESS.md and
+  CHECKPOINT.md. G3 modules are consumed, not modified.
+- G4 RESULT: integration live. `src/data/patients.ts`: loadCast
+  (Supabase REST -> fallback), root/child lookups, mergeExtension,
+  engine-built childSpecs, extendTree (+4 tests). Scene: ticker
+  (1-row, all but Telemed) + mock ticks, tool tray (Visit-only;
+  handle abuts panel at x516), Living Chart (nametag tap),
+  Learning List (strip book, Waiting/Portal), opener + resolves
+  read stored flesh with engine state authoritative, background
+  growTree off-tree. Geometry: nametag 740, chips 758, cards
+  y788 h74, toast y368; auditor re-run 0 findings (1 real
+  chips/cards gap fixed 6->8px). Doc: card/chip geometry.
+  NOTE: Vercel needs VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY
+  env for live reads in prod (else silent fallback — by design).
+- Tests: 42/42; build green. Spend $0.00.

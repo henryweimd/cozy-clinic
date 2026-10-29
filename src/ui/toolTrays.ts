@@ -8,8 +8,10 @@ import { THEME } from './chromeTheme';
  * tap a tool to pick it up (the integration wires sounds, exam
  * loops, and result lines — this module only reports the pick).
  *
- * Geometry: closed = 28px handle at x512-540, y300-560; open =
- * panel x348-540. Depth 22 (above views, below admin).
+ * Geometry: closed = 24px handle at x516-540, y300-560 (abuts
+ * the panel's right edge, never overlaps); open = panel x348-540.
+ * Depth 22 (above views, below admin). Visit-only chrome: exam
+ * tools make no sense through a video call.
  */
 
 export interface ToolDef {
@@ -25,7 +27,7 @@ export const EXAM_TOOLS: readonly ToolDef[] = [
   { id: 'penlight', label: 'Light', hint: 'eyes + throat' },
 ];
 
-const CLOSED_X = 512;
+const CLOSED_X = 516;
 const OPEN_X = 348;
 const TRAY_TOP = 300;
 const TRAY_H = 260;
@@ -53,7 +55,7 @@ export class ToolTray {
     this.paint();
     EXAM_TOOLS.forEach((tool, i) => this.buildRow(tool, i));
     const zone = this.scene.add
-      .zone(14, TRAY_TOP + TRAY_H / 2, 28, TRAY_H)
+      .zone(12, TRAY_TOP + TRAY_H / 2, 24, TRAY_H)
       .setInteractive({ useHandCursor: true });
     zone.on('pointerdown', () => this.toggle());
     this.root.add(zone);
@@ -77,7 +79,7 @@ export class ToolTray {
       bl: 20,
       br: 0,
     });
-    this.handleText.setPosition(14, TRAY_TOP + TRAY_H / 2);
+    this.handleText.setPosition(12, TRAY_TOP + TRAY_H / 2);
     this.handleText.setText(this.open ? '\u203a' : '\u2039');
   }
 
