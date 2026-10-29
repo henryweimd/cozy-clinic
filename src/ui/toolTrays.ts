@@ -3,10 +3,12 @@ import { THEME } from './chromeTheme';
 
 /**
  * T1 exam tool tray: a translucent tray sliding from the right
- * edge with common in-office tools (stethoscope, otoscope,
- * thermometer, penlight). Tap the handle to slide open/closed;
- * tap a tool to pick it up (the integration wires sounds, exam
- * loops, and result lines — this module only reports the pick).
+ * edge with the four real physical-exam maneuvers — inspection
+ * (look, incl. ears/nose/throat), palpation (feel), percussion
+ * (tap + listen), auscultation (listen with stethoscope). Tap the
+ * handle to slide open/closed; tap a maneuver to begin it (the
+ * exam loops wire sounds, illustrations, and result lines — this
+ * module only reports the pick).
  *
  * Geometry: the HANDLE is fixed at x516-540 (24px tab,
  * y300-560, depth 23); the PANEL slides behind it from x540
@@ -17,16 +19,18 @@ import { THEME } from './chromeTheme';
  */
 
 export interface ToolDef {
-  id: 'stethoscope' | 'otoscope' | 'thermometer' | 'penlight';
+  id: 'inspection' | 'palpation' | 'percussion' | 'auscultation';
+  /** Gentle verb (tap target). */
   label: string;
+  /** Clinical term (education line). */
   hint: string;
 }
 
 export const EXAM_TOOLS: readonly ToolDef[] = [
-  { id: 'stethoscope', label: 'Listen', hint: 'chest sounds' },
-  { id: 'otoscope', label: 'Look', hint: 'ears + throat' },
-  { id: 'thermometer', label: 'Temp', hint: 'quick check' },
-  { id: 'penlight', label: 'Light', hint: 'eyes + throat' },
+  { id: 'inspection', label: 'Look', hint: 'inspection' },
+  { id: 'palpation', label: 'Feel', hint: 'palpation' },
+  { id: 'percussion', label: 'Tap', hint: 'percussion' },
+  { id: 'auscultation', label: 'Listen', hint: 'auscultation' },
 ];
 
 const HANDLE_X = 516;
@@ -145,37 +149,45 @@ export function drawToolIcon(
   cy: number,
 ): void {
   g.lineStyle(3, THEME.outline, 1);
-  if (id === 'stethoscope') {
-    // Chest piece + Y tube, abstract-cozy.
+  if (id === 'inspection') {
+    // Eye: almond outline + pupil + highlight.
+    g.fillStyle(THEME.cardFill, 1);
+    g.fillEllipse(cx, cy, 30, 18);
+    g.strokeEllipse(cx, cy, 30, 18);
+    g.fillStyle(THEME.outline, 1);
+    g.fillCircle(cx, cy, 5);
+    g.fillStyle(0xfff9ef, 1);
+    g.fillCircle(cx - 1.5, cy - 1.5, 1.8);
+  } else if (id === 'palpation') {
+    // Pressing hand: palm + finger bumps + pressure ticks.
+    g.fillStyle(THEME.cardFill, 1);
+    g.fillRoundedRect(cx - 11, cy - 6, 22, 16, 8);
+    g.strokeRoundedRect(cx - 11, cy - 6, 22, 16, 8);
+    g.fillStyle(THEME.cardFill, 1);
+    for (const dx of [-7, 0, 7]) {
+      g.fillCircle(cx + dx, cy - 8, 5);
+      g.strokeCircle(cx + dx, cy - 8, 5);
+    }
+    g.lineStyle(2, THEME.outline, 0.7);
+    for (const dx of [-8, 0, 8]) {
+      g.lineBetween(cx + dx, cy + 14, cx + dx, cy + 19);
+    }
+  } else if (id === 'percussion') {
+    // Tapping fingers + radiating sound arcs.
+    g.lineStyle(4, THEME.outline, 1);
+    g.lineBetween(cx - 8, cy - 18, cx - 5, cy - 2);
+    g.lineBetween(cx + 2, cy - 18, cx + 5, cy - 2);
+    g.lineStyle(2.5, THEME.outline, 0.85);
+    for (const r of [10, 16, 22]) {
+      g.strokeCircle(cx, cy + 2, r);
+    }
+  } else {
+    // Auscultation: chest piece + Y tube, abstract-cozy.
     g.fillStyle(THEME.sky, 1);
     g.fillCircle(cx, cy + 8, 9);
     g.strokeCircle(cx, cy + 8, 9);
     g.lineBetween(cx, cy - 1, cx, cy - 12);
     g.lineBetween(cx, cy - 12, cx - 8, cy - 20);
     g.lineBetween(cx, cy - 12, cx + 8, cy - 20);
-  } else if (id === 'otoscope') {
-    // Cone head + handle.
-    g.fillStyle(THEME.cardFill, 1);
-    g.fillTriangle(cx - 10, cy - 14, cx + 10, cy - 14, cx, cy + 2);
-    g.strokeTriangle(cx - 10, cy - 14, cx + 10, cy - 14, cx, cy + 2);
-    g.fillStyle(THEME.sage, 1);
-    g.fillRoundedRect(cx - 5, cy + 2, 10, 18, 4);
-    g.strokeRoundedRect(cx - 5, cy + 2, 10, 18, 4);
-  } else if (id === 'thermometer') {
-    // Bulb + stem.
-    g.fillStyle(THEME.cardFill, 1);
-    g.fillRoundedRect(cx - 5, cy - 20, 10, 30, 5);
-    g.strokeRoundedRect(cx - 5, cy - 20, 10, 30, 5);
-    g.fillStyle(THEME.rose, 1);
-    g.fillCircle(cx, cy + 13, 7);
-    g.strokeCircle(cx, cy + 13, 7);
-    g.fillRect(cx - 1.5, cy - 14, 3, 24);
-  } else {
-    // Penlight body + beam.
-    g.fillStyle(THEME.amber, 1);
-    g.fillRoundedRect(cx - 12, cy - 5, 18, 10, 5);
-    g.strokeRoundedRect(cx - 12, cy - 5, 18, 10, 5);
-    g.fillStyle(THEME.amber, 0.35);
-    g.fillTriangle(cx + 6, cy - 5, cx + 6, cy + 5, cx + 20, cy);
   }
 }

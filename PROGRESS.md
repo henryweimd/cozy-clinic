@@ -1428,3 +1428,20 @@ clearance — then a polish fix loop for real findings.
   Auditor 0 findings, 48/48, build green. Spend $0.00. QUEUED:
   encounter-variety (diagnose/ask/examine/watchful-waiting
   round types + actions).
+
+## Active chunk: exam-maneuvers + illustrations (continuous run)
+
+- EXAM-MANEUVER OWNERSHIP: this phase owns ONLY `src/ui/toolTrays.ts`
+  (4 real maneuvers), `ART_BIBLE.md` (new Block U, proposed),
+  `public/assets/exam/*.png`, `art/manifest.json` (4 appends),
+  `art/contact-sheets/*exam*`, plus PROGRESS.md and CHECKPOINT.md.
+- EXAM-MANEUVER RESULT: tray corrected to the 4 real maneuvers
+  (inspection/look incl. ENT, palpation/feel, percussion/tap,
+  auscultation/listen) with clinical-term hint lines + 4 new
+  code-drawn icons (eye, pressing hand, tap arcs, chest piece).
+  ART_BIBLE gains Block U (UI illustration, proposed). 4 exam-loop
+  illustrations generated fresh ($0.04), all pass (flat, cream,
+  no text), 512px exports + contact sheet + 4 manifest entries.
+  48/48, build green. Ledger ~$0.3744. QUEUED: maneuver-library
+  (8 condition specials + illustrations), exam-loop UI wiring,
+  ortho/neuro with encounter-variety conditions.

@@ -447,6 +447,58 @@
     ],
     "opaque_ratio": 0.419
    }
+  },
+  {
+   "sprite": "exam-inspection.png",
+   "export": "public/assets/exam/exam-inspection.png",
+   "master": "art/source/exam/exam-inspection-master.png",
+   "source_file": "exam-inspection-20261029-112442-1.png",
+   "source_tool": "muse-image-mcp generate_image (fresh, Block U verbatim)",
+   "revision": 1,
+   "direction": "exam-maneuver-2026-10-29",
+   "status": "current",
+   "dimensions": "512x512",
+   "frame": "exam-loop illustration (inspection); opaque cream card, no text",
+   "prompt_full": "Cozy medical illustration for a kids game exam loop: a gentle round magnifier held over a soft ear, small nose and throat trio, warm light glow on the ear, sparkles of healthy pink. Soft flat cozy illustration, rounded shapes, matte texture, warm cream background, restrained pastel palette, gentle daylight, thin warm-brown outlines only, centered, generous negative space. No text, no words, no letters, no numbers, no photorealism, no 3D render look, no clutter, no scary imagery."
+  },
+  {
+   "sprite": "exam-palpation.png",
+   "export": "public/assets/exam/exam-palpation.png",
+   "master": "art/source/exam/exam-palpation-master.png",
+   "source_file": "exam-palpation-20261029-112515-1.png",
+   "source_tool": "muse-image-mcp generate_image (fresh, Block U verbatim)",
+   "revision": 1,
+   "direction": "exam-maneuver-2026-10-29",
+   "status": "current",
+   "dimensions": "512x512",
+   "frame": "exam-loop illustration (palpation); opaque cream card, no text",
+   "prompt_full": "Cozy medical illustration for a kids game exam loop: two soft mitten hands gently pressing a round calm belly, warm comfort ripples radiating outward, small flower of ease above. Soft flat cozy illustration, rounded shapes, matte texture, warm cream background, restrained pastel palette, gentle daylight, thin warm-brown outlines only, centered, generous negative space. No text, no words, no letters, no numbers, no photorealism, no 3D render look, no clutter, no scary imagery."
+  },
+  {
+   "sprite": "exam-percussion.png",
+   "export": "public/assets/exam/exam-percussion.png",
+   "master": "art/source/exam/exam-percussion-master.png",
+   "source_file": "exam-percussion-20261029-112547-1.png",
+   "source_tool": "muse-image-mcp generate_image (fresh, Block U verbatim)",
+   "revision": 1,
+   "direction": "exam-maneuver-2026-10-29",
+   "status": "current",
+   "dimensions": "512x512",
+   "frame": "exam-loop illustration (percussion); opaque cream card, no text",
+   "prompt_full": "Cozy medical illustration for a kids game exam loop: two fingertips tapping a round chest drum with musical tap ripples and soft drum-sound arcs floating up, gentle rhythm lines. Soft flat cozy illustration, rounded shapes, matte texture, warm cream background, restrained pastel palette, gentle daylight, thin warm-brown outlines only, centered, generous negative space. No text, no words, no letters, no numbers, no photorealism, no 3D render look, no clutter, no scary imagery."
+  },
+  {
+   "sprite": "exam-auscultation.png",
+   "export": "public/assets/exam/exam-auscultation.png",
+   "master": "art/source/exam/exam-auscultation-master.png",
+   "source_file": "exam-auscultation-20261029-112620-1.png",
+   "source_tool": "muse-image-mcp generate_image (fresh, Block U verbatim)",
+   "revision": 1,
+   "direction": "exam-maneuver-2026-10-29",
+   "status": "current",
+   "dimensions": "512x512",
+   "frame": "exam-loop illustration (auscultation); opaque cream card, no text",
+   "prompt_full": "Cozy medical illustration for a kids game exam loop: a small round heart with a tiny stethoscope chest piece resting on it, soft breathing swirls and heartbeat waves flowing around, calm air curls. Soft flat cozy illustration, rounded shapes, matte texture, warm cream background, restrained pastel palette, gentle daylight, thin warm-brown outlines only, centered, generous negative space. No text, no words, no letters, no numbers, no photorealism, no 3D render look, no clutter, no scary imagery."
   }
  ],
  "backgrounds": [
