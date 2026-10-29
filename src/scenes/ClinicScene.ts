@@ -1,5 +1,12 @@
 import Phaser from 'phaser';
 import { ClinicalEngine, CONDITIONS } from '../clinical';
+import type { ChoiceGrade, PatientState } from '../clinical';
+import {
+  CARD_ROW_IDS,
+  MOCK_ROSTER,
+  MOCK_THREADS,
+  PROTOTYPE_SEEDS,
+} from '../ui/mockData';
 
 /**
  * Milestone 1 clinic scene: a cozy clinic room and Mabel, the first
@@ -21,7 +28,20 @@ import { ClinicalEngine, CONDITIONS } from '../clinical';
  * Motion implements docs/ANIMATION.md exactly (bob 3px @ 1.8
  * rad/s; blink 120ms per 3-5s randomized; tap bounce 110ms squash
  * +-0.06 + 80ms overshoot +-0.03, Sine easings, token-guarded).
- * Bubble behavior + clinical copy identical to P4.
+ *
+ * UI PROTOTYPE (2026-10-29, docs/UI_PROTOTYPE.md): container
+ * overlays on the ONE clinic scene — conversation panel, decision
+ * card row, 4-view nav (Waiting/Visit/Telemed/Portal), secret
+ * title-5x trigger + MABEL code pad + wall monitor. Mabel's
+ * geometry (212px at (270,614)), motion, and tap-resolve behavior
+ * are IDENTICAL in Visit; the happy bounce is one shared method
+ * used by Mabel taps and card taps. The old bottom bubble is
+ * RETIRED per spec — the upper conversation panel is its new home
+ * (same complaint copy, same 180/150ms fades, same toggle).
+ * LIVE vs MOCK: vitals, condition, stage, grades, and consequence
+ * text read live from the ClinicalEngine/patient state; only the
+ * roster, portal inbox, and visit-session seeds come from the
+ * clearly-marked MOCK module (`src/ui/mockData.ts`).
  *
  * Reboot landmark survey (re-measured from
  * art/contact-sheets/bg-reboot-contact-sheet.png + pixel scans
@@ -35,16 +55,60 @@ import { ClinicalEngine, CONDITIONS } from '../clinical';
  * the rug, shadow ellipse at 724 on the rug.
  *
  * Layout contract (fix-layout-01 spacing system, survives the
- * reboot): SIDE = 24, GROUND = 724, Mabel 212px at (270, 614),
- * bubble 492 wide docked at 936.
+ * reboot): SIDE = 24, GROUND = 724, Mabel 212px at (270, 614).
  */
 /**
  * P4: the one plush face for every text object — Baloo 2 (vendored
  * offline, boot-gated in main.ts) over a rounded-system fallback
  * stack, so text stays friendly even if the font file ever fails.
+ * (The staff monitor is the one exception: monospace, by spec.)
  */
 const FONT_FAMILY =
   '"Baloo 2", "Comic Sans MS", "Chalkboard SE", system-ui, sans-serif';
+const MONO_FONT = '"Courier New", ui-monospace, monospace';
+
+// Prototype palette (docs/UI_PROTOTYPE.md shared chrome).
+const CREAM = 0xfff3e2;
+const CARD_FILL = 0xfff9ef;
+const OUTLINE = 0x8a5a3b;
+const SAGE = 0xa9c6a2;
+const SKY = 0xa9cce3;
+const COCOA = '#5c4633';
+const SECONDARY = '#8a6f52';
+
+const GRADE_COLOR: Record<ChoiceGrade, number> = {
+  BEST: SAGE,
+  NOT_GREAT: SKY,
+  WRONG: 0xd9a441,
+  DANGEROUS: 0xc9706b,
+};
+
+type ViewName = 'waiting' | 'visit' | 'telemed' | 'portal';
+type Speaker = 'MABEL' | 'DR. NORA' | 'YOU';
+
+const TAB_X: Record<ViewName, number> = {
+  waiting: 67,
+  visit: 202,
+  telemed: 337,
+  portal: 472,
+};
+
+interface CardWidgets {
+  root: Phaser.GameObjects.Container;
+  face: Phaser.GameObjects.Graphics;
+  spine: Phaser.GameObjects.Graphics;
+  actionId: string;
+  revealed: ChoiceGrade | null;
+}
+
+interface ThreadWidgets {
+  root: Phaser.GameObjects.Container;
+  bg: Phaser.GameObjects.Graphics;
+  extras: Phaser.GameObjects.Container;
+  zone: Phaser.GameObjects.Zone;
+  collapsedH: number;
+  expandedH: number;
+}
 
 export class ClinicScene extends Phaser.Scene {
   private mabel!: Phaser.GameObjects.Image;
@@ -52,9 +116,62 @@ export class ClinicScene extends Phaser.Scene {
   private blinkAt = 0;
   private showingHappy = false;
   private happyToken = 0;
-  private bubble!: Phaser.GameObjects.Container;
-  private bubbleOpen = false;
   private engine = new ClinicalEngine();
+  /** Live patient state — the single source the monitor reads. */
+  private patientState!: PatientState;
+  private lastNodeId = 'n0';
+
+  private titleText!: Phaser.GameObjects.Text;
+  private nametag!: Phaser.GameObjects.Text;
+
+  // Conversation panel (the retired bubble's new home, upper dock).
+  private panel!: Phaser.GameObjects.Container;
+  private panelBg!: Phaser.GameObjects.Graphics;
+  private panelTag!: Phaser.GameObjects.Graphics;
+  private panelTagText!: Phaser.GameObjects.Text;
+  private panelBody!: Phaser.GameObjects.Text;
+  private panelOpen = false;
+
+  // Decision card row + vitals chips.
+  private cardRow!: Phaser.GameObjects.Container;
+  private cards: CardWidgets[] = [];
+  private revealedStage = -1;
+  private chips!: Phaser.GameObjects.Container;
+  private chipTexts: Phaser.GameObjects.Text[] = [];
+
+  // Views + nav.
+  private currentView: ViewName = 'visit';
+  private waitingView!: Phaser.GameObjects.Container;
+  private telemedView!: Phaser.GameObjects.Container;
+  private portalView!: Phaser.GameObjects.Container;
+  private threads: ThreadWidgets[] = [];
+  private openThread = -1;
+  private navPill!: Phaser.GameObjects.Container;
+  private tabTexts: Record<ViewName, Phaser.GameObjects.Text[]> = {
+    waiting: [],
+    visit: [],
+    telemed: [],
+    portal: [],
+  };
+  private muteOn = true;
+  private camOn = true;
+
+  // Admin stack.
+  private titleTaps = 0;
+  private titleResetTimer?: Phaser.Time.TimerEvent;
+  private adminOpen = false;
+  private pad!: Phaser.GameObjects.Container;
+  private padDots!: Phaser.GameObjects.Graphics;
+  private padEntry = '';
+  private monitor!: Phaser.GameObjects.Container;
+  private monitorBackdrop!: Phaser.GameObjects.Container;
+  private monitorContent!: Phaser.GameObjects.Container;
+
+  // Toast.
+  private toast!: Phaser.GameObjects.Container;
+  private toastBg!: Phaser.GameObjects.Graphics;
+  private toastText!: Phaser.GameObjects.Text;
+  private toastTimer?: Phaser.Time.TimerEvent;
 
   constructor() {
     super('clinic');
@@ -72,12 +189,24 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.patientState = this.engine.initialState(PROTOTYPE_SEEDS.conditionId);
+    this.revealedStage = this.patientState.stageIndex;
     this.drawRoom();
     this.drawLightOverlays();
     this.drawTitle();
     this.drawMabel();
-    this.drawBubble();
+    this.drawConversationPanel();
+    this.drawCardRow();
+    this.drawVitalsChips();
+    this.drawWaitingView();
+    this.drawTelemedChrome();
+    this.drawPortalView();
+    this.drawNavBar();
+    this.drawCodePad();
+    this.drawMonitor();
+    this.drawToast();
     this.scheduleBlink();
+    this.showView('visit', true);
   }
 
   update(_time: number, delta: number): void {
@@ -116,7 +245,7 @@ export class ClinicScene extends Phaser.Scene {
     // (right), window, and rug, so plush furniture would clash in
     // style AND double up every piece. drawProps() deleted with
     // the P2 pass; nothing is re-pointed.
-    this.add.image(270, 480, 'room-shell').setDisplaySize(540, 960);
+    this.add.image(270, 480, 'room-shell').setDisplaySize(540, 960).setDepth(0);
   }
 
   /**
@@ -143,6 +272,7 @@ export class ClinicScene extends Phaser.Scene {
       0.0,
     );
     light.fillRect(0, 0, 540, 960);
+    light.setDepth(1);
 
     // Warm vignette: four feathered edge strips in warm-brown,
     // 0.07 at the screen edge fading to 0 inward over a 56px
@@ -159,24 +289,31 @@ export class ClinicScene extends Phaser.Scene {
     v.fillRect(0, 0, band, 960);
     v.fillGradientStyle(edge, edge, edge, edge, 0.0, 0.07, 0.0, 0.07);
     v.fillRect(540 - band, 0, band, 960);
+    v.setDepth(1);
   }
 
   private drawTitle(): void {
-    this.add
+    this.titleText = this.add
       .text(270, 56, 'Cozy Clinic', {
         fontFamily: FONT_FAMILY,
         fontStyle: 'bold',
         fontSize: '44px',
-        color: '#5c4633',
+        color: COCOA,
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5)
+      .setDepth(4);
     this.add
       .text(270, 100, 'Tap Mabel to say hello', {
         fontFamily: FONT_FAMILY,
         fontSize: '22px',
-        color: '#8a6f52',
+        color: SECONDARY,
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5)
+      .setDepth(4);
+    // Secret admin trigger zone: x150–390, y28–84. No visible hint.
+    const trigger = this.add.zone(270, 56, 240, 56).setDepth(4);
+    trigger.setInteractive({ useHandCursor: false });
+    trigger.on('pointerdown', () => this.onTitleTap());
   }
 
   private drawMabel(): void {
@@ -187,119 +324,1201 @@ export class ClinicScene extends Phaser.Scene {
     // with clear walking space to the bench (left) and the
     // plant/cabinet lane (right). Same 212px@(270,614) geometry
     // the reboot contact-sheet composite validated.
-    this.add.ellipse(270, 724, 170, 30, 0x8a5a3b, 0.18);
+    this.add.ellipse(270, 724, 170, 30, 0x8a5a3b, 0.18).setDepth(4);
 
     this.mabel = this.add.image(270, 614, 'mabel-idle');
     this.mabel.setDisplaySize(212, 212);
+    this.mabel.setDepth(5);
     this.mabelBaseY = this.mabel.y;
     this.mabel.setInteractive({ useHandCursor: true });
 
-    this.add
+    this.nametag = this.add
       .text(270, 748, 'Mabel · first patient', {
         fontFamily: FONT_FAMILY,
         fontSize: '24px',
-        color: '#5c4633',
+        color: COCOA,
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5)
+      .setDepth(5);
 
     this.mabel.on('pointerdown', () => this.onMabelTap());
   }
 
-  private drawBubble(): void {
-    const def = CONDITIONS['dehydration'];
-    const state = this.engine.initialState('dehydration');
-    const stage = def.stages[state.stageIndex];
-    const complaint = `Mabel feels ${stage.label.toLowerCase()}: ${stage.blurb} ${def.plainWords}`;
+  // -- conversation panel (Visit + Telemed; the retired bubble's home) --
 
-    // Bottom-edge-anchored dialogue card: side margins match SIDE,
-    // bottom docks at 936 (24px margin), and the card always sizes
-    // to its text upward — never overlapping Mabel or the edges.
-    const w = 492;
-    const x = 270;
-    const dockBottom = 936;
-    const padTop = 20;
-    const gapMid = 16;
-    const padBottom = 20;
-    const label = this.add
-      .text(x, padTop, complaint, {
-        fontFamily: FONT_FAMILY,
-        fontSize: '20px',
-        color: '#5c4633',
-        align: 'center',
-        wordWrap: { width: w - 40 },
-      })
-      .setOrigin(0.5, 0);
-    const hint = this.add
-      .text(x, padTop + label.height + gapMid, 'The doctor will see you now.', {
-        fontFamily: FONT_FAMILY,
-        fontSize: '18px',
-        color: '#8a6f52',
-      })
-      .setOrigin(0.5, 0);
-    const totalH = padTop + label.height + gapMid + hint.height + padBottom;
-    // P4 plush panel: palette cream fill + the one thin warm-brown
-    // outline (bible), with soft rounded corners. Same box (w 492,
-    // docked bottom 936, sizing upward) — only the finish changed.
-    const bg = this.add.graphics();
-    bg.fillStyle(0xfff3e2, 1);
-    bg.lineStyle(3, 0x8a5a3b, 1);
-    bg.fillRoundedRect(x - w / 2, 0, w, totalH, 24);
-    bg.strokeRoundedRect(x - w / 2, 0, w, totalH, 24);
-    this.bubble = this.add.container(0, dockBottom - totalH, [bg, label, hint]);
-    this.bubble.setVisible(false);
-    this.bubble.setAlpha(0);
+  private drawConversationPanel(): void {
+    this.panelBg = this.add.graphics();
+    this.panelTag = this.add.graphics();
+    this.panelTagText = this.add.text(0, 0, '', {
+      fontFamily: FONT_FAMILY,
+      fontStyle: 'bold',
+      fontSize: '14px',
+      color: COCOA,
+    });
+    this.panelBody = this.add.text(0, 0, '', {
+      fontFamily: FONT_FAMILY,
+      fontSize: '20px',
+      color: COCOA,
+      wordWrap: { width: 444 },
+    });
+    this.panel = this.add.container(0, 0, [
+      this.panelBg,
+      this.panelTag,
+      this.panelTagText,
+      this.panelBody,
+    ]);
+    this.panel.setDepth(10).setVisible(false).setAlpha(0);
   }
 
+  private renderPanel(speaker: Speaker, text: string): void {
+    const top = 136;
+    const w = 492;
+    const x = 270;
+    this.panelBody.setText(text);
+    this.truncateToHeight(this.panelBody, 110);
+    const h = Math.min(220, Math.max(96, 48 + this.panelBody.height + 20));
+    const bottom = top + h;
+
+    this.panelBg.clear();
+    // Tail triangle first (its top edge hides under the panel bg).
+    this.panelBg.fillStyle(CREAM, 1);
+    this.panelBg.lineStyle(3, OUTLINE, 1);
+    this.panelBg.fillTriangle(250, bottom - 2, 290, bottom - 2, 270, bottom + 14);
+    this.panelBg.strokeTriangle(250, bottom - 2, 290, bottom - 2, 270, bottom + 14);
+    this.panelBg.fillStyle(CREAM, 1);
+    this.panelBg.lineStyle(3, OUTLINE, 1);
+    this.panelBg.fillRoundedRect(x - w / 2, top, w, h, 24);
+    this.panelBg.strokeRoundedRect(x - w / 2, top, w, h, 24);
+
+    const tagFill = speaker === 'MABEL' ? SAGE : speaker === 'DR. NORA' ? SKY : CARD_FILL;
+    this.panelTagText.setText(speaker);
+    const tagW = this.panelTagText.width + 28;
+    this.panelTag.clear();
+    this.panelTag.fillStyle(tagFill, 1);
+    this.panelTag.lineStyle(2, OUTLINE, 1);
+    this.panelTag.fillRoundedRect(36, top + 12, tagW, 28, 14);
+    this.panelTag.strokeRoundedRect(36, top + 12, tagW, 28, 14);
+    this.panelTagText.setPosition(36 + 14, top + 12 + 14).setOrigin(0, 0.5);
+
+    this.panelBody.setPosition(40, top + 48).setOrigin(0, 0);
+  }
+
+  private setConversation(speaker: Speaker, text: string): void {
+    this.tweens.killTweensOf(this.panel);
+    if (!this.panelOpen) {
+      this.panelOpen = true;
+      this.renderPanel(speaker, text);
+      this.syncPanelVisibility();
+      this.panel.setAlpha(0);
+      this.tweens.add({
+        targets: this.panel,
+        alpha: 1,
+        duration: 180,
+        ease: 'Sine.easeOut',
+      });
+      return;
+    }
+    this.tweens.add({
+      targets: this.panel,
+      alpha: 0,
+      duration: 150,
+      ease: 'Sine.easeOut',
+      onComplete: () => {
+        this.renderPanel(speaker, text);
+        this.tweens.add({
+          targets: this.panel,
+          alpha: 1,
+          duration: 180,
+          ease: 'Sine.easeOut',
+        });
+      },
+    });
+  }
+
+  private closeConversation(): void {
+    this.tweens.killTweensOf(this.panel);
+    this.tweens.add({
+      targets: this.panel,
+      alpha: 0,
+      duration: 150,
+      ease: 'Sine.easeOut',
+      onComplete: () => {
+        this.panelOpen = false;
+        this.syncPanelVisibility();
+      },
+    });
+  }
+
+  private syncPanelVisibility(): void {
+    const inScene = this.currentView === 'visit' || this.currentView === 'telemed';
+    this.panel.setVisible(this.panelOpen && inScene);
+  }
+
+  /** Live complaint: today's formula, today's copy, live stage. */
+  private complaintText(): string {
+    const def = CONDITIONS[this.patientState.conditionId];
+    const stage = def.stages[this.patientState.stageIndex];
+    const complaint =
+      `Mabel feels ${stage.label.toLowerCase()}: ${stage.blurb} ${def.plainWords}`;
+    return `${complaint}\nThe doctor will see you now.`;
+  }
+
+  /** Chop words until the text fits maxH (prototype rule: …). */
+  private truncateToHeight(textObj: Phaser.GameObjects.Text, maxH: number): void {
+    if (textObj.height <= maxH) return;
+    const words = textObj.text.split(' ');
+    while (words.length > 1 && textObj.height > maxH) {
+      words.pop();
+      textObj.setText(`${words.join(' ')}…`);
+    }
+  }
+
+  // -- decision card row (Visit + Telemed; REAL tap-resolve path) --
+
+  private drawCardRow(): void {
+    this.cardRow = this.add.container(0, 0, []).setDepth(10);
+    CARD_ROW_IDS.forEach((actionId, i) => {
+      const def = CONDITIONS[this.patientState.conditionId];
+      const action = def.actions.find((a) => a.id === actionId);
+      const label = action ? action.label : actionId;
+      const cx = 24 + i * 168 + 78;
+      const cy = 796 + 40;
+      const face = this.add.graphics();
+      face.fillStyle(CARD_FILL, 1);
+      face.lineStyle(3, OUTLINE, 1);
+      face.fillRoundedRect(-78, -40, 156, 80, 16);
+      face.strokeRoundedRect(-78, -40, 156, 80, 16);
+      const spine = this.add.graphics();
+      const labelText = this.add
+        .text(0, 0, label, {
+          fontFamily: FONT_FAMILY,
+          fontStyle: 'bold',
+          fontSize: '17px',
+          color: COCOA,
+          align: 'center',
+          wordWrap: { width: 140 },
+        })
+        .setOrigin(0.5, 0.5);
+      this.truncateToHeight(labelText, 46);
+      const root = this.add.container(cx, cy, [face, spine, labelText]);
+      const zone = this.add.zone(0, 0, 156, 80).setInteractive({ useHandCursor: true });
+      zone.on('pointerdown', () => this.onCardTap(i));
+      root.add(zone);
+      this.cardRow.add(root);
+      this.cards.push({ root, face, spine, actionId, revealed: null });
+    });
+  }
+
+  private drawSpine(card: CardWidgets, grade: ChoiceGrade | null): void {
+    card.spine.clear();
+    if (!grade) return;
+    card.spine.fillStyle(GRADE_COLOR[grade], 1);
+    // 8px left spine inside the card's rounded corner.
+    card.spine.fillRoundedRect(-78, -40, 8, 80, { tl: 16, tr: 0, bl: 16, br: 0 });
+  }
+
+  private clearReveals(): void {
+    for (const card of this.cards) {
+      card.revealed = null;
+      card.root.setAlpha(1);
+      this.drawSpine(card, null);
+    }
+  }
+
+  private onCardTap(i: number): void {
+    if (this.adminOpen) return;
+    if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
+    const card = this.cards[i];
+    if (!card) return;
+    this.tweens.add({
+      targets: card.root,
+      scaleX: 0.97,
+      scaleY: 0.97,
+      duration: 90,
+      yoyo: true,
+      ease: 'Sine.easeInOut',
+      onComplete: () => this.resolveCard(i),
+    });
+  }
+
+  private resolveCard(i: number): void {
+    const card = this.cards[i];
+    if (!card) return;
+    const def = CONDITIONS[this.patientState.conditionId];
+    const action = def.actions.find((a) => a.id === card.actionId);
+    if (!action) return;
+    const grade = this.engine.gradeAction(this.patientState, card.actionId);
+    const result = this.engine.applyAction(this.patientState, card.actionId);
+    if (result.blocked) {
+      // Engine veto: Nora stepped in. Dim + shake + her line —
+      // no happy bounce on a blocked move.
+      card.revealed = grade;
+      this.drawSpine(card, grade);
+      card.root.setAlpha(0.55);
+      this.tweens.add({
+        targets: card.root,
+        x: '+=6',
+        duration: 30,
+        yoyo: true,
+        repeat: 3,
+        ease: 'Sine.easeInOut',
+      });
+      this.setConversation('DR. NORA', result.blockReason ?? action.hootLine);
+      return;
+    }
+    this.patientState = result.node.state;
+    this.lastNodeId = result.node.id;
+    if (this.patientState.stageIndex !== this.revealedStage) {
+      // Grades move with the stage — fresh discovery, clear spines.
+      this.revealedStage = this.patientState.stageIndex;
+      this.clearReveals();
+    }
+    card.revealed = grade;
+    this.drawSpine(card, grade);
+    this.refreshChips();
+    this.setConversation('MABEL', `${result.node.narrative} ${result.node.teaching}`);
+    this.playHappyBounce();
+  }
+
+  // -- shared tap-resolve motion (ANIMATION.md exact, both tap paths) --
+
   private onMabelTap(): void {
-    this.bubbleOpen = !this.bubbleOpen;
-    if (this.bubbleOpen) {
-      this.bubble.setVisible(true);
-      this.tweens.add({ targets: this.bubble, alpha: 1, duration: 180, ease: 'Sine.easeOut' });
+    if (this.adminOpen) return;
+    if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
+    if (!this.panelOpen) {
+      this.setConversation('MABEL', this.complaintText());
       // Happy tap-react: show the happy pose for the bounce, then
       // restore idle. The token guards rapid re-taps so a stale
       // bounce never clears a newer happy.
-      this.happyToken += 1;
-      const token = this.happyToken;
-      this.showingHappy = true;
-      this.mabel.setTexture('mabel-happy');
-      // Happy bounce, ANIMATION.md exact: 110ms squash yoyo
-      // (+-0.06) then a chained 80ms overshoot yoyo (+-0.03),
-      // Sine.easeInOut, scale-only (the update() bob owns
-      // mabel.y, so no y-tween). Same token guard on both steps.
-      this.tweens.add({
-        targets: this.mabel,
-        scaleY: '-=0.06',
-        scaleX: '+=0.06',
-        duration: 110,
-        yoyo: true,
-        ease: 'Sine.easeInOut',
-        onComplete: () => {
-          if (token !== this.happyToken) return;
-          this.tweens.add({
-            targets: this.mabel,
-            scaleY: '+=0.03',
-            scaleX: '-=0.03',
-            duration: 80,
-            yoyo: true,
-            ease: 'Sine.easeInOut',
-            onComplete: () => {
-              if (token !== this.happyToken) return;
-              this.showingHappy = false;
-              if (this.mabel.texture.key === 'mabel-happy') {
-                this.mabel.setTexture('mabel-idle');
-              }
-            },
-          });
-        },
+      this.playHappyBounce();
+    } else {
+      this.closeConversation();
+    }
+  }
+
+  private playHappyBounce(): void {
+    this.happyToken += 1;
+    const token = this.happyToken;
+    this.showingHappy = true;
+    this.mabel.setTexture('mabel-happy');
+    // Happy bounce, ANIMATION.md exact: 110ms squash yoyo
+    // (+-0.06) then a chained 80ms overshoot yoyo (+-0.03),
+    // Sine.easeInOut, scale-only (the update() bob owns
+    // mabel.y, so no y-tween). Same token guard on both steps.
+    this.tweens.add({
+      targets: this.mabel,
+      scaleY: '-=0.06',
+      scaleX: '+=0.06',
+      duration: 110,
+      yoyo: true,
+      ease: 'Sine.easeInOut',
+      onComplete: () => {
+        if (token !== this.happyToken) return;
+        this.tweens.add({
+          targets: this.mabel,
+          scaleY: '+=0.03',
+          scaleX: '-=0.03',
+          duration: 80,
+          yoyo: true,
+          ease: 'Sine.easeInOut',
+          onComplete: () => {
+            if (token !== this.happyToken) return;
+            this.showingHappy = false;
+            if (this.mabel.texture.key === 'mabel-happy') {
+              this.mabel.setTexture('mabel-idle');
+            }
+          },
+        });
+      },
+    });
+  }
+
+  // -- vitals chips (Visit only; LIVE values) --
+
+  private drawVitalsChips(): void {
+    this.chips = this.add.container(0, 0, []).setDepth(10);
+    const centers = [138, 270, 402];
+    for (const cx of centers) {
+      const bg = this.add.graphics();
+      bg.fillStyle(CARD_FILL, 1);
+      bg.lineStyle(2, OUTLINE, 1);
+      bg.fillRoundedRect(cx - 60, 772, 120, 20, 10);
+      bg.strokeRoundedRect(cx - 60, 772, 120, 20, 10);
+      const label = this.add
+        .text(cx, 782, '', {
+          fontFamily: FONT_FAMILY,
+          fontSize: '14px',
+          color: COCOA,
+        })
+        .setOrigin(0.5, 0.5);
+      this.chips.add([bg, label]);
+      this.chipTexts.push(label);
+    }
+    this.refreshChips();
+  }
+
+  private refreshChips(): void {
+    // pep maps to engine energy; breathing reads live on the monitor.
+    const texts = [
+      `• pep ${this.patientState.vitals.energy}`,
+      `• comfort ${this.patientState.vitals.comfort}`,
+      `visit #${PROTOTYPE_SEEDS.visitNo}`,
+    ];
+    this.chipTexts.forEach((label, i) => {
+      const text = texts[i];
+      if (text !== undefined) label.setText(text);
+    });
+  }
+
+  // -- VIEW 2: waiting room (MOCK roster) --
+
+  private drawWaitingView(): void {
+    const sheet = this.add.graphics();
+    sheet.fillStyle(CREAM, 1);
+    sheet.lineStyle(3, OUTLINE, 1);
+    sheet.fillRoundedRect(24, 136, 492, 740, 24);
+    sheet.strokeRoundedRect(24, 136, 492, 740, 24);
+    const title = this.add
+      .text(40, 160, 'Waiting Room', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '26px',
+        color: COCOA,
+      })
+      .setOrigin(0, 0.5);
+    const clockLabel = this.add
+      .text(0, 0, '10:24 AM', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '15px',
+        color: COCOA,
+      })
+      .setOrigin(0.5, 0.5);
+    const clockBg = this.add.graphics();
+    const clockW = clockLabel.width + 28;
+    clockBg.fillStyle(CARD_FILL, 1);
+    clockBg.lineStyle(2, OUTLINE, 1);
+    clockBg.fillRoundedRect(500 - clockW, 142, clockW, 36, 18);
+    clockBg.strokeRoundedRect(500 - clockW, 142, clockW, 36, 18);
+    clockLabel.setPosition(500 - clockW / 2, 160);
+    const footnote = this.add
+      .text(270, 820, 'Dr. Nora is with a patient…', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '16px',
+        color: SECONDARY,
+      })
+      .setOrigin(0.5, 0.5);
+    this.waitingView = this.add.container(0, 0, [
+      sheet,
+      title,
+      clockBg,
+      clockLabel,
+      footnote,
+    ]);
+    this.waitingView.setDepth(10).setVisible(false).setAlpha(0);
+
+    MOCK_ROSTER.forEach((entry, i) => {
+      const yc = 196 + i * 132 + 60;
+      const bg = this.add.graphics();
+      bg.fillStyle(CARD_FILL, 1);
+      bg.lineStyle(3, OUTLINE, 1);
+      bg.fillRoundedRect(-246, -60, 492, 120, 16);
+      bg.strokeRoundedRect(-246, -60, 492, 120, 16);
+      const fur = Phaser.Display.Color.HexStringToColor(entry.furShade).color;
+      const avatar = this.add.graphics();
+      avatar.fillStyle(fur, 1);
+      avatar.fillCircle(-192, 0, 42);
+      const initial = this.add
+        .text(-192, 0, entry.name.charAt(0), {
+          fontFamily: FONT_FAMILY,
+          fontStyle: 'bold',
+          fontSize: '32px',
+          color: '#fff9ef',
+        })
+        .setOrigin(0.5, 0.5);
+      const name = this.add
+        .text(-136, -28, entry.name, {
+          fontFamily: FONT_FAMILY,
+          fontStyle: 'bold',
+          fontSize: '22px',
+          color: COCOA,
+        })
+        .setOrigin(0, 0);
+      const persona = this.add
+        .text(-136, 4, entry.persona, {
+          fontFamily: FONT_FAMILY,
+          fontSize: '16px',
+          color: SECONDARY,
+        })
+        .setOrigin(0, 0);
+      const statusLabel = this.add
+        .text(0, 0, entry.status, {
+          fontFamily: FONT_FAMILY,
+          fontSize: '15px',
+          color: COCOA,
+        })
+        .setOrigin(0.5, 0.5);
+      const statusW = Math.max(110, statusLabel.width + 24);
+      const statusBg = this.add.graphics();
+      const here = entry.id === 'mock-patient-mabel';
+      statusBg.fillStyle(here ? SAGE : CARD_FILL, 1);
+      statusBg.lineStyle(2, OUTLINE, 1);
+      statusBg.fillRoundedRect(234 - statusW, -18, statusW, 36, 18);
+      statusBg.strokeRoundedRect(234 - statusW, -18, statusW, 36, 18);
+      statusLabel.setPosition(234 - statusW / 2, 0);
+      const row = this.add.container(270, yc, [
+        bg,
+        avatar,
+        initial,
+        name,
+        persona,
+        statusBg,
+        statusLabel,
+      ]);
+      const zone = this.add.zone(0, 0, 492, 120).setInteractive({ useHandCursor: true });
+      zone.on('pointerdown', () => {
+        this.tweens.add({
+          targets: row,
+          scaleX: 0.97,
+          scaleY: 0.97,
+          duration: 90,
+          yoyo: true,
+          ease: 'Sine.easeInOut',
+        });
+        this.showToast(
+          here ? 'Mabel is already with you!' : `${entry.name} isn't playable yet (mock)`,
+        );
       });
+      row.add(zone);
+      this.waitingView.add(row);
+    });
+  }
+
+  // -- VIEW 3: telemedicine call frame (Visit geometry + frame) --
+
+  private drawTelemedChrome(): void {
+    const frame = this.add.graphics();
+    frame.lineStyle(12, 0x2b2622, 1);
+    frame.strokeRoundedRect(12, 124, 516, 764, 28);
+    const liveBg = this.add.graphics();
+    liveBg.fillStyle(0xb34a45, 1);
+    liveBg.fillRoundedRect(28, 380, 110, 36, 18);
+    const live = this.add
+      .text(83, 398, '• LIVE', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '16px',
+        color: '#ffffff',
+      })
+      .setOrigin(0.5, 0.5);
+    const noraBg = this.add.graphics();
+    noraBg.fillStyle(SKY, 1);
+    noraBg.fillRoundedRect(352, 380, 160, 36, 18);
+    const nora = this.add
+      .text(432, 398, 'Dr. Nora › observing', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '14px',
+        color: COCOA,
+      })
+      .setOrigin(0.5, 0.5);
+    this.telemedView = this.add.container(0, 0, [frame, liveBg, live, noraBg, nora]);
+    this.telemedView.setDepth(11).setVisible(false).setAlpha(0);
+
+    const mkCallButton = (
+      cx: number,
+      label: string,
+      get: () => boolean,
+      set: (v: boolean) => void,
+    ): void => {
+      const bg = this.add.graphics();
+      bg.fillStyle(0xe3f0f8, 1);
+      bg.lineStyle(2, OUTLINE, 1);
+      bg.fillCircle(cx, 850, 24);
+      bg.strokeCircle(cx, 850, 24);
+      const text = this.add
+        .text(cx, 850, label, {
+          fontFamily: FONT_FAMILY,
+          fontStyle: 'bold',
+          fontSize: '13px',
+          color: COCOA,
+        })
+        .setOrigin(0.5, 0.5);
+      const slash = this.add.graphics();
+      slash.lineStyle(4, 0xb34a45, 1);
+      slash.lineBetween(cx - 14, 850 + 14, cx + 14, 850 - 14);
+      slash.setVisible(false);
+      const zone = this.add.zone(cx, 850, 48, 48).setInteractive({ useHandCursor: true });
+      zone.on('pointerdown', () => {
+        set(!get());
+        slash.setVisible(!get());
+        this.showToast(`${label} is pretend in this prototype (mock)`);
+      });
+      this.telemedView.add([bg, text, slash, zone]);
+    };
+    mkCallButton(90, 'MIC', () => this.muteOn, (v) => {
+      this.muteOn = v;
+    });
+    mkCallButton(150, 'CAM', () => this.camOn, (v) => {
+      this.camOn = v;
+    });
+
+    const pillBg = this.add.graphics();
+    pillBg.fillStyle(0x5e9c6b, 1);
+    pillBg.fillRoundedRect(200, 826, 312, 48, 24);
+    const pillText = this.add
+      .text(356, 850, 'Visit in person →', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '17px',
+        color: '#ffffff',
+      })
+      .setOrigin(0.5, 0.5);
+    const pillZone = this.add
+      .zone(356, 850, 312, 48)
+      .setInteractive({ useHandCursor: true });
+    pillZone.on('pointerdown', () => this.showView('visit'));
+    this.telemedView.add([pillBg, pillText, pillZone]);
+  }
+
+  // -- VIEW 4: portal inbox (MOCK threads) --
+
+  private drawPortalView(): void {
+    const sheet = this.add.graphics();
+    sheet.fillStyle(CREAM, 1);
+    sheet.lineStyle(3, OUTLINE, 1);
+    sheet.fillRoundedRect(24, 136, 492, 740, 24);
+    sheet.strokeRoundedRect(24, 136, 492, 740, 24);
+    const title = this.add
+      .text(40, 160, 'Patient Portal', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '26px',
+        color: COCOA,
+      })
+      .setOrigin(0, 0.5);
+    const lock = this.add
+      .text(500, 160, 'mock inbox — stays on this device', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '14px',
+        color: SECONDARY,
+      })
+      .setOrigin(1, 0.5);
+    const footnote = this.add
+      .text(270, 830, 'No real messages — everything here is pretend.', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '14px',
+        color: SECONDARY,
+      })
+      .setOrigin(0.5, 0.5);
+    this.portalView = this.add.container(0, 0, [sheet, title, lock, footnote]);
+    this.portalView.setDepth(10).setVisible(false).setAlpha(0);
+
+    MOCK_THREADS.forEach((thread, idx) => {
+      const collapsedH = 104;
+      const bg = this.add.graphics();
+      const line1 = this.add
+        .text(40, 12, `${thread.from} — ${thread.subject}`, {
+          fontFamily: FONT_FAMILY,
+          fontStyle: 'bold',
+          fontSize: '19px',
+          color: COCOA,
+        })
+        .setOrigin(0, 0);
+      const line2 = this.add
+        .text(40, 42, thread.snippet, {
+          fontFamily: FONT_FAMILY,
+          fontSize: '16px',
+          color: SECONDARY,
+        })
+        .setOrigin(0, 0);
+      const chevron = this.add
+        .text(494, 52, '›', {
+          fontFamily: FONT_FAMILY,
+          fontSize: '28px',
+          color: SECONDARY,
+        })
+        .setOrigin(0.5, 0.5);
+      const extras = this.add.container(0, 0, []);
+      // Expanded extras are measured now, shown on tap.
+      let ey = 76;
+      const bubbleBg = this.add.graphics();
+      extras.add(bubbleBg);
+      for (const msg of thread.messages) {
+        const bubble = this.add.text(msg.me ? 500 : 40, ey + 8, msg.text, {
+          fontFamily: FONT_FAMILY,
+          fontSize: '17px',
+          color: COCOA,
+          wordWrap: { width: 368 },
+        });
+        bubble.setOrigin(msg.me ? 1 : 0, 0);
+        const bw = bubble.width + 24;
+        const bh = bubble.height + 16;
+        const bx = msg.me ? 500 - bw : 40;
+        bubbleBg.fillStyle(msg.me ? CARD_FILL : 0xe3f0f8, 1);
+        bubbleBg.lineStyle(2, OUTLINE, 0.6);
+        bubbleBg.fillRoundedRect(bx, ey, bw, bh, 12);
+        bubbleBg.strokeRoundedRect(bx, ey, bw, bh, 12);
+        extras.add(bubble);
+        ey += bh + 8;
+      }
+      const replyBg = this.add.graphics();
+      replyBg.fillStyle(0xefe6d8, 1);
+      replyBg.fillRoundedRect(40, ey, 460, 44, 12);
+      const reply = this.add
+        .text(270, ey + 22, 'Replies open after the visit (mock)', {
+          fontFamily: FONT_FAMILY,
+          fontSize: '15px',
+          color: SECONDARY,
+        })
+        .setOrigin(0.5, 0.5);
+      extras.add([replyBg, reply]);
+      ey += 44;
+      const expandedH = ey + 16;
+      extras.setVisible(false);
+
+      const rowTop = 196 + idx * (collapsedH + 12);
+      const root = this.add.container(0, rowTop, [bg, line1, line2, chevron, extras]);
+      const zone = this.add
+        .zone(270, collapsedH / 2, 492, collapsedH)
+        .setInteractive({ useHandCursor: true });
+      zone.on('pointerdown', () => this.toggleThread(idx));
+      root.add(zone);
+      this.drawThreadBg(bg, collapsedH);
+      // Unread dot (sage 12px) + count, right side.
+      if (thread.unread > 0) {
+        const dot = this.add.graphics();
+        dot.fillStyle(SAGE, 1);
+        dot.fillCircle(448, 26, 6);
+        const count = this.add
+          .text(460, 26, `${thread.unread} new`, {
+            fontFamily: FONT_FAMILY,
+            fontSize: '14px',
+            color: SECONDARY,
+          })
+          .setOrigin(0, 0.5);
+        root.add([dot, count]);
+      }
+      this.portalView.add(root);
+      this.threads.push({ root, bg, extras, zone, collapsedH, expandedH });
+    });
+  }
+
+  private drawThreadBg(bg: Phaser.GameObjects.Graphics, h: number): void {
+    bg.clear();
+    bg.fillStyle(CARD_FILL, 1);
+    bg.lineStyle(3, OUTLINE, 1);
+    bg.fillRoundedRect(24, 0, 492, h, 16);
+    bg.strokeRoundedRect(24, 0, 492, h, 16);
+  }
+
+  private toggleThread(idx: number): void {
+    this.openThread = this.openThread === idx ? -1 : idx;
+    let rowTop = 196;
+    this.threads.forEach((thread, i) => {
+      const open = i === this.openThread;
+      const h = open ? thread.expandedH : thread.collapsedH;
+      this.drawThreadBg(thread.bg, h);
+      thread.extras.setVisible(open);
+      thread.zone.setSize(492, h).setPosition(270, h / 2);
+      this.tweens.killTweensOf(thread.root);
+      this.tweens.add({
+        targets: thread.root,
+        y: rowTop,
+        duration: 250,
+        ease: 'Sine.easeInOut',
+      });
+      rowTop += h + 12;
+    });
+  }
+
+  // -- nav bar (persistent, all views) --
+
+  private drawNavBar(): void {
+    const bg = this.add.graphics();
+    bg.fillStyle(CREAM, 1);
+    bg.fillRect(0, 888, 540, 72);
+    bg.fillStyle(OUTLINE, 0.4);
+    bg.fillRect(0, 888, 540, 3);
+    const pillFace = this.add.graphics();
+    pillFace.fillStyle(SAGE, 1);
+    pillFace.fillRoundedRect(-59, -28, 118, 56, 28);
+    this.navPill = this.add.container(TAB_X.visit, 924, [pillFace]);
+    const nav = this.add.container(0, 0, [bg, this.navPill]);
+    nav.setDepth(20);
+
+    const tabs: { view: ViewName; glyph: string; label: string }[] = [
+      { view: 'waiting', glyph: '…', label: 'Waiting' },
+      { view: 'visit', glyph: '+', label: 'Visit' },
+      { view: 'telemed', glyph: '>', label: 'Telemed' },
+      { view: 'portal', glyph: '@', label: 'Portal' },
+    ];
+    for (const tab of tabs) {
+      const cx = TAB_X[tab.view];
+      const glyph = this.add
+        .text(cx, 908, tab.glyph, {
+          fontFamily: FONT_FAMILY,
+          fontSize: '26px',
+          color: COCOA,
+        })
+        .setOrigin(0.5, 0.5);
+      const label = this.add
+        .text(cx, 936, tab.label, {
+          fontFamily: FONT_FAMILY,
+          fontStyle: 'bold',
+          fontSize: '15px',
+          color: COCOA,
+        })
+        .setOrigin(0.5, 0.5);
+      this.tabTexts[tab.view] = [glyph, label];
+      const zone = this.add
+        .zone(cx, 924, 135, 72)
+        .setInteractive({ useHandCursor: true });
+      zone.on('pointerdown', () => this.showView(tab.view));
+      nav.add([glyph, label, zone]);
+    }
+  }
+
+  private showView(next: ViewName, instant = false): void {
+    if (next === this.currentView && !instant) return;
+    if (this.adminOpen && !instant) return;
+    this.currentView = next;
+    if (instant) {
+      this.navPill.setX(TAB_X[next]);
     } else {
       this.tweens.add({
-        targets: this.bubble,
-        alpha: 0,
-        duration: 150,
-        onComplete: () => this.bubble.setVisible(false),
+        targets: this.navPill,
+        x: TAB_X[next],
+        duration: 200,
+        ease: 'Sine.easeInOut',
       });
     }
+    (Object.keys(this.tabTexts) as ViewName[]).forEach((view) => {
+      const active = view === next;
+      for (const text of this.tabTexts[view]) text.setAlpha(active ? 1 : 0.6);
+    });
+
+    this.fadeSwap(this.waitingView, next === 'waiting', instant);
+    this.fadeSwap(this.portalView, next === 'portal', instant);
+    this.fadeSwap(this.telemedView, next === 'telemed', instant);
+    this.fadeSwap(this.cardRow, next === 'visit' || next === 'telemed', instant);
+    this.fadeSwap(this.chips, next === 'visit', instant);
+    this.nametag.setVisible(next === 'visit');
+    this.syncPanelVisibility();
+    const cardY = next === 'telemed' ? -60 : 0;
+    if (instant) {
+      this.cardRow.setY(cardY);
+    } else {
+      this.tweens.killTweensOf(this.cardRow);
+      this.tweens.add({
+        targets: this.cardRow,
+        y: cardY,
+        duration: 250,
+        ease: 'Sine.easeInOut',
+      });
+    }
+    this.syncMabelInput();
+  }
+
+  private fadeSwap(
+    obj: Phaser.GameObjects.Container,
+    show: boolean,
+    instant: boolean,
+  ): void {
+    this.tweens.killTweensOf(obj);
+    if (show) {
+      obj.setVisible(true);
+      if (instant) {
+        obj.setAlpha(1);
+      } else {
+        this.tweens.add({
+          targets: obj,
+          alpha: 1,
+          duration: 180,
+          ease: 'Sine.easeOut',
+        });
+      }
+      return;
+    }
+    if (!obj.visible) return;
+    if (instant || obj.alpha === 0) {
+      obj.setVisible(false);
+      obj.setAlpha(0);
+      return;
+    }
+    this.tweens.add({
+      targets: obj,
+      alpha: 0,
+      duration: 150,
+      ease: 'Sine.easeOut',
+      onComplete: () => obj.setVisible(false),
+    });
+  }
+
+  private syncMabelInput(): void {
+    const want =
+      !this.adminOpen && (this.currentView === 'visit' || this.currentView === 'telemed');
+    if (want && !this.mabel.input) {
+      this.mabel.setInteractive({ useHandCursor: true });
+    } else if (!want && this.mabel.input) {
+      this.mabel.disableInteractive();
+    }
+  }
+
+  // -- DEV ADMIN: secret trigger + code pad + wall monitor --
+
+  private onTitleTap(): void {
+    if (this.adminOpen) return;
+    this.titleTaps += 1;
+    this.tweens.killTweensOf(this.titleText);
+    this.titleText.setScale(1);
+    this.tweens.add({
+      targets: this.titleText,
+      scaleX: 0.98,
+      scaleY: 0.98,
+      duration: 60,
+      yoyo: true,
+    });
+    this.titleResetTimer?.remove();
+    this.titleResetTimer = this.time.delayedCall(3000, () => {
+      this.titleTaps = 0;
+    });
+    if (this.titleTaps >= 5) {
+      this.titleTaps = 0;
+      this.openPad();
+    }
+  }
+
+  private drawCodePad(): void {
+    const dim = this.add.graphics();
+    dim.fillStyle(0x000000, 0.45);
+    dim.fillRect(0, 0, 540, 960);
+    const dimZone = this.add.zone(270, 480, 540, 960).setInteractive();
+    const sheet = this.add.graphics();
+    sheet.fillStyle(CREAM, 1);
+    sheet.lineStyle(3, OUTLINE, 1);
+    sheet.fillRoundedRect(90, 300, 360, 360, 24);
+    sheet.strokeRoundedRect(90, 300, 360, 360, 24);
+    const prompt = this.add
+      .text(270, 318, 'Staff only', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '18px',
+        color: SECONDARY,
+      })
+      .setOrigin(0.5, 0.5);
+    this.padDots = this.add.graphics();
+    const cancel = this.add
+      .text(270, 636, '‹ back', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '18px',
+        color: SECONDARY,
+      })
+      .setOrigin(0.5, 0.5);
+    const cancelZone = this.add
+      .zone(270, 636, 360, 48)
+      .setInteractive({ useHandCursor: true });
+    cancelZone.on('pointerdown', () => this.closePad(false));
+    this.pad = this.add.container(0, 0, [dim, dimZone, sheet, prompt, this.padDots, cancel, cancelZone]);
+    this.pad.setDepth(30).setVisible(false).setAlpha(0);
+    this.updatePadDots();
+
+    // Letter grid A–M minus J (12 keys; the spec's A–L had no M, so
+    // the MABEL code was untypable — corrected, see PROGRESS.md).
+    const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M'];
+    letters.forEach((letter, i) => {
+      const col = i % 3;
+      const row = Math.floor(i / 3);
+      const cx = 204 + col * 66;
+      const cy = 386 + row * 66;
+      const face = this.add.graphics();
+      face.fillStyle(0xf7e8d2, 1);
+      face.lineStyle(2, OUTLINE, 1);
+      face.fillRoundedRect(-28, -28, 56, 56, 12);
+      face.strokeRoundedRect(-28, -28, 56, 56, 12);
+      const glyph = this.add
+        .text(0, 0, letter, {
+          fontFamily: FONT_FAMILY,
+          fontStyle: 'bold',
+          fontSize: '24px',
+          color: COCOA,
+        })
+        .setOrigin(0.5, 0.5);
+      const key = this.add.container(cx, cy, [face, glyph]);
+      const zone = this.add.zone(0, 0, 56, 56).setInteractive({ useHandCursor: true });
+      zone.on('pointerdown', () => this.onPadKey(letter));
+      key.add(zone);
+      this.pad.add(key);
+    });
+  }
+
+  private updatePadDots(): void {
+    this.padDots.clear();
+    for (let i = 0; i < 5; i += 1) {
+      const cx = 202 + i * 34;
+      if (i < this.padEntry.length) {
+        this.padDots.fillStyle(OUTLINE, 1);
+        this.padDots.fillCircle(cx, 344, 10);
+      } else {
+        this.padDots.lineStyle(2, OUTLINE, 1);
+        this.padDots.strokeCircle(cx, 344, 10);
+      }
+    }
+  }
+
+  private onPadKey(letter: string): void {
+    if (!this.adminOpen || this.padEntry.length >= 5) return;
+    this.padEntry += letter;
+    this.updatePadDots();
+    if (this.padEntry.length !== 5) return;
+    this.time.delayedCall(120, () => {
+      if (!this.pad.visible) return;
+      if (this.padEntry === PROTOTYPE_SEEDS.devCode) {
+        this.closePad(true);
+        this.openMonitor();
+      } else {
+        this.tweens.add({
+          targets: this.pad,
+          x: '+=6',
+          duration: 30,
+          yoyo: true,
+          repeat: 3,
+          ease: 'Sine.easeInOut',
+        });
+        this.padEntry = '';
+        this.updatePadDots();
+      }
+    });
+  }
+
+  private openPad(): void {
+    if (this.adminOpen) return;
+    this.adminOpen = true;
+    this.padEntry = '';
+    this.updatePadDots();
+    this.syncMabelInput();
+    this.pad.setVisible(true).setAlpha(0);
+    this.tweens.add({
+      targets: this.pad,
+      alpha: 1,
+      duration: 180,
+      ease: 'Sine.easeOut',
+    });
+  }
+
+  private closePad(toMonitor: boolean): void {
+    this.tweens.killTweensOf(this.pad);
+    this.tweens.add({
+      targets: this.pad,
+      alpha: 0,
+      duration: 150,
+      ease: 'Sine.easeOut',
+      onComplete: () => {
+        this.pad.setVisible(false);
+        if (!toMonitor) {
+          this.adminOpen = false;
+          this.syncMabelInput();
+        }
+      },
+    });
+  }
+
+  private drawMonitor(): void {
+    const backdropZone = this.add
+      .zone(270, 480, 540, 960)
+      .setInteractive({ useHandCursor: false });
+    backdropZone.on('pointerdown', () => this.closeMonitor());
+    this.monitorBackdrop = this.add.container(0, 0, [backdropZone]);
+    this.monitorBackdrop.setDepth(30).setVisible(false);
+
+    const mount = this.add.graphics();
+    mount.fillStyle(0x6b4a2f, 1);
+    mount.fillRoundedRect(220, 132, 100, 18, 4);
+    const frame = this.add.graphics();
+    frame.fillStyle(0x6b4a2f, 1);
+    frame.fillRoundedRect(36, 150, 468, 550, 16);
+    frame.fillStyle(0x0e1b14, 1);
+    frame.fillRoundedRect(42, 156, 456, 538, 12);
+    const scan = this.add.graphics();
+    scan.lineStyle(1, 0xffffff, 0.05);
+    for (let y = 158; y < 692; y += 4) {
+      scan.lineBetween(44, y, 496, y);
+    }
+    const glare = this.add.graphics();
+    glare.fillStyle(0xffffff, 0.06);
+    glare.fillPoints(
+      [
+        { x: 330, y: 156 },
+        { x: 390, y: 156 },
+        { x: 230, y: 694 },
+        { x: 170, y: 694 },
+      ],
+      true,
+    );
+    const xBtn = this.add.graphics();
+    xBtn.fillStyle(0x3e2a1e, 1);
+    xBtn.fillCircle(480, 174, 20);
+    const xGlyph = this.add
+      .text(480, 174, '×', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '22px',
+        color: '#fff9ef',
+      })
+      .setOrigin(0.5, 0.5);
+    const xZone = this.add.zone(480, 174, 48, 48).setInteractive({ useHandCursor: true });
+    xZone.on('pointerdown', () => this.closeMonitor());
+    this.monitorContent = this.add.container(0, 0, []);
+    this.monitor = this.add.container(0, -750, [
+      mount,
+      frame,
+      scan,
+      glare,
+      this.monitorContent,
+      xBtn,
+      xGlyph,
+      xZone,
+    ]);
+    this.monitor.setDepth(31).setVisible(false);
+  }
+
+  /** Rebuilt on every open — every value below is a LIVE read. */
+  private buildMonitorContent(): void {
+    this.monitorContent.removeAll(true);
+    const def = CONDITIONS[this.patientState.conditionId];
+    const stage = def.stages[this.patientState.stageIndex];
+    const title = this.add
+      .text(64, 184, 'COZY CLINIC — STAFF TERMINAL', {
+        fontFamily: MONO_FONT,
+        fontStyle: 'bold',
+        fontSize: '17px',
+        color: '#e8c96a',
+      })
+      .setOrigin(0, 0);
+    this.monitorContent.add(title);
+    const rows: [string, string][] = [
+      ['patient:', PROTOTYPE_SEEDS.patientName],
+      ['condition:', `${def.name} (${def.id})`],
+      ['stage:', `[${this.patientState.stageIndex}] ${stage.label} (${stage.id})`],
+      [
+        'vitals:',
+        `energy ${this.patientState.vitals.energy} · comfort ${this.patientState.vitals.comfort} · breath ${this.patientState.vitals.breathing}`,
+      ],
+      ['visit:', `#${PROTOTYPE_SEEDS.visitNo} · node: ${this.lastNodeId}`],
+      ['wording:', `${PROTOTYPE_SEEDS.wordingTier} · difficulty: ${PROTOTYPE_SEEDS.difficulty}/3`],
+    ];
+    let y = 224;
+    for (const [key, value] of rows) {
+      const keyText = this.add
+        .text(64, y, key, {
+          fontFamily: MONO_FONT,
+          fontSize: '17px',
+          color: '#9fe8b8',
+        })
+        .setOrigin(0, 0);
+      const valueText = this.add
+        .text(64 + keyText.width + 8, y, value, {
+          fontFamily: MONO_FONT,
+          fontSize: '17px',
+          color: '#eaf5e9',
+          wordWrap: { width: 428 - keyText.width },
+        })
+        .setOrigin(0, 0);
+      this.monitorContent.add([keyText, valueText]);
+      y += Math.max(32, valueText.height + 10);
+    }
+    const memories = this.patientState.memory.split('. ').filter(Boolean);
+    const lastMemory = memories.length > 0 ? memories[memories.length - 1] : '—';
+    const memKey = this.add
+      .text(64, y, 'remembers:', {
+        fontFamily: MONO_FONT,
+        fontSize: '17px',
+        color: '#9fe8b8',
+      })
+      .setOrigin(0, 0);
+    const memValue = this.add
+      .text(64, y + 26, `"${lastMemory}"`, {
+        fontFamily: MONO_FONT,
+        fontSize: '17px',
+        color: '#eaf5e9',
+        wordWrap: { width: 404 },
+      })
+      .setOrigin(0, 0);
+    const hint = this.add
+      .text(64, 648, 'tap outside or × to close', {
+        fontFamily: MONO_FONT,
+        fontSize: '14px',
+        color: '#9fe8b8',
+      })
+      .setOrigin(0, 0);
+    this.monitorContent.add([memKey, memValue, hint]);
+  }
+
+  private openMonitor(): void {
+    this.buildMonitorContent();
+    this.monitorBackdrop.setVisible(true);
+    this.monitor.setVisible(true).setY(-750);
+    this.tweens.add({
+      targets: this.monitor,
+      y: 0,
+      duration: 350,
+      ease: 'Sine.easeOut',
+    });
+  }
+
+  private closeMonitor(): void {
+    if (!this.monitor.visible) return;
+    this.tweens.killTweensOf(this.monitor);
+    this.tweens.add({
+      targets: this.monitor,
+      y: -750,
+      duration: 250,
+      ease: 'Sine.easeInOut',
+      onComplete: () => {
+        this.monitor.setVisible(false);
+        this.monitorBackdrop.setVisible(false);
+        this.adminOpen = false;
+        this.syncMabelInput();
+      },
+    });
+  }
+
+  // -- toast / hint (topmost) --
+
+  private drawToast(): void {
+    this.toastBg = this.add.graphics();
+    this.toastText = this.add
+      .text(270, 770, '', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '17px',
+        color: '#fff9ef',
+      })
+      .setOrigin(0.5, 0.5);
+    this.toast = this.add.container(0, 0, [this.toastBg, this.toastText]);
+    this.toast.setDepth(40).setVisible(false).setAlpha(0);
+  }
+
+  private showToast(message: string): void {
+    this.toastTimer?.remove();
+    this.tweens.killTweensOf(this.toast);
+    this.toastText.setText(message);
+    const w = Math.min(492, this.toastText.width + 48);
+    this.toastBg.clear();
+    this.toastBg.fillStyle(0x3e2e22, 0.92);
+    this.toastBg.fillRoundedRect(270 - w / 2, 748, w, 44, 22);
+    this.toast.setVisible(true).setAlpha(0);
+    this.tweens.add({
+      targets: this.toast,
+      alpha: 1,
+      duration: 150,
+      ease: 'Sine.easeOut',
+    });
+    this.toastTimer = this.time.delayedCall(1200, () => {
+      this.tweens.add({
+        targets: this.toast,
+        alpha: 0,
+        duration: 150,
+        ease: 'Sine.easeOut',
+        onComplete: () => this.toast.setVisible(false),
+      });
+    });
   }
 
   private scheduleBlink(): void {

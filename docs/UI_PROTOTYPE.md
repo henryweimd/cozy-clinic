@@ -1,0 +1,312 @@
+# UI_PROTOTYPE.md — Little Lives: Cozy Clinic
+
+Interactive UI prototype spec, operator-ordered BEFORE backend work.
+Playtest this on a phone and answer the questionnaire at the end —
+your answers shape the real implementation.
+
+Constraints: 540x960 portrait canvas (Phaser FIT). NO game-code edits,
+NO images, NO backend calls in this pass — all content below is
+MOCK/LOCAL and the demo path stays fully offline. Dev code below
+(`MABEL`) is a documented prototype convenience, NOT a real secret.
+
+Source geometry this spec builds on (`ClinicScene.ts` today): title
+"Cozy Clinic" centered (270,56), subtitle (270,100), Mabel 212px at
+(270,614) — sprite box x164–376, y508–720 — nametag y748, complaint
+bubble 492 wide docked at bottom 936. SIDE=24 margins, Baloo 2 face,
+cream `#FFF3E2` panels + warm-brown `#8A5A3B` accents. Reboot
+landmarks: wall/floor ~696, rug top ~712, window glass only x490+
+y95–199 (title zone clear), bench left x0–160, plant/cabinet right
+x415+.
+
+## Architecture decision: container overlays, not Phaser scenes
+
+ONE scene (`clinic`) owns everything; each view is a toggled
+`Phaser.GameObjects.Container` overlaying the shared room plate +
+Mabel. Rationale (smallest robust option):
+
+- The room plate and Mabel are identical across views — scenes would
+  re-preload/re-layout the same assets for zero gain.
+- Overlays keep Mabel's bob/blink/update loop running untouched;
+  scenes would restart it (blink-timer fights, texture resets).
+- Offline fallback is trivial: mock data is a local const, no loader.
+- Transitions are container alpha/y tweens — the codebase already
+  speaks this language (bubble fade 180/150ms, Sine easings).
+
+Rule: exactly one view container visible at a time (+ nav bar always
+visible + admin stack above all). Depth order: room(0) < Mabel(5) <
+view containers(10) < nav bar(20) < code pad(30) < admin monitor(31)
+< toast/hint(40).
+
+## Shared chrome
+
+Palette: panel cream `#FFF3E2`, text cocoa `#5C4633`, secondary
+`#8A6F52`, outline warm-brown `#8A5A3B` 3px, accent sage `#A9C6A2`,
+accent sky `#A9CCE3`, danger muted rose `#C9706B`. Font: Baloo 2
+everywhere EXCEPT the admin monitor (monospace, see below). Corner
+radius 24 (panels), 16 (cards), full-pill (tabs/pills). All tap
+targets ≥ 48px in their smallest dimension unless noted.
+
+Motion language (extends `docs/ANIMATION.md`): fades 180ms in /
+150ms out `Sine.easeOut`; slides 250ms `Sine.easeInOut`; card tap =
+scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
++ bubble), so prototype taps feel like the shipped game.
+
+## (B) PLAYER CHROME
+
+### Nav bar (persistent, all views)
+
+- Geometry: full-width dock, x0–540, y888–960 (h72). Cream fill,
+  3px top border `#8A5A3B` at 40% alpha. Safe: sits below today's
+  bubble dock (936) — the Visit view re-docks the bubble higher
+  (see Visit).
+- Four tabs, each 135 wide x 72 tall (tap target 135x72):
+  Waiting (center x67), Visit (x202), Telemed (x337), Portal (x472).
+- Each tab: emoji-free glyph drawn as text (Baloo 2 26px) + label
+  (Baloo 2 15px semibold) stacked, inactive cocoa 60%, active cocoa
+  100% on a sage pill (w118 h56 centered in the tab cell).
+- Behavior: tap = fade current view out 150ms, fade new view in
+  180ms; tab pill slides 200ms `Sine.easeInOut`. Default view: Visit.
+
+### Conversation panel (Visit + Telemed)
+
+- Geometry: x24–516 (w492), top y136, height sizes to text UP TO
+  max-h 220 (y136–356), min-h 96. Never overlaps the subtitle
+  (ends ~y118) or Mabel (top y508): guaranteed clear band.
+- Style: cream panel r24 + 3px warm-brown outline + small tail
+  triangle pointing down toward Mabel (apex at (270, panel bottom
+  +14)). Speaker tag pill top-left inside ("MABEL" / "DR. NORA" /
+  "YOU", 14px bold, sage/sky/cream fills).
+- Body: Baloo 2 20px cocoa, left-aligned, max 4 lines at 20px
+  within max-h; longer copy truncates with "…" (prototype rule —
+  flag it in feedback if real copy ever needs scroll).
+- Transition: content swap = 150ms fade out, swap text, 180ms fade
+  in. Panel itself persists per view (no slide on every line).
+
+### Decision / action card row (Visit + Telemed)
+
+- Geometry: x24–516 (w492), y796–876 (h80). Two cards: each w240,
+  gap 12. Three cards: each w156, gaps 12. Tap target = full card
+  (≥156x80 — generous).
+- Style: white-cream `#FFF9EF` card r16, 3px outline; grade-tinted
+  left spine 8px (BEST sage, NOT_GREAT sky, WRONG amber `#D9A441`,
+  DANGEROUS rose — prototype shows the spine ONLY after tap, so
+  grading stays a discovery, not a giveaway). Label Baloo 2 17px
+  semibold cocoa, centered, 2 lines max.
+- Behavior: tap = card squash (scale 0.97, 90ms yoyo) then the
+  EXISTING tap-resolve path (happy bounce + result line in the
+  conversation panel + mock vitals tick). No new resolution logic.
+- Disabled state (e.g. DANGEROUS blocked by the engine): card
+  dims to 55% + shake 60ms x2 + Dr. Nora "stepped in" line —
+  mirrors the shipped `hootLine` veto copy.
+
+### The four views
+
+VIEW 1 — VISIT (default; today's Mabel scene):
+
+- Keeps the shipped scene visible: title, subtitle, Mabel,
+  nametag all as today.
+- Adds: conversation panel (y136+, replaces the old bottom bubble
+  — the old bubble dock is RETIRED in this prototype; its content
+  moves up so the card row + nav own the bottom), decision card
+  row (y796–876), nav bar (y888–960).
+- Nametag (y748) gains a mock vitals chip row beneath it:
+  y772–792, three pills (w~120 h~20, 14px): e.g. "• pep 3",
+  "• comfort 2", "visit #4". Decorative mock, ticks on resolve.
+
+VIEW 2 — WAITING ROOM (roster):
+
+- Opaque cream sheet x24–516, y136–876 (r24, covers Mabel —
+  deliberate: roster-picking is its own moment; Mabel returns on
+  Visit). Title row y136–184: "Waiting Room" 26px bold + mock
+  clock pill "10:24 AM".
+- Four roster rows, each w492(x24–516) h120, gaps 12, starting
+  y196: Mabel y196–316, June y328–448, Milo y460–580, Theo
+  y592–712. (Bottom y712–876 left as breathing room + "Dr. Nora
+  is with a patient…" footnote at y820.)
+- Each row: 84px avatar circle (initial letter in fur-shade fill
+  — Mabel `#A2766B`, June `#C4A484`, Milo `#CDB9A8`, Theo
+  `#8F7364`; NO generated faces this pass), name 22px bold +
+  persona 16px secondary (two lines, x130–400), status pill
+  right (w~110 h36, 15px): Mabel "VISIT 4 • here", June "waiting",
+  Milo "checked in", Theo "napping". Tap row = squash + toast
+  "Mabel is already with you!" (mock; only Mabel is playable).
+- Tap target: full row 492x120.
+
+VIEW 3 — TELEMEDICINE (video-call frame):
+
+- Same live scene as Visit (Mabel, panel, cards, nav all keep
+  their Visit geometry) PLUS a call frame: dark rounded rect
+  border (12px `#2B2622`) inset x12–528, y124–888 (r28) drawn
+  AROUND the scene — Mabel at (270,614) sits naturally inside.
+- Call chrome: red-dot "• LIVE" pill left (x28, y380, w110
+  h36, 16px bold white on `#B34A45`); "Dr. Nora › observing"
+  pill right (x352–512, y380–416, sky fill, 15px) — both sit
+  BELOW the conversation panel (panel bottom ≤370), so they
+  never cover the speaker tag; bottom
+  call bar inside the frame y828–872: mute/camera "buttons"
+  (mock toggles, 48px circles) + green "Visit in person →"
+  pill switching back to Visit. The decision card row shifts up
+  to y736–816 in this view to clear the call bar (nametag/vitals
+  chips hidden in Telemed — the frame owns the bottom).
+- Scanline/vignette: none (keep the photo plate clean); the frame
+  + pills alone must sell "video call".
+
+VIEW 4 — PORTAL (secure messages):
+
+- Opaque cream sheet x24–516, y136–876 (r24), same shell as
+  Waiting. Header y136–184: "Patient Portal" 26px bold + lock
+  note "mock inbox — stays on this device" 14px secondary.
+- Three thread rows, each w492 h104, gaps 12, from y196:
+  "Dr. Nora — Mabel's visit notes" (2 new), "Clinic — Appointment
+  reminder", "Dr. Nora — Sip-tips for home". Row: sender 19px
+  bold, snippet 16px secondary (1 line), unread dot sage 12px,
+  chevron "›" 28px right. Tap target full row.
+- Tap row = expands inline (row grows to h~220 pushing others
+  down, 250ms slide; only one open at a time): shows 2–3 mock
+  bubbles (incoming sky-tint left, outgoing cream right, 17px)
+  + a disabled reply field "Replies open after the visit (mock)"
+  44px tall. Collapse on second tap.
+- Footnote y830: "No real messages — everything here is pretend."
+
+### Mock-data shapes (local consts, no fetch)
+
+```ts
+type Grade = 'BEST' | 'NOT_GREAT' | 'WRONG' | 'DANGEROUS';
+
+interface MockVitals { pep: number; comfort: number; hydration: number; }
+
+interface MockPatientProfile {
+  name: string;            // 'Mabel'
+  conditionId: string;     // 'dehydration' (matches CONDITIONS key)
+  conditionName: string;   // 'Dehydration'
+  stageIndex: number;      // 2
+  stageId: string;         // 'dried-out'
+  stageLabel: string;      // 'Dried out'
+  vitals: MockVitals;      // { pep: 2, comfort: 2, hydration: 1 }
+  visitNo: number;         // 4
+  nodeId: string;          // 'dehy-v4-n07' (trajectory node)
+  wordingTier: string;     // 'gentle' | 'plain' | 'clinical'
+  difficulty: 1 | 2 | 3;   // 1 = early (2-3 choices), 3 = late (4-5)
+}
+
+interface MockChoiceCard {
+  id: string;              // 'offer-water' (matches CONDITIONS action id)
+  label: string;           // 'Offer cool water'
+  grade: Grade;            // mock-resolved; DANGEROUS demos the veto
+  resultLine: string;      // conversation-panel line after tap
+}
+
+interface MockRosterEntry {
+  name: string; persona: string; furShade: string; status: string;
+}
+
+interface MockThread { id: string; from: string; subject: string;
+  snippet: string; unread: number; messages: { me: boolean; text: string }[]; }
+```
+
+Seed values: Mabel / dehydration @ stageIndex 2 ('dried-out') /
+visit #4 / node `dehy-v4-n07` / wording 'gentle' / difficulty 1;
+cards: offer-water (BEST), rest-shade (NOT_GREAT),
+salt-pouch (DANGEROUS → veto demo).
+
+## (A) DEV ADMIN VIEW
+
+Reads as part of the clinic world: a wall-mounted monitor behind
+glass, not a debug dump.
+
+- SECRET TRIGGER: tap the "Cozy Clinic" title 5 times within 3s.
+  Title zone x150–390, y28–84 (generous around the 44px text).
+  Feedback: each tap tiny title scale pulse (0.98, 60ms); 5th tap
+  opens the code pad. No visible hint anywhere in player UI.
+  Counter resets after 3s of no title taps.
+- CODE PAD: centered sheet x90–450 (w360), y300–660 (r24, cream,
+  dim behind at 45%). Prompt "Staff only" 18px secondary + 5
+  dot slots (M·A·B·E·L). Letter grid: 3 cols x 4 rows of 56px
+  keys (A–M minus J: A B C / D E F / G H I / K L M — corrected
+  2026-10-29 by the UI builder, the spec's A–L had no M so the
+  MABEL code was untypable) — tap target 56x56, gaps 10.
+  DEV CODE: `MABEL`. Correct = pad fades 150ms, monitor slides
+  in. Wrong = shake 60ms x2 + dots clear. Cancel "‹ back" 48px
+  tall. (NOT a real secret — prototype gate only, documented
+  here by design.)
+- MONITOR: wall-mounted terminal, x36–504 (w468), y150–700
+  (h550, r16), dark phosphor `#0E1B14` fill + 6px walnut frame
+  `#6B4A2F` + glass glare (white 6% diagonal stripe) + tiny
+  wall-mount bar above (x220–320, y132–150). Slides down from
+  y-600 to y150 over 350ms `Sine.easeOut`; close reverses 250ms.
+  Scanline hint: 1px horizontal lines every 4px at 5% white —
+  cheap Graphics pass, static (no animation cost).
+- SCREEN CONTENT (monospace 17px, phosphor green `#9FE8B8`,
+  headers amber `#E8C96A`, values cream `#EAF5E9`):
+  `COZY CLINIC — STAFF TERMINAL`, `patient: Mabel`,
+  `condition: Dehydration (dehydration)`,
+  `stage: [2] Dried out (dried-out)`,
+  `vitals: pep 2 · comfort 2 · hydration 1`,
+  `visit: #4 · node: dehy-v4-n07`,
+  `wording: gentle · difficulty: 1/3`,
+  plus a 1-line Living Chart note:
+  `"remembers: chose water last visit!"`.
+  Values are LIVE reads of the same mock state the Visit view
+  uses (tap a choice card, reopen, numbers moved) — mocked, but
+  single-sourced, never hard-coded twice.
+- CLOSE: "×" button top-right of the frame, 48x48 tap target
+  (x456–504, y150–198), cream on walnut. Also closes on
+  backdrop tap outside the monitor. Neither control is reachable
+  without the code — the monitor never peeks otherwise.
+
+## Responsive / edge notes
+
+- 540x960 is the ONLY canvas (Phaser FIT letterboxes elsewhere);
+  all coords above are canvas px. No orientation change (portrait).
+- Text overflow rule: conversation 4 lines, card labels 2 lines,
+  thread snippets 1 line — truncate with "…", never wrap into
+  Mabel or the nav. Baloo 2 metrics differ from Georgia; verify
+  on device.
+- Mabel stays interactive in Visit/Telemed (tap = happy bounce);
+  in Waiting/Portal/overlay states Mabel is covered and
+  non-interactive (input disabled with the view swap, not just
+  visually hidden).
+- Admin stack locks the nav (tabs disabled while pad/monitor
+  open) so a view swap can't strand the monitor.
+
+## Open tradeoffs (chosen; push back in feedback)
+
+1. Overlays over scenes — fastest, offline-trivial, keeps Mabel's
+   motion loop alive; costs some container-spaghetti later.
+2. Old bottom bubble RETIRED — conversation moves to the upper
+   panel so cards + nav own the bottom. Reversible if you loved it.
+3. Waiting/Portal sheets COVER Mabel — simpler than re-laying the
+   room per view, but Mabel vanishes twice. Alternative: shrink
+   Mabel to a corner buddy (extra layout work).
+4. Grading spines hidden until AFTER tap — preserves discovery;
+   alternative is always-visible difficulty coloring.
+5. DANGEROUS card always present in the mock row — demos the veto
+   every session; ship may randomize the row instead.
+6. Telemed reuses Visit geometry + frame — cheapest "video call"
+   sell; a dedicated camera-crop layout would read stronger.
+7. Dev code is a word (MABEL) not digits — thematic, thumbable;
+   digits would look more "terminal".
+
+## Feedback questionnaire (operator — playtest on a phone first)
+
+1. Feel: does the Visit screen still read cute/friendly/inviting
+   with the panel + cards + nav added, or did the chrome eat the
+   coziness? What would you cut first?
+2. Conversation panel: is the upper placement (above Mabel) easy
+   to read while tapping cards at the bottom, or does your thumb
+   cover Mabel at the key moment?
+3. Card row: 2 cards or 3 — which count felt right, and did any
+   label need a second line? Did tapping feel like the old
+   tap-Mabel resolve?
+4. Waiting Room: did Mabel vanishing behind the roster sheet feel
+   fine, jarring, or unnoticed? Would you rather she stay visible?
+5. Telemed: did the frame + LIVE pill sell "video call", or did it
+   read as Visit with a border? What one element would sell it?
+6. Portal: did the inline-expanding thread feel good, or would you
+   rather a full thread screen? Was the mock-reply field clear?
+7. Admin: trigger discoverable enough for staff yet invisible to
+   players? Does the monitor read as clinic furniture or a debug
+   dump? Is `MABEL` too guessable for a prototype gate?
+8. Cut/keep: if we ship only TWO of the four nav views for the
+   demo, which two — and what is missing that the demo cannot
+   live without?

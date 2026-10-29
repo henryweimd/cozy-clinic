@@ -743,3 +743,78 @@ idle + tapped states, zero console errors. Element-by-element
 - Outcome: `npm test` 29/29 pass (guard covers the new names;
   no condition text names a patient); `npm run build` green.
   No geometry/motion/copy change — strings + docs only.
+
+## Active chunk: UI prototype pass (UI designer workstream)
+
+- UI-PROTOTYPE OWNERSHIP (declared BEFORE writing, per AGENTS.md
+  workflow law): the UI prototype designer owns `docs/UI_PROTOTYPE.md`
+  (NEW) and `PROGRESS.md` UI-prototype additions ONLY. Nobody else
+  writes those paths this run. NO game-code edits (`src/*`
+  untouched), NO image generations, NO asset files. Mock/local
+  content only — no backend calls, offline intact.
+- UI-PROTOTYPE RESULT (designer, 2026-10-29): wrote
+  `docs/UI_PROTOTYPE.md` — full 540x960 spec for the DEV ADMIN
+  VIEW (title-5x trigger, MABEL code pad, sliding wall-mounted
+  phosphor monitor with live mock profile) + PLAYER CHROME
+  (upper conversation panel, 2-3 graded choice cards on the
+  tap-resolve path, 4-tab nav: Waiting/Visit/Telemed/Portal),
+  container-overlay architecture, mock-data shapes, and an
+  8-question operator questionnaire. No code/assets touched.
+
+## Active chunk: UI prototype pass (UI builder workstream)
+
+- UI-BUILDER OWNERSHIP (declared BEFORE editing, per AGENTS.md
+  workflow law): the UI prototype builder owns `src/scenes/*`,
+  new `src/ui/*`, `docs/UI_PROTOTYPE.md` spec-correction edits
+  ONLY if the spec needs correction, `PROGRESS.md`, `CHECKPOINT.md`
+  this run. Nobody else writes those paths this run. Code-drawn
+  UI strongly preferred: image budget AT MOST 6 ($0.06 cap, ledger
+  MUST stay far under the operator's $20 cap); target $0.00.
+- Scope: implement `docs/UI_PROTOTYPE.md` exactly — secret
+  title-5x trigger + MABEL code pad + wall monitor wired to LIVE
+  game state (real engine/scene values, no hardcoded vitals);
+  conversation panel; decision card row on the REAL tap-resolve
+  path; nav bar + 4 views with MOCK roster/message data in a
+  local mock-data module shaped like future Supabase rows.
+  Mabel's geometry/motion/bubble behavior identical in Visit.
+  No commit/push (main agent merges).
+- UI-BUILDER RESULT (builder, 2026-10-29): implemented the full
+  spec in `src/scenes/ClinicScene.ts` + NEW `src/ui/mockData.ts`
+  (MOCK roster/threads/seeds, Supabase-row-shaped with table
+  mapping). Player chrome: nav bar (4 tabs, sage pill, 150/180ms
+  fades) + Visit (conversation panel, 3-card row, live vitals
+  chips) + Waiting (4-row MOCK roster) + Telemed (call frame,
+  LIVE/Nora pills, call bar, shifted cards) + Portal (3 MOCK
+  threads, inline expand). Admin: title-5x trigger + MABEL pad +
+  sliding phosphor monitor. Cards resolve through the REAL engine
+  (`gradeAction`/`applyAction` on live state) with the shared
+  happy-bounce method; monitor/chips read LIVE state (no
+  hardcoded vitals). Mabel 212px@(270,614), bob/blink/bounce, and
+  complaint copy byte-identical; old bottom bubble retired per
+  spec (panel is its new home, same fades/toggle).
+- Live-vs-spec-seed deviations (parent law: live wins):
+  (1) rest-shade grades BEST at stage 2 live (spec seed said
+  NOT_GREAT) — spines show live grades, verified by probe;
+  (2) live vitals start 6/6/6 (spec seed 2/2/1) — chips show
+  pep(=energy)/comfort/visit#4, monitor adds breathing;
+  (3) blocked DANGEROUS plays shake+dim+Nora line with NO happy
+  bounce (a bounce would celebrate a veto);
+  (4) Nora observing pill 14px not 15px (fits x352–512);
+  (5) 'semibold' renders as 'bold' (Phaser fontStyle);
+  (6) Telemed LIVE pill overlaps the panel corner per spec
+  geometry — accepted, operator judges in Q5.
+- Spec correction (owned): code-pad grid was A–L with code MABEL
+  — no M, untypable. Corrected to A–M minus J in both the doc
+  and the build (one grid, minimal edit).
+- Tests/build: `npm test` 29/29 pass; `npm run build` green
+  (only the known benign font-URL + chunk-size warnings). Logic
+  probe (`/tmp/ui-probe.ts` via vite-node): stage/vitals/grade/
+  block/node-id/monitor-string behavior all live-correct.
+- Spend: image spend $0.00 (code-drawn UI only, no
+  generations). Ledger stays ~$0.1944. $20 gate far off; at >=
+  $120, STOP — not reached.
+- Not done by builder: deploy + operator phone playtest
+  (no browser in sandbox; in-game render check needs the
+  deployed URL on a phone — confirm panel/cards/nav layout,
+  Telemed pill overlap, Baloo glyph coverage for ◷✚◉✉♥✿☀›✕‹→).
+  No commit/push (main agent merges). STOP after CHECKPOINT.md.
