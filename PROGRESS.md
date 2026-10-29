@@ -1321,3 +1321,20 @@ clearance — then a polish fix loop for real findings.
   (overlaps, spacing, Baloo-measured fit, landmarks) — 0
   findings. Tightest clearance: title ink 3.5px below strip.
   No polish commit (nothing to fix). STOP.
+
+## Active chunk: GROUP 3 frontend modules (long-horizon run)
+
+- G3 OWNERSHIP (declared BEFORE editing): this phase owns ONLY
+  `src/ui/chromeTheme.ts`, `src/ui/ticker.ts`,
+  `src/ui/toolTrays.ts`, `src/ui/livingChart.ts`,
+  `src/ui/learnList.ts`, `src/ui/g3.test.ts`, plus PROGRESS.md
+  and CHECKPOINT.md. No scene edits (integration wires at G4).
+- G3 RESULT: 4 frontend modules ship (unwired): `src/ui/ticker.ts`
+  (F1 2-row terminal strip y852-888 + mock feed + rotation),
+  `src/ui/toolTrays.ts` (T1 slide-in exam tray, 4 code-drawn
+  tools, pick callback), `src/ui/livingChart.ts` (L1 memory-bead
+  sheet, <=5 lines), `src/ui/learnList.ts` (E1 submenu fed by
+  fallback resources), `src/ui/chromeTheme.ts` (shared palette),
+  `src/ui/g3.test.ts` (4 pure-logic tests). G4 contract: card
+  row shifts up 36px to clear the ticker.
+- Tests: 38/38; build green. Spend $0.00.
