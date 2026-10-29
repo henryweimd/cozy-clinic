@@ -46,6 +46,15 @@ everywhere EXCEPT the admin monitor (monospace, see below). Corner
 radius 24 (panels), 16 (cards), full-pill (tabs/pills). All tap
 targets ≥ 48px in their smallest dimension unless noted.
 
+Spacing system (one system, all chrome — UI polish 2026-10-29):
+M_EDGE = 24 canvas→sheet/panel/cards; M_NEST = 16 sheet→inset-rows
+and panel→body (nested rects never share the parent edge); G_MD = 12
+sibling gaps (card/card, row/row, cards/nav, sheet/nav); G_SM = 8
+dense-stack minimum (nametag→chips→cards, tag→body, prompt→dots).
+Radii step down per nesting depth: 24 sheets/panels, 16 cards/rows,
+12 bubbles/keys, h/2 pills. Baloo slack: pill h ≥ fontSize + 8,
+pill side pad ≥ 12px, card side pad ≥ 8px.
+
 Motion language (extends `docs/ANIMATION.md`): fades 180ms in /
 150ms out `Sine.easeOut`; slides 250ms `Sine.easeInOut`; card tap =
 scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
@@ -61,9 +70,9 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
   (see Visit).
 - Four tabs, each 135 wide x 72 tall (tap target 135x72):
   Waiting (center x67), Visit (x202), Telemed (x337), Portal (x472).
-- Each tab: emoji-free glyph drawn as text (Baloo 2 26px) + label
+- Each tab: emoji-free glyph drawn as text (Baloo 2 24px) + label
   (Baloo 2 15px semibold) stacked, inactive cocoa 60%, active cocoa
-  100% on a sage pill (w118 h56 centered in the tab cell).
+  100% on a sage pill (w118 h60 centered in the tab cell).
 - Behavior: tap = fade current view out 150ms, fade new view in
   180ms; tab pill slides 200ms `Sine.easeInOut`. Default view: Visit.
 
@@ -90,7 +99,7 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
 - Style: white-cream `#FFF9EF` card r16, 3px outline; grade-tinted
   left spine 8px (BEST sage, NOT_GREAT sky, WRONG amber `#D9A441`,
   DANGEROUS rose — prototype shows the spine ONLY after tap, so
-  grading stays a discovery, not a giveaway). Label Baloo 2 17px
+  grading stays a discovery, not a giveaway). Label Baloo 2 15px
   semibold cocoa, centered, 2 lines max.
 - Behavior: tap = card squash (scale 0.97, 90ms yoyo) then the
   EXISTING tap-resolve path (happy bounce + result line in the
@@ -109,8 +118,8 @@ VIEW 1 — VISIT (default; today's Mabel scene):
   — the old bubble dock is RETIRED in this prototype; its content
   moves up so the card row + nav own the bottom), decision card
   row (y796–876), nav bar (y888–960).
-- Nametag (y748) gains a mock vitals chip row beneath it:
-  y772–792, three pills (w~120 h~20, 14px): e.g. "• pep 3",
+- Nametag (y744) gains a mock vitals chip row beneath it:
+  y766–788, three pills (w~120 h~22, 14px): e.g. "• breath 3",
   "• comfort 2", "visit #4". Decorative mock, ticks on resolve.
 
 VIEW 2 — WAITING ROOM (roster):
@@ -119,10 +128,10 @@ VIEW 2 — WAITING ROOM (roster):
   deliberate: roster-picking is its own moment; Mabel returns on
   Visit). Title row y136–184: "Waiting Room" 26px bold + mock
   clock pill "10:24 AM".
-- Four roster rows, each w492(x24–516) h120, gaps 12, starting
+- Four roster rows, each w460 (x40–500) h120, gaps 12, starting
   y196: Mabel y196–316, June y328–448, Milo y460–580, Theo
   y592–712. (Bottom y712–876 left as breathing room + "Dr. Nora
-  is with a patient…" footnote at y820.)
+  is with a patient…" footnote at y826.)
 - Each row: 84px avatar circle (initial letter in fur-shade fill
   — Mabel `#A2766B`, June `#C4A484`, Milo `#CDB9A8`, Theo
   `#8F7364`; NO generated faces this pass), name 22px bold +
@@ -130,17 +139,17 @@ VIEW 2 — WAITING ROOM (roster):
   right (w~110 h36, 15px): Mabel "VISIT 4 • here", June "waiting",
   Milo "checked in", Theo "napping". Tap row = squash + toast
   "Mabel is already with you!" (mock; only Mabel is playable).
-- Tap target: full row 492x120.
+- Tap target: full row 460x120.
 
 VIEW 3 — TELEMEDICINE (video-call frame):
 
 - Same live scene as Visit (Mabel, panel, cards, nav all keep
   their Visit geometry) PLUS a call frame: dark rounded rect
-  border (12px `#2B2622`) inset x12–528, y124–888 (r28) drawn
+  border (12px `#2B2622`) inset x16–524, y128–876 (r28) drawn
   AROUND the scene — Mabel at (270,614) sits naturally inside.
 - Call chrome: red-dot "• LIVE" pill left (x28, y380, w110
   h36, 16px bold white on `#B34A45`); "Dr. Nora › observing"
-  pill right (x352–512, y380–416, sky fill, 15px) — both sit
+  pill right (x344–512, y380–416, sky fill, 14px) — both sit
   BELOW the conversation panel (panel bottom ≤370), so they
   never cover the speaker tag; bottom
   call bar inside the frame y828–872: mute/camera "buttons"
@@ -156,9 +165,9 @@ VIEW 4 — PORTAL (secure messages):
 - Opaque cream sheet x24–516, y136–876 (r24), same shell as
   Waiting. Header y136–184: "Patient Portal" 26px bold + lock
   note "mock inbox — stays on this device" 14px secondary.
-- Three thread rows, each w492 h104, gaps 12, from y196:
+- Three thread rows, each w460 (x40–500) h92, gaps 12, from y196:
   "Dr. Nora — Mabel's visit notes" (2 new), "Clinic — Appointment
-  reminder", "Dr. Nora — Sip-tips for home". Row: sender 19px
+  reminder", "Dr. Nora — Breathe-easy plan". Row: sender 19px
   bold, snippet 16px secondary (1 line), unread dot sage 12px,
   chevron "›" 28px right. Tap target full row.
 - Tap row = expands inline (row grows to h~220 pushing others
@@ -166,32 +175,32 @@ VIEW 4 — PORTAL (secure messages):
   bubbles (incoming sky-tint left, outgoing cream right, 17px)
   + a disabled reply field "Replies open after the visit (mock)"
   44px tall. Collapse on second tap.
-- Footnote y830: "No real messages — everything here is pretend."
+- Footnote y826: "No real messages — everything here is pretend."
 
 ### Mock-data shapes (local consts, no fetch)
 
 ```ts
 type Grade = 'BEST' | 'NOT_GREAT' | 'WRONG' | 'DANGEROUS';
 
-interface MockVitals { pep: number; comfort: number; hydration: number; }
+interface MockVitals { pep: number; comfort: number; breathing: number; }
 
 interface MockPatientProfile {
   name: string;            // 'Mabel'
-  conditionId: string;     // 'dehydration' (matches CONDITIONS key)
-  conditionName: string;   // 'Dehydration'
+  conditionId: string;     // 'asthma' (matches CONDITIONS key)
+  conditionName: string;   // 'Asthma'
   stageIndex: number;      // 2
-  stageId: string;         // 'dried-out'
-  stageLabel: string;      // 'Dried out'
-  vitals: MockVitals;      // { pep: 2, comfort: 2, hydration: 1 }
+  stageId: string;         // 'wheezy'
+  stageLabel: string;      // 'Wheezy'
+  vitals: MockVitals;      // { pep: 2, comfort: 2, breathing: 1 }
   visitNo: number;         // 4
-  nodeId: string;          // 'dehy-v4-n07' (trajectory node)
+  nodeId: string;          // 'asthma-v4-n07' (trajectory node)
   wordingTier: string;     // 'gentle' | 'plain' | 'clinical'
   difficulty: 1 | 2 | 3;   // 1 = early (2-3 choices), 3 = late (4-5)
 }
 
 interface MockChoiceCard {
-  id: string;              // 'offer-water' (matches CONDITIONS action id)
-  label: string;           // 'Offer cool water'
+  id: string;              // 'calm-air' (matches CONDITIONS action id)
+  label: string;           // 'Sit upright in calm air'
   grade: Grade;            // mock-resolved; DANGEROUS demos the veto
   resultLine: string;      // conversation-panel line after tap
 }
@@ -204,10 +213,10 @@ interface MockThread { id: string; from: string; subject: string;
   snippet: string; unread: number; messages: { me: boolean; text: string }[]; }
 ```
 
-Seed values: Mabel / dehydration @ stageIndex 2 ('dried-out') /
-visit #4 / node `dehy-v4-n07` / wording 'gentle' / difficulty 1;
-cards: offer-water (BEST), rest-shade (NOT_GREAT),
-salt-pouch (DANGEROUS → veto demo).
+Seed values: Mabel / asthma @ stageIndex 2 ('wheezy') /
+visit #4 / node `asthma-v4-n07` / wording 'gentle' / difficulty 1;
+cards: calm-air (BEST), rescue-puffer (BEST),
+dusty-blanket (DANGEROUS → veto demo).
 
 ## (A) DEV ADMIN VIEW
 
@@ -219,7 +228,7 @@ glass, not a debug dump.
   Feedback: each tap tiny title scale pulse (0.98, 60ms); 5th tap
   opens the code pad. No visible hint anywhere in player UI.
   Counter resets after 3s of no title taps.
-- CODE PAD: centered sheet x90–450 (w360), y300–660 (r24, cream,
+- CODE PAD: centered sheet x90–450 (w360), y296–664 (r24, cream,
   dim behind at 45%). Prompt "Staff only" 18px secondary + 5
   dot slots (M·A·B·E·L). Letter grid: 3 cols x 4 rows of 56px
   keys (A–M minus J: A B C / D E F / G H I / K L M — corrected
@@ -239,18 +248,18 @@ glass, not a debug dump.
 - SCREEN CONTENT (monospace 17px, phosphor green `#9FE8B8`,
   headers amber `#E8C96A`, values cream `#EAF5E9`):
   `COZY CLINIC — STAFF TERMINAL`, `patient: Mabel`,
-  `condition: Dehydration (dehydration)`,
-  `stage: [2] Dried out (dried-out)`,
-  `vitals: pep 2 · comfort 2 · hydration 1`,
-  `visit: #4 · node: dehy-v4-n07`,
+  `condition: Asthma (asthma)`,
+  `stage: [2] Wheezy (wheezy)`,
+  `vitals: energy 6 · comfort 6 · breath 6`,
+  `visit: #4 · node: asthma-v4-n07`,
   `wording: gentle · difficulty: 1/3`,
   plus a 1-line Living Chart note:
-  `"remembers: chose water last visit!"`.
+  `"remembers: used the puffer like a champ!"`.
   Values are LIVE reads of the same mock state the Visit view
   uses (tap a choice card, reopen, numbers moved) — mocked, but
   single-sourced, never hard-coded twice.
 - CLOSE: "×" button top-right of the frame, 48x48 tap target
-  (x456–504, y150–198), cream on walnut. Also closes on
+  (x452–500, y154–202), cream on walnut. Also closes on
   backdrop tap outside the monitor. Neither control is reachable
   without the code — the monitor never peeks otherwise.
 

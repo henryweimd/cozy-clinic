@@ -76,7 +76,7 @@ export interface PrototypeSeeds {
 
 export const PROTOTYPE_SEEDS: PrototypeSeeds = {
   patientName: 'Mabel',
-  conditionId: 'dehydration',
+  conditionId: 'asthma',
   visitNo: 4,
   wordingTier: 'gentle',
   difficulty: 1,
@@ -89,9 +89,9 @@ export const PROTOTYPE_SEEDS: PrototypeSeeds = {
  * grades, and results resolve LIVE from the engine at tap time.
  */
 export const CARD_ROW_IDS: readonly string[] = [
-  'offer-water',
-  'rest-shade',
-  'salt-pouch',
+  'calm-air',
+  'rescue-puffer',
+  'dusty-blanket',
 ];
 
 /** Waiting-room roster, top to bottom (spec geometry order). */
@@ -132,11 +132,11 @@ export const MOCK_THREADS: readonly MockThread[] = [
     id: 'mock-thread-visit-notes',
     from: 'Dr. Nora',
     subject: "Mabel's visit notes",
-    snippet: 'Keep the water bowl close…',
+    snippet: 'Slow breaths, puffer close…',
     unread: 2,
     messages: [
       { me: false, text: 'Mabel did so well today!' },
-      { me: false, text: 'Keep the water bowl close — little sips through the day.' },
+      { me: false, text: 'Keep the puffer with its spacer close — calm air and slow breaths.' },
       { me: true, text: 'We will! Thank you!' },
     ],
   },
@@ -154,11 +154,11 @@ export const MOCK_THREADS: readonly MockThread[] = [
   {
     id: 'mock-thread-sip-tips',
     from: 'Dr. Nora',
-    subject: 'Sip-tips for home',
+    subject: 'Breathe-easy plan',
     snippet: 'Three cozy tricks for…',
     unread: 1,
     messages: [
-      { me: false, text: 'Three cozy tricks for thirsty days: cool water, shade rest, and patience.' },
+      { me: false, text: 'Three cozy tricks for wheezy days: calm air, puffer with spacer, and patience.' },
     ],
   },
 ];

@@ -140,7 +140,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       },
       {
         id: 'dusty-blanket',
-        label: 'Shake out a dusty blanket indoors',
+        label: 'Shake a dusty blanket indoors',
         gradeByStage: ['DANGEROUS', 'DANGEROUS', 'DANGEROUS', 'DANGEROUS'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: {},

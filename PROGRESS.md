@@ -818,3 +818,62 @@ idle + tapped states, zero console errors. Element-by-element
   deployed URL on a phone — confirm panel/cards/nav layout,
   Telemed pill overlap, Baloo glyph coverage for ◷✚◉✉♥✿☀›✕‹→).
   No commit/push (main agent merges). STOP after CHECKPOINT.md.
+
+## Active chunk: UI polish + asthma opener (polish-fixer workstream)
+
+- UI-POLISH OWNERSHIP (declared BEFORE editing, per AGENTS.md
+  workflow law): the UI polish fixer owns `src/scenes/ClinicScene.ts`,
+  `src/ui/mockData.ts`, `src/clinical/conditions.ts` COPY ONLY
+  (display labels/blurbs/plainWords/hootLines — never IDs, grades
+  arrays, stage counts, presentsAt, or action IDs),
+  `docs/UI_PROTOTYPE.md` corrections, `PROGRESS.md`, `CHECKPOINT.md`
+  this run. Nobody else writes those paths this run. Code + copy
+  only — $0.00 image spend, no generations.
+- Scope: (1) apply ONE spacing system to ALL chrome + fix every
+  audit-ranked overlap (A1–A14); do NOT move Mabel, bg, GROUND,
+  bubble geometry, or texture keys; (2) opener swap
+  dehydration→asthma (display copy + mock seed + conversation +
+  monitor defaults + spec doc only); (3) npm test + build;
+  (4) PROGRESS.md + CHECKPOINT.md. No commit/push (main merges).
+- UI-POLISH RESULT (fixer, 2026-10-29): one spacing system now
+  documented in code + spec (M_EDGE 24, M_NEST 16, G_MD 12,
+  G_SM 8, radii 24/16/12/pill, Baloo slack rules). All 14
+  audit fixes applied in `ClinicScene.ts`: waiting rows +
+  portal threads inset 16px inside their sheets (A1/A2);
+  nametag 22px@744 + chips y766–788 h22 (A3); pad sheet/dots/
+  keys/cancel re-stacked (A4); nav pill h60 + glyph 24px (A5);
+  portal collapsed h92 re-balanced (A6); telemed frame inside
+  the nav divider (A7); monitor wrap pulled in 16px (A8);
+  Nora pill widened to 168 (A9); panel body/tag symmetric 16px
+  insets (A10); card labels 15px/wrap144 (A11); shadow ellipse
+  tightened (A12); monitor × fully on-screen (A13); footnotes
+  unified at y826 (A14). Untouched per law: Mabel sprite
+  (212px@(270,614)), bg, GROUND, panel/bubble geometry,
+  texture keys.
+- ASTHMA-OPENER RESULT (same run): `conditionId` → asthma,
+  card row → calm-air/rescue-puffer/dusty-blanket (live grades
+  BEST/BEST/DANGEROUS at stage 2 — veto demo survives);
+  chips lead with live breath; portal threads re-flavored
+  (puffer+spacer, breathe-easy plan); dusty-blanket label
+  shortened to fit 2 lines (A11). conditions.ts diff is ONE
+  label line — IDs, grades arrays, stage counts, presentsAt,
+  action IDs byte-identical; dehydration def kept (tests
+  reference it). Spec updated: seed/profile/card/monitor
+  blocks → asthma, MockVitals hydration→breathing (pre-existing
+  drift fixed), rest-shade NOT_GREAT claim gone with the old
+  row, geometry lines match the new build. Complaint renders
+  live: "Mabel feels wheezy: Whistly breaths, worried eyes…".
+- Tests/build: `npm test` 29/29 pass (incl. patient-name guard
+  over the new copy); `npm run build` green (known benign
+  font-URL + chunk-size warnings only). Live probe
+  (`/tmp/polish-probe.ts`): presentsAt 2/wheezy, veto blocks
+  with Nora line, rescue-puffer 2→1 + breath 6→8. Zero
+  polish regressions — no fixes needed.
+- Spend: image spend $0.00 (code + copy only, no generations).
+  Ledger stays ~$0.1944. $20 gate far off; at >= $120, STOP —
+  not reached.
+- Not done by fixer: deploy + operator phone playtest (no
+  browser in sandbox — confirm insets/gaps read clean, no
+  Baloo overflow in pills/cards/threads, asthma opener feels
+  clinical-but-cozy). No commit/push (main agent merges).
+  STOP after CHECKPOINT.md.

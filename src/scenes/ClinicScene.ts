@@ -68,6 +68,16 @@ const FONT_FAMILY =
 const MONO_FONT = '"Courier New", ui-monospace, monospace';
 
 // Prototype palette (docs/UI_PROTOTYPE.md shared chrome).
+// UI-POLISH SPACING SYSTEM (one system, all chrome): M_EDGE = 24
+// canvas→sheet/panel/cards; M_NEST = 16 sheet→inset-rows and
+// panel→body; G_MD = 12 sibling gaps (card/card, row/row,
+// cards/nav, sheet/nav); G_SM = 8 dense-stack minimum
+// (nametag→chips→cards, tag→body, prompt→dots — nothing < 8).
+// Radii step down per nesting depth: R0 = 24 top sheets/panels,
+// R1 = 16 cards/rows, R2 = 12 bubbles/keys, PILL = h/2 tags/chips;
+// a nested rect never shares its parent's edge (>= M_NEST inset).
+// Baloo slack: fixed pill h >= fontSize + 8, pill horizontal pad
+// >= 12px/side, card pad >= 8px/side, wrap width = rectW - 2*inset.
 const CREAM = 0xfff3e2;
 const CARD_FILL = 0xfff9ef;
 const OUTLINE = 0x8a5a3b;
@@ -318,13 +328,13 @@ export class ClinicScene extends Phaser.Scene {
 
   private drawMabel(): void {
     // Mabel stands fully on the painted rug: feet at 720 (~8px
-    // inside the rug top ~712) and the fixed shadow ellipse at
-    // GROUND = 724 on the rug, body clear of the baseboard (~696)
+    // inside the rug top ~712) and the fixed shadow ellipse just
+    // under GROUND = 724 on the rug, body clear of the baseboard (~696)
     // above. At 212px Mabel is still the largest visual weight,
     // with clear walking space to the bench (left) and the
     // plant/cabinet lane (right). Same 212px@(270,614) geometry
     // the reboot contact-sheet composite validated.
-    this.add.ellipse(270, 724, 170, 30, 0x8a5a3b, 0.18).setDepth(4);
+    this.add.ellipse(270, 722, 150, 24, 0x8a5a3b, 0.18).setDepth(4);
 
     this.mabel = this.add.image(270, 614, 'mabel-idle');
     this.mabel.setDisplaySize(212, 212);
@@ -333,9 +343,9 @@ export class ClinicScene extends Phaser.Scene {
     this.mabel.setInteractive({ useHandCursor: true });
 
     this.nametag = this.add
-      .text(270, 748, 'Mabel · first patient', {
+      .text(270, 744, 'Mabel · first patient', {
         fontFamily: FONT_FAMILY,
-        fontSize: '24px',
+        fontSize: '22px',
         color: COCOA,
       })
       .setOrigin(0.5)
@@ -359,7 +369,7 @@ export class ClinicScene extends Phaser.Scene {
       fontFamily: FONT_FAMILY,
       fontSize: '20px',
       color: COCOA,
-      wordWrap: { width: 444 },
+      wordWrap: { width: 460 },
     });
     this.panel = this.add.container(0, 0, [
       this.panelBg,
@@ -396,9 +406,9 @@ export class ClinicScene extends Phaser.Scene {
     this.panelTag.clear();
     this.panelTag.fillStyle(tagFill, 1);
     this.panelTag.lineStyle(2, OUTLINE, 1);
-    this.panelTag.fillRoundedRect(36, top + 12, tagW, 28, 14);
-    this.panelTag.strokeRoundedRect(36, top + 12, tagW, 28, 14);
-    this.panelTagText.setPosition(36 + 14, top + 12 + 14).setOrigin(0, 0.5);
+    this.panelTag.fillRoundedRect(40, top + 12, tagW, 28, 14);
+    this.panelTag.strokeRoundedRect(40, top + 12, tagW, 28, 14);
+    this.panelTagText.setPosition(40 + 14, top + 12 + 14).setOrigin(0, 0.5);
 
     this.panelBody.setPosition(40, top + 48).setOrigin(0, 0);
   }
@@ -493,10 +503,10 @@ export class ClinicScene extends Phaser.Scene {
         .text(0, 0, label, {
           fontFamily: FONT_FAMILY,
           fontStyle: 'bold',
-          fontSize: '17px',
+          fontSize: '15px',
           color: COCOA,
           align: 'center',
-          wordWrap: { width: 140 },
+          wordWrap: { width: 144 },
         })
         .setOrigin(0.5, 0.5);
       this.truncateToHeight(labelText, 46);
@@ -642,10 +652,10 @@ export class ClinicScene extends Phaser.Scene {
       const bg = this.add.graphics();
       bg.fillStyle(CARD_FILL, 1);
       bg.lineStyle(2, OUTLINE, 1);
-      bg.fillRoundedRect(cx - 60, 772, 120, 20, 10);
-      bg.strokeRoundedRect(cx - 60, 772, 120, 20, 10);
+      bg.fillRoundedRect(cx - 60, 766, 120, 22, 11);
+      bg.strokeRoundedRect(cx - 60, 766, 120, 22, 11);
       const label = this.add
-        .text(cx, 782, '', {
+        .text(cx, 777, '', {
           fontFamily: FONT_FAMILY,
           fontSize: '14px',
           color: COCOA,
@@ -658,9 +668,9 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   private refreshChips(): void {
-    // pep maps to engine energy; breathing reads live on the monitor.
+    // Breath leads: the asthma opener moves breathing on every card.
     const texts = [
-      `• pep ${this.patientState.vitals.energy}`,
+      `• breath ${this.patientState.vitals.breathing}`,
       `• comfort ${this.patientState.vitals.comfort}`,
       `visit #${PROTOTYPE_SEEDS.visitNo}`,
     ];
@@ -701,7 +711,7 @@ export class ClinicScene extends Phaser.Scene {
     clockBg.strokeRoundedRect(500 - clockW, 142, clockW, 36, 18);
     clockLabel.setPosition(500 - clockW / 2, 160);
     const footnote = this.add
-      .text(270, 820, 'Dr. Nora is with a patient…', {
+      .text(270, 826, 'Dr. Nora is with a patient…', {
         fontFamily: FONT_FAMILY,
         fontSize: '16px',
         color: SECONDARY,
@@ -721,14 +731,14 @@ export class ClinicScene extends Phaser.Scene {
       const bg = this.add.graphics();
       bg.fillStyle(CARD_FILL, 1);
       bg.lineStyle(3, OUTLINE, 1);
-      bg.fillRoundedRect(-246, -60, 492, 120, 16);
-      bg.strokeRoundedRect(-246, -60, 492, 120, 16);
+      bg.fillRoundedRect(-230, -60, 460, 120, 16);
+      bg.strokeRoundedRect(-230, -60, 460, 120, 16);
       const fur = Phaser.Display.Color.HexStringToColor(entry.furShade).color;
       const avatar = this.add.graphics();
       avatar.fillStyle(fur, 1);
-      avatar.fillCircle(-192, 0, 42);
+      avatar.fillCircle(-172, 0, 42);
       const initial = this.add
-        .text(-192, 0, entry.name.charAt(0), {
+        .text(-172, 0, entry.name.charAt(0), {
           fontFamily: FONT_FAMILY,
           fontStyle: 'bold',
           fontSize: '32px',
@@ -736,7 +746,7 @@ export class ClinicScene extends Phaser.Scene {
         })
         .setOrigin(0.5, 0.5);
       const name = this.add
-        .text(-136, -28, entry.name, {
+        .text(-116, -28, entry.name, {
           fontFamily: FONT_FAMILY,
           fontStyle: 'bold',
           fontSize: '22px',
@@ -744,7 +754,7 @@ export class ClinicScene extends Phaser.Scene {
         })
         .setOrigin(0, 0);
       const persona = this.add
-        .text(-136, 4, entry.persona, {
+        .text(-116, 4, entry.persona, {
           fontFamily: FONT_FAMILY,
           fontSize: '16px',
           color: SECONDARY,
@@ -762,9 +772,9 @@ export class ClinicScene extends Phaser.Scene {
       const here = entry.id === 'mock-patient-mabel';
       statusBg.fillStyle(here ? SAGE : CARD_FILL, 1);
       statusBg.lineStyle(2, OUTLINE, 1);
-      statusBg.fillRoundedRect(234 - statusW, -18, statusW, 36, 18);
-      statusBg.strokeRoundedRect(234 - statusW, -18, statusW, 36, 18);
-      statusLabel.setPosition(234 - statusW / 2, 0);
+      statusBg.fillRoundedRect(218 - statusW, -18, statusW, 36, 18);
+      statusBg.strokeRoundedRect(218 - statusW, -18, statusW, 36, 18);
+      statusLabel.setPosition(218 - statusW / 2, 0);
       const row = this.add.container(270, yc, [
         bg,
         avatar,
@@ -774,7 +784,7 @@ export class ClinicScene extends Phaser.Scene {
         statusBg,
         statusLabel,
       ]);
-      const zone = this.add.zone(0, 0, 492, 120).setInteractive({ useHandCursor: true });
+      const zone = this.add.zone(0, 0, 460, 120).setInteractive({ useHandCursor: true });
       zone.on('pointerdown', () => {
         this.tweens.add({
           targets: row,
@@ -798,7 +808,7 @@ export class ClinicScene extends Phaser.Scene {
   private drawTelemedChrome(): void {
     const frame = this.add.graphics();
     frame.lineStyle(12, 0x2b2622, 1);
-    frame.strokeRoundedRect(12, 124, 516, 764, 28);
+    frame.strokeRoundedRect(16, 128, 508, 748, 28);
     const liveBg = this.add.graphics();
     liveBg.fillStyle(0xb34a45, 1);
     liveBg.fillRoundedRect(28, 380, 110, 36, 18);
@@ -812,9 +822,9 @@ export class ClinicScene extends Phaser.Scene {
       .setOrigin(0.5, 0.5);
     const noraBg = this.add.graphics();
     noraBg.fillStyle(SKY, 1);
-    noraBg.fillRoundedRect(352, 380, 160, 36, 18);
+    noraBg.fillRoundedRect(344, 380, 168, 36, 18);
     const nora = this.add
-      .text(432, 398, 'Dr. Nora › observing', {
+      .text(428, 398, 'Dr. Nora › observing', {
         fontFamily: FONT_FAMILY,
         fontSize: '14px',
         color: COCOA,
@@ -903,7 +913,7 @@ export class ClinicScene extends Phaser.Scene {
       })
       .setOrigin(1, 0.5);
     const footnote = this.add
-      .text(270, 830, 'No real messages — everything here is pretend.', {
+      .text(270, 826, 'No real messages — everything here is pretend.', {
         fontFamily: FONT_FAMILY,
         fontSize: '14px',
         color: SECONDARY,
@@ -913,10 +923,10 @@ export class ClinicScene extends Phaser.Scene {
     this.portalView.setDepth(10).setVisible(false).setAlpha(0);
 
     MOCK_THREADS.forEach((thread, idx) => {
-      const collapsedH = 104;
+      const collapsedH = 92;
       const bg = this.add.graphics();
       const line1 = this.add
-        .text(40, 12, `${thread.from} — ${thread.subject}`, {
+        .text(56, 16, `${thread.from} — ${thread.subject}`, {
           fontFamily: FONT_FAMILY,
           fontStyle: 'bold',
           fontSize: '19px',
@@ -924,14 +934,14 @@ export class ClinicScene extends Phaser.Scene {
         })
         .setOrigin(0, 0);
       const line2 = this.add
-        .text(40, 42, thread.snippet, {
+        .text(56, 46, thread.snippet, {
           fontFamily: FONT_FAMILY,
           fontSize: '16px',
           color: SECONDARY,
         })
         .setOrigin(0, 0);
       const chevron = this.add
-        .text(494, 52, '›', {
+        .text(478, 46, '›', {
           fontFamily: FONT_FAMILY,
           fontSize: '28px',
           color: SECONDARY,
@@ -943,7 +953,7 @@ export class ClinicScene extends Phaser.Scene {
       const bubbleBg = this.add.graphics();
       extras.add(bubbleBg);
       for (const msg of thread.messages) {
-        const bubble = this.add.text(msg.me ? 500 : 40, ey + 8, msg.text, {
+        const bubble = this.add.text(msg.me ? 484 : 56, ey + 8, msg.text, {
           fontFamily: FONT_FAMILY,
           fontSize: '17px',
           color: COCOA,
@@ -952,7 +962,7 @@ export class ClinicScene extends Phaser.Scene {
         bubble.setOrigin(msg.me ? 1 : 0, 0);
         const bw = bubble.width + 24;
         const bh = bubble.height + 16;
-        const bx = msg.me ? 500 - bw : 40;
+        const bx = msg.me ? 484 - bw : 56;
         bubbleBg.fillStyle(msg.me ? CARD_FILL : 0xe3f0f8, 1);
         bubbleBg.lineStyle(2, OUTLINE, 0.6);
         bubbleBg.fillRoundedRect(bx, ey, bw, bh, 12);
@@ -962,7 +972,7 @@ export class ClinicScene extends Phaser.Scene {
       }
       const replyBg = this.add.graphics();
       replyBg.fillStyle(0xefe6d8, 1);
-      replyBg.fillRoundedRect(40, ey, 460, 44, 12);
+      replyBg.fillRoundedRect(56, ey, 428, 44, 12);
       const reply = this.add
         .text(270, ey + 22, 'Replies open after the visit (mock)', {
           fontFamily: FONT_FAMILY,
@@ -978,7 +988,7 @@ export class ClinicScene extends Phaser.Scene {
       const rowTop = 196 + idx * (collapsedH + 12);
       const root = this.add.container(0, rowTop, [bg, line1, line2, chevron, extras]);
       const zone = this.add
-        .zone(270, collapsedH / 2, 492, collapsedH)
+        .zone(270, collapsedH / 2, 460, collapsedH)
         .setInteractive({ useHandCursor: true });
       zone.on('pointerdown', () => this.toggleThread(idx));
       root.add(zone);
@@ -987,9 +997,9 @@ export class ClinicScene extends Phaser.Scene {
       if (thread.unread > 0) {
         const dot = this.add.graphics();
         dot.fillStyle(SAGE, 1);
-        dot.fillCircle(448, 26, 6);
+        dot.fillCircle(432, 28, 6);
         const count = this.add
-          .text(460, 26, `${thread.unread} new`, {
+          .text(444, 28, `${thread.unread} new`, {
             fontFamily: FONT_FAMILY,
             fontSize: '14px',
             color: SECONDARY,
@@ -1006,8 +1016,8 @@ export class ClinicScene extends Phaser.Scene {
     bg.clear();
     bg.fillStyle(CARD_FILL, 1);
     bg.lineStyle(3, OUTLINE, 1);
-    bg.fillRoundedRect(24, 0, 492, h, 16);
-    bg.strokeRoundedRect(24, 0, 492, h, 16);
+    bg.fillRoundedRect(40, 0, 460, h, 16);
+    bg.strokeRoundedRect(40, 0, 460, h, 16);
   }
 
   private toggleThread(idx: number): void {
@@ -1018,7 +1028,7 @@ export class ClinicScene extends Phaser.Scene {
       const h = open ? thread.expandedH : thread.collapsedH;
       this.drawThreadBg(thread.bg, h);
       thread.extras.setVisible(open);
-      thread.zone.setSize(492, h).setPosition(270, h / 2);
+      thread.zone.setSize(460, h).setPosition(270, h / 2);
       this.tweens.killTweensOf(thread.root);
       this.tweens.add({
         targets: thread.root,
@@ -1040,7 +1050,7 @@ export class ClinicScene extends Phaser.Scene {
     bg.fillRect(0, 888, 540, 3);
     const pillFace = this.add.graphics();
     pillFace.fillStyle(SAGE, 1);
-    pillFace.fillRoundedRect(-59, -28, 118, 56, 28);
+    pillFace.fillRoundedRect(-59, -30, 118, 60, 30);
     this.navPill = this.add.container(TAB_X.visit, 924, [pillFace]);
     const nav = this.add.container(0, 0, [bg, this.navPill]);
     nav.setDepth(20);
@@ -1054,14 +1064,14 @@ export class ClinicScene extends Phaser.Scene {
     for (const tab of tabs) {
       const cx = TAB_X[tab.view];
       const glyph = this.add
-        .text(cx, 908, tab.glyph, {
+        .text(cx, 910, tab.glyph, {
           fontFamily: FONT_FAMILY,
-          fontSize: '26px',
+          fontSize: '24px',
           color: COCOA,
         })
         .setOrigin(0.5, 0.5);
       const label = this.add
-        .text(cx, 936, tab.label, {
+        .text(cx, 938, tab.label, {
           fontFamily: FONT_FAMILY,
           fontStyle: 'bold',
           fontSize: '15px',
@@ -1195,10 +1205,10 @@ export class ClinicScene extends Phaser.Scene {
     const sheet = this.add.graphics();
     sheet.fillStyle(CREAM, 1);
     sheet.lineStyle(3, OUTLINE, 1);
-    sheet.fillRoundedRect(90, 300, 360, 360, 24);
-    sheet.strokeRoundedRect(90, 300, 360, 360, 24);
+    sheet.fillRoundedRect(90, 296, 360, 368, 24);
+    sheet.strokeRoundedRect(90, 296, 360, 368, 24);
     const prompt = this.add
-      .text(270, 318, 'Staff only', {
+      .text(270, 316, 'Staff only', {
         fontFamily: FONT_FAMILY,
         fontSize: '18px',
         color: SECONDARY,
@@ -1206,14 +1216,14 @@ export class ClinicScene extends Phaser.Scene {
       .setOrigin(0.5, 0.5);
     this.padDots = this.add.graphics();
     const cancel = this.add
-      .text(270, 636, '‹ back', {
+      .text(270, 640, '‹ back', {
         fontFamily: FONT_FAMILY,
         fontSize: '18px',
         color: SECONDARY,
       })
       .setOrigin(0.5, 0.5);
     const cancelZone = this.add
-      .zone(270, 636, 360, 48)
+      .zone(270, 640, 360, 48)
       .setInteractive({ useHandCursor: true });
     cancelZone.on('pointerdown', () => this.closePad(false));
     this.pad = this.add.container(0, 0, [dim, dimZone, sheet, prompt, this.padDots, cancel, cancelZone]);
@@ -1227,7 +1237,7 @@ export class ClinicScene extends Phaser.Scene {
       const col = i % 3;
       const row = Math.floor(i / 3);
       const cx = 204 + col * 66;
-      const cy = 386 + row * 66;
+      const cy = 392 + row * 66;
       const face = this.add.graphics();
       face.fillStyle(0xf7e8d2, 1);
       face.lineStyle(2, OUTLINE, 1);
@@ -1255,10 +1265,10 @@ export class ClinicScene extends Phaser.Scene {
       const cx = 202 + i * 34;
       if (i < this.padEntry.length) {
         this.padDots.fillStyle(OUTLINE, 1);
-        this.padDots.fillCircle(cx, 344, 10);
+        this.padDots.fillCircle(cx, 342, 9);
       } else {
         this.padDots.lineStyle(2, OUTLINE, 1);
-        this.padDots.strokeCircle(cx, 344, 10);
+        this.padDots.strokeCircle(cx, 342, 9);
       }
     }
   }
@@ -1354,16 +1364,16 @@ export class ClinicScene extends Phaser.Scene {
     );
     const xBtn = this.add.graphics();
     xBtn.fillStyle(0x3e2a1e, 1);
-    xBtn.fillCircle(480, 174, 20);
+    xBtn.fillCircle(476, 178, 20);
     const xGlyph = this.add
-      .text(480, 174, '×', {
+      .text(476, 178, '×', {
         fontFamily: FONT_FAMILY,
         fontStyle: 'bold',
         fontSize: '22px',
         color: '#fff9ef',
       })
       .setOrigin(0.5, 0.5);
-    const xZone = this.add.zone(480, 174, 48, 48).setInteractive({ useHandCursor: true });
+    const xZone = this.add.zone(476, 178, 48, 48).setInteractive({ useHandCursor: true });
     xZone.on('pointerdown', () => this.closeMonitor());
     this.monitorContent = this.add.container(0, 0, []);
     this.monitor = this.add.container(0, -750, [
@@ -1418,7 +1428,7 @@ export class ClinicScene extends Phaser.Scene {
           fontFamily: MONO_FONT,
           fontSize: '17px',
           color: '#eaf5e9',
-          wordWrap: { width: 428 - keyText.width },
+          wordWrap: { width: 412 - keyText.width },
         })
         .setOrigin(0, 0);
       this.monitorContent.add([keyText, valueText]);
