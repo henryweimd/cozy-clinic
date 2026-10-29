@@ -429,3 +429,64 @@ idle + tapped states, zero console errors. Element-by-element
   rounded bubble still clears the nametag/Mochi/edges with
   the new metrics); P5 fx out of scope. STOP after
   CHECKPOINT.md.
+
+## Active chunk: P5 lighting/feel (implementer workstream)
+
+- P5 OWNERSHIP (declared BEFORE editing, per AGENTS.md workflow
+  law): the P5 lighting/feel agent owns `src/scenes/ClinicScene.ts`
+  LIGHTING ADDITIONS ONLY (new overlay pass + bounce-tween
+  tuning; no layout/behavior/copy changes),
+  `public/assets/fonts/OFL.txt` (NEW license glue only),
+  `PROGRESS.md`, `CHECKPOINT.md` this run. Nobody else writes
+  those paths this run. Freeze-safe POLISH ONLY: no re-layout,
+  no new features, no new patients/conditions, no image
+  generations (code-only, $0.00 image spend target).
+- P5 LIGHTING/FX LIST (declared BEFORE editing):
+  (1) Window-light gradient overlay: one full-screen
+  `fillGradientStyle` rect in palette cream/butter
+  (`#FCEBD6`/`#FFF3E2`), strongest upper-left (bible light
+  dir), alpha <= 0.12, drawn AFTER room/props and BEFORE
+  title/Mochi/bubble so text and Mochi cannot wash out.
+  (2) Warm vignette: four feathered edge strips in outline
+  warm-brown `#8A5A3B`, ~0.10 at the screen edge fading to 0
+  inward, same below-Mochi/text depth as (1).
+  (3) Happy-bounce tuning ONLY if it improves tap feel:
+  keep the same squash + token guard, add a tiny scale
+  overshoot (bible: squash, rise, tiny overshoot, settle).
+  No y-tween (the update() idle bob owns mochi.y).
+  Layout constants, sprite positions, bubble geometry, copy,
+  and all other behavior stay byte-identical.
+- P5 RESULT (implementer): code-only warmth in
+  `src/scenes/ClinicScene.ts` — new `drawLightOverlays()`,
+  called after drawRoom / before title/Mochi/bubble:
+  (1) full-screen window-light gradient (`fillGradientStyle`,
+  `#FCEBD6` upper-left 0.12 fading to `#FFF3E2` 0.0
+  lower-right); (2) warm vignette, four 56px feathered edge
+  strips in `#8A5A3B`, 0.10 at the edge fading to 0 inward.
+  Both tint room + props only — title/Mochi/bubble render
+  above and cannot wash out. Happy bounce tuned per bible
+  (squash, rise, tiny overshoot, settle): the 110ms squash
+  yoyo is unchanged, then a chained 80ms scale overshoot
+  (+0.03/-0.03) yoyo before idle restore; scale-only (no
+  y-tween, the bob owns mochi.y), same token guard both
+  steps. Header comment records P5. Diff is +67/-4, the 4
+  removed lines being the restore-idle block re-indented
+  into the nested onComplete — no layout/copy change.
+- P5 LICENSE GLUE: OFL.txt retry FAILED both legs —
+  google/fonts raw timed out (curl 28, 25s), opensource.org
+  returned an HTML page (196635 bytes, not license text,
+  deleted). No `OFL.txt` vendored; `LICENSE.txt` kept as-is
+  (still cites OFL 1.1 by name + source URLs).
+- Tests/build: `npm test` 29/29 pass; `npm run build` green
+  (tsc + vite; only the known benign public/font-URL
+  warning). Zero P5 regressions — no fixes needed.
+- Spend: image spend $0.00 (no generations). P5 total $0.00.
+  Ledger stays ~$0.1244. Next $20 gate far off; at >= $120,
+  STOP — not reached.
+- Not done by implementer: deploy + operator phone playtest
+  (headless screenshot impossible in sandbox per prior audit;
+  render check needs the deployed URL on a phone — confirm
+  the room reads warmer/cozier with no haze on text or
+  Mochi, vignette edges subtle, happy overshoot reads as
+  one bounce with no flicker vs blink). No commit/push
+  (main agent merges). STOP after CHECKPOINT.md.

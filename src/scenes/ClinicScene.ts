@@ -22,6 +22,12 @@ import { ClinicalEngine, CONDITIONS } from '../clinical';
  * is a plush rounded panel in palette cream with the one thin
  * warm-brown outline — same w492/dockBottom936 sizing-upward
  * geometry and same clinical copy.
+ * P5: code-only warmth — a window-light gradient overlay plus a
+ * warm vignette (see drawLightOverlays), drawn above the room
+ * but below title/Mochi/bubble so text and Mochi cannot wash
+ * out; the happy bounce gains a tiny scale overshoot (bible:
+ * squash, rise, tiny overshoot, settle). No layout, copy, or
+ * other behavior change.
  *
  * Layout contract (fix-layout-01 spacing system): SIDE = 24,
  * GROUND = 724, Mochi 212px at (270, 614), bubble 492 wide docked
@@ -62,6 +68,7 @@ export class ClinicScene extends Phaser.Scene {
 
   create(): void {
     this.drawRoom();
+    this.drawLightOverlays();
     this.drawTitle();
     this.drawMochi();
     this.drawBubble();
@@ -118,6 +125,47 @@ export class ClinicScene extends Phaser.Scene {
     bed.setScale(160 / bed.width);
     const plant = this.add.image(461, 724, 'prop-plant').setOrigin(0.5, 1);
     plant.setScale(110 / plant.width);
+  }
+
+  /**
+   * P5 code-only warmth: a window-light gradient plus a warm
+   * vignette, both pure Graphics fills in palette colors (no
+   * generated images, $0.00 spend). Called after drawRoom and
+   * before title/Mochi/bubble, so the overlays tint only the
+   * room and props — text and Mochi render above and cannot
+   * wash out. Alphas stay <= 0.12: cozy, not hazy.
+   */
+  private drawLightOverlays(): void {
+    // Window light: full-screen gradient, strongest upper-left
+    // (bible: soft light from upper left) in palette cream.
+    const light = this.add.graphics();
+    light.fillGradientStyle(
+      0xfcebd6,
+      0xfcebd6,
+      0xfff3e2,
+      0xfff3e2,
+      0.12,
+      0.05,
+      0.05,
+      0.0,
+    );
+    light.fillRect(0, 0, 540, 960);
+
+    // Warm vignette: four feathered edge strips in the one thin
+    // outline warm-brown, ~0.10 at the screen edge fading to 0
+    // inward over a 56px band. Corners double up slightly, as a
+    // real vignette should.
+    const edge = 0x8a5a3b;
+    const band = 56;
+    const v = this.add.graphics();
+    v.fillGradientStyle(edge, edge, edge, edge, 0.1, 0.1, 0.0, 0.0);
+    v.fillRect(0, 0, 540, band);
+    v.fillGradientStyle(edge, edge, edge, edge, 0.0, 0.0, 0.1, 0.1);
+    v.fillRect(0, 960 - band, 540, band);
+    v.fillGradientStyle(edge, edge, edge, edge, 0.1, 0.0, 0.1, 0.0);
+    v.fillRect(0, 0, band, 960);
+    v.fillGradientStyle(edge, edge, edge, edge, 0.0, 0.1, 0.0, 0.1);
+    v.fillRect(540 - band, 0, band, 960);
   }
 
   private drawTitle(): void {
@@ -219,6 +267,10 @@ export class ClinicScene extends Phaser.Scene {
       this.showingHappy = true;
       this.mochi.setTexture('mochi-happy');
       // One small happy bounce (squash, rise, tiny overshoot), then settle.
+      // P5 tuning: the squash keeps its 110ms yoyo, then a tiny
+      // scale overshoot (bible follow-through) before restoring
+      // idle. Scale-only — the update() bob owns mochi.y, so no
+      // y-tween. Same token guard on both steps.
       this.tweens.add({
         targets: this.mochi,
         scaleY: '-=0.06',
@@ -228,10 +280,21 @@ export class ClinicScene extends Phaser.Scene {
         ease: 'Sine.easeInOut',
         onComplete: () => {
           if (token !== this.happyToken) return;
-          this.showingHappy = false;
-          if (this.mochi.texture.key === 'mochi-happy') {
-            this.mochi.setTexture('mochi-idle');
-          }
+          this.tweens.add({
+            targets: this.mochi,
+            scaleY: '+=0.03',
+            scaleX: '-=0.03',
+            duration: 80,
+            yoyo: true,
+            ease: 'Sine.easeInOut',
+            onComplete: () => {
+              if (token !== this.happyToken) return;
+              this.showingHappy = false;
+              if (this.mochi.texture.key === 'mochi-happy') {
+                this.mochi.setTexture('mochi-idle');
+              }
+            },
+          });
         },
       });
     } else {
