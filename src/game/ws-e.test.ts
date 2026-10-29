@@ -89,4 +89,22 @@ describe('WS-E undo stack', () => {
     expect(undoDepth(clearUndo())).toBe(0);
     expect(canUndo(clearUndo<typeof s.past>())).toBe(false);
   });
+
+  it('round-trips object snapshots (the scene UndoSnapshot shape)', () => {
+    interface Snap {
+      stageIndex: number;
+      nodeId: string | null;
+      coins: number;
+      reveals: (string | null)[];
+    }
+    let s = emptyUndo<Snap>();
+    const a: Snap = { stageIndex: 2, nodeId: 'n1', coins: 12, reveals: [null, null, null] };
+    const b: Snap = { stageIndex: 1, nodeId: 'n2', coins: 13, reveals: ['BEST', null, null] };
+    s = pushMove(pushMove(s, a), b);
+    const u1 = undoMove(s);
+    expect(u1?.snapshot).toEqual(b);
+    const u2 = undoMove(u1?.stack ?? s);
+    expect(u2?.snapshot).toEqual(a);
+    expect(canUndo(u2?.stack ?? s)).toBe(false);
+  });
 });

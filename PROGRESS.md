@@ -1483,3 +1483,18 @@ clearance — then a polish fix loop for real findings.
   follows monitor close. Fixed a real leak found via tsc-never
   (stray null assignment). Doc +1 section. 48/48, build green.
   Spend $0.00.
+
+## Active chunk: wallet + undo wiring (continuous run)
+
+- WALLET-UNDO OWNERSHIP: this phase owns ONLY
+  `src/scenes/ClinicScene.ts` (wallet behind HUD, undo stack +
+  dev-monitor restore), plus PROGRESS.md and CHECKPOINT.md.
+  Player undo UI arrives with the submenu phase.
+- WALLET-UNDO RESULT: wallet behind the HUD (earn +1/BEST,
+  localStorage persist, corrupt-save safe); 10-move undo stack
+  records pre-move snapshots (engine state, cursor, coins, card
+  spines; blocked moves skipped); doUndo rewinds all four with
+  an honest ledger entry; dev monitor gains a tap-to-rewind
+  row; patient switch clears history. +1 snapshot-shape test
+  (durable collateral). 49/49, build green, auditor 0. $0.00.
+  Player undo UI queued with the submenu phase.

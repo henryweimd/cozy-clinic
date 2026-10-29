@@ -5,7 +5,6 @@ import {
   CARD_ROW_IDS,
   CHOOSE_PROMPT_WORDING,
   CHROME_TIER_BY_DIFFICULTY,
-  MOCK_CARE_COINS_START,
   MOCK_ROSTER,
   MOCK_THREADS,
   PROTOTYPE_SEEDS,
@@ -28,6 +27,16 @@ import {
   rootNode,
 } from '../data/patients';
 import type { CastData } from '../data/patients';
+import {
+  EARN_BEST,
+  deserializeWallet,
+  earn,
+  emptyWallet,
+  serializeWallet,
+} from '../game/economy';
+import type { Wallet } from '../game/economy';
+import { clearUndo, emptyUndo, pushMove, undoDepth, undoMove } from '../game/undo';
+import type { UndoStack } from '../game/undo';
 
 /**
  * Milestone 1 clinic scene: a cozy clinic room and Mabel, the first
@@ -197,6 +206,17 @@ function speakerFor(patientName: string): Speaker {
   if (key === 'JUNE' || key === 'MILO' || key === 'MABEL') return key;
   return 'MABEL';
 }
+
+/** Pre-move snapshot for the 10-move undo stack. */
+interface UndoSnapshot {
+  state: PatientState;
+  nodeId: string | null;
+  depth: number;
+  coins: number;
+  reveals: (ChoiceGrade | null)[];
+}
+
+const WALLET_STORAGE_KEY = 'cozy-wallet-v1';
 /**
  * SAY vs TELL (chrome-3): 'say' = direct speech in the speaker's
  * own voice (quoted + tagged); 'tell' = third-person narration
@@ -307,7 +327,8 @@ export class ClinicScene extends Phaser.Scene {
   private coinsText!: Phaser.GameObjects.Text;
   private contextText!: Phaser.GameObjects.Text;
   private timerText!: Phaser.GameObjects.Text;
-  private careCoins = MOCK_CARE_COINS_START;
+  private wallet: Wallet = emptyWallet();
+  private undoStack: UndoStack<UndoSnapshot> = emptyUndo();
   private visitStartMs = 0;
   private lastTimerSecond = -1;
 
@@ -421,6 +442,7 @@ export class ClinicScene extends Phaser.Scene {
       loop: true,
       callback: () => this.maybeNudge(),
     });
+    this.loadWallet();
     this.showView('visit', true);
   }
 
@@ -758,6 +780,75 @@ export class ClinicScene extends Phaser.Scene {
     return `${complaint}\nThe doctor will see you now.`;
   }
 
+  /** Wallet persistence (local; coin_ledger replaces it later). */
+  private loadWallet(): void {
+    try {
+      const raw = window.localStorage.getItem(WALLET_STORAGE_KEY);
+      if (raw) this.wallet = deserializeWallet(raw);
+    } catch {
+      this.wallet = emptyWallet();
+    }
+  }
+
+  private saveWallet(): void {
+    try {
+      window.localStorage.setItem(WALLET_STORAGE_KEY, serializeWallet(this.wallet));
+    } catch {
+      // Private mode et al: play on without saving.
+    }
+  }
+
+  /**
+   * Restore one undone move (dev monitor today, player submenu
+   * later): engine state, trajectory cursor, coins, and card
+   * spines all rewind together.
+   */
+  private doUndo(): void {
+    const undone = undoMove(this.undoStack);
+    if (!undone) {
+      this.showToast('Nothing to undo yet.');
+      return;
+    }
+    this.undoStack = undone.stack;
+    const snap = undone.snapshot;
+    this.patientState = snap.state;
+    this.currentNodeId = snap.nodeId;
+    this.currentDepth = snap.depth;
+    this.revealedStage = snap.state.stageIndex;
+    // Coins rewind by rebuilding the wallet WITHOUT a ledger lie:
+    // undo is its own entry kind, not a delete.
+    const diff = this.wallet.balance - snap.coins;
+    if (diff !== 0) {
+      this.wallet = {
+        balance: snap.coins,
+        entries: [
+          ...this.wallet.entries,
+          {
+            seq: this.wallet.entries.length,
+            delta: -diff,
+            reason: 'adjust:undo',
+            balance: snap.coins,
+          },
+        ],
+      };
+      this.saveWallet();
+    }
+    this.cards.forEach((card, i) => {
+      card.revealed = snap.reveals[i] ?? null;
+      this.drawSpine(card, card.revealed);
+    });
+    this.patient.setTexture(this.steadyFace());
+    this.refreshChips();
+    this.refreshHud();
+    this.closeConversation();
+    this.setConversation(
+      speakerFor(this.activeName),
+      'Back a step — no harm done. What will you try instead?',
+      'tell',
+    );
+    this.showToast(`Undone (${undoDepth(this.undoStack)} left).`);
+  }
+
   /** Chop words until the text fits maxH (prototype rule: …). */
   private truncateToHeight(textObj: Phaser.GameObjects.Text, maxH: number): void {
     if (textObj.height <= maxH) return;
@@ -931,7 +1022,19 @@ export class ClinicScene extends Phaser.Scene {
     const action = def.actions.find((a) => a.id === card.actionId);
     if (!action) return;
     const grade = this.engine.gradeAction(this.patientState, card.actionId);
+    // Undo: capture the PRE-move snapshot (skipped for blocked moves,
+    // which change nothing and would make undo a no-op step).
+    const preMove: UndoSnapshot = {
+      state: structuredClone(this.patientState),
+      nodeId: this.currentNodeId,
+      depth: this.currentDepth,
+      coins: this.wallet.balance,
+      reveals: this.cards.map((c) => c.revealed),
+    };
     const result = this.engine.applyAction(this.patientState, card.actionId);
+    if (!result.blocked) {
+      this.undoStack = pushMove(this.undoStack, preMove);
+    }
     if (result.blocked) {
       // Engine veto: Nora stepped in. Dim + shake + her line —
       // no happy bounce on a blocked move.
@@ -961,9 +1064,11 @@ export class ClinicScene extends Phaser.Scene {
     this.drawSpine(card, grade);
     this.refreshChips();
     if (grade === 'BEST') {
-      // Mock coins: +1 per correct (BEST) resolve. Blocked moves and
-      // lesser grades pay nothing. Real coin_ledger accrual later.
-      this.careCoins += 1;
+      // Care Coins wallet: +1 per correct (BEST) resolve. Blocked
+      // moves and lesser grades pay nothing. Persisted locally;
+      // the coin_ledger table replaces local saves later.
+      this.wallet = earn(this.wallet, EARN_BEST, 'earn:best-resolve');
+      this.saveWallet();
     }
     // Stage may have moved — the context label re-derives (mock).
     this.refreshHud();
@@ -1038,6 +1143,7 @@ export class ClinicScene extends Phaser.Scene {
       this.patientState = this.engine.initialState(this.patientState.conditionId);
     }
     this.revealedStage = this.patientState.stageIndex;
+    this.undoStack = clearUndo();
     this.activePatientId = row?.id ?? null;
     const root = row && this.cast ? rootNode(this.cast, row.id) : null;
     this.currentNodeId = root?.id ?? null;
@@ -1311,7 +1417,7 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   private refreshHud(): void {
-    this.coinsText.setText(`${this.careCoins}`);
+    this.coinsText.setText(`${this.wallet.balance}`);
     const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
     this.contextText.setText(VISIT_CONTEXT_WORDING[this.visitContext()][tier]);
   }
@@ -2269,7 +2375,21 @@ export class ClinicScene extends Phaser.Scene {
     assetsZone.on('pointerdown', () => {
       this.assetBrowser.show('plates', this.prefix(), this.activeName);
     });
-    this.monitorContent.add([memKey, memValue, hint, assetsBtn, assetsZone]);
+    const undoLine = this.add
+      .text(64, 616, `undo: ${undoDepth(this.undoStack)}/10 — tap to rewind`, {
+        fontFamily: MONO_FONT,
+        fontSize: '14px',
+        color: '#e8c96a',
+      })
+      .setOrigin(0, 0);
+    const undoZone = this.add
+      .zone(200, 624, 280, 28)
+      .setInteractive({ useHandCursor: true });
+    undoZone.on('pointerdown', () => {
+      this.doUndo();
+      this.buildMonitorContent();
+    });
+    this.monitorContent.add([memKey, memValue, undoLine, undoZone, hint, assetsBtn, assetsZone]);
   }
 
   private openMonitor(): void {
