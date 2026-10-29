@@ -10,7 +10,9 @@ import { ClinicalEngine, CONDITIONS } from '../clinical';
  * `assets/room/clinic-shell-reboot-01.png` (1080x1920, Block B;
  * see art/manifest.json backgrounds[] reboot entry), and Mochi
  * is the Jolly-style redesign (`mochi-reboot-idle/blink/happy.png`,
- * 192px class, Block C). Texture keys (`mochi-idle`, `room-shell`,
+ * 192px class, Block C; rev-2 refinement 2026-10-29: same files,
+ * same geometry, owned rose-taupe identity + smooth edges — no
+ * layout change). Texture keys (`mochi-idle`, `room-shell`,
  * ...) are unchanged — only the file paths moved. The old plush
  * room-shell + plush Mochi + plush props are SUPERSEDED (files
  * left on disk, manifest-flagged); old plush-room constants are

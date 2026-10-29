@@ -81,124 +81,184 @@
    "sprite": "mochi-reboot-idle.png",
    "export": "public/assets/characters/mochi-reboot-idle.png",
    "master": "art/source/mochi-reboot/mochi-reboot-idle-master.png",
-   "source_file": "mochi-reboot-idle-20261028-231805-1.png",
-   "source_tool": "muse-image-mcp edit_image (ref-guided by jolly-trip.jpg + jolly-sunglasses.webp)",
-   "revision": 1,
+   "source_file": "mochi-refine-idle-20261028-233327-1.png",
+   "source_tool": "muse-image-mcp edit_image (idle: differentiation edit of OUR mochi-reboot-idle-master rev-1; blink/happy: identity edits of rev-2 idle master; NO jolly-* image used as reference this run per IP rule)",
+   "revision": 2,
    "direction": "reboot-2026-10-29",
    "status": "current",
    "dimensions": "192x192",
-   "frame": "idle (eyes open; ref-guided from jolly-trip + jolly-sunglasses)",
-   "prompt_full": "Using the attached reference images for the character's 3D render style, oatmeal fleece texture, and chibi proportions, create the mascot Mochi: the same oatmeal-cream fleece body and smooth porcelain face plate as the references, standing facing forward with stubby mitten arms relaxed at its sides and nub feet planted, bead eyes open, gentle smile, one small plain pink belly pouch centered on the belly, no costume, no props, no sunglasses, no sign, no suitcase, no logos, no text. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
-   "prompt_hash_sha256": "e134a67206366bf1ebb3cc786745e73c833c3eafeab3531e44b82eee2c203853",
-   "export_sha256": "65827ca6607125350788918feefc5ab6effdbf524050fe1cbbd0b8f5e349599c",
+   "frame": "idle rev2 (eyes open; rose-taupe + nurse cap; refined from OUR rev-1 idle master, NO jolly refs)",
+   "prompt_full": "Edit this mascot sprite into Mochi's own distinct identity. Keep the same chibi egg pose, body position, size, framing, and plain warm-white background. Apply these owned Mochi deltas: (1) FUR SHADE: recolor the fleece to Mochi's muted rose-taupe, a soft desaturated rosy taupe-brown clearly rosier and cooler than oatmeal-cream, keeping dense visible short-pile strands and soft volumetric shading; keep the smooth matte porcelain face plate in warm cream. (2) FACE: bead eyes slightly LARGER, set a touch CLOSER together and HIGHER on the face plate, each with one white highlight dot; smile a warmer slightly WIDER single closed curve with gently upturned ends; blush circles slightly LARGER, placed LOWER and more outward on the cheeks. (3) ACCESSORIES (both fixed Mochi traits): keep the small plain pink belly pouch centered on the belly, AND add a small pastel-pink nurse cap tilted on the upper-left of the head with one tiny white cross emblem. (4) CLEAN EDGES: crisp smooth silhouette with gentle antialiased falloff, no jagged stair-steps, no pixel spikes, no halo; one faint compact grounding shadow tucked directly beneath the feet only. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
+   "prompt_hash_sha256": "fe5709fc95f421ccdb71b2a360baca6ba8cb0005f2fb81e7ebc2dadf2f611f10",
+   "export_sha256": "6a2edbb8b7c6843748735aac4e12e5d628ad75f8c26f548aff6e39f88ec68427",
    "opacity_check": {
     "bbox": [
-     24,
+     25,
      9,
-     168,
-     183
+     165,
+     182
     ],
-    "opaque_ratio": 0.4489,
+    "opaque_ratio": 0.4254,
+    "opaque_ratio_def": "alpha>=128 over 192x192",
     "corners_transparent": true,
     "pad_px": {
-     "left": 24,
+     "left": 25,
      "top": 9,
-     "right": 23,
-     "bottom": 8
+     "right": 26,
+     "bottom": 9
     }
    },
    "foot_anchor": "bottom-center (Phaser origin 0.5,1.0); union-crop window shared by all 3 poses, bottom-aligned at export row 184",
    "validation": {
     "dimensions": "192x192 RGBA exact",
-    "alpha": "border flood-fill keyout tol=28 from bg median on 1600x1600 master; corners transparent; between-legs gap keyed",
-    "bbox_vs_idle": "idle [24, 9, 168, 183] vs idle [24, 9, 168, 183]: delta [0, 0, 0, 0]; opaque ratio 0.4489 vs 0.4489",
-    "identity_match": "same pouch/fur/pose/scale by eye (see mochi-reboot-poses contact sheet); blink left eye has slight lash flick, accepted",
-    "style_match": "Block C carried verbatim; oatmeal fleece + porcelain plate + no outline match jolly refs (visual)"
+    "alpha": "border flood-fill keyout thresh=32 from 8 edge seeds on 1600x1600 master + binary-opening despeckle; edge-band-only despill (<=2px of transparent); NO interior despill (rev-2 pipeline fix: interior despill ate the face plate + cap in a draft); shadow-ectomy below y=1350 keeps foot-fur only; LANCZOS to shared union window (246,112,1353,1476 master px), scale-to-height-176, bottom row 184, centered-x; corners alpha 0",
+    "bbox_vs_idle": "rev-2 idle [25,9,165,182] vs rev-2 idle [25,9,165,182]: delta [0,0,0,0]; opaque ratio 0.4254 vs 0.4254. Vs REV-1 idle [24,9,168,183]: delta [1,0,3,1] \u2014 DELIBERATE silhouette delta recorded: nurse cap added (top refit absorbs it), baked floor shadow removed (code shadow ellipse remains), right fur edge 3px tighter; left/top/bottom within rev-1 tolerance",
+    "identity_match": "same rose-taupe fur/cap/pouch/pose/scale across 3 poses by eye (see mochi-reboot-poses-v2 contact sheet); blink closed lash lines, happy ^ ^ + bigger smile + rosier blush; cap cross crisp on all 3",
+    "style_match": "Block C carried verbatim (verified programmatically EXACT vs ART_BIBLE.md); delta prefix overrides fur tint + face + accessories per differentiation brief",
+    "edge_before": "rev-1 idle: fringe 9.6% (AA-band 5.27%), right j1/j2/j3p 69/25/17, max 17, stair-runs L4/R5, right-band fringe 14.95%; blink fringe 9.74% right 71/20/15; happy fringe 9.51% right 74/18/18; pixel spikes + stair-steps worst on character right; shadow smear at feet",
+    "edge_after": "fringe 12.84% (AA-band 10.11% smooth falloff), right j1/j2/j3p 62/7/8, max-jump 17 (cap/head boundary), hard01 448 (was 745), band fringe 16.31%; remaining |dx|>=3 all anatomical (cap y10-19, arm-hip y143-145, feet y175-181)",
+    "distinction_vs_jolly": "PASS 6/6 \u2014 (1) fur muted rose-taupe #A2766B mid (#926A60-#C69C8F) vs oatmeal #F1E7D4; (2) eyes larger + closer + higher vs small wide-set; (3) smile wider warm upturned vs thin curve; (4) blush larger lower-outer #E2B7A4; (5) pink pouch kept + ADDED pastel-pink nurse cap w/ white cross (pouch reads plain, cross lives on cap); (6) Block C render language shared (reminiscent) but silhouette+palette+face+accessories owned. Verified from descriptors only \u2014 no jolly image opened as reference this run."
    },
    "spend_usd": 0.01,
-   "fallback": "if export missing, integrator keeps current plush mochi sprites (offline-safe)"
+   "fallback": "if export missing, integrator keeps current plush mochi sprites (offline-safe)",
+   "refine_run": "mascot-refinement-2026-10-29",
+   "source_file_rev1": "mochi-reboot-idle-20261028-231805-1.png",
+   "prompt_full_rev1": "Using the attached reference images for the character's 3D render style, oatmeal fleece texture, and chibi proportions, create the mascot Mochi: the same oatmeal-cream fleece body and smooth porcelain face plate as the references, standing facing forward with stubby mitten arms relaxed at its sides and nub feet planted, bead eyes open, gentle smile, one small plain pink belly pouch centered on the belly, no costume, no props, no sunglasses, no sign, no suitcase, no logos, no text. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
+   "export_sha256_rev1": "65827ca6607125350788918feefc5ab6effdbf524050fe1cbbd0b8f5e349599c",
+   "master_rev1_backup": "art/source/mochi-reboot/mochi-reboot-idle-master-rev1.png",
+   "palette_measured": {
+    "fur_mid": "#A2766B",
+    "fur_range": "#926A60-#C69C8F",
+    "plate": "#F5E0C8",
+    "eye": "#1A1714",
+    "blush": "#E2B7A4",
+    "smile": "#805446",
+    "cap_pink": "#E6B2B0",
+    "pouch_pink": "#EBAFAF"
+   },
+   "contact_sheet": "art/contact-sheets/mochi-reboot-poses-v2.png"
   },
   {
    "sprite": "mochi-reboot-blink.png",
    "export": "public/assets/characters/mochi-reboot-blink.png",
    "master": "art/source/mochi-reboot/mochi-reboot-blink-master.png",
-   "source_file": "mochi-reboot-blink-20261028-231834-1.png",
-   "source_tool": "muse-image-mcp edit_image (identity edit of mochi-reboot idle master)",
-   "revision": 1,
+   "source_file": "mochi-refine-blink-20261028-233352-1.png",
+   "source_tool": "muse-image-mcp edit_image (idle: differentiation edit of OUR mochi-reboot-idle-master rev-1; blink/happy: identity edits of rev-2 idle master; NO jolly-* image used as reference this run per IP rule)",
+   "revision": 2,
    "direction": "reboot-2026-10-29",
    "status": "current",
    "dimensions": "192x192",
-   "frame": "blink (eyes closed, identity-matched edit of reboot idle master)",
-   "prompt_full": "Edit this mascot sprite into a blink variant: change ONLY the eyes \u2014 both eyes closed, each closed eye a single short dark curved lash line sitting in exactly the same position as the open bead eyes. Keep everything else EXACTLY the same: same oatmeal fleece body, same porcelain face plate, same blush, same smile, same arms, legs, and pink belly pouch, same body position, size, framing, and warm-white background. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
-   "prompt_hash_sha256": "666f0fd3f8d682d388f02defcf70b3203f9568a919e604da52448d5fe60e4e32",
-   "export_sha256": "1df68892ca6ea44b679f23fd4312b7936a13315738b7fa6195404622f29bf268",
+   "frame": "blink rev2 (eyes closed, identity edit of rev-2 idle master)",
+   "prompt_full": "Edit this Mochi mascot sprite into a blink variant: change ONLY the eyes \u2014 both eyes closed, each closed eye a single short dark curved lash line sitting in exactly the same position as the open bead eyes. Keep everything else EXACTLY the same: same muted rose-taupe fleece, same warm-cream porcelain face plate, same blush, same smile, same arms, legs, pink belly pouch, and pastel-pink nurse cap with white cross, same body position, size, framing, and warm-white background. Clean smooth silhouette with gentle antialiased falloff, no jagged edges, no halo. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
+   "prompt_hash_sha256": "f128bcb4f441ac3a85c4381c8701f84b6889b77db28f103a0585fe669ea35ec5",
+   "export_sha256": "04828c3ea1ddb35150bd79f24fa7fdc9b6e87b3fa048a2036d0bb585b8823fdf",
    "opacity_check": {
     "bbox": [
      25,
      9,
-     167,
+     165,
      182
     ],
-    "opaque_ratio": 0.4449,
+    "opaque_ratio": 0.4242,
+    "opaque_ratio_def": "alpha>=128 over 192x192",
     "corners_transparent": true,
     "pad_px": {
      "left": 25,
      "top": 9,
-     "right": 24,
+     "right": 26,
      "bottom": 9
     }
    },
    "foot_anchor": "bottom-center (Phaser origin 0.5,1.0); union-crop window shared by all 3 poses, bottom-aligned at export row 184",
    "validation": {
     "dimensions": "192x192 RGBA exact",
-    "alpha": "border flood-fill keyout tol=28 from bg median on 1600x1600 master; corners transparent; between-legs gap keyed",
-    "bbox_vs_idle": "blink [25, 9, 167, 182] vs idle [24, 9, 168, 183]: delta [1, 0, 1, 1]; opaque ratio 0.4449 vs 0.4489",
-    "identity_match": "same pouch/fur/pose/scale by eye (see mochi-reboot-poses contact sheet); blink left eye has slight lash flick, accepted",
-    "style_match": "Block C carried verbatim; oatmeal fleece + porcelain plate + no outline match jolly refs (visual)"
+    "alpha": "border flood-fill keyout thresh=32 from 8 edge seeds on 1600x1600 master + binary-opening despeckle; edge-band-only despill (<=2px of transparent); NO interior despill (rev-2 pipeline fix: interior despill ate the face plate + cap in a draft); shadow-ectomy below y=1350 keeps foot-fur only; LANCZOS to shared union window (246,112,1353,1476 master px), scale-to-height-176, bottom row 184, centered-x; corners alpha 0",
+    "bbox_vs_idle": "rev-2 blink [25,9,165,182] vs rev-2 idle [25,9,165,182]: delta [0,0,0,0]; opaque ratio 0.4242 vs 0.4254. Vs REV-1 idle [24,9,168,183]: delta [1,0,3,1] \u2014 DELIBERATE silhouette delta recorded: nurse cap added (top refit absorbs it), baked floor shadow removed (code shadow ellipse remains), right fur edge 3px tighter; left/top/bottom within rev-1 tolerance",
+    "identity_match": "same rose-taupe fur/cap/pouch/pose/scale across 3 poses by eye (see mochi-reboot-poses-v2 contact sheet); blink closed lash lines, happy ^ ^ + bigger smile + rosier blush; cap cross crisp on all 3",
+    "style_match": "Block C carried verbatim (verified programmatically EXACT vs ART_BIBLE.md); delta prefix overrides fur tint + face + accessories per differentiation brief",
+    "edge_before": "rev-1 idle: fringe 9.6% (AA-band 5.27%), right j1/j2/j3p 69/25/17, max 17, stair-runs L4/R5, right-band fringe 14.95%; blink fringe 9.74% right 71/20/15; happy fringe 9.51% right 74/18/18; pixel spikes + stair-steps worst on character right; shadow smear at feet",
+    "edge_after": "fringe 12.78% (AA-band 10.17%), right 59/9/6, max 19, hard01 427, band 16.33%",
+    "distinction_vs_jolly": "PASS 6/6 \u2014 (1) fur muted rose-taupe #A2766B mid (#926A60-#C69C8F) vs oatmeal #F1E7D4; (2) eyes larger + closer + higher vs small wide-set; (3) smile wider warm upturned vs thin curve; (4) blush larger lower-outer #E2B7A4; (5) pink pouch kept + ADDED pastel-pink nurse cap w/ white cross (pouch reads plain, cross lives on cap); (6) Block C render language shared (reminiscent) but silhouette+palette+face+accessories owned. Verified from descriptors only \u2014 no jolly image opened as reference this run."
    },
    "spend_usd": 0.01,
-   "fallback": "if export missing, integrator keeps current plush mochi sprites (offline-safe)"
+   "fallback": "if export missing, integrator keeps current plush mochi sprites (offline-safe)",
+   "refine_run": "mascot-refinement-2026-10-29",
+   "source_file_rev1": "mochi-reboot-blink-20261028-231834-1.png",
+   "prompt_full_rev1": "Edit this mascot sprite into a blink variant: change ONLY the eyes \u2014 both eyes closed, each closed eye a single short dark curved lash line sitting in exactly the same position as the open bead eyes. Keep everything else EXACTLY the same: same oatmeal fleece body, same porcelain face plate, same blush, same smile, same arms, legs, and pink belly pouch, same body position, size, framing, and warm-white background. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
+   "export_sha256_rev1": "1df68892ca6ea44b679f23fd4312b7936a13315738b7fa6195404622f29bf268",
+   "master_rev1_backup": "art/source/mochi-reboot/mochi-reboot-blink-master-rev1.png",
+   "palette_measured": {
+    "fur_mid": "#A2766B",
+    "fur_range": "#926A60-#C69C8F",
+    "plate": "#F5E0C8",
+    "eye": "#1A1714",
+    "blush": "#E2B7A4",
+    "smile": "#805446",
+    "cap_pink": "#E6B2B0",
+    "pouch_pink": "#EBAFAF"
+   },
+   "contact_sheet": "art/contact-sheets/mochi-reboot-poses-v2.png"
   },
   {
    "sprite": "mochi-reboot-happy.png",
    "export": "public/assets/characters/mochi-reboot-happy.png",
    "master": "art/source/mochi-reboot/mochi-reboot-happy-master.png",
-   "source_file": "mochi-reboot-happy-20261028-231855-1.png",
-   "source_tool": "muse-image-mcp edit_image (identity edit of mochi-reboot idle master)",
-   "revision": 1,
+   "source_file": "mochi-refine-happy-20261028-233411-1.png",
+   "source_tool": "muse-image-mcp edit_image (idle: differentiation edit of OUR mochi-reboot-idle-master rev-1; blink/happy: identity edits of rev-2 idle master; NO jolly-* image used as reference this run per IP rule)",
+   "revision": 2,
    "direction": "reboot-2026-10-29",
    "status": "current",
    "dimensions": "192x192",
-   "frame": "happy tap-react (closed ^ ^ eyes, bigger smile, rosier blush; same body/pouch)",
-   "prompt_full": "Edit this mascot sprite into a joyful happy tap-reaction: change ONLY the face \u2014 happy closed eyes shaped like ^ ^ (two upward-curved dark arcs), a bigger joyful curved smile, slightly rosier pink blush cheeks. Keep everything else EXACTLY the same: same oatmeal fleece body, same porcelain face plate, same arms, legs, and pink belly pouch, same body position, size, framing, and warm-white background. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
-   "prompt_hash_sha256": "ecd20d3b6d956fb045280bf69c13123e4a61275a27a94a112babb3270863013f",
-   "export_sha256": "66421e3100ab75b3fa49491d265e59dd0e6e31b5d6c52c4a3aa19d2ac46d6f0c",
+   "frame": "happy rev2 (closed ^ ^ eyes, bigger smile, rosier blush; same cap/pouch/fur)",
+   "prompt_full": "Edit this Mochi mascot sprite into a joyful happy tap-reaction: change ONLY the face \u2014 happy closed eyes shaped like ^ ^ (two upward-curved dark arcs), a bigger joyful closed curved smile, slightly rosier pink blush cheeks. Keep everything else EXACTLY the same: same muted rose-taupe fleece, same warm-cream porcelain face plate, same arms, legs, pink belly pouch, and pastel-pink nurse cap with white cross, same body position, size, framing, and warm-white background. Clean smooth silhouette with gentle antialiased falloff, no jagged edges, no halo. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
+   "prompt_hash_sha256": "a61b8057c7af8f2344f333520d68ebf349b58001bfab29df1118f417f64ed165",
+   "export_sha256": "8da2ad3783ae3e1d1d947fb27976500b7fb74999a230e863197d33a3d9ad84e0",
    "opacity_check": {
     "bbox": [
-     24,
-     8,
-     167,
+     25,
+     9,
+     165,
      182
     ],
-    "opaque_ratio": 0.4483,
+    "opaque_ratio": 0.4231,
+    "opaque_ratio_def": "alpha>=128 over 192x192",
     "corners_transparent": true,
     "pad_px": {
-     "left": 24,
-     "top": 8,
-     "right": 24,
+     "left": 25,
+     "top": 9,
+     "right": 26,
      "bottom": 9
     }
    },
    "foot_anchor": "bottom-center (Phaser origin 0.5,1.0); union-crop window shared by all 3 poses, bottom-aligned at export row 184",
    "validation": {
     "dimensions": "192x192 RGBA exact",
-    "alpha": "border flood-fill keyout tol=28 from bg median on 1600x1600 master; corners transparent; between-legs gap keyed",
-    "bbox_vs_idle": "happy [24, 8, 167, 182] vs idle [24, 9, 168, 183]: delta [0, 1, 1, 1]; opaque ratio 0.4483 vs 0.4489",
-    "identity_match": "same pouch/fur/pose/scale by eye (see mochi-reboot-poses contact sheet); blink left eye has slight lash flick, accepted",
-    "style_match": "Block C carried verbatim; oatmeal fleece + porcelain plate + no outline match jolly refs (visual)"
+    "alpha": "border flood-fill keyout thresh=32 from 8 edge seeds on 1600x1600 master + binary-opening despeckle; edge-band-only despill (<=2px of transparent); NO interior despill (rev-2 pipeline fix: interior despill ate the face plate + cap in a draft); shadow-ectomy below y=1350 keeps foot-fur only; LANCZOS to shared union window (246,112,1353,1476 master px), scale-to-height-176, bottom row 184, centered-x; corners alpha 0",
+    "bbox_vs_idle": "rev-2 happy [25,9,165,182] vs rev-2 idle [25,9,165,182]: delta [0,0,0,0]; opaque ratio 0.4231 vs 0.4254. Vs REV-1 idle [24,9,168,183]: delta [1,0,3,1] \u2014 DELIBERATE silhouette delta recorded: nurse cap added (top refit absorbs it), baked floor shadow removed (code shadow ellipse remains), right fur edge 3px tighter; left/top/bottom within rev-1 tolerance",
+    "identity_match": "same rose-taupe fur/cap/pouch/pose/scale across 3 poses by eye (see mochi-reboot-poses-v2 contact sheet); blink closed lash lines, happy ^ ^ + bigger smile + rosier blush; cap cross crisp on all 3",
+    "style_match": "Block C carried verbatim (verified programmatically EXACT vs ART_BIBLE.md); delta prefix overrides fur tint + face + accessories per differentiation brief",
+    "edge_before": "rev-1 idle: fringe 9.6% (AA-band 5.27%), right j1/j2/j3p 69/25/17, max 17, stair-runs L4/R5, right-band fringe 14.95%; blink fringe 9.74% right 71/20/15; happy fringe 9.51% right 74/18/18; pixel spikes + stair-steps worst on character right; shadow smear at feet",
+    "edge_after": "fringe 12.86% (AA-band 10.10%), right 61/6/6, max 22, hard01 451, band 16.49%",
+    "distinction_vs_jolly": "PASS 6/6 \u2014 (1) fur muted rose-taupe #A2766B mid (#926A60-#C69C8F) vs oatmeal #F1E7D4; (2) eyes larger + closer + higher vs small wide-set; (3) smile wider warm upturned vs thin curve; (4) blush larger lower-outer #E2B7A4; (5) pink pouch kept + ADDED pastel-pink nurse cap w/ white cross (pouch reads plain, cross lives on cap); (6) Block C render language shared (reminiscent) but silhouette+palette+face+accessories owned. Verified from descriptors only \u2014 no jolly image opened as reference this run."
    },
    "spend_usd": 0.01,
-   "fallback": "if export missing, integrator keeps current plush mochi sprites (offline-safe)"
+   "fallback": "if export missing, integrator keeps current plush mochi sprites (offline-safe)",
+   "refine_run": "mascot-refinement-2026-10-29",
+   "source_file_rev1": "mochi-reboot-happy-20261028-231855-1.png",
+   "prompt_full_rev1": "Edit this mascot sprite into a joyful happy tap-reaction: change ONLY the face \u2014 happy closed eyes shaped like ^ ^ (two upward-curved dark arcs), a bigger joyful curved smile, slightly rosier pink blush cheeks. Keep everything else EXACTLY the same: same oatmeal fleece body, same porcelain face plate, same arms, legs, and pink belly pouch, same body position, size, framing, and warm-white background. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
+   "export_sha256_rev1": "66421e3100ab75b3fa49491d265e59dd0e6e31b5d6c52c4a3aa19d2ac46d6f0c",
+   "master_rev1_backup": "art/source/mochi-reboot/mochi-reboot-happy-master-rev1.png",
+   "palette_measured": {
+    "fur_mid": "#A2766B",
+    "fur_range": "#926A60-#C69C8F",
+    "plate": "#F5E0C8",
+    "eye": "#1A1714",
+    "blush": "#E2B7A4",
+    "smile": "#805446",
+    "cap_pink": "#E6B2B0",
+    "pouch_pink": "#EBAFAF"
+   },
+   "contact_sheet": "art/contact-sheets/mochi-reboot-poses-v2.png"
   }
  ],
  "backgrounds": [
@@ -374,11 +434,14 @@
  "props_contact_sheet": "art/contact-sheets/props-contact-sheet.png",
  "props_spend_usd": 0.05,
  "props_spend_note": "4 final images (2 gen + 2 edit) x $0.01 + $0.01 probe generation after tool-arg failures; ledger ~$0.1144 cumulative; at >= $120 STOP - not reached",
- "reboot_character": "Mochi (Jolly-style: oatmeal fleece #F1E7D4 family + porcelain face plate, pink belly pouch, no outline)",
+ "reboot_character": "Mochi rev-2 (owned identity: muted rose-taupe fur #A2766B family + warm-cream plate #F5E0C8, pink belly pouch + pastel-pink nurse cap w/ white cross, larger closer-higher eyes, wider warm smile, lower-outer blush; no outline)",
  "reboot_contact_sheets": [
-  "art/contact-sheets/mochi-reboot-poses.png",
+  "art/contact-sheets/mochi-reboot-poses-v2.png (current rev-2)",
+  "art/contact-sheets/mochi-reboot-poses.png (rev-1 evidence, superseded art)",
   "art/contact-sheets/bg-reboot-contact-sheet.png"
  ],
  "reboot_spend_usd": 0.04,
- "reboot_spend_note": "4 images (1 bg gen + 1 ref-guided idle + 2 identity edits) x $0.01; ledger ~$0.1644 cumulative; at >= $120 STOP - not reached"
+ "reboot_spend_note": "4 images (1 bg gen + 1 ref-guided idle + 2 identity edits) x $0.01; ledger ~$0.1644 cumulative; at >= $120 STOP - not reached",
+ "refine_spend_usd": 0.03,
+ "refine_spend_note": "3 images (1 differentiation idle + 2 identity edits) x $0.01; ledger ~$0.1944 cumulative; at >= $120 STOP - not reached"
 }

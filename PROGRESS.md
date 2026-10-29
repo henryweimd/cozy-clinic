@@ -620,3 +620,102 @@ idle + tapped states, zero console errors. Element-by-element
   confirm Jolly Mochi reads cute on the photo plate, rug
   grounding holds, no haze from overlays, happy/blink clean).
   No commit/push (main agent merges). STOP after CHECKPOINT.md.
+
+## Active chunk: mascot refinement (Mochi distance-from-Jolly + edge fix)
+
+- MASCOT-REFINE OWNERSHIP (declared BEFORE editing, per AGENTS.md
+  workflow law): the mascot-refinement agent owns
+  `public/assets/characters/mochi-reboot-*.png` (refined bytes),
+  `art/contact-sheets/mochi-reboot-poses.png` (refresh or v2),
+  `art/manifest.json` mascot entries ONLY, and
+  `docs/CHARACTER_BIBLE.md` differentiation-section edits ONLY.
+  Nobody else writes those paths this run. NO bg / scene-code
+  edits (`public/assets/room/*`, `src/*` untouched). Base ref is
+  OUR `mochi-reboot-idle.png` master ONLY — no `jolly-*` image
+  used as generation/edit reference this run (IP rule).
+- EDGE-DEFECT BEFORE-NUMBERS (current rev-1 exports, 192x192 RGBA;
+  script `/tmp/edge_metrics.py`; fringe = alpha 1..254 over alpha>0;
+  j2/j3p = silhouette row-to-row jumps >=2 / >=3px; band = x>=60%w):
+  idle: fringe 9.6% (AA-band 5.27%), right j1/j2/j3p 69/25/17,
+  max-jump 17, stair-runs L4/R5, right-band fringe 14.95%;
+  blink: fringe 9.74%, right 71/20/15, max 17, runs L5/R7,
+  band 15.02%; happy: fringe 9.51%, right 74/18/18, max 16,
+  runs L6/R9, band 14.52%. Corners alpha 0 (good), halo 0.
+  Visual: pixel spikes + stair-steps along the fur silhouette,
+  worst on the character's right side; floor-shadow smear
+  partially keyed into a white fringe at the feet. Crops:
+  `/tmp/mochi-rightside-before.png`, `/tmp/mochi-fringe-before.png`.
+- MASCOT-REFINE RESULT (2026-10-29): Mochi rev-2 ships — owned
+  identity at distance from Jolly + smooth edges. 3 images x
+  $0.01 = $0.03 this workstream (ledger ~$0.1944, $120 STOP far
+  off). Idle = differentiation edit of OUR rev-1 idle master;
+  blink/happy = identity edits of the rev-2 idle master. NO
+  `jolly-*` image used as reference (IP rule; distinction
+  verified from descriptors only, 6/6 PASS in manifest).
+  Deltas: muted rose-taupe fur (mid `#A2766B`), larger
+  closer-higher eyes, wider warm smile, lower-outer blush,
+  plain pink pouch KEPT + ADDED pastel-pink nurse cap w/ white
+  cross (cross moved off the pouch — resolves P3 question).
+  Exports `mochi-reboot-<idle,blink,happy>.png` 192x192 RGBA:
+  pad 25/9/26/9, corners alpha 0, bbox IDENTICAL [25,9,165,182]
+  across all 3 (delta 0). Vs rev-1 idle [24,9,168,183]:
+  [1,0,3,1] — DELIBERATE delta (cap added, baked shadow
+  removed, right fur 3px tighter). Edge AFTER (idle): right
+  j2+j3p 42->15, hard01 745->448, AA-band 5.27%->10.11%
+  smooth falloff; every remaining |dx|>=3 is anatomical
+  (cap/arm-hip/feet). Pipeline: flood-fill keyout + despeckle
+  + edge-band-only despill + shadow-ectomy below y=1350
+  (shadow-shape variance was the parity breaker; code ellipse
+  still grounds Mochi). Two draft defects caught and fixed:
+  interior despill ate the face/cap (restricted to edge band),
+  one stray top-edge pixel wrecked the union (despeckle).
+  Sheet `mochi-reboot-poses-v2.png` (poses + checker row);
+  rev-1 sheet kept as evidence. Manifest rev-2 entries carry
+  FULL prompt text + prompt/export sha256 + before/after
+  metrics + measured palette; bible gains Differentiation IP
+  law + delta table + Supabase-aligned roster columns (name,
+  persona, fur_shade, facial_features, accessories/clothing —
+  sketch only, no DB work). Rev-1 masters backed up as
+  `*-master-rev1.png`. Integrator notes: (1) same 192 class +
+  foot anchor, no code change needed; (2) char reads a touch
+  larger (tighter union, cap included) — confirm 212px display
+  on device; (3) single grounding shadow now (code ellipse
+  only). In-game render check needs deploy + operator phone
+  playtest. No bg/scene-code edits (untouched).
+
+## Active chunk: mascot refinement (refinement-integrator workstream)
+
+- REFINE-INTEGRATOR OWNERSHIP (declared BEFORE editing, per AGENTS.md
+  workflow law): the refinement integrator owns
+  `src/scenes/ClinicScene.ts` header-comment touch ONLY,
+  `PROGRESS.md`, `CHECKPOINT.md` this run. No `art/*` or
+  `public/assets/*` edits (refinement artist owns those paths);
+  sequential after art, no concurrent writers.
+- REFINE-INTEGRATOR RESULT (integrator, 2026-10-29): art was REAL
+  (3 rev-2 poses verified on disk: 192x192 RGBA, sha8
+  idle 6a2edbb8 / blink 04828c3e / happy 8da2ad37 matching the
+  art result, bbox identical across poses, corners alpha 0).
+  Filenames, texture keys, 192 class, and foot anchor all
+  UNCHANGED — so no preload/geometry/anchor edit: the only
+  scene change is a 3-line header-comment touch recording the
+  rev-2 refinement. Verified preserved in code: Mochi 212px at
+  (270,614), code shadow ellipse at GROUND=724 (now the SOLE
+  grounding shadow — rev-2 removed the baked shadow smear),
+  nametag, bubble 492 wide docked at 936 sizing upward,
+  tap-to-complaint + happy bounce, motion == ANIMATION.md
+  (bob 3px@1.8rad/s, blink 120ms/3-5s, bounce 110ms +-0.06 +
+  80ms +-0.03 Sine, token-guarded). No clinical-copy change.
+- Tests/build: `npm test` 29/29 pass; `npm run build` green
+  (tsc + vite; rev-2 poses bundled into dist; only the known
+  benign public/font-URL warning). Zero refinement
+  regressions — no fixes needed.
+- Spend: integrator image spend $0.00 (no generations). Ledger
+  stays ~$0.1944. Next $20 gate far off; at >= $120, STOP —
+  not reached.
+- Not done by integrator: deploy + operator phone playtest
+  (headless screenshot impossible in sandbox per prior audit;
+  in-game render check needs the deployed URL on a phone —
+  confirm rev-2 Mochi (nurse cap, rose-taupe fur) reads cute
+  on the photo plate at 212px, single-shadow grounding holds,
+  happy/blink clean). No commit/push (main agent merges).
+  STOP after CHECKPOINT.md.
