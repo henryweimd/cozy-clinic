@@ -115,6 +115,14 @@ import type { CastData } from '../data/patients';
  * content variety (diagnose/ask/examine/watchful-waiting) is a
  * queued encounter-variety phase, not this fix.
  *
+ * ROSTER (2026-10-29): Mabel/June/Milo are all playable. The
+ * scene runs an active patient (name -> sprite prefix + speaker
+ * + cast row); tapping a playable waiting row switches the
+ * visit (fresh engine state for THEIR condition, stored root,
+ * rebuilt cards, live nametag). Asthma keeps the fixed demo
+ * card row; other conditions show their first 3 live actions.
+ * Same geometry, same motion, same 212px stage for everyone.
+ *
  * Reboot landmark survey (re-measured from
  * art/contact-sheets/bg-reboot-contact-sheet.png + pixel scans
  * of the plate, 540x960 space): baseboard/wall-floor ~696 at
@@ -170,7 +178,24 @@ const GRADE_COLOR: Record<ChoiceGrade, number> = {
 };
 
 type ViewName = 'waiting' | 'visit' | 'telemed' | 'portal';
-type Speaker = 'MABEL' | 'DR. NORA' | 'YOU';
+type Speaker = 'MABEL' | 'JUNE' | 'MILO' | 'DR. NORA' | 'YOU';
+
+/**
+ * Playable cast (roster phase): display name -> sprite texture
+ * prefix. Mabel keeps the `mabel-*` keys (files stay `mochi-*`
+ * for stability); June/Milo use their own names.
+ */
+const SPRITE_PREFIX: Record<string, string> = {
+  Mabel: 'mabel',
+  June: 'june',
+  Milo: 'milo',
+};
+
+function speakerFor(patientName: string): Speaker {
+  const key = patientName.trim().toUpperCase();
+  if (key === 'JUNE' || key === 'MILO' || key === 'MABEL') return key;
+  return 'MABEL';
+}
 /**
  * SAY vs TELL (chrome-3): 'say' = direct speech in the speaker's
  * own voice (quoted + tagged); 'tell' = third-person narration
@@ -241,8 +266,10 @@ interface ThreadWidgets {
 
 export class ClinicScene extends Phaser.Scene {
   private roomBg!: Phaser.GameObjects.Image;
-  private mabel!: Phaser.GameObjects.Image;
-  private mabelBaseY = 0;
+  private patient!: Phaser.GameObjects.Image;
+  private patientBaseY = 0;
+  /** Active playable patient (roster phase; Mabel opens). */
+  private activeName = 'Mabel';
   private blinkAt = 0;
   private showingFlash = false;
   private flashToken = 0;
@@ -289,7 +316,7 @@ export class ClinicScene extends Phaser.Scene {
   private chart!: LivingChart;
   private learnList!: LearnList;
   private cast: CastData | null = null;
-  private mabelPatientId: string | null = null;
+  private activePatientId: string | null = null;
   private currentNodeId: string | null = null;
   private currentDepth = 0;
   private extending = false;
@@ -347,6 +374,12 @@ export class ClinicScene extends Phaser.Scene {
     this.load.image('mabel-sick', 'assets/characters/mochi-reboot-sick.png');
     this.load.image('mabel-pained', 'assets/characters/mochi-reboot-pained.png');
     this.load.image('mabel-relieved', 'assets/characters/mochi-reboot-relieved.png');
+    // Roster phase: June + Milo full expression sets (own names).
+    for (const slug of ['june', 'milo']) {
+      for (const frame of ['idle', 'blink', 'happy', 'sick', 'pained', 'relieved']) {
+        this.load.image(`${slug}-${frame}`, `assets/characters/${slug}-${frame}.png`);
+      }
+    }
     // Backdrop plate library: all 8 plates preload locally
     // (offline-safe); keys `plate-<slug>`.
     for (const [slug, file] of Object.entries(PLATE_FILE)) {
@@ -364,7 +397,7 @@ export class ClinicScene extends Phaser.Scene {
     this.drawRoom();
     this.drawLightOverlays();
     this.drawTitle();
-    this.drawMabel();
+    this.drawPatient();
     this.drawConversationPanel();
     this.drawCardRow();
     this.drawPromptTab();
@@ -392,7 +425,7 @@ export class ClinicScene extends Phaser.Scene {
   update(_time: number, delta: number): void {
     // Idle bob: ANIMATION.md — 3px @ 1.8 rad/s, owns mabel.y.
     const t = this.time.now / 1000;
-    this.mabel.y = this.mabelBaseY + Math.sin(t * 1.8) * 3;
+    this.patient.y = this.patientBaseY + Math.sin(t * 1.8) * 3;
 
     // Visit timer: display-only mm:ss readout, urgency feel only —
     // no rewards or penalties read it. Text updates once per second.
@@ -411,14 +444,14 @@ export class ClinicScene extends Phaser.Scene {
     if (this.time.now >= this.blinkAt) {
       if (
         !this.showingFlash &&
-        this.steadyFace() === 'mabel-idle' &&
-        this.mabel.texture.key === 'mabel-idle'
+        this.steadyFace() === `${this.prefix()}-idle` &&
+        this.patient.texture.key === `${this.prefix()}-idle`
       ) {
-        this.mabel.setTexture('mabel-blink');
+        this.patient.setTexture(`${this.prefix()}-blink`);
         this.time.delayedCall(120, () => {
           // A tap/flash during the 120ms window wins; only restore
           // when blink still owns the texture.
-          if (this.mabel.texture.key === 'mabel-blink') {
+          if (this.patient.texture.key === `${this.prefix()}-blink`) {
             this.settleToSteady();
           }
           this.scheduleBlink();
@@ -553,7 +586,7 @@ export class ClinicScene extends Phaser.Scene {
     trigger.on('pointerdown', () => this.onTitleTap());
   }
 
-  private drawMabel(): void {
+  private drawPatient(): void {
     // Mabel stands fully on the painted rug: feet at 720 (~8px
     // inside the rug top ~712) and the fixed shadow ellipse just
     // under GROUND = 724 on the rug, body clear of the baseboard (~696)
@@ -565,11 +598,11 @@ export class ClinicScene extends Phaser.Scene {
 
     // Mabel opens on her steady face for the live state (sick at the
     // stage-2 asthma opener) — idle is one steady state, not the home.
-    this.mabel = this.add.image(270, 614, this.steadyFace());
-    this.mabel.setDisplaySize(212, 212);
-    this.mabel.setDepth(5);
-    this.mabelBaseY = this.mabel.y;
-    this.mabel.setInteractive({ useHandCursor: true });
+    this.patient = this.add.image(270, 614, this.steadyFace());
+    this.patient.setDisplaySize(212, 212);
+    this.patient.setDepth(5);
+    this.patientBaseY = this.patient.y;
+    this.patient.setInteractive({ useHandCursor: true });
 
     this.nametag = this.add
       .text(270, 740, 'Mabel · first patient', {
@@ -580,7 +613,7 @@ export class ClinicScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setDepth(5);
 
-    this.mabel.on('pointerdown', () => this.onMabelTap());
+    this.patient.on('pointerdown', () => this.onPatientTap());
   }
 
   // -- conversation panel (Visit + Telemed; the retired bubble's home) --
@@ -642,7 +675,7 @@ export class ClinicScene extends Phaser.Scene {
     this.panelTag.clear();
     this.panelTagText.setText('');
     if (showTag) {
-      const tagFill = speaker === 'MABEL' ? SAGE : speaker === 'DR. NORA' ? SKY : CARD_FILL;
+      const tagFill = speaker === 'DR. NORA' ? SKY : speaker === 'YOU' ? CARD_FILL : SAGE;
       this.panelTagText.setText(speaker);
       const tagW = this.panelTagText.width + 28;
       this.panelTag.fillStyle(tagFill, 1);
@@ -712,14 +745,14 @@ export class ClinicScene extends Phaser.Scene {
    * opener either way — the stored flesh IS the formula, grown.
    */
   private complaintText(): string {
-    if (this.cast && this.mabelPatientId) {
-      const root = rootNode(this.cast, this.mabelPatientId);
+    if (this.cast && this.activePatientId) {
+      const root = rootNode(this.cast, this.activePatientId);
       if (root) return `${root.narrative}\nThe doctor will see you now.`;
     }
     const def = CONDITIONS[this.patientState.conditionId];
     const stage = def.stages[this.patientState.stageIndex];
     const complaint =
-      `Mabel feels ${stage.label.toLowerCase()}: ${stage.blurb} ${def.plainWords}`;
+      `${this.activeName} feels ${stage.label.toLowerCase()}: ${stage.blurb} ${def.plainWords}`;
     return `${complaint}\nThe doctor will see you now.`;
   }
 
@@ -735,9 +768,24 @@ export class ClinicScene extends Phaser.Scene {
 
   // -- decision card row (Visit + Telemed; REAL tap-resolve path) --
 
+  /** Card ids for the active condition: the fixed asthma demo row, else the first 3 live actions. */
+  private cardRowIds(): readonly string[] {
+    if (this.patientState.conditionId === 'asthma') return CARD_ROW_IDS;
+    return this.engine
+      .listActions(this.patientState.conditionId)
+      .slice(0, 3)
+      .map((a) => a.id);
+  }
+
   private drawCardRow(): void {
     this.cardRow = this.add.container(0, 0, []).setDepth(10);
-    CARD_ROW_IDS.forEach((actionId, i) => {
+    this.buildCards();
+  }
+
+  /** (Re)builds the tappable cards; the prompt tab is re-added by drawPromptTab. */
+  private buildCards(): void {
+    this.cards = [];
+    this.cardRowIds().forEach((actionId, i) => {
       const def = CONDITIONS[this.patientState.conditionId];
       const action = def.actions.find((a) => a.id === actionId);
       const label = action ? action.label : actionId;
@@ -929,13 +977,13 @@ export class ClinicScene extends Phaser.Scene {
       this.currentNodeId = stored.node.id;
       this.currentDepth = stored.node.depth;
       this.setConversation(
-        'MABEL',
+        speakerFor(this.activeName),
         `${stored.node.narrative} ${stored.node.teaching}`,
         'tell',
       );
     } else {
       this.setConversation(
-        'MABEL',
+        speakerFor(this.activeName),
         `${result.node.narrative} ${result.node.teaching}`,
         'tell',
       );
@@ -951,11 +999,11 @@ export class ClinicScene extends Phaser.Scene {
    */
   private async growTree(): Promise<void> {
     if (this.extending) return;
-    if (!this.cast || !this.mabelPatientId || !this.currentNodeId) return;
+    if (!this.cast || !this.activePatientId || !this.currentNodeId) return;
     this.extending = true;
     try {
       const children = childSpecs(this.engine, this.patientState, this.currentDepth + 1);
-      const grown = await extendTree(this.mabelPatientId, this.currentNodeId, children);
+      const grown = await extendTree(this.activePatientId, this.currentNodeId, children);
       if (grown) {
         this.cast = mergeExtension(this.cast, grown.nodes, grown.edges);
         this.ticker.setLines([
@@ -968,29 +1016,71 @@ export class ClinicScene extends Phaser.Scene {
     }
   }
 
+  /**
+   * Switch the visit to another playable patient (roster phase):
+   * fresh engine state for THEIR condition, fresh trajectory
+   * cursor, fresh face/cards/nametag. Mabel/June/Milo only —
+   * anyone else never reaches here (waiting tap guards).
+   */
+  private switchPatient(name: string): void {
+    if (SPRITE_PREFIX[name] === undefined) return;
+    this.activeName = name;
+    const row = this.cast ? patientByName(this.cast, name) : null;
+    const cond = row?.condition_id;
+    if (
+      cond === 'asthma' || cond === 'viral-respiratory' ||
+      cond === 'dehydration' || cond === 'hypertension'
+    ) {
+      this.patientState = this.engine.initialState(cond);
+    } else {
+      this.patientState = this.engine.initialState(this.patientState.conditionId);
+    }
+    this.revealedStage = this.patientState.stageIndex;
+    this.activePatientId = row?.id ?? null;
+    const root = row && this.cast ? rootNode(this.cast, row.id) : null;
+    this.currentNodeId = root?.id ?? null;
+    this.currentDepth = 0;
+    this.patient.setTexture(this.steadyFace());
+    this.nametag.setText(`${name} · ${row?.persona ?? 'first patient'}`);
+    this.cardRow.removeAll(true);
+    this.buildCards();
+    this.drawPromptTab();
+    this.closeConversation();
+    this.refreshChips();
+    this.refreshHud();
+    this.showView('visit');
+    this.showToast(`${name} is with you!`);
+  }
+
   // -- expression state machine (ANIMATION.md normative) --
+
+  /** Sprite texture prefix for the active patient. */
+  private prefix(): string {
+    return SPRITE_PREFIX[this.activeName] ?? 'mabel';
+  }
 
   /** Steady face for the LIVE state: stage map + vitals shift. */
   private steadyFace(): string {
-    const ladder = ['mabel-relieved', 'mabel-idle', 'mabel-sick', 'mabel-pained'];
+    const p = this.prefix();
+    const ladder = [`${p}-relieved`, `${p}-idle`, `${p}-sick`, `${p}-pained`];
     let idx = Math.min(3, Math.max(0, this.patientState.stageIndex));
     const v = this.patientState.vitals;
     // One rule: ANY vital <= 2 shifts one step worse (floor pained).
     if (v.energy <= 2 || v.comfort <= 2 || v.breathing <= 2) {
       idx = Math.min(3, idx + 1);
     }
-    return ladder[idx] ?? 'mabel-idle';
+    return ladder[idx] ?? `${p}-idle`;
   }
 
   /** Every flash settles here — the steady map, never hard-coded idle. */
   private settleToSteady(): void {
-    this.mabel.setTexture(this.steadyFace());
+    this.patient.setTexture(this.steadyFace());
   }
 
   /** HOLD steady: no flash, no bounce — the face reflects state. */
   private holdSteady(): void {
     if (this.showingFlash) return;
-    if (this.mabel.texture.key === 'mabel-blink') return;
+    if (this.patient.texture.key === `${this.prefix()}-blink`) return;
     this.settleToSteady();
   }
 
@@ -998,12 +1088,12 @@ export class ClinicScene extends Phaser.Scene {
   private playResolveFlash(cue: TrajectoryNode['animationCue']): void {
     if (cue === 'happy') {
       // Full recovery: happy + standard bounce, then settle relieved.
-      this.playBounceFlash('mabel-happy');
+      this.playBounceFlash(`${this.prefix()}-happy`);
       return;
     }
     if (cue === 'recovery') {
       // Partial improvement: relieved flash + standard bounce.
-      this.playBounceFlash('mabel-relieved');
+      this.playBounceFlash(`${this.prefix()}-relieved`);
       return;
     }
     if (cue === 'sick') {
@@ -1017,11 +1107,11 @@ export class ClinicScene extends Phaser.Scene {
 
   // -- shared tap-resolve motion (ANIMATION.md exact, both tap paths) --
 
-  private onMabelTap(): void {
+  private onPatientTap(): void {
     if (this.adminOpen) return;
     if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
     if (!this.panelOpen) {
-      this.setConversation('MABEL', this.complaintText(), 'tell');
+      this.setConversation(speakerFor(this.activeName), this.complaintText(), 'tell');
       // Happy tap-react: show the happy pose for the bounce, then
       // settle to steady. The token guards rapid re-taps so a stale
       // bounce never clears a newer flash.
@@ -1032,7 +1122,7 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   private playHappyBounce(): void {
-    this.playBounceFlash('mabel-happy');
+    this.playBounceFlash(`${this.prefix()}-happy`);
   }
 
   /**
@@ -1043,13 +1133,13 @@ export class ClinicScene extends Phaser.Scene {
    * Settles to the STEADY-map face; the monotonic token guards
    * both onCompletes so a stale bounce never clears a newer flash.
    */
-  private playBounceFlash(face: 'mabel-happy' | 'mabel-relieved'): void {
+  private playBounceFlash(face: string): void {
     this.flashToken += 1;
     const token = this.flashToken;
     this.showingFlash = true;
-    this.mabel.setTexture(face);
+    this.patient.setTexture(face);
     this.tweens.add({
-      targets: this.mabel,
+      targets: this.patient,
       scaleY: '-=0.06',
       scaleX: '+=0.06',
       duration: 110,
@@ -1058,7 +1148,7 @@ export class ClinicScene extends Phaser.Scene {
       onComplete: () => {
         if (token !== this.flashToken) return;
         this.tweens.add({
-          targets: this.mabel,
+          targets: this.patient,
           scaleY: '+=0.03',
           scaleX: '-=0.03',
           duration: 80,
@@ -1067,7 +1157,7 @@ export class ClinicScene extends Phaser.Scene {
           onComplete: () => {
             if (token !== this.flashToken) return;
             this.showingFlash = false;
-            if (this.mabel.texture.key === face) {
+            if (this.patient.texture.key === face) {
               this.settleToSteady();
             }
           },
@@ -1085,10 +1175,10 @@ export class ClinicScene extends Phaser.Scene {
     this.flashToken += 1;
     const token = this.flashToken;
     this.showingFlash = true;
-    this.mabel.setTexture('mabel-pained');
+    this.patient.setTexture(`${this.prefix()}-pained`);
     this.time.delayedCall(600, () => {
       if (token !== this.flashToken) return;
-      if (this.mabel.texture.key !== 'mabel-pained') return;
+      if (this.patient.texture.key !== `${this.prefix()}-pained`) return;
       this.showingFlash = false;
       this.settleToSteady();
     });
@@ -1338,9 +1428,15 @@ export class ClinicScene extends Phaser.Scene {
           yoyo: true,
           ease: 'Sine.easeInOut',
         });
-        this.showToast(
-          here ? 'Mabel is already with you!' : `${entry.name} isn't playable yet (mock)`,
-        );
+        if (SPRITE_PREFIX[entry.name] !== undefined) {
+          if (entry.name === this.activeName) {
+            this.showToast(`${entry.name} is already with you!`);
+          } else {
+            this.switchPatient(entry.name);
+          }
+        } else {
+          this.showToast(`${entry.name} isn't playable yet (mock)`);
+        }
       });
       row.add(zone);
       this.waitingView.add(row);
@@ -1717,7 +1813,7 @@ export class ClinicScene extends Phaser.Scene {
       if (this.adminOpen) return;
       if (this.currentView !== 'visit') return;
       if (this.chart.open) this.chart.hide();
-      else this.chart.show('Mabel', this.patientState.memory);
+      else this.chart.show(this.activeName, this.patientState.memory);
     });
 
     // Learning List: book button in the strip (waiting/portal).
@@ -1731,9 +1827,9 @@ export class ClinicScene extends Phaser.Scene {
     // the loaded trees instantly — never mid-tap network.
     void loadCast().then((cast) => {
       this.cast = cast;
-      const mabel = patientByName(cast, 'Mabel');
-      this.mabelPatientId = mabel?.id ?? null;
-      const root = mabel ? rootNode(cast, mabel.id) : null;
+      const me = patientByName(cast, this.activeName);
+      this.activePatientId = me?.id ?? null;
+      const root = me ? rootNode(cast, me.id) : null;
       this.currentNodeId = root?.id ?? null;
       this.currentDepth = 0;
       this.ticker.setLines([
@@ -1742,7 +1838,7 @@ export class ClinicScene extends Phaser.Scene {
       ]);
       // The opener complaint re-reads live on next tap.
       if (this.panelOpen) {
-        this.setConversation('MABEL', this.complaintText(), 'tell');
+        this.setConversation(speakerFor(this.activeName), this.complaintText(), 'tell');
       }
     });
   }
@@ -1822,7 +1918,7 @@ export class ClinicScene extends Phaser.Scene {
         ease: 'Sine.easeInOut',
       });
     }
-    this.syncMabelInput();
+    this.syncPatientInput();
   }
 
   private fadeSwap(
@@ -1860,13 +1956,13 @@ export class ClinicScene extends Phaser.Scene {
     });
   }
 
-  private syncMabelInput(): void {
+  private syncPatientInput(): void {
     const want =
       !this.adminOpen && (this.currentView === 'visit' || this.currentView === 'telemed');
-    if (want && !this.mabel.input) {
-      this.mabel.setInteractive({ useHandCursor: true });
-    } else if (!want && this.mabel.input) {
-      this.mabel.disableInteractive();
+    if (want && !this.patient.input) {
+      this.patient.setInteractive({ useHandCursor: true });
+    } else if (!want && this.patient.input) {
+      this.patient.disableInteractive();
     }
   }
 
@@ -2000,7 +2096,7 @@ export class ClinicScene extends Phaser.Scene {
     this.adminOpen = true;
     this.padEntry = '';
     this.updatePadDots();
-    this.syncMabelInput();
+    this.syncPatientInput();
     this.pad.setVisible(true).setAlpha(0);
     this.tweens.add({
       targets: this.pad,
@@ -2021,7 +2117,7 @@ export class ClinicScene extends Phaser.Scene {
         this.pad.setVisible(false);
         if (!toMonitor) {
           this.adminOpen = false;
-          this.syncMabelInput();
+          this.syncPatientInput();
         }
       },
     });
@@ -2101,7 +2197,7 @@ export class ClinicScene extends Phaser.Scene {
       .setOrigin(0, 0);
     this.monitorContent.add(title);
     const rows: [string, string][] = [
-      ['patient:', PROTOTYPE_SEEDS.patientName],
+      ['patient:', this.activeName],
       ['condition:', `${def.name} (${def.id})`],
       ['stage:', `[${this.patientState.stageIndex}] ${stage.label} (${stage.id})`],
       [
@@ -2182,7 +2278,7 @@ export class ClinicScene extends Phaser.Scene {
         this.monitor.setVisible(false);
         this.monitorBackdrop.setVisible(false);
         this.adminOpen = false;
-        this.syncMabelInput();
+        this.syncPatientInput();
       },
     });
   }

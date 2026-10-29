@@ -1453,3 +1453,18 @@ clearance — then a polish fix loop for real findings.
   persist, all expressions read. june-pained v1 moderation-hit
   on "winced/sweat" wording — reworded playful-scrunch r2
   shipped. Manifest now 25 assets. Ledger ~$0.4744.
+
+## Active chunk: playable roster (continuous run)
+
+- ROSTER OWNERSHIP: this phase owns ONLY `src/scenes/ClinicScene.ts`
+  (active-patient generalization + switching), `src/ui/mockData.ts`
+  (cast quote rule), `docs/UI_PROTOTYPE.md` (waiting spec touch),
+  plus PROGRESS.md and CHECKPOINT.md. No engine/backend changes.
+- ROSTER RESULT: June + Milo playable. Scene runs active patient
+  (prefix/speaker/cast lookups); identifiers renamed
+  patient-wide (tsc clean first pass); expressions/blink/bounce
+  prefix-driven; complaint/resolves/chart/monitor follow the
+  active name; cast quote rule covers JUNE/MILO; card rows
+  rebuild per condition (asthma fixed demo row, else first 3
+  live actions); waiting taps switch visits (Theo stays mock).
+  Auditor 0 findings, 48/48, build green. Spend $0.00.

@@ -214,7 +214,7 @@ export const MOCK_PROFILE_LABEL = 'You';
 export function quoteIfSpoken(from: string, me: boolean, text: string): string {
   if (me) return text;
   const key = from.trim().toUpperCase();
-  if (key === 'MABEL' || key === 'DR. NORA' || key === 'DR NORA') {
+  if (key === 'MABEL' || key === 'JUNE' || key === 'MILO' || key === 'DR. NORA' || key === 'DR NORA') {
     return `"${text}"`;
   }
   return text;

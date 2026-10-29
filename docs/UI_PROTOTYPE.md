@@ -194,8 +194,10 @@ VIEW 2 — WAITING ROOM (roster):
   `#8F7364`; NO generated faces this pass), name 22px bold +
   persona 16px secondary (two lines, x130–400), status pill
   right (w~110 h36, 15px): Mabel "VISIT 4 • here", June "waiting",
-  Milo "checked in", Theo "napping". Tap row = squash + toast
-  "Mabel is already with you!" (mock; only Mabel is playable).
+  Milo "checked in", Theo "napping". Tap row = squash, then
+  (roster phase): Mabel/June/Milo rows SWITCH the visit to that
+  patient (fresh state, stored root, rebuilt cards); re-tapping
+  the active patient toasts "already with you"; Theo stays mock.
 - Tap target: full row 460x120.
 
 VIEW 3 — TELEMEDICINE (video-call frame):
