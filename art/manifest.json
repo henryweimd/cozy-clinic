@@ -403,6 +403,50 @@
    "fallback": "if export missing, integrator keeps mabel-idle for that state (offline-safe)",
    "expression_run": "expression-art-2026-10-29",
    "contact_sheet": "art/contact-sheets/mochi-reboot-expressions.png"
+  },
+  {
+   "sprite": "june-idle.png",
+   "export": "public/assets/characters/june-idle.png",
+   "master": "art/source/june/june-idle-master.png",
+   "source_file": "june-idle-20261029-110320-1.png",
+   "source_tool": "muse-image-mcp generate_image (fresh, no reference image, Block C verbatim; NO jolly-* refs per IP rule)",
+   "revision": 1,
+   "direction": "ws-a-2026-10-29",
+   "status": "current",
+   "dimensions": "192x192",
+   "frame": "idle (eyes open; honey-taupe + sage head-scarf + larger blush; baked floor shadow faint, under-feet only)",
+   "prompt_full": "Original chibi mascot character, full body, centered, feet grounded: June, a gentle slightly-shy girl mascot with honey-taupe dense short-pile fleece fur (muted warm tan), smooth matte porcelain face plate in warm cream, slightly LARGER soft diffused pink blush circles placed low and outward on the cheeks, small round glossy black bead eyes with white highlight dots, one thin gentle closed-curve smile, a small sage-green head-scarf tied at the side of her head, stubby mitten arms and nub legs. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
+   "opacity_check": {
+    "bbox": [
+     18,
+     10,
+     173,
+     182
+    ],
+    "opaque_ratio": 0.504
+   }
+  },
+  {
+   "sprite": "milo-idle.png",
+   "export": "public/assets/characters/milo-idle.png",
+   "master": "art/source/milo/milo-idle-master.png",
+   "source_file": "milo-idle-20261029-110408-1.png",
+   "source_tool": "muse-image-mcp generate_image (fresh, no reference image, Block C verbatim; NO jolly-* refs per IP rule)",
+   "revision": 1,
+   "direction": "ws-a-2026-10-29",
+   "status": "current",
+   "dimensions": "192x192",
+   "frame": "idle (eyes open; porcelain-taupe + slate glasses prop + head tilt; warm-beige void keyed by sampled corners; faint under-feet shadow)",
+   "prompt_full": "Original chibi mascot character, full body, centered, feet grounded: Milo, a curious kid mascot with porcelain-taupe dense short-pile fleece fur (muted pale greige), smooth matte porcelain face plate in warm cream, small round glossy black bead eyes with white highlight dots behind small round slate-grey glasses frames (a worn prop sitting on the face, thin arms to the ears), soft diffused pink blush circles, one thin curious tilted smile, stubby mitten arms and nub legs, slight inquisitive head tilt. Soft 3D animated mascot character, chibi egg-shaped body, head and body merged with no neck, dense short-pile oatmeal-cream fleece fur with visible fur strands and soft volumetric shading, smooth matte porcelain face plate inset into the fur, small round glossy black bead eyes with white highlight dots set wide, soft diffused pink blush circles, one thin dark curved smile, stubby mitten arms and nub legs, no fingers or toes, no outline or line art of any kind, no cel shading, soft rim light, soft floor shadow, full body, centered, plain solid warm-white studio void background, game sprite. No text, no busy background, no extra limbs, no open mouth, no outline, no flat 2D, no neon colors, no clutter.",
+   "opacity_check": {
+    "bbox": [
+     13,
+     10,
+     178,
+     178
+    ],
+    "opaque_ratio": 0.419
+   }
   }
  ],
  "backgrounds": [

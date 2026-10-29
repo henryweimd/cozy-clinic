@@ -1373,3 +1373,22 @@ clearance — then a polish fix loop for real findings.
   `src/game/ws-e.test.ts` (6 tests). Scene/submenu wiring at the
   next integration; coin_ledger table replaces local saves.
 - Tests: 48/48; build green. Spend $0.00.
+
+## Active chunk: WS-A June + Milo portraits (long-horizon run)
+
+- WS-A OWNERSHIP (declared BEFORE editing): this phase owns ONLY
+  `public/assets/characters/june-*`, `public/assets/characters/milo-*`,
+  `art/manifest.json` (append 2 entries), `art/contact-sheets/*ws-a*`,
+  `docs/CHARACTER_BIBLE.md` (master refs if missing), plus
+  PROGRESS.md and CHECKPOINT.md. No code, no scene wiring
+  (roster/encounter wiring at the next integration). Cap $0.02.
+- WS-A RESULT: June + Milo idle portraits ship. Fresh generations
+  (no refs, Block C verbatim, $0.02): honey-taupe June + sage
+  scarf + larger blush; porcelain-taupe Milo + slate glasses +
+  head tilt. Key-out: corner-sampled floodfill (June void ~253,
+  Milo void ~240 beige — fixed-threshold r1 REJECTED on Milo,
+  full-frame bbox); exports 192px, pad 9-10, corners clear,
+  opaque 0.504/0.419; contact sheet + 2 manifest entries; bible
+  rows now idle-current. In-game render check pending (no
+  browser) — roster/encounter wiring at next integration.
+- Tests: 48/48; build green. Spend $0.02 (ledger ~$0.3344).

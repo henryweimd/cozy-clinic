@@ -140,7 +140,7 @@ body plan, no new species without a bible amendment.
 | name | persona | fur_shade | facial_features | accessories/clothing |
 |---|---|---|---|---|
 | Mabel (SHIPS) | Warm returning patient; the Living Chart made visible | Rose-taupe `#A2766B` | Larger closer-higher beads; wide warm smile; lower-outer blush | Pink belly pouch + pink nurse cap w/ white cross (fixed) |
-| June (reserved) | Gentle first-timer, slightly shy | Honey-taupe `#C4A484` | Slightly larger blush, gentle | Sage head-scarf |
-| Milo (reserved) | Curious kid, asks questions | Porcelain-taupe `#CDB9A8` | Curious head-tilt in idle (motion) | Round slate glasses (prop, never face paint) |
+| June (idle current) | Gentle first-timer, slightly shy | Honey-taupe `#C4A484` | Slightly larger blush, gentle | Sage head-scarf |
+| Milo (idle current) | Curious kid, asks questions | Porcelain-taupe `#CDB9A8` | Curious head-tilt in idle (motion) | Round slate glasses (prop, never face paint) |
 | Theo (reserved) | Sleepy toddler, slow blinks | Cocoa-taupe `#8F7364` | Sleepier blink cadence (motion) | Butter-yellow knit cap |
 | Dr. Nora (reserved) | Reassuring AI colleague doctor | Rose-taupe `#A2766B` | Reassuring half-smile | White coat + sage scrubs (outfit, same silhouette) |
