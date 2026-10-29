@@ -1359,3 +1359,17 @@ clearance — then a polish fix loop for real findings.
   NOTE: Vercel needs VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY
   env for live reads in prod (else silent fallback — by design).
 - Tests: 42/42; build green. Spend $0.00.
+
+## Active chunk: WS-E economy + undo (long-horizon run)
+
+- WS-E OWNERSHIP (declared BEFORE editing): this phase owns ONLY
+  `src/game/economy.ts`, `src/game/undo.ts`,
+  `src/game/ws-e.test.ts`, plus PROGRESS.md and CHECKPOINT.md.
+  Unwired systems (submenu/HUD wiring at the next integration).
+- WS-E RESULT: unwired economy + undo systems. `src/game/economy.ts`
+  (Care Coins wallet: start 12, earn +1/BEST, spend with no debt,
+  serialize/deserialize with corrupt-save rejection),
+  `src/game/undo.ts` (generic 10-move capped stack, LIFO, clear),
+  `src/game/ws-e.test.ts` (6 tests). Scene/submenu wiring at the
+  next integration; coin_ledger table replaces local saves.
+- Tests: 48/48; build green. Spend $0.00.
