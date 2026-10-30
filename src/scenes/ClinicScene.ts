@@ -77,7 +77,7 @@ import { ProfileEditor } from '../ui/profileEditor';
 import type { ProfileKind } from '../ui/profileEditor';
 import { ShopSheet } from '../ui/shopSheet';
 import { blinkCloseMs, blinkGapMs, bobRate, SPRITE_PREFIX } from '../game/sprites';
-import { takeTrayHint } from '../game/hints';
+import { takeFirstQuizHint, takeTrayHint } from '../game/hints';
 import { clearUndo, emptyUndo, pushMove, undoDepth, undoMove } from '../game/undo';
 import type { UndoStack } from '../game/undo';
 
@@ -1481,14 +1481,19 @@ export class ClinicScene extends Phaser.Scene {
         : roundQuestion(round, tier, this.activeName);
     this.lastQuestion = q;
     this.setConversation(speakerFor(this.activeName), q, 'tell');
-    // First examine quiz ever: point at the tray once (the quiz
-    // options make more sense after the findings). View-gated:
+    // One-shot coaches, at most one toast per question (the
+    // toast replaces, so ordering is the priority). First quiz
+    // ever: teach the tap. First examine quiz after that (second
+    // visit): point at the tray (options make more sense after
+    // the findings). View-gated:
     // resolve beats can land while the player is away, and the
     // tray exists only here. Storage-guarded: blocked browsers
     // stay quiet instead of throwing.
-    if (round === 'examine' && this.isQuizView()) {
+    if (this.isQuizView()) {
       try {
-        if (takeTrayHint(window.localStorage)) {
+        if (takeFirstQuizHint(window.localStorage)) {
+          this.showToast('Tap the best answer below');
+        } else if (round === 'examine' && takeTrayHint(window.localStorage)) {
           this.showToast('Stuck? The exam tray (right edge) holds clues');
         }
       } catch {
