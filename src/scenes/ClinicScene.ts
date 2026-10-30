@@ -460,6 +460,8 @@ export class ClinicScene extends Phaser.Scene {
   private difficulty: 1 | 2 | 3 = PROTOTYPE_SEEDS.difficulty;
   /** Consecutive correct picks this visit (the combo chain). */
   private visitCombo = 0;
+  /** A press animation is mid-flight (double-resolve guard). */
+  private tapping = false;
   /** Daily streak state + one pending day-bonus toast. */
   private streak: StreakState = { ...EMPTY_STREAK };
   private pendingStreak: { day: number; bonus: number } | null = null;
@@ -1249,6 +1251,7 @@ export class ClinicScene extends Phaser.Scene {
     this.revealedStage = snap.state.stageIndex;
     // Rounds rewind too: restore the round + score, rebuild the row.
     this.roundToken += 1;
+    this.tapping = false;
     this.round = snap.round;
     this.roundScore = { ...snap.score };
     this.visitCombo = snap.combo;
@@ -1348,6 +1351,7 @@ export class ClinicScene extends Phaser.Scene {
    * after a Profile tier switch.
    */
   private rebuildCardsForTier(): void {
+    this.tapping = false;
     const saved = this.cards.map((c) => c.revealed);
     this.cardRow.removeAll(true);
     this.buildCards();
@@ -1549,6 +1553,13 @@ export class ClinicScene extends Phaser.Scene {
     // applies). Blocked vetoes don't set revealed, so the player
     // can always pick again after one.
     if (this.cards.some((c) => c.revealed !== null)) return;
+    // The press animation runs 90ms before resolve sets revealed —
+    // without this flag a fast double-tap resolves twice (double
+    // payouts, double engine applies). Cleared on every round
+    // turnover: advance, visit end, veto, undo, tier rebuild,
+    // and patient switch.
+    if (this.tapping) return;
+    this.tapping = true;
     this.lastCardTapMs = this.time.now;
     this.tweens.add({
       targets: card.root,
@@ -1583,6 +1594,7 @@ export class ClinicScene extends Phaser.Scene {
   /** Rebuilds the row for a new round (fresh cards + legend + quiz). */
   private advanceRound(next: VisitRound): void {
     this.roundToken += 1;
+    this.tapping = false;
     this.round = next;
     this.cardRow.removeAll(true);
     this.buildCards();
@@ -1813,6 +1825,7 @@ export class ClinicScene extends Phaser.Scene {
       });
       this.setConversation('YOU', result.blockReason ?? action.hootLine, 'say');
       this.holdSteady();
+      this.tapping = false;
       return;
     }
     this.patientState = result.node.state;
@@ -1880,6 +1893,7 @@ export class ClinicScene extends Phaser.Scene {
    */
   private maybeEndVisit(txBest: boolean): void {
     if (this.visitEnded) return;
+    this.tapping = false;
     this.roundScore.txBest = txBest;
     // Daily streak: the first completion of the day pays the
     // escalating bonus (its toast waits for the next arrival —
@@ -1957,6 +1971,7 @@ export class ClinicScene extends Phaser.Scene {
     this.round = 'examine';
     this.roundScore = { examBest: false, dxCorrect: false, txBest: false };
     this.visitCombo = 0;
+    this.tapping = false;
     const row = this.cast ? patientByName(this.cast, name) : null;
     // Live row first, fallback second (never the previous
     // patient's disease when the cast is slow or missing).

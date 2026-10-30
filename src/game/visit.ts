@@ -79,7 +79,9 @@ export function resultCopy(input: ResultCopyInput): ResultCopy {
   const scoreLine = `${scoreCount(input.score)} of 3 right`;
   if (input.outcome === 'recovered') {
     return {
-      title: 'Great work, Doctor!',
+      // Flawless 3/3 earns its own headline (perfect-visit bonus
+      // lands with it); 2/3 keeps the warm standard praise.
+      title: scoreCount(input.score) === 3 ? 'Flawless visit, Doctor!' : 'Great work, Doctor!',
       lines: [
         `Visit #${input.visitNo} complete`,
         scoreLine,
