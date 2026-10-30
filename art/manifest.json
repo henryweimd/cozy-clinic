@@ -1207,6 +1207,7 @@
   "sign2_run": "wall-signs-subtle-2026-10-29",
   "sign3_note": "Scripted-only revision ($0.00): letters moved down to canvas (270,112) onto the wall + moderate +14 letter lift; single clean pass from sign2 files after a compounding-lift misstep was caught in review; seams verified invisible incl. equalized check. Ledger stays ~$0.55 cumulative.",
   "sign3_contact_sheet": "art/contact-sheets/plates-sign3-2026-10-29.png",
+  "sign4_note": "Sign swap ($0.00): exam-b restored from pristine presign master (painted sign sat too low after the top strip went away); visit header is now a UI wordmark (cocoa text + rules, y90, visit-only). Waiting keeps paint. Ledger stays ~$0.74 cumulative.",
   "theo_spend_usd": 0.07,
   "theo_spend_note": "7 images (idle v1 + reframe attempt + 5 expression edits) x $0.01; ledger ~$0.62 cumulative; at >= $120 STOP - not reached",
   "theo_contact_sheet": "art/contact-sheets/plate-theo.png",

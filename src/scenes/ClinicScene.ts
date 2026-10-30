@@ -400,6 +400,7 @@ export class ClinicScene extends Phaser.Scene {
   private lastNodeId = 'n0';
 
   private devTrigger!: Phaser.GameObjects.Container;
+  private wordmark!: Phaser.GameObjects.Container;
   private nametag!: Phaser.GameObjects.Text;
 
   // Conversation panel (the retired bubble's new home, upper dock).
@@ -813,23 +814,34 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   /**
-   * Wall sign: "Cozy Clinic" hangs ON the clinic wall (a plaque
-   * with hanger rods in the calm wall band y36–92) instead of
-   * floating text. Children are RELATIVE so the admin-tap wiggle
-   * scales about the sign center. Shown on wall-plate views
-   * (waiting/visit/learn), hidden on telemed/portal.
+   * Wordmark + admin trigger. The visit plate lost its painted
+   * sign (it sat too low once the top strip went away), so the
+   * header is a UI element now: small-caps cocoa text with thin
+   * rules, floating in the calm wall band (y58–122), visit-only.
+   * Waiting keeps its painted sign. The invisible 5-tap trigger
+   * rides the same band on wall-plate views as before.
    */
   private drawTitle(): void {
-    // The Cozy Clinic sign is PAINTED into the plates now (art
-    // bible appendix) — no code-drawn plaque. This keeps only
-    // the secret admin trigger: an invisible zone sitting on the
-    // painted sign's screen band (y58–122), still 5 taps, still
-    // no visible hint.
     const trigger = this.add.zone(0, 0, 240, 64);
     trigger.setInteractive({ useHandCursor: false });
     trigger.on('pointerdown', () => this.onDevTrigger());
     this.devTrigger = this.add.container(270, 90, [trigger]);
     this.devTrigger.setDepth(4);
+    const rules = this.add.graphics();
+    rules.lineStyle(2, OUTLINE, 0.5);
+    rules.lineBetween(-140, 0, -68, 0);
+    rules.lineBetween(68, 0, 140, 0);
+    const word = this.add
+      .text(0, 0, 'COZY CLINIC', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '14px',
+        color: COCOA,
+      })
+      .setOrigin(0.5, 0.5)
+      .setAlpha(0.75);
+    this.wordmark = this.add.container(270, 90, [rules, word]);
+    this.wordmark.setDepth(4);
   }
 
   private drawPatient(): void {
@@ -3647,6 +3659,9 @@ export class ClinicScene extends Phaser.Scene {
     this.devTrigger.setVisible(
       next === 'waiting' || next === 'visit' || next === 'learn' || next === 'profile',
     );
+    // The UI wordmark owns visit (its plate lost the painted
+    // sign); waiting keeps paint, other views stay bare.
+    this.wordmark.setVisible(next === 'visit');
     this.syncPanelVisibility();
     const cardY = next === 'telemed' ? -60 : 0;
     if (instant) {

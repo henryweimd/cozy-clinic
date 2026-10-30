@@ -71,7 +71,7 @@ Playable today on the live build; every step works, nothing staged:
 8. Chain straight correct picks for combo pay; finish a visit daily
    for the escalating streak bonus.
 
-Judges' overlay: tap the painted COZY CLINIC wall sign 5 times, enter
+Judges' overlay: tap the COZY CLINIC header 5 times (visit wordmark or waiting wall sign), enter
 the documented code `MABEL`, then `› DEMO` in the staff terminal for
 this script plus the tooling table in-game.
 
@@ -143,7 +143,7 @@ the core of the game — are only possible because generation is this cheap.
   live both ways — handoffs, team tags, preset cheers, 20s
   sync, offline outboxes).
 - **Art:** Jolly-style 3D mascots on clean photorealistic clinic plates
-  (8 backdrops, painted COZY CLINIC wall signs), Baloo 2 vendored offline;
+  (8 backdrops, painted wall signs in waiting, UI wordmark in visit), Baloo 2 vendored offline;
   art law in [`ART_BIBLE.md`](./ART_BIBLE.md).
 - **Quality gates:** full test suite green, `tsc` clean, production build
   green, programmatic layout audit at 0 findings, live deployment verified.
