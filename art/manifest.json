@@ -1204,5 +1204,7 @@
   "sign2_spend_usd": 0.04,
   "sign2_spend_note": "4 images (subtle single-line COZY CLINIC wall lettering redo on exam-a/exam-b/waiting-a/waiting-b) x $0.01; relocated to canvas (270,90) via diff-vs-presign script (/tmp/sign2-move.py) onto pristine presign bases; ledger ~$0.55 cumulative; at >= $120 STOP - not reached",
   "sign2_contact_sheet": "art/contact-sheets/plates-sign2-2026-10-29.png",
-  "sign2_run": "wall-signs-subtle-2026-10-29"
+  "sign2_run": "wall-signs-subtle-2026-10-29",
+  "sign3_note": "Scripted-only revision ($0.00): letters moved down to canvas (270,112) onto the wall + moderate +14 letter lift; single clean pass from sign2 files after a compounding-lift misstep was caught in review; seams verified invisible incl. equalized check. Ledger stays ~$0.55 cumulative.",
+  "sign3_contact_sheet": "art/contact-sheets/plates-sign3-2026-10-29.png"
 }

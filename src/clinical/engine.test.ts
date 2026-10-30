@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ClinicalEngine } from './engine';
-import { CONDITIONS, CONDITION_TIER_NAMES } from './conditions';
+import { CONDITIONS, CONDITION_TIER_NAMES, EXAM_OTHER_FINDING } from './conditions';
 import type { ConditionId } from './types';
 
 const CONDITION_IDS = Object.keys(CONDITIONS) as ConditionId[];
@@ -186,5 +186,21 @@ describe('shipped copy', () => {
       d.examOptions.findIndex((o) => o.id === d.examBestId),
     );
     expect(new Set(examSlots).size).toBeGreaterThan(1);
+  });
+
+  it('pairs each exam quiz with its distinctive finding', () => {
+    // The best step must reveal THE finding worth teaching —
+    // turgor, Centor nodes, wheeze, repeat cuff — and wrong
+    // picks must read as wrong, never as alternate credit.
+    const keywords: Record<ConditionId, string> = {
+      dehydration: 'turgor',
+      'viral-respiratory': 'Centor',
+      asthma: 'whistle',
+      hypertension: 'cuff',
+    };
+    for (const def of Object.values(CONDITIONS)) {
+      expect(def.bestFinding).toContain(keywords[def.id]);
+      expect(EXAM_OTHER_FINDING).not.toContain(keywords[def.id]);
+    }
   });
 });

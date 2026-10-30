@@ -133,8 +133,10 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
 
 - Geometry: x24–516 (w492), y772–846 (h74). Every visit is a
   3-round mini-story, one 3-card row each (w156): EXAMINE (3
-  bedside checks UNIQUE to the case — e.g. a Centor-criterion
-  neck-gland check for sore throat — never a generic maneuver
+  bedside checks UNIQUE to the case — the best step reveals
+  THE distinctive finding worth teaching, e.g. a Centor-node
+  neck-gland check for sore throat or turgor for dehydration,
+  with clearly-wrong distractors — never a generic maneuver
   list), DIAGNOSE (3 tier-worded condition names), TREAT (3
   action cards). Tap target = full card. Undo rewinds rounds
   too (round + score in the snapshot).

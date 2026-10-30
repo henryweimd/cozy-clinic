@@ -1689,3 +1689,22 @@ clearance — then a polish fix loop for real findings.
   exam round is case quizzes now).
 - Verification: auditor 0 findings; 90/90; tsc clean; build green.
 - Spend $0.04 (ledger ~$0.55 cumulative).
+
+## Sign3 + pathognomonic quizzes (2026-10-29)
+
+- OWNERSHIP: 4 room plates, `src/clinical/conditions.ts` +
+  `engine.test.ts`, auditor, UI_PROTOTYPE, manifest note,
+  contact sheet, PROGRESS/CHECKPOINT. No scene changes.
+- Sign: letters moved down onto the wall proper (center
+  y112, kissing the panel top) + moderate contrast lift —
+  subtle but no longer extreme. Scripted-only ($0.00); a
+  compounding-lift misstep was caught by the equalized check
+  and redone as one clean pass from the sign2 files.
+- Exam quizzes rewritten around distinctive findings: turgor,
+  Centor nodes, expiratory wheeze (asthma best is now "Listen
+  for the whistle", peak flow retired), repeat cuff — with
+  clearly-wrong distractors (throat swab / belly sounds / ear
+  peek / ankle check placed where they make no sense). New
+  pairing test locks bestFinding keywords per condition.
+- Verification: auditor 0 findings; 91/91; tsc clean; build green.
+- Spend $0.00 (ledger ~$0.55 cumulative).
