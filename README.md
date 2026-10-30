@@ -42,7 +42,7 @@ path. Never real patient data.
 
 ```bash
 npm install
-npm test        # full suite — must pass (84 tests, green at last update)
+npm test        # full suite — must pass (86 tests, green at last update)
 npm run dev     # serves at http://localhost:5173 — open in a browser
 npm run build   # production build into dist/
 ```
@@ -115,7 +115,8 @@ the core of the game — are only possible because generation is this cheap.
   wallet, Tools/Medicines/Practice), **10-move undo**, exam tool trays,
   chart drawer, signout handoff, dev asset browser, **Profile** tab
   (preset doctor handle over the `players` table; shared-care
-  handoff schema live, compose UI next).
+  handoffs live end to end — notes handle, preset compose,
+  20s inbox sync, offline outbox).
 - **Art:** Jolly-style 3D mascots on clean photorealistic clinic plates
   (8 backdrops, painted COZY CLINIC wall signs), Baloo 2 vendored offline;
   art law in [`ART_BIBLE.md`](./ART_BIBLE.md).
@@ -130,5 +131,5 @@ Docs map: [`docs/UI_PROTOTYPE.md`](./docs/UI_PROTOTYPE.md) (interface spec),
 [`PROGRESS.md`](./PROGRESS.md) (build log).
 
 ---
-*Last verified 2026-10-29 against `main` @ `e2f4e66` (84/84 tests, build green,
+*Last verified 2026-10-29 against `main` @ `4751202` (86/86 tests, build green,
 live URL up).*
