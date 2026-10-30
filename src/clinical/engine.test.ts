@@ -170,12 +170,12 @@ describe('shipped copy', () => {
       expect(new Set(optIds).size).toBe(3);
       expect(optIds).toContain(def.examBestId);
       for (const opt of def.examOptions) expect(opt.label.length).toBeGreaterThan(0);
-      expect(def.bestFinding.length).toBeGreaterThan(0);
       expect(def.dxOptions).toHaveLength(3);
       expect(def.dxOptions).toContain(def.id);
       for (const opt of def.dxOptions) expect(ids).toContain(opt);
-      for (const tier of ['gentle', 'steady', 'expert'] as const) {
+      for (const tier of ['gentle', 'steady', 'clinical', 'expert'] as const) {
         expect(def.examQuiz[tier].length).toBeGreaterThan(20);
+        expect(def.bestFinding[tier].length).toBeGreaterThan(0);
         expect(CONDITION_TIER_NAMES[def.id][tier].length).toBeGreaterThan(0);
       }
     }
@@ -189,27 +189,29 @@ describe('shipped copy', () => {
   });
 
   it('pairs each exam quiz with its distinctive finding', () => {
-    // The best step must reveal THE finding worth teaching —
-    // turgor, Centor nodes, wheeze, repeat cuff — and wrong
-    // picks must read as wrong, never as alternate credit.
-    const keywords: Record<ConditionId, string> = {
-      dehydration: 'turgor',
-      'viral-respiratory': 'Centor',
-      asthma: 'whistle',
-      hypertension: 'cuff',
-    };
-    for (const def of Object.values(CONDITIONS)) {
-      expect(def.bestFinding).toContain(keywords[def.id]);
-      expect(EXAM_OTHER_FINDING).not.toContain(keywords[def.id]);
-    }
-    // Direction lock: the viral case must RULE OUT strep (low
-    // Centor), never reward finding for it — the patient has a
+    // The best step must reveal THE finding worth teaching at
+    // every tier — plain words at gentle (peaked, not strep,
+    // whistles, cuff), clinical terms up top (turgor, Centor).
+    // Wrong picks must read as wrong, never as alternate credit.
+    expect(CONDITIONS.dehydration.bestFinding.gentle).toContain('peaked');
+    expect(CONDITIONS.dehydration.bestFinding.expert).toContain('turgor');
+    expect(CONDITIONS.asthma.bestFinding.gentle).toMatch(/whistl/i);
+    expect(CONDITIONS.asthma.bestFinding.expert).toMatch(/wheeze/i);
+    expect(CONDITIONS.hypertension.bestFinding.gentle).toContain('cuff');
+    expect(CONDITIONS.hypertension.bestFinding.expert).toContain('cuff');
+    expect(EXAM_OTHER_FINDING).not.toMatch(/turgor|Centor|wheeze|cuff/i);
+    // Direction lock: the viral case must RULE OUT strep at
+    // every tier — plain denial at gentle, Centor language
+    // above — never reward finding for it. The patient has a
     // cold. Wrong-direction medicine is a ship-blocker.
     const viral = CONDITIONS['viral-respiratory'];
-    expect(viral.bestFinding).toMatch(/zero Centor|rules out|not strep/i);
-    expect(viral.bestFinding).not.toMatch(/toward strep/i);
-    for (const tier of ['gentle', 'steady', 'expert'] as const) {
-      expect(viral.examQuiz[tier]).toMatch(/rules out strep/i);
+    for (const tier of ['gentle', 'steady', 'clinical', 'expert'] as const) {
+      expect(viral.bestFinding[tier]).toMatch(/zero Centor|Centor 0|not strep/i);
+      expect(viral.bestFinding[tier]).not.toMatch(/toward strep/i);
+    }
+    expect(viral.examQuiz.gentle).toMatch(/just a cold|not strep/i);
+    for (const tier of ['steady', 'clinical', 'expert'] as const) {
+      expect(viral.examQuiz[tier]).toMatch(/rules out strep|excludes strep/i);
     }
   });
 });

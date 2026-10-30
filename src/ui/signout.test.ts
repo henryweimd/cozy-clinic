@@ -42,6 +42,15 @@ describe('signoutLines', () => {
     ]);
   });
 
+  it('spells everything out at clinical tier', () => {
+    expect(signoutLines(MABEL, 'clinical')).toEqual([
+      'Acute visit #4 · 8 year old F',
+      'Reports "wheezy"',
+      'History: Asthma · Medicines: none',
+      MABEL.observation,
+    ]);
+  });
+
   it('handles awkward labels by quoting, not conjugating', () => {
     const high = { ...MABEL, complaint: 'Running High', condition: 'High Blood Pressure' };
     const [, gentleComplaint] = signoutLines(high, 'gentle');
@@ -55,7 +64,7 @@ describe('signoutLines', () => {
   });
 
   it('never repeats the patient name (the nametag owns it)', () => {
-    for (const tier of ['gentle', 'steady', 'expert'] as const) {
+    for (const tier of ['gentle', 'steady', 'clinical', 'expert'] as const) {
       for (const line of signoutLines(MABEL, tier)) {
         expect(line).not.toContain('Mabel');
       }
@@ -63,7 +72,7 @@ describe('signoutLines', () => {
   });
 
   it('fits the drawer budget', () => {
-    for (const tier of ['gentle', 'steady', 'expert'] as const) {
+    for (const tier of ['gentle', 'steady', 'clinical', 'expert'] as const) {
       const lines = signoutLines(MABEL, tier);
       expect(lines).toHaveLength(4);
       expect(lines.every((l) => l.length > 0)).toBe(true);

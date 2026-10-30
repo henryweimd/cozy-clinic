@@ -25,23 +25,24 @@ export const DOCTOR_HANDLES: readonly string[] = [
   'Moss',
 ];
 
-export type CareTier = 'gentle' | 'steady' | 'expert';
+export type CareTier = 'gentle' | 'steady' | 'clinical' | 'expert';
 
 /** One handoff preset, tier-worded (unit-tested). */
 export interface HandoffPreset {
   id: string;
   gentle: string;
   steady: string;
+  clinical: string;
   expert: string;
 }
 
 export const HANDOFF_PRESETS: readonly HandoffPreset[] = [
-  { id: 'keep-fluids', gentle: 'Keep up the fluids', steady: 'Keep pushing fluids', expert: 'Maintain PO hydration' },
-  { id: 'recheck-breathing', gentle: 'Listen to the breathing again tomorrow', steady: 'Recheck breathing tomorrow', expert: 'Reassess respiratory status daily' },
-  { id: 'watch-fever', gentle: 'Watch the warm forehead', steady: 'Watch the fever', expert: 'Monitor the temperature trend' },
-  { id: 'rest-up', gentle: 'Lots of rest and cuddles', steady: 'Rest until the recheck', expert: 'Rest emphasized; activity as tolerated' },
-  { id: 'finish-meds', gentle: 'Finish all the yucky medicine', steady: 'Finish the full course', expert: 'Complete the prescribed course' },
-  { id: 'all-clear', gentle: 'All clear — hooray!', steady: 'All clear — great teamwork', expert: 'Resolved — closing the loop' },
+  { id: 'keep-fluids', gentle: 'Keep up the fluids', steady: 'Keep pushing fluids', clinical: 'Encourage oral fluids', expert: 'Maintain PO hydration' },
+  { id: 'recheck-breathing', gentle: 'Listen to the breathing again tomorrow', steady: 'Recheck breathing tomorrow', clinical: 'Recheck respirations tomorrow', expert: 'Reassess respiratory status daily' },
+  { id: 'watch-fever', gentle: 'Watch the warm forehead', steady: 'Watch the fever', clinical: 'Monitor temperature', expert: 'Monitor the temperature trend' },
+  { id: 'rest-up', gentle: 'Lots of rest and cuddles', steady: 'Rest until the recheck', clinical: 'Rest, activity as tolerated', expert: 'Rest emphasized; activity as tolerated' },
+  { id: 'finish-meds', gentle: 'Finish all the yucky medicine', steady: 'Finish the full course', clinical: 'Finish all prescribed doses', expert: 'Complete the prescribed course' },
+  { id: 'all-clear', gentle: 'All clear — hooray!', steady: 'All clear — great teamwork', clinical: 'Resolved — good teamwork', expert: 'Resolved — closing the loop' },
 ];
 
 /** Preset encouragements (short enough to read at every tier). */

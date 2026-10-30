@@ -101,6 +101,7 @@ export interface FallbackExamFinding {
   modality: ExamModality;
   gentle: string;
   steady: string;
+  clinical: string;
   expert: string;
 }
 
@@ -5418,20 +5419,20 @@ export const FALLBACK_CHEERS: FallbackCheer[] = [
 
 /** Offline mirror of exam_findings (4 conditions x 4 modalities). */
 export const FALLBACK_EXAM_FINDINGS: FallbackExamFinding[] = [
-  { condition_id: 'asthma', modality: 'look', gentle: 'Breathing fast and working hard — shoulders lift with each breath.', steady: 'Fast breathing with accessory muscle use.', expert: 'Tachypnea with accessory muscle recruitment; possible tripoding.' },
-  { condition_id: 'asthma', modality: 'feel', gentle: 'Chest moving fast; skin a little sweaty.', steady: 'Racing pulse; chest moves evenly on both sides.', expert: 'Tachycardia; symmetric expansion; fremitus normal.' },
-  { condition_id: 'asthma', modality: 'tap', gentle: 'Chest sounds hollow, like a little drum.', steady: 'A bit overfull with air — mildly hyperresonant.', expert: 'Hyperresonance from hyperinflation.' },
-  { condition_id: 'asthma', modality: 'listen', gentle: 'Whistly breaths, mostly while breathing out.', steady: 'Wheezes when breathing out, all over.', expert: 'Diffuse polyphonic expiratory wheezes; prolonged expiratory phase.' },
-  { condition_id: 'viral-respiratory', modality: 'look', gentle: 'Runny nose and watery eyes; lots of sneezing.', steady: 'Runny nose, red eyes, frequent sneezing.', expert: 'Profuse clear rhinorrhea; conjunctival injection; paroxysmal sneezing.' },
-  { condition_id: 'viral-respiratory', modality: 'feel', gentle: 'Forehead feels warm — a small fever.', steady: 'Low-grade fever; sinuses a little tender.', expert: 'Low-grade pyrexia; mild sinus tenderness.' },
-  { condition_id: 'viral-respiratory', modality: 'tap', gentle: 'Chest taps sound normal.', steady: 'Chest sounds normal — this cold lives in the nose.', expert: 'Resonant throughout; no consolidation.' },
-  { condition_id: 'viral-respiratory', modality: 'listen', gentle: 'Chest sounds clear — the sniffles stay in the nose.', steady: 'Lungs clear; only sniffly nose sounds from above.', expert: 'Vesicular, no crackles or wheeze.' },
-  { condition_id: 'dehydration', modality: 'look', gentle: 'Very thirsty, droopy, with sleepy eyes.', steady: 'Lethargic with sunken eyes and dry lips.', expert: 'Lethargy; sunken eyes; dry mucous membranes.' },
-  { condition_id: 'dehydration', modality: 'feel', gentle: 'Pinched skin stays peaked instead of springing back.', steady: 'Slow skin recoil — the tent stays up.', expert: 'Delayed skin-turgor recoil; thready rapid pulse.' },
-  { condition_id: 'dehydration', modality: 'tap', gentle: 'Belly taps sound normal — this check shows little here.', steady: 'Belly unremarkable; percussion adds nothing here.', expert: 'No percussive abnormality; this is an inspection diagnosis.' },
-  { condition_id: 'dehydration', modality: 'listen', gentle: 'Heartbeat is fast, like after running.', steady: 'Fast heart rate; pressure a little low.', expert: 'Sinus tachycardia; borderline hypotension.' },
-  { condition_id: 'hypertension', modality: 'look', gentle: 'Looks fine outside — high pressure hides inside.', steady: 'No outward signs; pressure problems often hide.', expert: 'Asymptomatic at rest; no distress.' },
-  { condition_id: 'hypertension', modality: 'feel', gentle: 'Pulse feels strong and bouncy.', steady: 'Bounding pulses; ankles look fine.', expert: 'Bounding pulses; no peripheral edema.' },
-  { condition_id: 'hypertension', modality: 'tap', gentle: 'Chest taps sound normal.', steady: 'Percussion normal.', expert: 'No percussive abnormality.' },
-  { condition_id: 'hypertension', modality: 'listen', gentle: 'The arm cuff squeezes and reads a big number — too high!', steady: 'Cuff reads high even after quiet rest.', expert: 'Stage-2-range cuff readings after 5 minutes rest.' },
+  { condition_id: 'asthma', modality: 'look', gentle: 'Breathing fast and working hard — shoulders lift with each breath.', steady: 'Fast breathing with accessory muscle use.', clinical: 'Tachypneic; accessory-muscle use.', expert: 'Tachypnea with accessory muscle recruitment; possible tripoding.' },
+  { condition_id: 'asthma', modality: 'feel', gentle: 'Chest moving fast; skin a little sweaty.', steady: 'Racing pulse; chest moves evenly on both sides.', clinical: 'Tachycardic; chest expansion symmetric.', expert: 'Tachycardia; symmetric expansion; fremitus normal.' },
+  { condition_id: 'asthma', modality: 'tap', gentle: 'Chest sounds hollow, like a little drum.', steady: 'A bit overfull with air — mildly hyperresonant.', clinical: 'Hyperresonant; lungs overexpanded.', expert: 'Hyperresonance from hyperinflation.' },
+  { condition_id: 'asthma', modality: 'listen', gentle: 'Whistly breaths, mostly while breathing out.', steady: 'Wheezes when breathing out, all over.', clinical: 'Diffuse expiratory wheezes.', expert: 'Diffuse polyphonic expiratory wheezes; prolonged expiratory phase.' },
+  { condition_id: 'viral-respiratory', modality: 'look', gentle: 'Runny nose and watery eyes; lots of sneezing.', steady: 'Runny nose, red eyes, frequent sneezing.', clinical: 'Clear rhinorrhea; injected conjunctivae.', expert: 'Profuse clear rhinorrhea; conjunctival injection; paroxysmal sneezing.' },
+  { condition_id: 'viral-respiratory', modality: 'feel', gentle: 'Forehead feels warm — a small fever.', steady: 'Low-grade fever; sinuses a little tender.', clinical: 'Low-grade fever; sinus tenderness.', expert: 'Low-grade pyrexia; mild sinus tenderness.' },
+  { condition_id: 'viral-respiratory', modality: 'tap', gentle: 'Chest taps sound normal.', steady: 'Chest sounds normal — this cold lives in the nose.', clinical: 'Chest resonant; upper-airway findings only.', expert: 'Resonant throughout; no consolidation.' },
+  { condition_id: 'viral-respiratory', modality: 'listen', gentle: 'Chest sounds clear — the sniffles stay in the nose.', steady: 'Lungs clear; only sniffly nose sounds from above.', clinical: 'Lungs clear; transmitted nasal sounds.', expert: 'Vesicular, no crackles or wheeze.' },
+  { condition_id: 'dehydration', modality: 'look', gentle: 'Very thirsty, droopy, with sleepy eyes.', steady: 'Lethargic with sunken eyes and dry lips.', clinical: 'Lethargic; sunken eyes, dry lips.', expert: 'Lethargy; sunken eyes; dry mucous membranes.' },
+  { condition_id: 'dehydration', modality: 'feel', gentle: 'Pinched skin stays peaked instead of springing back.', steady: 'Slow skin recoil — the tent stays up.', clinical: 'Poor skin turgor; rapid pulse.', expert: 'Delayed skin-turgor recoil; thready rapid pulse.' },
+  { condition_id: 'dehydration', modality: 'tap', gentle: 'Belly taps sound normal — this check shows little here.', steady: 'Belly unremarkable; percussion adds nothing here.', clinical: 'Abdomen benign; percussion unhelpful.', expert: 'No percussive abnormality; this is an inspection diagnosis.' },
+  { condition_id: 'dehydration', modality: 'listen', gentle: 'Heartbeat is fast, like after running.', steady: 'Fast heart rate; pressure a little low.', clinical: 'Tachycardia; low-normal pressure.', expert: 'Sinus tachycardia; borderline hypotension.' },
+  { condition_id: 'hypertension', modality: 'look', gentle: 'Looks fine outside — high pressure hides inside.', steady: 'No outward signs; pressure problems often hide.', clinical: 'No outward signs; asymptomatic.', expert: 'Asymptomatic at rest; no distress.' },
+  { condition_id: 'hypertension', modality: 'feel', gentle: 'Pulse feels strong and bouncy.', steady: 'Bounding pulses; ankles look fine.', clinical: 'Bounding pulses; no edema.', expert: 'Bounding pulses; no peripheral edema.' },
+  { condition_id: 'hypertension', modality: 'tap', gentle: 'Chest taps sound normal.', steady: 'Percussion normal.', clinical: 'Resonant; no abnormality.', expert: 'No percussive abnormality.' },
+  { condition_id: 'hypertension', modality: 'listen', gentle: 'The arm cuff squeezes and reads a big number — too high!', steady: 'Cuff reads high even after quiet rest.', clinical: 'Cuff high after 5 minutes rest.', expert: 'Stage-2-range cuff readings after 5 minutes rest.' },
 ];

@@ -85,7 +85,7 @@ export interface ActionDef {
    */
   label: string;
   /** Display wording per reading tier (Muse-drafted, engine-vetoed). */
-  labels: { gentle: string; steady: string; expert: string };
+  labels: { gentle: string; steady: string; clinical: string; expert: string };
   /** Grade of this action when taken at each stage index. */
   gradeByStage: ChoiceGrade[];
   /** Stage-index delta applied when the action resolves (before clamping). */
@@ -110,11 +110,12 @@ export interface ConditionDef {
   examOptions: { id: string; label: string }[];
   examBestId: string;
   /** Exam-round: the best check's finding. */
-  bestFinding: string;
+  /** Shown when the exam round's best step is picked (tiered). */
+  bestFinding: { gentle: string; steady: string; clinical: string; expert: string };
   /** Diagnose-round: 3 option ids, one is `id` (position varies). */
   dxOptions: ConditionId[];
   /** Exam-round quiz question per tier ({name}/{demo} filled in). */
-  examQuiz: { gentle: string; steady: string; expert: string };
+  examQuiz: { gentle: string; steady: string; clinical: string; expert: string };
   /** Diagnose-round teaching: why the pick fits (right) or not. */
   dxPearl: { right: string; wrong: string };
   /** The visit's one-line takeaway (result modal, ≤40 chars). */

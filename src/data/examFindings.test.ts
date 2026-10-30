@@ -5,10 +5,10 @@ import { findingFor, MODALITIES } from './examFindings';
 const CONDITIONS = ['asthma', 'viral-respiratory', 'dehydration', 'hypertension'];
 
 describe('exam findings', () => {
-  it('covers every condition x modality with all three tiers', () => {
+  it('covers every condition x modality at all four tiers', () => {
     for (const conditionId of CONDITIONS) {
       for (const modality of MODALITIES) {
-        for (const tier of ['gentle', 'steady', 'expert'] as const) {
+        for (const tier of ['gentle', 'steady', 'clinical', 'expert'] as const) {
           const text = findingFor(FALLBACK_EXAM_FINDINGS, conditionId, modality, tier);
           expect(text, `${conditionId}/${modality}/${tier}`).toBeTruthy();
         }

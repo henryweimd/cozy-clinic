@@ -25,7 +25,7 @@ describe('isPerfectVisit', () => {
 
 describe('round questions', () => {
   it('asks every round at every tier with the name filled in', () => {
-    for (const tier of ['gentle', 'steady', 'expert'] as const) {
+    for (const tier of ['gentle', 'steady', 'clinical', 'expert'] as const) {
       expect(roundQuestion('diagnose', tier, 'Milo')).not.toContain('{name}');
       expect(roundQuestion('treat', tier, 'Milo')).not.toContain('{name}');
       expect(roundQuestion('diagnose', tier, 'Milo').length).toBeGreaterThan(0);

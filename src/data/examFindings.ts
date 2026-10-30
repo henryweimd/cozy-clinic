@@ -31,15 +31,26 @@ export async function loadExamFindings(): Promise<ExamFindingsData> {
       },
     });
     if (!res.ok) throw new Error(`exam_findings: ${res.status}`);
-    const findings = (await res.json()) as FallbackExamFinding[];
-    if (findings.length === 0) throw new Error('empty');
+    const rows = (await res.json()) as Record<string, unknown>[];
+    if (rows.length === 0) throw new Error('empty');
+    // The table stores finding_* columns — map to the tier keys
+    // (a past direct cast read row[tier] as undefined, so live
+    // findings silently never displayed).
+    const findings: FallbackExamFinding[] = rows.map((r) => ({
+      condition_id: r['condition_id'] as string,
+      modality: r['modality'] as ExamModality,
+      gentle: r['finding_gentle'] as string,
+      steady: r['finding_steady'] as string,
+      clinical: r['finding_clinical'] as string,
+      expert: r['finding_expert'] as string,
+    }));
     return { findings, source: 'live' };
   } catch {
     return { findings: FALLBACK_EXAM_FINDINGS, source: 'fallback' };
   }
 }
 
-export type ExamTier = 'gentle' | 'steady' | 'expert';
+export type ExamTier = 'gentle' | 'steady' | 'clinical' | 'expert';
 
 /** Pure lookup: the tiered finding, or null when the row is missing. */
 export function findingFor(

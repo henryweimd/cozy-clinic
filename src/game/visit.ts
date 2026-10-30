@@ -28,18 +28,20 @@ export function isPerfectVisit(score: RoundScore): boolean {
   return score.examBest && score.dxCorrect && score.txBest;
 }
 
-type QuizTier = 'gentle' | 'steady' | 'expert';
+type QuizTier = 'gentle' | 'steady' | 'clinical' | 'expert';
 
 /** Diagnose/treat round questions per tier ({name} filled in). */
 const ROUND_QUESTIONS: Record<'diagnose' | 'treat', Record<QuizTier, string>> = {
   diagnose: {
     gentle: 'What do you think {name} has? Pick below.',
     steady: "What's your diagnosis? Choose one.",
-    expert: 'Your diagnosis?',
+    clinical: 'Your clinical impression? Choose one.',
+    expert: 'Most likely diagnosis?',
   },
   treat: {
     gentle: 'How will you help {name} feel better? Choose one.',
     steady: 'Choose the treatment.',
+    clinical: 'Choose the intervention.',
     expert: 'Your management plan? Choose one.',
   },
 };

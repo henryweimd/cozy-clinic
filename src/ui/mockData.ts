@@ -106,7 +106,7 @@ export interface PrototypeSeeds {
   visitNo: number;
   wordingTier: 'gentle' | 'plain' | 'clinical';
   /** 1 = early (2-3 choices), 3 = late (4-5). */
-  difficulty: 1 | 2 | 3;
+  difficulty: 1 | 2 | 3 | 4;
   /** Prototype gate only, NOT a real secret (spec documents it). */
   devCode: string;
 }
@@ -196,25 +196,46 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
 ];
 
 /**
- * CHROME-2 display tiers, gentle → expert. Keyed by the mock
- * `difficulty` seed (1 → gentle, 2 → steady, 3 → expert). These
- * names match the future wording system's planned tiers; the
- * legacy `wordingTier` seed (gentle/plain/clinical) still feeds
- * the staff monitor until the backend owns wording.
+ * Reading tiers, gentle → expert. Four stops with real
+ * audiences: gentle (grade-schoolers), steady (educated
+ * adults), clinical (healthcare workers — spelled-out clinical
+ * words, no abbreviations), expert (physicians). Keyed by the
+ * persisted `difficulty` (1-4); the legacy `wordingTier` seed
+ * (gentle/plain/clinical) still feeds the staff monitor until
+ * the backend owns wording.
  */
-export type ChromeTier = 'gentle' | 'steady' | 'expert';
+export type ChromeTier = 'gentle' | 'steady' | 'clinical' | 'expert';
 
-export const CHROME_TIER_BY_DIFFICULTY: Record<1 | 2 | 3, ChromeTier> = {
+export const CHROME_TIER_BY_DIFFICULTY: Record<1 | 2 | 3 | 4, ChromeTier> = {
   1: 'gentle',
   2: 'steady',
-  3: 'expert',
+  3: 'clinical',
+  4: 'expert',
 };
 
 export const CHROME_TIER_LABEL: Record<ChromeTier, string> = {
   gentle: 'Gentle',
   steady: 'Steady',
+  clinical: 'Clinical',
   expert: 'Expert',
 };
+
+/**
+ * Profile level-slider stops (screen x, y=180): 4 reading
+ * levels, right-aligned to the stat rows (x492). The auditor
+ * mirrors these numbers.
+ */
+export const LEVEL_STOP_X: readonly [number, number, number, number] = [322, 379, 435, 492];
+export const LEVEL_STOP_Y = 180;
+
+/** Pure: nearest slider stop (1-4) for a screen x (unit-tested). */
+export function nearestLevelStop(x: number): 1 | 2 | 3 | 4 {
+  let best = 0;
+  for (let i = 1; i < LEVEL_STOP_X.length; i += 1) {
+    if (Math.abs(x - LEVEL_STOP_X[i]) < Math.abs(x - LEVEL_STOP_X[best])) best = i;
+  }
+  return (best + 1) as 1 | 2 | 3 | 4;
+}
 
 /**
  * Card-row prompt wordings, one per chrome tier (MOCK — the real
@@ -225,6 +246,7 @@ export const CHROME_TIER_LABEL: Record<ChromeTier, string> = {
 export const CHOOSE_PROMPT_WORDING: Record<ChromeTier, string> = {
   gentle: 'Choose care…',
   steady: 'Choose an action…',
+  clinical: 'Choose management…',
   expert: 'Select intervention…',
 };
 
@@ -241,16 +263,19 @@ export const VISIT_CONTEXT_WORDING: Record<VisitContext, Record<ChromeTier, stri
   'new-patient': {
     gentle: 'A first hello',
     steady: 'New Patient',
+    clinical: 'New intake',
     expert: 'New intake',
   },
   'sick-visit': {
     gentle: 'Feeling poorly',
     steady: 'Sick Visit',
+    clinical: 'Acute visit',
     expert: 'Acute visit',
   },
   'follow-up': {
     gentle: 'Back for a check-in',
     steady: 'Follow-Up Visit',
+    clinical: 'Follow-up',
     expert: 'Follow-up',
   },
 };

@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { MOCK_ROSTER, moveWaiting, quoteIfSpoken, waitingNames } from './mockData';
+import {
+  LEVEL_STOP_X,
+  MOCK_ROSTER,
+  moveWaiting,
+  nearestLevelStop,
+  quoteIfSpoken,
+  waitingNames,
+} from './mockData';
 
 describe('waitingNames', () => {
   it('excludes whoever is in the exam room, keeping queue order', () => {
@@ -45,5 +52,20 @@ describe('moveWaiting', () => {
   it('never mutates the input', () => {
     moveWaiting(order, 'June', -1);
     expect(order).toEqual(['Milo', 'Mabel', 'June', 'Theo']);
+  });
+});
+
+describe('nearestLevelStop', () => {
+  it('snaps each stop center to its own level', () => {
+    LEVEL_STOP_X.forEach((x, i) => {
+      expect(nearestLevelStop(x)).toBe(i + 1);
+    });
+  });
+
+  it('splits midpoints toward the left stop and clamps off-track taps', () => {
+    const mid = (LEVEL_STOP_X[0] + LEVEL_STOP_X[1]) / 2;
+    expect(nearestLevelStop(mid)).toBe(1);
+    expect(nearestLevelStop(0)).toBe(1);
+    expect(nearestLevelStop(9999)).toBe(4);
   });
 });

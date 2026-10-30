@@ -6,10 +6,13 @@ import {
   CHOOSE_PROMPT_WORDING,
   CHROME_TIER_BY_DIFFICULTY,
   CHROME_TIER_LABEL,
+  LEVEL_STOP_X,
+  LEVEL_STOP_Y,
   MOCK_ROSTER,
   MOCK_THREADS,
   PROTOTYPE_SEEDS,
   moveWaiting,
+  nearestLevelStop,
   quoteIfSpoken,
   waitingNames,
 } from '../ui/mockData';
@@ -460,8 +463,8 @@ export class ClinicScene extends Phaser.Scene {
   /** Opened resource ids (their +2 is spent). */
   private openedRes = new Set<string>();
   private passedQuiz = new Set<string>();
-  /** Live reading level (1 Gentle → 3 Expert), Profile-owned. */
-  private difficulty: 1 | 2 | 3 = PROTOTYPE_SEEDS.difficulty;
+  /** Live reading level (1 Gentle → 4 Expert), Profile-owned. */
+  private difficulty: 1 | 2 | 3 | 4 = PROTOTYPE_SEEDS.difficulty;
   /** Consecutive correct picks this visit (the combo chain). */
   private visitCombo = 0;
   /** A press animation is mid-flight (double-resolve guard). */
@@ -487,7 +490,7 @@ export class ClinicScene extends Phaser.Scene {
   private waitingView!: Phaser.GameObjects.Container;
   private profileView!: Phaser.GameObjects.Container;
   private profileRows!: Phaser.GameObjects.Container;
-  private segRow!: Phaser.GameObjects.Container;
+  private levelSlider!: Phaser.GameObjects.Container;
   private waitingRows!: Phaser.GameObjects.Container;
   /** Queue order (names); the player reorders with the chevrons. */
   private waitingOrder: string[] = MOCK_ROSTER.map((e) => e.name);
@@ -1119,8 +1122,11 @@ export class ClinicScene extends Phaser.Scene {
   private loadDifficulty(): void {
     try {
       const raw = window.localStorage.getItem(DIFFICULTY_KEY);
+      // Grandfather clause: stored 3 meant expert before the
+      // clinical tier split the scale (now 4).
       if (raw === '2') this.difficulty = 2;
-      else if (raw === '3') this.difficulty = 3;
+      else if (raw === '3') this.difficulty = 4;
+      else if (raw === '4') this.difficulty = 4;
       else this.difficulty = 1;
     } catch {
       this.difficulty = 1;
@@ -1194,8 +1200,8 @@ export class ClinicScene extends Phaser.Scene {
     }
   }
 
-  /** Profile segmented control: rewords the visit on return. */
-  private setDifficulty(next: 1 | 2 | 3): void {
+  /** Profile level slider: rewords the visit on return. */
+  private setDifficulty(next: 1 | 2 | 3 | 4): void {
     if (next === this.difficulty) return;
     this.difficulty = next;
     this.saveDifficulty();
@@ -1776,7 +1782,7 @@ export class ClinicScene extends Phaser.Scene {
       if (this.isQuizView()) {
         this.setConversation(
           speakerFor(this.activeName),
-          best ? def.bestFinding : EXAM_OTHER_FINDING,
+          best ? def.bestFinding[this.tier()] : EXAM_OTHER_FINDING,
           'tell',
         );
       }
@@ -2711,48 +2717,76 @@ export class ClinicScene extends Phaser.Scene {
         color: SECONDARY,
       })
       .setOrigin(0, 0.5);
-    // Reading-level segmented control (header right — the
-    // sheet's 7 row slots are full). Pills right-align to the
-    // rows (x492); zones oversize the visuals for touch.
-    const segLabel = this.add
-      .text(314, 180, 'Reading level', {
-        fontFamily: FONT_FAMILY,
-        fontSize: '13px',
-        color: SECONDARY,
-      })
-      .setOrigin(1, 0.5);
-    this.segRow = this.add.container(0, 0, []);
+    // Reading-level slider (header right — the sheet's 7 row
+    // slots are full). Four labeled stops; tap a stop or drag
+    // the knob. The toast names the level on every change.
+    this.levelSlider = this.add.container(0, 0, []);
     this.profileRows = this.add.container(0, 0, []);
-    this.profileView = this.add.container(0, 0, [sheet, title, hint, segLabel, this.segRow, this.profileRows]);
+    this.profileView = this.add.container(0, 0, [sheet, title, hint, this.levelSlider, this.profileRows]);
     this.profileView.setDepth(10).setVisible(false).setAlpha(0);
   }
 
   /** Rebuilds the live stat rows on every Profile arrival. */
   private refreshProfileRows(): void {
-    this.segRow.removeAll(true);
-    const segDefs: (1 | 2 | 3)[] = [1, 2, 3];
-    segDefs.forEach((d, i) => {
-      const x = 322 + i * 58;
-      const selected = d === this.difficulty;
-      const bg = this.add.graphics();
-      bg.fillStyle(selected ? SAGE : CARD_FILL, 1);
-      bg.lineStyle(2, OUTLINE, 1);
-      bg.fillRoundedRect(x, 166, 54, 28, 14);
-      bg.strokeRoundedRect(x, 166, 54, 28, 14);
+    this.levelSlider.removeAll(true);
+    const stops: (1 | 2 | 3 | 4)[] = [1, 2, 3, 4];
+    // Track + stop dots.
+    const track = this.add.graphics();
+    track.fillStyle(CARD_FILL, 1);
+    track.lineStyle(2, OUTLINE, 1);
+    track.fillRoundedRect(316, LEVEL_STOP_Y - 3, 182, 6, 3);
+    track.strokeRoundedRect(316, LEVEL_STOP_Y - 3, 182, 6, 3);
+    this.levelSlider.add(track);
+    stops.forEach((d) => {
+      const x = LEVEL_STOP_X[d - 1];
+      const dot = this.add.graphics();
+      dot.fillStyle(CARD_FILL, 1);
+      dot.lineStyle(2, OUTLINE, 1);
+      dot.fillCircle(x, LEVEL_STOP_Y, 5);
+      dot.strokeCircle(x, LEVEL_STOP_Y, 5);
       const label = this.add
-        .text(x + 27, 180, CHROME_TIER_LABEL[CHROME_TIER_BY_DIFFICULTY[d]], {
+        .text(x, LEVEL_STOP_Y + 21, CHROME_TIER_LABEL[CHROME_TIER_BY_DIFFICULTY[d]], {
           fontFamily: FONT_FAMILY,
           fontStyle: 'bold',
-          fontSize: '12px',
-          color: selected ? '#ffffff' : COCOA,
+          fontSize: '11px',
+          color: d === this.difficulty ? COCOA : SECONDARY,
         })
         .setOrigin(0.5, 0.5);
-      const zone = this.add
-        .zone(x + 27, 180, 54, 44)
-        .setInteractive({ useHandCursor: true });
-      zone.on('pointerdown', () => this.setDifficulty(d));
-      this.segRow.add([bg, label, zone]);
+      this.levelSlider.add([dot, label]);
     });
+    // Knob at the live stop (drag moves it; release snaps).
+    const knobX = LEVEL_STOP_X[this.difficulty - 1];
+    const knob = this.add.graphics();
+    knob.fillStyle(SAGE, 1);
+    knob.lineStyle(2, OUTLINE, 1);
+    knob.fillCircle(knobX, LEVEL_STOP_Y, 11);
+    knob.strokeCircle(knobX, LEVEL_STOP_Y, 11);
+    knob.fillStyle(0xffffff, 1);
+    knob.fillCircle(knobX, LEVEL_STOP_Y, 3);
+    this.levelSlider.add(knob);
+    const zone = this.add
+      .zone(407, 186, 200, 52)
+      .setInteractive({ useHandCursor: true, draggable: true });
+    let downX: number | null = null;
+    zone.on('pointerdown', (p: Phaser.Input.Pointer) => {
+      downX = p.x;
+    });
+    zone.on('drag', (_p: Phaser.Input.Pointer, dragX: number) => {
+      knob.x = Math.max(LEVEL_STOP_X[0], Math.min(LEVEL_STOP_X[3], dragX)) - knobX;
+    });
+    zone.on('dragend', (p: Phaser.Input.Pointer) => {
+      downX = null;
+      this.setDifficulty(nearestLevelStop(p.x));
+      // Snap the knob home even when the stop didn't change.
+      this.refreshProfileRows();
+    });
+    zone.on('pointerup', (p: Phaser.Input.Pointer) => {
+      if (downX !== null && Math.abs(p.x - downX) < 10) {
+        this.setDifficulty(nearestLevelStop(p.x));
+      }
+      downX = null;
+    });
+    this.levelSlider.add(zone);
     this.profileRows.removeAll(true);
     // Tappable rows carry › (Coins opens the Shop; Doctor +
     // Team open the identity editor; About opens its sheet).
@@ -3852,7 +3886,7 @@ export class ClinicScene extends Phaser.Scene {
         `energy ${this.patientState.vitals.energy} · comfort ${this.patientState.vitals.comfort} · breath ${this.patientState.vitals.breathing}`,
       ],
       ['visit:', `#${this.visitNo()} · node: ${this.lastNodeId}`],
-      ['wording:', `${PROTOTYPE_SEEDS.wordingTier} · difficulty: ${this.difficulty}/3 (${this.tier()})`],
+      ['wording:', `${PROTOTYPE_SEEDS.wordingTier} · difficulty: ${this.difficulty}/4 (${this.tier()})`],
     ];
     let y = 224;
     for (const [key, value] of rows) {

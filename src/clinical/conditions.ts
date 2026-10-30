@@ -5,18 +5,24 @@ export const EXAM_OTHER_FINDING = 'That exam finds nothing new.';
 
 /** Display label for one action at one reading tier. */
 export function actionLabel(
-  action: { label: string; labels: { gentle: string; steady: string; expert: string } },
-  tier: 'gentle' | 'steady' | 'expert',
+  action: {
+    label: string;
+    labels: { gentle: string; steady: string; clinical: string; expert: string };
+  },
+  tier: 'gentle' | 'steady' | 'clinical' | 'expert',
 ): string {
   return action.labels[tier];
 }
 
 /** Condition display names per tier (diagnose-round options). */
-export const CONDITION_TIER_NAMES: Record<ConditionId, { gentle: string; steady: string; expert: string }> = {
-  dehydration: { gentle: 'Dried Out', steady: 'Dehydration', expert: 'Dehydration' },
-  'viral-respiratory': { gentle: 'Sniffly Cold', steady: 'Common Cold', expert: 'Viral URI' },
-  asthma: { gentle: 'Asthma', steady: 'Asthma', expert: 'Asthma Exacerbation' },
-  hypertension: { gentle: 'High Blood Pressure', steady: 'High Blood Pressure', expert: 'Hypertension' },
+export const CONDITION_TIER_NAMES: Record<
+  ConditionId,
+  { gentle: string; steady: string; clinical: string; expert: string }
+> = {
+  dehydration: { gentle: 'Dried Out', steady: 'Dehydration', clinical: 'Dehydration', expert: 'Dehydration' },
+  'viral-respiratory': { gentle: 'Sniffly Cold', steady: 'Common Cold', clinical: 'Viral URI', expert: 'Viral URI' },
+  asthma: { gentle: 'Asthma', steady: 'Asthma', clinical: 'Asthma flare', expert: 'Asthma Exacerbation' },
+  hypertension: { gentle: 'High Blood Pressure', steady: 'High Blood Pressure', clinical: 'Hypertension', expert: 'Hypertension' },
 };
 
 /**
@@ -37,7 +43,12 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       { id: 'belly-sounds', label: 'Belly sounds' },
     ],
     examBestId: 'skin-spring',
-    bestFinding: 'Lifted skin stays peaked — poor turgor, very dry inside.',
+    bestFinding: {
+      gentle: 'Lifted skin stays peaked — very dry inside.',
+      steady: 'Lifted skin stays peaked — poor turgor, very dry inside.',
+      clinical: 'Sustained tenting — poor turgor, volume depleted.',
+      expert: 'Sustained skin tenting; poor turgor, volume depletion.',
+    },
     dxOptions: ['asthma', 'dehydration', 'viral-respiratory'],
     dxPearl: {
       right: 'Droopy + very thirsty: fluids will perk them up.',
@@ -45,8 +56,9 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     },
     visitPearl: 'Small sips of water fix drying out',
     examQuiz: {
-      gentle: '{name} is all droopy and very thirsty. Which check shows dryness best?',
+      gentle: '{name} is all droopy and very thirsty. Which check shows how dry they are?',
       steady: 'Droopy and very thirsty. Which bedside check shows fluid loss best?',
+      clinical: 'Droopy, very thirsty. Which bedside check shows fluid loss?',
       expert: '{demo} with suspected volume depletion. Most revealing bedside check?',
     },
     stages: [
@@ -60,7 +72,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'offer-water',
         label: 'Offer cool water',
-        labels: { gentle: 'Give cool sips of water', steady: 'Offer cool water', expert: 'Oral rehydration' },
+        labels: { gentle: 'Give cool sips of water', steady: 'Offer cool water', clinical: 'Give oral fluids', expert: 'Oral rehydration' },
         gradeByStage: ['NOT_GREAT', 'BEST', 'BEST', 'BEST'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { energy: 1, comfort: 1 },
@@ -69,7 +81,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'rest-shade',
         label: 'Rest in the shade',
-        labels: { gentle: 'Rest somewhere shady', steady: 'Rest in the shade', expert: 'Rest, observation' },
+        labels: { gentle: 'Rest somewhere shady', steady: 'Rest in the shade', clinical: 'Rest and observe', expert: 'Monitor at rest' },
         gradeByStage: ['NOT_GREAT', 'NOT_GREAT', 'BEST', 'NOT_GREAT'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { energy: 1 },
@@ -78,7 +90,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'fizzy-soda',
         label: 'Give fizzy soda',
-        labels: { gentle: 'Share a fizzy soda', steady: 'Give fizzy soda', expert: 'Sugary carbonated drink' },
+        labels: { gentle: 'Share a fizzy soda', steady: 'Give fizzy soda', clinical: 'Give a sugary soda', expert: 'Sugary carbonated drink' },
         gradeByStage: ['WRONG', 'WRONG', 'WRONG', 'WRONG'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { comfort: -1 },
@@ -87,7 +99,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'salt-pouch',
         label: 'Feed a whole salt pouch',
-        labels: { gentle: 'Eat a whole salt packet', steady: 'Feed a whole salt pouch', expert: 'Concentrated salt dose' },
+        labels: { gentle: 'Eat a whole salt packet', steady: 'Feed a whole salt pouch', clinical: 'Give a salt load', expert: 'Acute sodium load' },
         gradeByStage: ['DANGEROUS', 'DANGEROUS', 'DANGEROUS', 'DANGEROUS'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: {},
@@ -106,16 +118,22 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       { id: 'belly-sounds', label: 'Belly sounds' },
     ],
     examBestId: 'neck-glands',
-    bestFinding: 'Neck glands feel normal with no white spots — zero Centor points. A virus, not strep.',
+    bestFinding: {
+      gentle: 'Neck feels fine, no white spots — this is not strep. Just a cold.',
+      steady: 'Neck glands feel normal with no white spots — zero Centor points. A virus, not strep.',
+      clinical: 'Nodes normal, no exudates — Centor 0. A virus, not strep.',
+      expert: 'Cervical nodes normal, no exudates — Centor 0, viral.',
+    },
     dxOptions: ['viral-respiratory', 'hypertension', 'asthma'],
     dxPearl: {
-      right: 'Cough + runny nose with zero Centor points: a virus, not strep.',
+      right: 'Cough and sniffles with no strep signs — just a cold.',
       wrong: 'Cough and sniffles point to a cold — what fits those?',
     },
-    visitPearl: 'Cough + sniffles, zero Centor: a virus',
+    visitPearl: 'Cough + sniffles, no strep signs: a cold',
     examQuiz: {
-      gentle: '{name} has a scratchy throat AND lots of cough and sniffles. What rules out strep?',
+      gentle: '{name} has a scratchy throat AND lots of cough and sniffles. What shows it is just a cold?',
       steady: 'Sore throat with cough and runny nose. Which check rules out strep?',
+      clinical: 'Sore throat with cough and rhinorrhea. Which check excludes strep?',
       expert: 'Pharyngitis with cough and rhinorrhea. Which bedside check rules out strep?',
     },
     stages: [
@@ -129,7 +147,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'rest-fluids',
         label: 'Warm rest + fluids',
-        labels: { gentle: 'Snuggle, rest and sip', steady: 'Warm rest + fluids', expert: 'Supportive care + PO fluids' },
+        labels: { gentle: 'Snuggle, rest and sip', steady: 'Warm rest + fluids', clinical: 'Rest with fluids', expert: 'Supportive care + PO fluids' },
         gradeByStage: ['NOT_GREAT', 'BEST', 'BEST', 'BEST'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { energy: 1, comfort: 1 },
@@ -138,7 +156,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'warm-soup',
         label: 'Warm soup break',
-        labels: { gentle: 'Have some warm soup', steady: 'Warm soup break', expert: 'Warm fluids for comfort' },
+        labels: { gentle: 'Have some warm soup', steady: 'Warm soup break', clinical: 'Offer warm fluids', expert: 'Warm fluids for comfort' },
         gradeByStage: ['NOT_GREAT', 'NOT_GREAT', 'BEST', 'NOT_GREAT'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { comfort: 1 },
@@ -147,7 +165,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'share-cup',
         label: 'Share a cup with a friend',
-        labels: { gentle: 'Share sips with a friend', steady: 'Share a cup with a friend', expert: 'Share drinking vessels' },
+        labels: { gentle: 'Share sips with a friend', steady: 'Share a cup with a friend', clinical: 'Share drinking cups', expert: 'Share drinking vessels' },
         gradeByStage: ['WRONG', 'WRONG', 'WRONG', 'WRONG'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { comfort: -1 },
@@ -156,7 +174,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'ice-bath',
         label: 'Plunge into an ice bath',
-        labels: { gentle: 'Jump in an ice bath', steady: 'Plunge into an ice bath', expert: 'Cold-water immersion' },
+        labels: { gentle: 'Jump in an ice bath', steady: 'Plunge into an ice bath', clinical: 'Cold bath plunge', expert: 'Cold-water immersion' },
         gradeByStage: ['DANGEROUS', 'DANGEROUS', 'DANGEROUS', 'DANGEROUS'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: {},
@@ -175,7 +193,12 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       { id: 'wheeze-listen', label: 'Listen for the whistle' },
     ],
     examBestId: 'wheeze-listen',
-    bestFinding: 'Soft whistles on breathing out — the classic asthma sound.',
+    bestFinding: {
+      gentle: 'Soft whistles on breathing out — the classic asthma sound.',
+      steady: 'Soft whistles on breathing out — the classic asthma sound.',
+      clinical: 'Expiratory wheezes — classic asthma.',
+      expert: 'Polyphonic expiratory wheezes — obstructive pattern.',
+    },
     dxOptions: ['viral-respiratory', 'asthma', 'dehydration'],
     dxPearl: {
       right: 'Whistly breaths + tight chest: classic asthma.',
@@ -185,7 +208,8 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     examQuiz: {
       gentle: "{name}'s chest feels tight and funny. What do you check first?",
       steady: 'Tight chest, hard to breathe. What do you check first?',
-      expert: '{demo} with chest tightness. Which check reveals the key finding?',
+      clinical: 'Chest tightness, short of breath. Priority assessment?',
+      expert: '{demo} with chest tightness. Which finding confirms obstruction?',
     },
     stages: [
       { id: 'clear', label: 'Clear', blurb: 'Breathing easy.', says: "Just here for my check-in — I'm breathing easy!" },
@@ -198,7 +222,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'calm-air',
         label: 'Sit upright in calm air',
-        labels: { gentle: 'Sit up in calm air', steady: 'Sit upright in calm air', expert: 'Upright positioning, calm air' },
+        labels: { gentle: 'Sit up in calm air', steady: 'Sit upright in calm air', clinical: 'Sit upright, stay calm', expert: 'Upright positioning, calm air' },
         gradeByStage: ['NOT_GREAT', 'BEST', 'BEST', 'NOT_GREAT'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { breathing: 1, comfort: 1 },
@@ -207,7 +231,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'rescue-puffer',
         label: 'Rescue puffer with spacer',
-        labels: { gentle: 'Use the rescue puffer', steady: 'Rescue puffer with spacer', expert: 'Albuterol via spacer' },
+        labels: { gentle: 'Use the rescue puffer', steady: 'Rescue puffer with spacer', clinical: 'Puffer with spacer', expert: 'Albuterol via spacer' },
         gradeByStage: ['NOT_GREAT', 'BEST', 'BEST', 'BEST'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { breathing: 2 },
@@ -216,7 +240,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'flower-sniff',
         label: 'Bury nose in dusty flowers',
-        labels: { gentle: 'Sniff the dusty flowers', steady: 'Bury nose in dusty flowers', expert: 'Allergen exposure' },
+        labels: { gentle: 'Sniff the dusty flowers', steady: 'Bury nose in dusty flowers', clinical: 'Breathe in flower dust', expert: 'Allergen exposure' },
         gradeByStage: ['WRONG', 'WRONG', 'WRONG', 'WRONG'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { breathing: -1 },
@@ -225,7 +249,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'dusty-blanket',
         label: 'Shake a dusty blanket indoors',
-        labels: { gentle: 'Shake a dusty blanket', steady: 'Shake a dusty blanket indoors', expert: 'Indoor dust aerosol' },
+        labels: { gentle: 'Shake a dusty blanket', steady: 'Shake a dusty blanket indoors', clinical: 'Shake out dusty bedding', expert: 'Indoor dust aerosol' },
         gradeByStage: ['DANGEROUS', 'DANGEROUS', 'DANGEROUS', 'DANGEROUS'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: {},
@@ -244,7 +268,12 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       { id: 'throat-swab', label: 'Throat swab' },
     ],
     examBestId: 'recuff',
-    bestFinding: 'After five quiet minutes the cuff still reads high — it counts.',
+    bestFinding: {
+      gentle: 'After five quiet minutes the cuff still reads high — it counts.',
+      steady: 'After five quiet minutes the cuff still reads high — it counts.',
+      clinical: 'Cuff still high after 5 minutes rest.',
+      expert: 'Persistent stage-2-range cuff readings.',
+    },
     dxOptions: ['dehydration', 'asthma', 'hypertension'],
     dxPearl: {
       right: 'High twice after quiet rest — it counts.',
@@ -254,6 +283,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     examQuiz: {
       gentle: "{name}'s numbers are running high. What do you do first?",
       steady: 'Blood pressure running high. Which step comes first?',
+      clinical: 'Elevated BP on repeat. Which step comes first?',
       expert: '{demo} with elevated office BP. Which bedside step comes first?',
     },
     stages: [
@@ -267,7 +297,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'daily-walk',
         label: 'Daily walks, less salt',
-        labels: { gentle: 'Walk daily, less salty food', steady: 'Daily walks, less salt', expert: 'Exercise + sodium cut' },
+        labels: { gentle: 'Walk daily, less salty food', steady: 'Daily walks, less salt', clinical: 'Daily walks, cut salt', expert: 'Exercise + sodium restriction' },
         gradeByStage: ['BEST', 'BEST', 'BEST', 'NOT_GREAT'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { energy: 1 },
@@ -276,7 +306,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'prescribed-meds',
         label: 'Take prescribed medicine',
-        labels: { gentle: 'Take the daily medicine', steady: 'Take prescribed medicine', expert: 'Continue antihypertensives' },
+        labels: { gentle: 'Take the daily medicine', steady: 'Take prescribed medicine', clinical: 'Take meds as prescribed', expert: 'Continue antihypertensives' },
         gradeByStage: ['NOT_GREAT', 'NOT_GREAT', 'BEST', 'BEST'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { comfort: 1 },
@@ -285,7 +315,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'skip-meds',
         label: 'Skip meds — feeling fine!',
-        labels: { gentle: 'Skip it — feeling great!', steady: 'Skip meds — feeling fine!', expert: 'Omit doses (feels well)' },
+        labels: { gentle: 'Skip it — feeling great!', steady: 'Skip meds — feeling fine!', clinical: 'Skip meds, feeling well', expert: 'Nonadherence (asymptomatic)' },
         gradeByStage: ['NOT_GREAT', 'WRONG', 'WRONG', 'WRONG'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { comfort: -1 },
@@ -294,7 +324,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'double-dose',
         label: 'Double the dose to fix it faster',
-        labels: { gentle: 'Take double to fix it fast', steady: 'Double the dose to fix it faster', expert: 'Double the dose' },
+        labels: { gentle: 'Take double to fix it fast', steady: 'Double the dose to fix it faster', clinical: 'Double the dose', expert: 'Double the antihypertensive dose' },
         gradeByStage: ['DANGEROUS', 'DANGEROUS', 'DANGEROUS', 'DANGEROUS'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: {},

@@ -32,7 +32,7 @@ describe('handles + presets', () => {
     expect(HANDOFF_PRESETS.length).toBeGreaterThan(0);
     for (const p of HANDOFF_PRESETS) {
       expect(p.id.length).toBeLessThanOrEqual(40);
-      for (const tier of ['gentle', 'steady', 'expert'] as const) {
+      for (const tier of ['gentle', 'steady', 'clinical', 'expert'] as const) {
         expect(p[tier].length).toBeGreaterThan(0);
         expect(handoffText(p.id, tier)).toBe(p[tier]);
       }

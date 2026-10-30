@@ -58,6 +58,17 @@ export function signoutLines(input: SignoutInput, tier: ChromeTier): string[] {
       input.observation,
     ];
   }
+  if (tier === 'clinical') {
+    // Healthcare-worker voice: spelled-out clinical words, no
+    // abbreviations — the chart a nurse aide hands over.
+    const visit = VISIT_CONTEXT_WORDING[input.visitKind].clinical;
+    return [
+      `${visit} #${input.visitNo} · ${input.ageYears} year old ${input.sex}`,
+      `Reports "${c}"`,
+      `History: ${input.condition} · Medicines: ${medsStr}`,
+      input.observation,
+    ];
+  }
   const medsGentle =
     input.meds.length === 0 ? 'No medicines yet.' : `Takes ${medsStr.toLowerCase()}.`;
   return [

@@ -15,7 +15,7 @@ describe.each(CONDITION_IDS)('treatment wording %s', (condition) => {
   it('keeps steady === canonical and every tier in budget', () => {
     for (const action of CONDITIONS[condition].actions) {
       expect(action.labels.steady).toBe(action.label);
-      for (const tier of ['gentle', 'steady', 'expert'] as const) {
+      for (const tier of ['gentle', 'steady', 'clinical', 'expert'] as const) {
         const text = actionLabel(action, tier);
         expect(text.length).toBeGreaterThan(0);
         // Card budget: 2 wrapped lines max (auditor mirrors).
