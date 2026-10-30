@@ -42,7 +42,7 @@ path. Never real patient data.
 
 ```bash
 npm install
-npm test        # full suite — must pass (90 tests, green at last update)
+npm test        # full suite — must pass (91 tests, green at last update)
 npm run dev     # serves at http://localhost:5173 — open in a browser
 npm run build   # production build into dist/
 ```
@@ -146,5 +146,5 @@ Docs map: [`docs/UI_PROTOTYPE.md`](./docs/UI_PROTOTYPE.md) (interface spec),
 [`PROGRESS.md`](./PROGRESS.md) (build log).
 
 ---
-*Last verified 2026-10-29 against `main` @ `9015999` (90/90 tests, build green,
+*Last verified 2026-10-29 against `main` @ `56d00fa` (91/91 tests, build green,
 live URL up).*
