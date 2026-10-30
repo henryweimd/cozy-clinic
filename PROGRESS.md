@@ -1897,3 +1897,19 @@ clearance — then a polish fix loop for real findings.
   clean; build green; live 200 with fresh bundle.
 - Spend $0.00 (ledger ~$0.74 cumulative; runtime Muse calls
   bill to the operator's Meta key per call).
+
+## Loop-coin: Care Coin icon (2026-10-30)
+
+- OWNERSHIP: `src/ui/coin.ts` (new), `src/ui/shopSheet.ts`,
+  `src/scenes/ClinicScene.ts` (Profile row + result modal),
+  auditor E9.
+- Coins were text-only everywhere (the old top-bar icon died
+  with the strip). New code-drawn metallic disc — gold body,
+  light inner ring, care-cross emblem, specular dot — via one
+  shared helper, pinned left of measured text at all 3 coin
+  displays: Profile Care Coins row, Shop balance, result
+  earnings line (recovered only; offscreen measurer for the
+  4th-line width). Big wallets shift the coin left, never clip.
+- Verification: auditor 0 findings (new E9 coin geometry);
+  143/143; tsc clean; build green; live 200 after push.
+- Spend $0.00 (ledger ~$0.74 cumulative).

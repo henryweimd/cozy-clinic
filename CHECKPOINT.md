@@ -69,3 +69,23 @@ through run 5; coin icon still unloved but parked).
 Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
 
 STOP.
+
+## Run 8 — loop-coin (2026-10-30)
+
+Phase: metallic Care Coin icon at Profile + Shop + result.
+
+Files changed: 3 (coin.ts new, shopSheet, ClinicScene).
+Commit `d7da59d` on main.
+
+Test result: auditor 0 findings; `npm test` 143/143 (19
+files); tsc clean; build green.
+
+Deployment URL: `https://cozy-clinic.vercel.app/` (live-polled
+200 with fresh bundle after push).
+
+Playtest result: NOT operator-playtested this run —
+programmatic verification only.
+
+Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
+
+STOP.
