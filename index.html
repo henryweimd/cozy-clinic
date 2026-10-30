@@ -2,9 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <meta name="theme-color" content="#fdf6ec" />
-    <link rel="icon" href="data:," />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Cozy Clinic" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/cozy-192.png" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <title>Little Lives: Cozy Clinic</title>
     <style>
       /* P4: Baloo 2 vendored offline (public/assets/fonts/Baloo2.ttf,
@@ -27,14 +33,15 @@
         overflow: hidden;
         overscroll-behavior: none;
       }
+      /* Centering belongs to ONE authority: Phaser's autoCenter
+         margins. (Flex here + Phaser margins double-applied and
+         shoved the canvas off-center on wide screens.) */
       #game-root {
         position: fixed;
         inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
       }
       canvas {
+        display: block;
         border-radius: 12px;
         box-shadow: 0 8px 32px rgba(122, 84, 48, 0.18);
       }

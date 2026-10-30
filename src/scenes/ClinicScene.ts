@@ -547,6 +547,8 @@ export class ClinicScene extends Phaser.Scene {
   private greetCache = new Map<string, string>();
   /** The ticker notes the proxy going live exactly once. */
   private museNoted = false;
+  /** Respects the OS: infinite pulses + idle bob go static. */
+  private reducedMotion = false;
 
   /** Coins earned by THIS visit's rounds (never net-of-spend). */
   private visitEarned = 0;
@@ -600,6 +602,12 @@ export class ClinicScene extends Phaser.Scene {
   create(): void {
     // Difficulty first: cards build at the live tier (no
     // boot-time rebuild flicker for returning Steady/Expert).
+    try {
+      this.reducedMotion =
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches === true;
+    } catch {
+      this.reducedMotion = false;
+    }
     this.loadDifficulty();
     this.loadStreak();
     this.loadSfx();
@@ -651,7 +659,9 @@ export class ClinicScene extends Phaser.Scene {
     // Idle bob: ANIMATION.md — 3px @ the roster's rad/s rate,
     // owns the patient's y.
     const t = this.time.now / 1000;
-    this.patient.y = this.patientBaseY + Math.sin(t * bobRate(this.activeName)) * 3;
+    this.patient.y =
+      this.patientBaseY +
+      (this.reducedMotion ? 0 : Math.sin(t * bobRate(this.activeName)) * 3);
 
     // (Visit clock removed until the speed element returns.)
 
@@ -4358,26 +4368,32 @@ export class ClinicScene extends Phaser.Scene {
     if (outcome === 'struggling') {
       // Struggling invites learning (pulsing badge) while the
       // primary leads onward to the next patient, never obliged.
+      // Reduced motion: static emphasis, no infinite pulse.
       this.tweens.killTweensOf(this.learnBadge);
       this.learnBadge.setScale(1).setVisible(true);
-      this.tweens.add({
-        targets: this.learnBadge,
-        scaleX: 1.3,
-        scaleY: 1.3,
-        duration: 450,
-        yoyo: true,
-        repeat: -1,
-        ease: 'Sine.easeInOut',
-      });
-      this.tweens.add({
-        targets: this.resultPrimary,
-        scaleX: 1.03,
-        scaleY: 1.03,
-        duration: 500,
-        yoyo: true,
-        repeat: -1,
-        ease: 'Sine.easeInOut',
-      });
+      if (this.reducedMotion) {
+        this.learnBadge.setScale(1.15);
+        this.resultPrimary.setScale(1);
+      } else {
+        this.tweens.add({
+          targets: this.learnBadge,
+          scaleX: 1.3,
+          scaleY: 1.3,
+          duration: 450,
+          yoyo: true,
+          repeat: -1,
+          ease: 'Sine.easeInOut',
+        });
+        this.tweens.add({
+          targets: this.resultPrimary,
+          scaleX: 1.03,
+          scaleY: 1.03,
+          duration: 500,
+          yoyo: true,
+          repeat: -1,
+          ease: 'Sine.easeInOut',
+        });
+      }
     }
   }
 
