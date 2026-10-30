@@ -77,7 +77,15 @@ export interface TrajectoryEdge {
 /** A playable action card offered to the player. */
 export interface ActionDef {
   id: string;
+  /**
+   * Canonical label (=== labels.steady): engine memory,
+   * choice records, and trajectory-edge matching all key on
+   * this — tiers only ever reword the DISPLAY, never the
+   * meaning, so a tier switch can't change the right answer.
+   */
   label: string;
+  /** Display wording per reading tier (Muse-drafted, engine-vetoed). */
+  labels: { gentle: string; steady: string; expert: string };
   /** Grade of this action when taken at each stage index. */
   gradeByStage: ChoiceGrade[];
   /** Stage-index delta applied when the action resolves (before clamping). */

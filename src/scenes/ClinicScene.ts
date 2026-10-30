@@ -5,6 +5,7 @@ import {
   CARD_ROW_IDS,
   CHOOSE_PROMPT_WORDING,
   CHROME_TIER_BY_DIFFICULTY,
+  CHROME_TIER_LABEL,
   MOCK_ROSTER,
   MOCK_THREADS,
   PROTOTYPE_SEEDS,
@@ -12,7 +13,7 @@ import {
   quoteIfSpoken,
   waitingNames,
 } from '../ui/mockData';
-import type { VisitContext } from '../ui/mockData';
+import type { ChromeTier, VisitContext } from '../ui/mockData';
 import { BackendTicker } from '../ui/ticker';
 import { ToolTray } from '../ui/toolTrays';
 import type { ToolDef } from '../ui/toolTrays';
@@ -41,7 +42,7 @@ import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
 import { examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
 import type { RoundScore, VisitOutcome } from '../game/visit';
-import { CONDITION_TIER_NAMES, EXAM_OTHER_FINDING } from '../clinical/conditions';
+import { actionLabel, CONDITION_TIER_NAMES, EXAM_OTHER_FINDING } from '../clinical/conditions';
 import type { ConditionId } from '../clinical/types';
 import { LearnList } from '../ui/learnList';
 import { AssetBrowser } from '../ui/assetBrowser';
@@ -276,6 +277,7 @@ const SHOP_STORAGE_KEY = 'cozy-shop-v1';
 const LEARN_FILED_KEY = 'cozy-learn-filed-v1';
 const LEARN_OPENED_KEY = 'cozy-learn-opened-v1';
 const LEARN_PASSED_KEY = 'cozy-learn-passed-v1';
+const DIFFICULTY_KEY = 'cozy-difficulty-v1';
 const HANDLE_STORAGE_KEY = 'cozy-doctor-handle-v1';
 const TEAM_STORAGE_KEY = 'cozy-team-tag-v1';
 const OUTBOX_STORAGE_KEY = 'cozy-handoff-outbox-v1';
@@ -451,6 +453,10 @@ export class ClinicScene extends Phaser.Scene {
   /** Opened resource ids (their +2 is spent). */
   private openedRes = new Set<string>();
   private passedQuiz = new Set<string>();
+  /** Live reading level (1 Gentle → 3 Expert), Profile-owned. */
+  private difficulty: 1 | 2 | 3 = PROTOTYPE_SEEDS.difficulty;
+  /** Tier the card row was last built with (rebuild on switch). */
+  private cardTier: ChromeTier | null = null;
   private cast: CastData | null = null;
   /** Exam findings: fallback until the live rows land (boot-only). */
   private examFindings: FallbackExamFinding[] = FALLBACK_EXAM_FINDINGS;
@@ -463,6 +469,7 @@ export class ClinicScene extends Phaser.Scene {
   private waitingView!: Phaser.GameObjects.Container;
   private profileView!: Phaser.GameObjects.Container;
   private profileRows!: Phaser.GameObjects.Container;
+  private segRow!: Phaser.GameObjects.Container;
   private waitingRows!: Phaser.GameObjects.Container;
   /** Queue order (names); the player reorders with the chevrons. */
   private waitingOrder: string[] = MOCK_ROSTER.map((e) => e.name);
@@ -560,6 +567,9 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   create(): void {
+    // Difficulty first: cards build at the live tier (no
+    // boot-time rebuild flicker for returning Steady/Expert).
+    this.loadDifficulty();
     this.patientState = this.engine.initialState(PROTOTYPE_SEEDS.conditionId);
     this.revealedStage = this.patientState.stageIndex;
     this.drawRoom();
@@ -1078,6 +1088,39 @@ export class ClinicScene extends Phaser.Scene {
     }
   }
 
+  /** Live wording tier (every tiered surface reads this). */
+  private tier(): ChromeTier {
+    return CHROME_TIER_BY_DIFFICULTY[this.difficulty];
+  }
+
+  private loadDifficulty(): void {
+    try {
+      const raw = window.localStorage.getItem(DIFFICULTY_KEY);
+      if (raw === '2') this.difficulty = 2;
+      else if (raw === '3') this.difficulty = 3;
+      else this.difficulty = 1;
+    } catch {
+      this.difficulty = 1;
+    }
+  }
+
+  private saveDifficulty(): void {
+    try {
+      window.localStorage.setItem(DIFFICULTY_KEY, `${this.difficulty}`);
+    } catch {
+      /* private-mode play: the session keeps the switch */
+    }
+  }
+
+  /** Profile segmented control: rewords the visit on return. */
+  private setDifficulty(next: 1 | 2 | 3): void {
+    if (next === this.difficulty) return;
+    this.difficulty = next;
+    this.saveDifficulty();
+    this.refreshProfileRows();
+    this.showToast(`Reading level: ${CHROME_TIER_LABEL[this.tier()]}`);
+  }
+
   /** Wallet persistence (local; coin_ledger replaces it later). */
   private loadWallet(): void {
     try {
@@ -1230,18 +1273,37 @@ export class ClinicScene extends Phaser.Scene {
       return def.examOptions.map((opt) => ({ id: `exam:${opt.id}`, label: opt.label }));
     }
     if (this.round === 'diagnose') {
-      const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+      const tier = this.tier();
       return def.dxOptions.map((opt) => ({ id: `dx:${opt}`, label: CONDITION_TIER_NAMES[opt][tier] }));
     }
+    const tier = this.tier();
     return this.cardRowIds().map((actionId) => {
       const action = def.actions.find((a) => a.id === actionId);
-      return { id: actionId, label: action ? action.label : actionId };
+      return { id: actionId, label: action ? actionLabel(action, tier) : actionId };
+    });
+  }
+
+  /**
+   * Rebuilds the row at the live tier (doUndo's pattern):
+   * reveals survive, labels reword. Called on visit return
+   * after a Profile tier switch.
+   */
+  private rebuildCardsForTier(): void {
+    const saved = this.cards.map((c) => c.revealed);
+    this.cardRow.removeAll(true);
+    this.buildCards();
+    this.drawCorral();
+    this.cards.forEach((card, i) => {
+      card.revealed = saved[i] ?? null;
+      this.drawSpine(card, card.revealed);
+      this.drawStamp(card, card.revealed);
     });
   }
 
   /** (Re)builds the tappable cards; the corral is re-added by drawCorral. */
   private buildCards(): void {
     this.cards = [];
+    this.cardTier = this.tier();
     const defs = this.roundCardDefs();
     // 3 cards → w156 step 168; 4–5 (later difficulty) → w114 step 126.
     // Both span x24–516. Every live round deals 3.
@@ -1290,7 +1352,7 @@ export class ClinicScene extends Phaser.Scene {
    * — fixed here).
    */
   private drawCorral(): void {
-    const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+    const tier = this.tier();
     // The legend names the live round + its step (examine and
     // diagnose are tier-free teaching words; treat keeps the
     // tier wording).
@@ -1487,7 +1549,7 @@ export class ClinicScene extends Phaser.Scene {
 
   private showQuestion(round: VisitRound): void {
     const def = CONDITIONS[this.patientState.conditionId];
-    const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+    const tier = this.tier();
     const q =
       round === 'examine'
         ? examQuestion(def.examQuiz[tier], this.activeName, this.demoTag())
@@ -1616,7 +1678,7 @@ export class ClinicScene extends Phaser.Scene {
     this.undoStack = pushMove(this.undoStack, this.snapPreMove());
     const pick = card.actionId.replace('dx:', '') as ConditionId;
     const correct = pick === def.id;
-    const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+    const tier = this.tier();
     const pickLabel = CONDITION_TIER_NAMES[pick]?.[tier] ?? pick;
     const grade: ChoiceGrade = correct ? 'BEST' : 'WRONG';
     card.revealed = grade;
@@ -2098,7 +2160,7 @@ export class ClinicScene extends Phaser.Scene {
   private refreshChart(): void {
     const def = CONDITIONS[this.patientState.conditionId];
     const stage = def.stages[this.patientState.stageIndex];
-    const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+    const tier = this.tier();
     const row = this.cast ? patientByName(this.cast, this.activeName) : null;
     const fb = row ?? FALLBACK_PATIENTS.find((p) => p.name === this.activeName);
     const lines = signoutLines(
@@ -2565,13 +2627,48 @@ export class ClinicScene extends Phaser.Scene {
         color: SECONDARY,
       })
       .setOrigin(0, 0.5);
+    // Reading-level segmented control (header right — the
+    // sheet's 7 row slots are full). Pills right-align to the
+    // rows (x492); zones oversize the visuals for touch.
+    const segLabel = this.add
+      .text(314, 180, 'Reading level', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '13px',
+        color: SECONDARY,
+      })
+      .setOrigin(1, 0.5);
+    this.segRow = this.add.container(0, 0, []);
     this.profileRows = this.add.container(0, 0, []);
-    this.profileView = this.add.container(0, 0, [sheet, title, hint, this.profileRows]);
+    this.profileView = this.add.container(0, 0, [sheet, title, hint, segLabel, this.segRow, this.profileRows]);
     this.profileView.setDepth(10).setVisible(false).setAlpha(0);
   }
 
   /** Rebuilds the live stat rows on every Profile arrival. */
   private refreshProfileRows(): void {
+    this.segRow.removeAll(true);
+    const segDefs: (1 | 2 | 3)[] = [1, 2, 3];
+    segDefs.forEach((d, i) => {
+      const x = 322 + i * 58;
+      const selected = d === this.difficulty;
+      const bg = this.add.graphics();
+      bg.fillStyle(selected ? SAGE : CARD_FILL, 1);
+      bg.lineStyle(2, OUTLINE, 1);
+      bg.fillRoundedRect(x, 166, 54, 28, 14);
+      bg.strokeRoundedRect(x, 166, 54, 28, 14);
+      const label = this.add
+        .text(x + 27, 180, CHROME_TIER_LABEL[CHROME_TIER_BY_DIFFICULTY[d]], {
+          fontFamily: FONT_FAMILY,
+          fontStyle: 'bold',
+          fontSize: '12px',
+          color: selected ? '#ffffff' : COCOA,
+        })
+        .setOrigin(0.5, 0.5);
+      const zone = this.add
+        .zone(x + 27, 180, 54, 44)
+        .setInteractive({ useHandCursor: true });
+      zone.on('pointerdown', () => this.setDifficulty(d));
+      this.segRow.add([bg, label, zone]);
+    });
     this.profileRows.removeAll(true);
     const stats: [string, string][] = [
       ['Care Coins', `${this.wallet.balance}`],
@@ -2843,7 +2940,7 @@ export class ClinicScene extends Phaser.Scene {
     // The sheet is modal: park both sliders behind it.
     this.chartDrawer.setOpen(false, true);
     this.tray.setOpen(false, true);
-    const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+    const tier = this.tier();
     this.handoffSheet.show({
       patientName: this.activeName,
       notes: this.notesFor(this.activeName),
@@ -3043,7 +3140,7 @@ export class ClinicScene extends Phaser.Scene {
     // available; the main cards keep only real choices.
     this.tray = new ToolTray(this);
     this.tray.onPick = (tool) => {
-      const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+      const tier = this.tier();
       const finding =
         findingFor(
           this.examFindings,
@@ -3260,6 +3357,12 @@ export class ClinicScene extends Phaser.Scene {
     // showing, no tap-teaching needed — then the live quiz
     // follows. (Boot lands here too.)
     if (next === 'visit' || next === 'telemed') {
+      // A Profile tier switch rewords the live visit on return:
+      // cards rebuild (stamps preserved), chart + quiz re-ask.
+      if (this.cardTier !== null && this.cardTier !== this.tier()) {
+        this.rebuildCardsForTier();
+      }
+      this.refreshChart();
       if (this.visitEnded && this.lastOutcome) {
         // A finished visit re-offers its ending (never dead cards).
         this.showResult(this.lastOutcome);
@@ -3605,7 +3708,7 @@ export class ClinicScene extends Phaser.Scene {
         `energy ${this.patientState.vitals.energy} · comfort ${this.patientState.vitals.comfort} · breath ${this.patientState.vitals.breathing}`,
       ],
       ['visit:', `#${this.visitNo()} · node: ${this.lastNodeId}`],
-      ['wording:', `${PROTOTYPE_SEEDS.wordingTier} · difficulty: ${PROTOTYPE_SEEDS.difficulty}/3`],
+      ['wording:', `${PROTOTYPE_SEEDS.wordingTier} · difficulty: ${this.difficulty}/3 (${this.tier()})`],
     ];
     let y = 224;
     for (const [key, value] of rows) {

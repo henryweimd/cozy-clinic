@@ -3,6 +3,14 @@ import type { ConditionDef, ConditionId } from './types';
 /** Exam-round finding when the pick isn't the revealing one. */
 export const EXAM_OTHER_FINDING = 'That exam finds nothing new.';
 
+/** Display label for one action at one reading tier. */
+export function actionLabel(
+  action: { label: string; labels: { gentle: string; steady: string; expert: string } },
+  tier: 'gentle' | 'steady' | 'expert',
+): string {
+  return action.labels[tier];
+}
+
 /** Condition display names per tier (diagnose-round options). */
 export const CONDITION_TIER_NAMES: Record<ConditionId, { gentle: string; steady: string; expert: string }> = {
   dehydration: { gentle: 'Dried Out', steady: 'Dehydration', expert: 'Dehydration' },
@@ -47,6 +55,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'offer-water',
         label: 'Offer cool water',
+        labels: { gentle: 'Give cool sips of water', steady: 'Offer cool water', expert: 'Oral rehydration' },
         gradeByStage: ['NOT_GREAT', 'BEST', 'BEST', 'BEST'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { energy: 1, comfort: 1 },
@@ -55,6 +64,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'rest-shade',
         label: 'Rest in the shade',
+        labels: { gentle: 'Rest somewhere shady', steady: 'Rest in the shade', expert: 'Rest, observation' },
         gradeByStage: ['NOT_GREAT', 'NOT_GREAT', 'BEST', 'NOT_GREAT'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { energy: 1 },
@@ -63,6 +73,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'fizzy-soda',
         label: 'Give fizzy soda',
+        labels: { gentle: 'Share a fizzy soda', steady: 'Give fizzy soda', expert: 'Sugary carbonated drink' },
         gradeByStage: ['WRONG', 'WRONG', 'WRONG', 'WRONG'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { comfort: -1 },
@@ -71,6 +82,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'salt-pouch',
         label: 'Feed a whole salt pouch',
+        labels: { gentle: 'Eat a whole salt packet', steady: 'Feed a whole salt pouch', expert: 'Concentrated salt dose' },
         gradeByStage: ['DANGEROUS', 'DANGEROUS', 'DANGEROUS', 'DANGEROUS'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: {},
@@ -107,6 +119,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'rest-fluids',
         label: 'Warm rest + fluids',
+        labels: { gentle: 'Snuggle, rest and sip', steady: 'Warm rest + fluids', expert: 'Supportive care + PO fluids' },
         gradeByStage: ['NOT_GREAT', 'BEST', 'BEST', 'BEST'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { energy: 1, comfort: 1 },
@@ -115,6 +128,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'warm-soup',
         label: 'Warm soup break',
+        labels: { gentle: 'Have some warm soup', steady: 'Warm soup break', expert: 'Warm fluids for comfort' },
         gradeByStage: ['NOT_GREAT', 'NOT_GREAT', 'BEST', 'NOT_GREAT'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { comfort: 1 },
@@ -123,6 +137,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'share-cup',
         label: 'Share a cup with a friend',
+        labels: { gentle: 'Share sips with a friend', steady: 'Share a cup with a friend', expert: 'Share drinking vessels' },
         gradeByStage: ['WRONG', 'WRONG', 'WRONG', 'WRONG'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { comfort: -1 },
@@ -131,6 +146,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'ice-bath',
         label: 'Plunge into an ice bath',
+        labels: { gentle: 'Jump in an ice bath', steady: 'Plunge into an ice bath', expert: 'Cold-water immersion' },
         gradeByStage: ['DANGEROUS', 'DANGEROUS', 'DANGEROUS', 'DANGEROUS'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: {},
@@ -167,6 +183,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'calm-air',
         label: 'Sit upright in calm air',
+        labels: { gentle: 'Sit up in calm air', steady: 'Sit upright in calm air', expert: 'Upright positioning, calm air' },
         gradeByStage: ['NOT_GREAT', 'BEST', 'BEST', 'NOT_GREAT'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { breathing: 1, comfort: 1 },
@@ -175,6 +192,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'rescue-puffer',
         label: 'Rescue puffer with spacer',
+        labels: { gentle: 'Use the rescue puffer', steady: 'Rescue puffer with spacer', expert: 'Albuterol via spacer' },
         gradeByStage: ['NOT_GREAT', 'BEST', 'BEST', 'BEST'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { breathing: 2 },
@@ -183,6 +201,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'flower-sniff',
         label: 'Bury nose in dusty flowers',
+        labels: { gentle: 'Sniff the dusty flowers', steady: 'Bury nose in dusty flowers', expert: 'Allergen exposure' },
         gradeByStage: ['WRONG', 'WRONG', 'WRONG', 'WRONG'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { breathing: -1 },
@@ -191,6 +210,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'dusty-blanket',
         label: 'Shake a dusty blanket indoors',
+        labels: { gentle: 'Shake a dusty blanket', steady: 'Shake a dusty blanket indoors', expert: 'Indoor dust aerosol' },
         gradeByStage: ['DANGEROUS', 'DANGEROUS', 'DANGEROUS', 'DANGEROUS'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: {},
@@ -227,6 +247,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'daily-walk',
         label: 'Daily walks, less salt',
+        labels: { gentle: 'Walk daily, less salty food', steady: 'Daily walks, less salt', expert: 'Exercise + sodium cut' },
         gradeByStage: ['BEST', 'BEST', 'BEST', 'NOT_GREAT'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { energy: 1 },
@@ -235,6 +256,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'prescribed-meds',
         label: 'Take prescribed medicine',
+        labels: { gentle: 'Take the daily medicine', steady: 'Take prescribed medicine', expert: 'Continue antihypertensives' },
         gradeByStage: ['NOT_GREAT', 'NOT_GREAT', 'BEST', 'BEST'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { comfort: 1 },
@@ -243,6 +265,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'skip-meds',
         label: 'Skip meds — feeling fine!',
+        labels: { gentle: 'Skip it — feeling great!', steady: 'Skip meds — feeling fine!', expert: 'Omit doses (feels well)' },
         gradeByStage: ['NOT_GREAT', 'WRONG', 'WRONG', 'WRONG'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { comfort: -1 },
@@ -251,6 +274,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'double-dose',
         label: 'Double the dose to fix it faster',
+        labels: { gentle: 'Take double to fix it fast', steady: 'Double the dose to fix it faster', expert: 'Double the dose' },
         gradeByStage: ['DANGEROUS', 'DANGEROUS', 'DANGEROUS', 'DANGEROUS'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: {},
