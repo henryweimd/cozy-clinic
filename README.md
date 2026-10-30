@@ -59,7 +59,7 @@ Playable today on the live build; every step works, nothing staged:
 1. Meet Milo — visit #2, he recognizes you in the opening seconds.
 2. Answer the examine quiz, then diagnose → treat.
 3. Tap Next patient into a 6-strong roster (sleepy Theo to elder
-   Ellis); reorder the Waiting queue. The right-edge exam tray
+   Ellis); reorder the Waiting queue. The left-edge exam tray
    holds Look / Feel / Tap / Listen with per-disease findings.
 4. Leave a care note (open a 2nd tab as another doctor to see it land).
 5. Read a Learn topic (+2 coins), pass its prize quiz (+5), spend

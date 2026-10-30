@@ -70,12 +70,10 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
   divider `#8A5A3B` at 25% alpha. Display-only (no tap zones),
   so title taps pass through. Depth 19, under the HUD contents
   (20). Clear of the title (top ~y40) and the admin trigger zone.
-- Chrome-3: the profile chip ("You") + difficulty pill ("Gentle"
-  + dots) LEFT the main screen for a future submenu (operator
-  direction — the submenu will read "Gentle Mode" etc.). The
-  strip now frames the Visit HUD contents (coin cluster left,
-  context words center — see Visit; the clock left until the
-  speed element returns); on other views it rests empty.
+- Chrome-4: the top strip is GONE (operator: distracting; a
+  translucent bar returns later). Coins live in the Profile Care
+  Coins row (opens the Shop); the visit keeps one floater, the
+  Rewind pill top-right while a move can rewind.
 
 ### Nav bar (persistent, all views)
 
@@ -161,11 +159,12 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
   in `src/game/visit.ts`). A dim + result card (x48–492,
   y340–620) congratulates the PLAYER, never claims the patient
   is better/worse ("Great work, Doctor!" / "Tough case — keep
-  going!"), shows visit # + score ("N of 3 right") + coins
-  earned, and offers two buttons: recovered → Next patient /
-  Learn; struggling → Learn (amber, pulsing) / Try again. The
-  card blocks all other taps. Retry resets coins baseline,
-  rounds, undo, and state.
+  going!", flawless 3/3 earns "Flawless visit, Doctor!"), shows
+  visit # + score ("N of 3 right") + the visit pearl + coins
+  earned, and offers two buttons: both endings lead with Next
+  patient; recovered → Learn about X, struggling → Try again
+  (Learn badge pulses). The card blocks all other taps. Retry
+  resets coins baseline, rounds, undo, and state.
 - VIEW 5 — LEARN (full-screen): the Learning List sheet behind
   the Learn tab (condition-linked authoritative resources; the
   old strip book button is gone). × returns to Visit; switching
@@ -198,8 +197,8 @@ VIEW 1 — VISIT (default; today's Mabel scene):
 - Nametag (y736 — tap it for the Living Chart). The old vitals
   chip row (breath/comfort/visit#) is REMOVED from the main view
   (unclutter: dev-facing values) — its content moves into the
-  Medical Chart drawer: top tab of the right-edge rail (radio with exam)
-  (handle x0–24, panel x0–192, y300–560), auto-open on each
+  Medical Chart drawer: top tab of the left-edge rail (radio with exam)
+  (tab x0–52, panel x0–192, y300–560), auto-open on each
   patient's first appearance, handle toggles. Contents: the
   patient's SIGNOUT (signout.ts, tier-aware): expert reads like
   a real signout ("Acute visit #4 · 8yF" / 'c/o "wheezy"' /

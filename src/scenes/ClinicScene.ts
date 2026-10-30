@@ -43,6 +43,7 @@ import { signoutLines } from '../ui/signout';
 import { examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
 import { EMPTY_STREAK, earnsDailyBonus, nextStreak, streakBonus } from '../game/streak';
 import type { StreakState } from '../game/streak';
+import { playSfx, setSfxMuted, unlockSfx } from '../game/sfx';
 import type { RoundScore, VisitOutcome } from '../game/visit';
 import { actionLabel, CONDITION_TIER_NAMES, EXAM_OTHER_FINDING } from '../clinical/conditions';
 import type { ConditionId } from '../clinical/types';
@@ -283,6 +284,7 @@ const LEARN_OPENED_KEY = 'cozy-learn-opened-v1';
 const LEARN_PASSED_KEY = 'cozy-learn-passed-v1';
 const DIFFICULTY_KEY = 'cozy-difficulty-v1';
 const STREAK_KEY = 'cozy-streak-v1';
+const SFX_KEY = 'cozy-sfx-v1';
 const HANDLE_STORAGE_KEY = 'cozy-doctor-handle-v1';
 const TEAM_STORAGE_KEY = 'cozy-team-tag-v1';
 const OUTBOX_STORAGE_KEY = 'cozy-handoff-outbox-v1';
@@ -462,6 +464,8 @@ export class ClinicScene extends Phaser.Scene {
   private visitCombo = 0;
   /** A press animation is mid-flight (double-resolve guard). */
   private tapping = false;
+  /** Sound off (About sheet toggle, persisted, default on). */
+  private sfxMuted = false;
   /** Daily streak state + one pending day-bonus toast. */
   private streak: StreakState = { ...EMPTY_STREAK };
   private pendingStreak: { day: number; bonus: number } | null = null;
@@ -581,6 +585,10 @@ export class ClinicScene extends Phaser.Scene {
     // boot-time rebuild flicker for returning Steady/Expert).
     this.loadDifficulty();
     this.loadStreak();
+    this.loadSfx();
+    // Audio unlocks on the first tap (autoplay policy); every
+    // cue after that just plays.
+    this.input.once('pointerdown', () => unlockSfx());
     this.patientState = this.engine.initialState(PROTOTYPE_SEEDS.conditionId);
     this.revealedStage = this.patientState.stageIndex;
     this.drawRoom();
@@ -1148,6 +1156,23 @@ export class ClinicScene extends Phaser.Scene {
     }
   }
 
+  private loadSfx(): void {
+    try {
+      this.sfxMuted = window.localStorage.getItem(SFX_KEY) === 'off';
+    } catch {
+      this.sfxMuted = false;
+    }
+    setSfxMuted(this.sfxMuted);
+  }
+
+  private saveSfx(): void {
+    try {
+      window.localStorage.setItem(SFX_KEY, this.sfxMuted ? 'off' : 'on');
+    } catch {
+      /* private-mode play: the session keeps the switch */
+    }
+  }
+
   /** Profile segmented control: rewords the visit on return. */
   private setDifficulty(next: 1 | 2 | 3): void {
     if (next === this.difficulty) return;
@@ -1712,6 +1737,7 @@ export class ClinicScene extends Phaser.Scene {
       this.wallet = earn(this.wallet, examPay, 'earn:best-exam');
       this.visitEarned += examPay;
       this.saveWallet();
+      playSfx('correct');
       this.showToast(`Great exam! +${total} ${this.coinWord(total)}${this.praiseSuffix()}`);
     } else {
       this.breakCombo();
@@ -1765,9 +1791,11 @@ export class ClinicScene extends Phaser.Scene {
       this.wallet = earn(this.wallet, dxPay, 'earn:best-dx');
       this.visitEarned += dxPay;
       this.saveWallet();
+      playSfx('correct');
       this.showToast(`Correct diagnosis! +${total} ${this.coinWord(total)}${this.praiseSuffix()}`);
     } else {
       this.breakCombo();
+      playSfx('wrong');
       this.showToast("Hmm — that doesn't fit");
     }
     this.refreshChart();
@@ -1844,10 +1872,14 @@ export class ClinicScene extends Phaser.Scene {
     if (grade !== 'BEST') this.breakCombo();
     if (grade === 'BEST') {
       const total = txPay + txExtra;
+      playSfx('correct');
       this.showToast(`Great choice! +${total} ${this.coinWord(total)}${this.praiseSuffix()}`);
     }
     else if (grade === 'NOT_GREAT') this.showToast('Okay — no harm done');
-    else this.showToast('Oh no — that made things worse');
+    else {
+      playSfx('wrong');
+      this.showToast('Oh no — that made things worse');
+    }
     this.refreshChart();
     if (grade === 'BEST') {
       // Care Coins wallet: correct (BEST) resolves pay the shop-
@@ -1919,6 +1951,7 @@ export class ClinicScene extends Phaser.Scene {
       this.wallet = earn(this.wallet, perfectPay, 'earn:perfect-visit');
       this.visitEarned += perfectPay;
       this.saveWallet();
+      playSfx('fanfare');
     }
     const outcome = visitOutcome(this.roundScore);
     this.visitEnded = true;
@@ -2786,7 +2819,7 @@ export class ClinicScene extends Phaser.Scene {
       .setInteractive({ useHandCursor: true });
     aboutZone.on('pointerdown', () => {
       if (this.about.open) this.about.hide();
-      else this.about.show();
+      else this.about.show(this.sfxMuted);
     });
     this.profileRows.add([aboutBg, aboutLeft, aboutRight, aboutZone]);
   }
@@ -3251,6 +3284,7 @@ export class ClinicScene extends Phaser.Scene {
       this.wallet = earn(this.wallet, readPay, 'earn:learn-first');
       this.saveWallet();
       this.refreshHud();
+      playSfx('coin');
       this.showToast(`Good reading! +${readPay} ${this.coinWord(readPay)}`);
     };
     this.learnList.onExternal = (r) => {
@@ -3264,6 +3298,7 @@ export class ClinicScene extends Phaser.Scene {
       this.wallet = earn(this.wallet, EARN_QUIZ_PASS, 'earn:quiz-pass');
       this.saveWallet();
       this.refreshHud();
+      playSfx('coin');
       this.showToast(`Quiz whiz! +${EARN_QUIZ_PASS} ${this.coinWord(EARN_QUIZ_PASS)}`);
       return EARN_QUIZ_PASS;
     };
@@ -3275,6 +3310,14 @@ export class ClinicScene extends Phaser.Scene {
     this.shop = new ShopSheet(this);
     // About sheet: the Profile About row opens it.
     this.about = new AboutSheet(this);
+    this.about.onSoundToggle = (muted: boolean) => {
+      this.sfxMuted = muted;
+      setSfxMuted(muted);
+      this.saveSfx();
+      this.about.syncSound(muted);
+      // Unmuting plays back so the switch feels alive.
+      if (!muted) playSfx('correct');
+    };
     // Profile editor: Doctor + Practice rows open it.
     this.editor = new ProfileEditor(this);
     this.editor.onSave = (kind: ProfileKind, value: string) => {
