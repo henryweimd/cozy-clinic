@@ -39,7 +39,10 @@ cast below is invented, not copied [R].
   side of the rev-2 set ([25,9,165,182] at alpha>0). Baked
   floor shadow REMOVED at rev-2 (its shape varied per pose
   and broke parity); grounding comes from the code-drawn
-  shadow ellipse + rug.
+  shadow ellipse + rug. Same surgery 2026-10-29 for the whole
+  cast: June's white disc, Milo's beige slab, Mabel's last gap
+  sliver all keyed out (feet fur 100% preserved, contact sheets
+  `floor-*.png`); Block C now forbids baked shadows outright.
 
 ## Expression library — Mabel (normative)
 

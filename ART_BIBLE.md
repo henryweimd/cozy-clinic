@@ -28,8 +28,10 @@ file and its character's master reference, and has passed validation
   and the relevant objects. Empty space is fine; flat, mismatched,
   unfinished space is not.
 - Finish quality is the bar: clean silhouettes, soft grounding
-  shadows, nothing floating, overflowing, or straddling lines.
-  Nothing ships looking placeholder or amateur.
+  shadows DRAWN IN CODE (static ellipse under feet — never baked
+  into the sprite, or the shadow bobs with the character),
+  nothing floating, overflowing, or straddling lines. Nothing
+  ships looking placeholder or amateur.
 
 ## Fixed style blocks (verbatim in EVERY image prompt)
 
@@ -44,8 +46,10 @@ block B verbatim. Never mix them; never drop the negative clauses.
 > bead eyes with white highlight dots set wide, soft diffused pink
 > blush circles, one thin dark curved smile, stubby mitten arms and
 > nub legs, no fingers or toes, no outline or line art of any kind,
-> no cel shading, soft rim light, soft floor shadow, full body,
-> centered, plain solid warm-white studio void background, game sprite.
+> no cel shading, soft rim light, NO floor shadow, NO ground disc,
+> NO contact shadow of any kind, full body floating on clean
+> transparency, centered, plain solid warm-white studio void
+> background, game sprite.
 > No text, no busy background, no extra limbs, no open mouth,
 > no outline, no flat 2D, no neon colors, no clutter.
 
@@ -122,7 +126,8 @@ NO outline color exists in this direction — there is no outline [R].
 
 - Camera: slightly elevated 2.5D (front view with a hint of floor).
 - Lighting: soft daylight, upper left; one gentle highlight per
-  form; soft rim light + soft floor shadow on mascots [R].
+  form; soft rim light on mascots, ZERO baked shadow — all
+  grounding is the code-drawn ellipse [R].
 - Composition: one focal character per shot; plain warm-white void
   in character source art; clean minimal plates in backdrops;
   generous negative space. If a scene feels busy, remove something.
@@ -163,7 +168,10 @@ Background plates (540×960 canvas, 2x 1080×1920 exports allowed):
 
 1. Dimensions: exact size class (192² mascot / 9:16 plate).
 2. Alpha: mascot corners transparent, padding ≥8 px, bbox sane vs
-   the character's idle; plates fully opaque RGB, no characters.
+   the character's idle; NO baked floor/blob pixels — the bottom
+   band holds feet fur only (no white disc, no beige slab, no
+   detached dots; check on magenta); plates fully opaque RGB,
+   no characters.
 3. Alignment: foot anchor bottom-center; feet land on GROUND=724
    in composite; mascot footprint clear of furniture.
 4. Contact sheet: idle/blink/happy (+alpha-checker row) for
