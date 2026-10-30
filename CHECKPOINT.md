@@ -111,3 +111,24 @@ programmatic verification only.
 Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
 
 STOP.
+
+## Run 10 — profile-panels (2026-10-30)
+
+Phase: Profile rows -> identity cards + panels; About row ->
+full About page.
+
+Files changed: 7 (ClinicScene, icons + test replace coin.*,
+shopSheet import, aboutSheet). Commits `513b860` + docs on main.
+
+Test result: auditor 0 findings; `npm test` 146/146 (20
+files); tsc clean; build green.
+
+Deployment URL: `https://cozy-clinic.vercel.app/` (live-polled
+200 with fresh bundle after push).
+
+Playtest result: NOT operator-playtested this run —
+programmatic verification only.
+
+Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
+
+STOP.

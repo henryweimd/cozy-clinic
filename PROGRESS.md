@@ -1929,3 +1929,22 @@ clearance — then a polish fix loop for real findings.
 - Verification: auditor 0 findings; 145/145 (20 files); tsc
   clean; build green; live 200 after push.
 - Spend $0.00 (ledger ~$0.74 cumulative).
+
+## Profile panels: identity cards + grid + About page (2026-10-30)
+
+- OWNERSHIP: `src/scenes/ClinicScene.ts` (profile layout only),
+  `src/ui/icons.ts` (+test, replaces coin.*), `src/ui/shopSheet.ts`
+  (import), `src/ui/aboutSheet.ts`, auditor (panels + E2).
+- Rows gone per operator note: Doctor identity card on top
+  (persona disc + handle + cheers sticker badge), Team card,
+  2-panel grid (Coins with coin icon + Shop link; Topics with
+  book icon, N-of-M read, Learn link), slim About Cozy Clinic
+  link. Compact sheet ends 636 — no dead rows below.
+- Cheers demoted from row to badge; topics filed/read merged;
+  typed handles/tags sliced for badge clearance (8/14 chars).
+- About is a full page now: pitch, how to play, hackathon +
+  Muse credits, education-only disclaimer, sound/terminal
+  toggles at the bottom.
+- Verification: auditor 0 findings (panels + E2 rewritten);
+  146/146 (20 files); tsc clean; build green; live 200.
+- Spend $0.00 (ledger ~$0.74 cumulative).
