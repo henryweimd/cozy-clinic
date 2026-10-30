@@ -89,3 +89,25 @@ programmatic verification only.
 Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
 
 STOP.
+
+## Run 9 — loop-docs (2026-10-30)
+
+Phase: coin design-lock test + README freshness + live-bundle
+wiring proof.
+
+Files changed: 2 (coin.test.ts new, README). Commit `779ba1f`
+on main (+ docs commit).
+
+Test result: auditor 0 findings; `npm test` 145/145 (20
+files); tsc clean; build green. Live bundle verified to carry
+Supabase env + both function paths.
+
+Deployment URL: `https://cozy-clinic.vercel.app/` (live-polled
+200 with fresh bundle after push).
+
+Playtest result: NOT operator-playtested this run —
+programmatic verification only.
+
+Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
+
+STOP.

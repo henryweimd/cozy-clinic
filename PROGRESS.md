@@ -1913,3 +1913,19 @@ clearance — then a polish fix loop for real findings.
 - Verification: auditor 0 findings (new E9 coin geometry);
   143/143; tsc clean; build green; live 200 after push.
 - Spend $0.00 (ledger ~$0.74 cumulative).
+
+## Loop-docs: design lock + freshness (2026-10-30)
+
+- OWNERSHIP: `src/ui/coin.test.ts` (new), `README.md`,
+  PROGRESS/CHECKPOINT.
+- Stub-graphics test locks the coin design (call order, gold
+  palette, centered cross, up-left specular) without a canvas.
+- README: 6 playable patients (was stale at 3), Muse table row
+  gains runtime `muse-reword` (vetoed) alongside the
+  pre-compute functions.
+- Production proof: live bundle contains the Supabase URL +
+  `functions/v1/muse-reword` + `extend-trajectory` — the
+  deployed game is fully wired, not silently on fallback.
+- Verification: auditor 0 findings; 145/145 (20 files); tsc
+  clean; build green; live 200 after push.
+- Spend $0.00 (ledger ~$0.74 cumulative).
