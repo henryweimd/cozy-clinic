@@ -65,7 +65,7 @@ Playable today on the live build; every step works, nothing staged:
 5. Read a Learn topic (+2 coins), pass its prize quiz (+5), spend
    coins in the Shop (every item boosts payouts), check Profile +
    the About sheet.
-6. Flip Reading level (Gentle/Steady/Expert) in Profile — the live
+6. Slide Reading level (Gentle/Steady/Clinical/Expert) in Profile — the live
    visit rewords on return, same right answers.
 7. Cheer a colleague from any care note.
 8. Chain straight correct picks for combo pay; finish a visit daily
@@ -130,7 +130,7 @@ the core of the game — are only possible because generation is this cheap.
   per-patient visits and quotes) plus a waiting-room list with queue reorder;
   Milo opens onboarding as an existing-patient sick visit.
 - **3-round quiz visits:** examine → diagnose → treat, each round asking its
-  question first (tier-worded Gentle/Steady/Expert); endings praise
+  question first (tier-worded Gentle/Steady/Clinical/Expert); endings praise
   the player with an N-of-3 score line, never claiming the patient better/worse.
 - **4 conditions** as tested state transitions: asthma, sniffly cold (viral
   respiratory), dehydration, hypertension.

@@ -1844,3 +1844,29 @@ clearance — then a polish fix loop for real findings.
   pairing test locks bestFinding keywords per condition.
 - Verification: auditor 0 findings; 91/91; tsc clean; build green.
 - Spend $0.00 (ledger ~$0.55 cumulative).
+
+## Tiers-4: 4 reading levels + slider (2026-10-30)
+
+- OWNERSHIP: `src/ui/mockData.ts` (+test), `src/clinical/types.ts`,
+  `conditions.ts` (+tests), `engine.test.ts`, `src/game/visit.ts`
+  (+test), `src/data/sharedCare.ts` (+test), `examFindings.ts`
+  (+test), `fallbackPack.ts`, `src/ui/signout.ts` (+test),
+  `src/scenes/ClinicScene.ts`, auditor, Supabase exam_findings,
+  README tour. Untouched: maneuvers.* (other stream, paused).
+- Scale is now Gentle (grade-school plain) / Steady (educated
+  adult, canonical) / Clinical (healthcare worker, spelled-out,
+  no abbreviations) / Expert (physician). Stored difficulty 3
+  grandfathers to 4. Grades still key on ids — wording only.
+- Profile slider replaces 3-pill seg: track + 4 labeled stops,
+  tap or drag the knob, toast names the level on change.
+- Tiered this run: 64 treatment labels, 4 exam quizzes + best
+  findings (newly tiered — gentle plain, expert clinical),
+  condition names, 64 fallback findings, visit questions,
+  handoff presets, signout (clinical spells out y/o, Meds).
+- Supabase: `finding_clinical` column + 16/16 backfill matching
+  the fallback wording (two migrations, online/offline agree).
+- Centor direction lock re-pinned per tier: gentle plain denial,
+  steady/clinical/expert rule-out language. Ship-blocker holds.
+- Verification: auditor 0 findings; 138/138 (18 files); tsc
+  clean; build green; live 200 with fresh bundle.
+- Spend $0.00 (ledger ~$0.74 cumulative).

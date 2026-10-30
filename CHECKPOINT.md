@@ -22,3 +22,27 @@ through run 2; coin icon still unloved but parked).
 Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
 
 STOP.
+
+## Run 6 — tiers-4 (2026-10-30)
+
+Phase: 4 reading levels (Gentle/Steady/Clinical/Expert) + Profile
+slider UI + exam_findings.finding_clinical migration.
+
+Files changed: 16 (mockData, types, conditions, visit,
+sharedCare, examFindings, fallbackPack, signout + tests,
+ClinicScene, README). Commit `0e116ec` on main.
+
+Test result: auditor 0 findings; `npm test` 138/138 (18
+files); tsc clean; build green. Supabase:
+exam_findings.finding_clinical 16/16.
+
+Deployment URL: `https://cozy-clinic.vercel.app/` (live-polled
+200 with fresh bundle after push).
+
+Playtest result: NOT operator-playtested this run —
+programmatic verification only (operator: playtest acceptable
+through run 5; coin icon still unloved but parked).
+
+Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
+
+STOP.
