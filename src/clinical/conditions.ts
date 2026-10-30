@@ -89,12 +89,12 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       { id: 'belly-sounds', label: 'Belly sounds' },
     ],
     examBestId: 'neck-glands',
-    bestFinding: 'The neck glands are sore and swollen — a Centor point toward strep.',
+    bestFinding: 'Neck glands feel normal with no white spots — zero Centor points. A virus, not strep.',
     dxOptions: ['viral-respiratory', 'hypertension', 'asthma'],
     examQuiz: {
-      gentle: "{name}'s throat is scratchy and there is no cough. What do you check first?",
-      steady: 'Scratchy throat, no cough. Which check best sorts strep from virus?',
-      expert: 'Sore throat without cough. Which bedside check earns a Centor point?',
+      gentle: '{name} has a scratchy throat AND lots of cough and sniffles. What rules out strep?',
+      steady: 'Sore throat with cough and runny nose. Which check rules out strep?',
+      expert: 'Pharyngitis with cough and rhinorrhea. Which bedside check rules out strep?',
     },
     stages: [
       { id: 'breezy', label: 'Breezy', blurb: 'Nose clear, feeling bouncy.', says: "Just here for my check-in — my nose is clear and I feel bouncy!" },

@@ -202,5 +202,14 @@ describe('shipped copy', () => {
       expect(def.bestFinding).toContain(keywords[def.id]);
       expect(EXAM_OTHER_FINDING).not.toContain(keywords[def.id]);
     }
+    // Direction lock: the viral case must RULE OUT strep (low
+    // Centor), never reward finding for it — the patient has a
+    // cold. Wrong-direction medicine is a ship-blocker.
+    const viral = CONDITIONS['viral-respiratory'];
+    expect(viral.bestFinding).toMatch(/zero Centor|rules out|not strep/i);
+    expect(viral.bestFinding).not.toMatch(/toward strep/i);
+    for (const tier of ['gentle', 'steady', 'expert'] as const) {
+      expect(viral.examQuiz[tier]).toMatch(/rules out strep/i);
+    }
   });
 });
