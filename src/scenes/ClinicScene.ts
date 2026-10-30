@@ -68,6 +68,7 @@ import type { ShopItem } from '../game/shop';
 import { AboutSheet } from '../ui/aboutSheet';
 import { ShopSheet } from '../ui/shopSheet';
 import { blinkCloseMs, blinkGapMs, bobRate, SPRITE_PREFIX } from '../game/sprites';
+import { takeTrayHint } from '../game/hints';
 import { clearUndo, emptyUndo, pushMove, undoDepth, undoMove } from '../game/undo';
 import type { UndoStack } from '../game/undo';
 
@@ -1450,6 +1451,11 @@ export class ClinicScene extends Phaser.Scene {
         ? examQuestion(def.examQuiz[tier], this.activeName, this.demoTag())
         : roundQuestion(round, tier, this.activeName);
     this.setConversation(speakerFor(this.activeName), q, 'tell');
+    // First examine quiz ever: point at the tray once (the quiz
+    // options make more sense after the findings).
+    if (round === 'examine' && takeTrayHint(window.localStorage)) {
+      this.showToast('Stuck? The exam tray (right edge) holds clues');
+    }
   }
 
   /**

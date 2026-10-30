@@ -149,3 +149,42 @@ body plan, no new species without a bible amendment.
 | Priya (SHIPS) | Eager teen team captain | Golden-taupe `#C2A878` | Faster eager bob (motion: 2.3 rad/s) | Coral sport headband (fixed; above face plate) |
 | Ellis (SHIPS) | Gentle elder retired sailor | Stone-taupe `#8E8A80` | Slow calm bob (1.4 rad/s) + slow lids (160ms close) | White sailor cap + navy collar (fixed outfit) |
 | Dr. Nora (reserved) | Reassuring AI colleague doctor | Rose-taupe `#A2766B` | Reassuring half-smile | White coat + sage scrubs (outfit, same silhouette) |
+
+## Population mixing system (normative 2026-10-30)
+
+New patients are MIXED, not modeled: one shared body plan crossed
+with independent axes. This is how the cast scales to dozens
+without new species, new rigs, or runaway art spend ($0.06 per
+patient: 1 idle edit + 5 expression edits).
+
+Mixing axes (each new row picks one value per axis):
+
+| Axis | Values in use | Rule |
+|---|---|---|
+| `fur_shade` | Rose/honey/porcelain/cocoa/golden/stone taupe | Muted taupe family ONLY — reads as one cast |
+| `accessories/clothing` | Cap, knit cap, headband, scarf, glasses, sailor outfit, pouch | ONE fixed set per character; strong color lives HERE |
+| Motion | Bob 1.4–2.3 rad/s, blink 120–220 ms | Code-only (`sprites.ts`); never breaks bbox match |
+| Clinical | Any of the 4+ conditions × age/sex/persona | DB columns; same disease recurs across patients |
+
+Pipeline (all in `art/process_character.py`):
+
+1. Idle = identity EDIT of the nearest shipped master (never a
+   `jolly-*` ref, never fresh text-to-image — framing must match
+   the shared UNION window). Block C verbatim + the bible row.
+2. Headgear clearance: keyed art must sit inside UNION
+   (246,112,1353,1476). Overflow = deterministic 0.88 rescale
+   (Ellis recipe), never a crop change, never a model re-ask.
+3. Paste-x calibration centers the export bbox on x96.
+4. Foot-shelf cleanup is per-character (measured mask); white
+   headgear gets cap-restore (bright-neutral rule).
+5. Five expression edits from the idle master, same language:
+   blink (lash lines), happy (content arcs), sick (half-mast +
+   frown), pained (squeezed + wavy, NO brow marks), relieved
+   (curves + smile + cheek sparkles).
+6. `validate` gate: idle-drift ≤4px, corners 0, edge jumps at the
+   June baseline, interior holes ≤ shipped baseline, contact
+   sheet reviewed, in-game render check (dist + code-trace).
+
+Wiring checklist: `sprites.ts` prefix + motion, `mockData`
+roster row, preload (derived — automatic), speaker tag, DB
+fur/accessories BOTH sources, bible row, auditor ROSTER_PREFIX.
