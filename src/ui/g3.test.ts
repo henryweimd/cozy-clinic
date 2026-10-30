@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { EXAM_TOOLS } from './toolTrays';
-import { MOCK_FEED, nextFeedLine } from './ticker';
+import { MOCK_FEED, nextFeedLine, tickerVisible } from './ticker';
 import { memoryBeads } from './livingChart';
 import { resourcesFor } from './learnList';
 
@@ -13,6 +13,14 @@ describe('G3 modules', () => {
     expect(wrap.line).toBe(MOCK_FEED[0]);
     expect(wrap.cursor).toBe(1);
     expect(nextFeedLine([], 9)).toEqual({ line: '', cursor: 0 });
+  });
+
+  it('shows the ticker unless toggled off or telemed', () => {
+    expect(tickerVisible('visit', true)).toBe(true);
+    expect(tickerVisible('waiting', true)).toBe(true);
+    expect(tickerVisible('telemed', true)).toBe(false);
+    expect(tickerVisible('visit', false)).toBe(false);
+    expect(tickerVisible('telemed', false)).toBe(false);
   });
 
   it('ships 4 exam tools with unique ids', () => {

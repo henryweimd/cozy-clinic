@@ -14,7 +14,7 @@ import {
   waitingNames,
 } from '../ui/mockData';
 import type { ChromeTier, VisitContext } from '../ui/mockData';
-import { BackendTicker } from '../ui/ticker';
+import { BackendTicker, tickerVisible } from '../ui/ticker';
 import { ToolTray } from '../ui/toolTrays';
 import type { ToolDef } from '../ui/toolTrays';
 import {
@@ -285,6 +285,7 @@ const LEARN_PASSED_KEY = 'cozy-learn-passed-v1';
 const DIFFICULTY_KEY = 'cozy-difficulty-v1';
 const STREAK_KEY = 'cozy-streak-v1';
 const SFX_KEY = 'cozy-sfx-v1';
+const TICKER_KEY = 'cozy-ticker-v1';
 const HANDLE_STORAGE_KEY = 'cozy-doctor-handle-v1';
 const TEAM_STORAGE_KEY = 'cozy-team-tag-v1';
 const OUTBOX_STORAGE_KEY = 'cozy-handoff-outbox-v1';
@@ -466,6 +467,8 @@ export class ClinicScene extends Phaser.Scene {
   private tapping = false;
   /** Sound off (About sheet toggle, persisted, default on). */
   private sfxMuted = false;
+  /** Terminal ticker on (About sheet toggle, persisted). */
+  private tickerOn = true;
   /** Daily streak state + one pending day-bonus toast. */
   private streak: StreakState = { ...EMPTY_STREAK };
   private pendingStreak: { day: number; bonus: number } | null = null;
@@ -586,6 +589,7 @@ export class ClinicScene extends Phaser.Scene {
     this.loadDifficulty();
     this.loadStreak();
     this.loadSfx();
+    this.loadTicker();
     // Audio unlocks on the first tap (autoplay policy); every
     // cue after that just plays.
     this.input.once('pointerdown', () => unlockSfx());
@@ -1168,6 +1172,22 @@ export class ClinicScene extends Phaser.Scene {
   private saveSfx(): void {
     try {
       window.localStorage.setItem(SFX_KEY, this.sfxMuted ? 'off' : 'on');
+    } catch {
+      /* private-mode play: the session keeps the switch */
+    }
+  }
+
+  private loadTicker(): void {
+    try {
+      this.tickerOn = window.localStorage.getItem(TICKER_KEY) !== 'off';
+    } catch {
+      this.tickerOn = true;
+    }
+  }
+
+  private saveTicker(): void {
+    try {
+      window.localStorage.setItem(TICKER_KEY, this.tickerOn ? 'on' : 'off');
     } catch {
       /* private-mode play: the session keeps the switch */
     }
@@ -2819,7 +2839,7 @@ export class ClinicScene extends Phaser.Scene {
       .setInteractive({ useHandCursor: true });
     aboutZone.on('pointerdown', () => {
       if (this.about.open) this.about.hide();
-      else this.about.show(this.sfxMuted);
+      else this.about.show(this.sfxMuted, this.tickerOn);
     });
     this.profileRows.add([aboutBg, aboutLeft, aboutRight, aboutZone]);
   }
@@ -3318,6 +3338,12 @@ export class ClinicScene extends Phaser.Scene {
       // Unmuting plays back so the switch feels alive.
       if (!muted) playSfx('correct');
     };
+    this.about.onTickerToggle = (on: boolean) => {
+      this.tickerOn = on;
+      this.saveTicker();
+      this.about.syncTicker(on);
+      this.ticker.setVisible(tickerVisible(this.currentView, on));
+    };
     // Profile editor: Doctor + Practice rows open it.
     this.editor = new ProfileEditor(this);
     this.editor.onSave = (kind: ProfileKind, value: string) => {
@@ -3466,9 +3492,10 @@ export class ClinicScene extends Phaser.Scene {
     // Profile stats rebuild every arrival (never stale coins).
     if (next === 'profile') this.refreshProfileRows();
     // G4 module visibility: ticker everywhere except Telemed (call
-    // buttons own that bottom band); tray + chart drawer Visit-only
-    // (no hands through a video call).
-    this.ticker.setVisible(next !== 'telemed');
+    // buttons own that bottom band) unless the player muted it in
+    // About; tray + chart drawer Visit-only (no hands through a
+    // video call).
+    this.ticker.setVisible(tickerVisible(next, this.tickerOn));
     this.tray.setVisible(next === 'visit');
     this.chartDrawer.setVisible(next === 'visit');
     this.notesHandle.setVisible(next === 'visit');

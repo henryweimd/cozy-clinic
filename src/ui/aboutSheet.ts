@@ -21,8 +21,12 @@ export class AboutSheet {
   private isOpen = false;
   private soundBg: Phaser.GameObjects.Graphics;
   private soundText: Phaser.GameObjects.Text;
+  private terminalBg: Phaser.GameObjects.Graphics;
+  private terminalText: Phaser.GameObjects.Text;
   private muted = false;
+  private tickerOn = true;
   onSoundToggle: (muted: boolean) => void = () => {};
+  onTickerToggle: (on: boolean) => void = () => {};
 
   constructor(private scene: Phaser.Scene) {
     const backdrop = this.scene.add
@@ -32,8 +36,8 @@ export class AboutSheet {
     const card = this.scene.add.graphics();
     card.fillStyle(THEME.cardFill, THEME.glassSheet);
     card.lineStyle(3, THEME.outline, 1);
-    card.fillRoundedRect(48, 300, 444, 404, 24);
-    card.strokeRoundedRect(48, 300, 444, 404, 24);
+    card.fillRoundedRect(48, 300, 444, 452, 24);
+    card.strokeRoundedRect(48, 300, 444, 452, 24);
     const title = this.scene.add
       .text(72, 340, TITLE, {
         fontFamily: THEME.font,
@@ -83,7 +87,27 @@ export class AboutSheet {
       .zone(420, 666, 110, 52)
       .setInteractive({ useHandCursor: true });
     soundZone.on('pointerdown', () => this.onSoundToggle(!this.muted));
-    this.paintSound();
+    const terminalLabel = this.scene.add
+      .text(72, 722, 'Terminal', {
+        fontFamily: THEME.font,
+        fontSize: '17px',
+        color: THEME.secondary,
+      })
+      .setOrigin(0, 0.5);
+    this.terminalBg = this.scene.add.graphics();
+    this.terminalText = this.scene.add
+      .text(420, 722, '', {
+        fontFamily: THEME.font,
+        fontStyle: 'bold',
+        fontSize: '17px',
+        color: THEME.cocoa,
+      })
+      .setOrigin(0.5, 0.5);
+    const terminalZone = this.scene.add
+      .zone(420, 722, 110, 52)
+      .setInteractive({ useHandCursor: true });
+    terminalZone.on('pointerdown', () => this.onTickerToggle(!this.tickerOn));
+    this.paintToggles();
     this.root = this.scene.add.container(0, 0, [
       backdrop,
       card,
@@ -95,29 +119,48 @@ export class AboutSheet {
       this.soundBg,
       this.soundText,
       soundZone,
+      terminalLabel,
+      this.terminalBg,
+      this.terminalText,
+      terminalZone,
     ]);
     this.root.setDepth(30).setVisible(false).setAlpha(0);
   }
 
-  /** Repaints the toggle (the scene owns the persisted value). */
+  /** Repaints the toggles (the scene owns the persisted values). */
   syncSound(muted: boolean): void {
     this.muted = muted;
-    this.paintSound();
+    this.paintToggles();
   }
 
-  private paintSound(): void {
-    const on = !this.muted;
-    this.soundBg.clear();
-    this.soundBg.fillStyle(on ? THEME.sage : THEME.cardFill, 1);
-    this.soundBg.lineStyle(2, THEME.outline, 1);
-    this.soundBg.fillRoundedRect(372, 644, 96, 44, 22);
-    this.soundBg.strokeRoundedRect(372, 644, 96, 44, 22);
-    this.soundText.setText(on ? 'On' : 'Off');
-    this.soundText.setColor(on ? '#ffffff' : THEME.cocoa);
+  syncTicker(on: boolean): void {
+    this.tickerOn = on;
+    this.paintToggles();
   }
 
-  show(muted: boolean): void {
+  private paintToggle(
+    bg: Phaser.GameObjects.Graphics,
+    text: Phaser.GameObjects.Text,
+    y: number,
+    on: boolean,
+  ): void {
+    bg.clear();
+    bg.fillStyle(on ? THEME.sage : THEME.cardFill, 1);
+    bg.lineStyle(2, THEME.outline, 1);
+    bg.fillRoundedRect(372, y, 96, 44, 22);
+    bg.strokeRoundedRect(372, y, 96, 44, 22);
+    text.setText(on ? 'On' : 'Off');
+    text.setColor(on ? '#ffffff' : THEME.cocoa);
+  }
+
+  private paintToggles(): void {
+    this.paintToggle(this.soundBg, this.soundText, 644, !this.muted);
+    this.paintToggle(this.terminalBg, this.terminalText, 700, this.tickerOn);
+  }
+
+  show(muted: boolean, tickerOn: boolean): void {
     this.syncSound(muted);
+    this.syncTicker(tickerOn);
     this.isOpen = true;
     this.root.setVisible(true).setAlpha(0);
     this.scene.tweens.killTweensOf(this.root);

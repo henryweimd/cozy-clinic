@@ -5,7 +5,7 @@ import { THEME } from './chromeTheme';
  * F1 backend ticker: 1-2 rows of translucent terminal text above
  * the menu bar, narrating backend activity for judges + technical
  * players (e.g. trajectory pre-computation). Subtle, muted, small,
- * legible; a submenu toggle (later) turns it off.
+ * legible; the About sheet toggle turns it off (persisted).
  *
  * GEOMETRY CONTRACT (G4 honors): the strip owns x0-540, y852-888
  * (2 rows) and collapses to y870-888 (1 row). G4 shifts the Visit
@@ -20,6 +20,15 @@ export const MOCK_FEED: readonly string[] = [
   'trajectories: 2 turns ahead \u00b7 instant reads',
   'engine: authoritative \u00b7 veto armed',
 ];
+
+/**
+ * Pure visibility rule (unit-tested): the player toggle wins,
+ * then the Telemed call band (its buttons own y852-888).
+ */
+export function tickerVisible(view: string, tickerOn: boolean): boolean {
+  if (!tickerOn) return false;
+  return view !== 'telemed';
+}
 
 /** Pure feed rotation (unit-tested). */
 export function nextFeedLine(
