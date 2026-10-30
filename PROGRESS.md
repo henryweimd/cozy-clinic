@@ -2022,3 +2022,27 @@ clearance — then a polish fix loop for real findings.
 - Verification: auditor 0 findings (new F2 PWA parity);
   148/148; tsc clean; build green; live 200 + manifest 200.
 - Spend $0.00 (ledger ~$0.74 cumulative).
+
+## Undo-home + ticklive (2026-10-30)
+
+- OWNERSHIP: `src/scenes/ClinicScene.ts` (HUD strip, profile
+  undo card, hint, warmGreeting push), `src/game/reword.ts`
+  (+test: latency + note), `src/ui/ticker.ts` (pushLive),
+  auditor (pill out, card + ticker in).
+- Visit is bare: the Rewind pill is gone, undo lives as a
+  bottom card in Profile (live count, rewinds in place with
+  toast). The one-time hint now points to Profile. refreshHud
+  keeps the card fresh under resolving play.
+- Live AI narrates on the ribbon: each reword call scrolls one
+  succinct terminal line (variant ready + ms, or veto reason +
+  local kept) — only while the ribbon shows; offline/muted
+  stays silent. Extend-trajectory already narrated (kept).
+- Process note: a `git stash -u` swept the other stream's
+  untracked maneuvers.* along with stashed Alive work; both
+  files restored byte-identical from the stash (suite confirms
+  3/3 maneuvers tests) and left untracked. Stash keeps ONLY
+  Alive WIP now... (maneuvers copies remain in the stash
+  object too — harmless duplicate, will drop with the stash).
+- Verification: auditor 0 findings; 148/148 (20 files); tsc
+  clean; build green; live 200.
+- Spend $0.00 (ledger ~$0.74 cumulative).

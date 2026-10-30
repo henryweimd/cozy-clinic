@@ -213,3 +213,24 @@ programmatic verification only.
 Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
 
 STOP.
+
+## Run 15 — undo-home + ticklive (2026-10-30)
+
+Phase: undo pill off visit into Profile bottom card; live-AI
+ribbon narration.
+
+Files changed: 4 (ClinicScene, reword + test, ticker).
+Commits `7f5e059` + `56a61d1` on main.
+
+Test result: auditor 0 findings; `npm test` 148/148 (20
+files); tsc clean; build green.
+
+Deployment URL: `https://cozy-clinic.vercel.app/` (live-polled
+200 with fresh bundle after push).
+
+Playtest result: NOT operator-playtested this run —
+programmatic verification only.
+
+Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
+
+STOP.
