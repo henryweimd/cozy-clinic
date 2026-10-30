@@ -62,6 +62,7 @@ import {
 import type { Wallet } from '../game/economy';
 import { buyItem, learnBonus, nurseBonus, perfectBonus, toolBonus } from '../game/shop';
 import type { ShopItem } from '../game/shop';
+import { AboutSheet } from '../ui/aboutSheet';
 import { ShopSheet } from '../ui/shopSheet';
 import { blinkCloseMs, blinkGapMs, SPRITE_PREFIX } from '../game/sprites';
 import { clearUndo, emptyUndo, pushMove, undoDepth, undoMove } from '../game/undo';
@@ -386,6 +387,7 @@ export class ClinicScene extends Phaser.Scene {
   private contextText!: Phaser.GameObjects.Text;
   private wallet: Wallet = emptyWallet();
   private shop!: ShopSheet;
+  private about!: AboutSheet;
   private ownedIds: string[] = [];
   private undoStack: UndoStack<UndoSnapshot> = emptyUndo();
   // (visitStartMs returns with the speed element.)
@@ -2486,6 +2488,36 @@ export class ClinicScene extends Phaser.Scene {
       this.refreshProfileRows();
     });
     this.profileRows.add(teamZone);
+    // The About row opens the project sheet (7th row, same card).
+    const aboutY = 232 + 6 * 84;
+    const aboutBg = this.add.graphics();
+    aboutBg.fillStyle(CARD_FILL, 1);
+    aboutBg.lineStyle(2, OUTLINE, 1);
+    aboutBg.fillRoundedRect(48, aboutY, 444, 72, 16);
+    aboutBg.strokeRoundedRect(48, aboutY, 444, 72, 16);
+    const aboutLeft = this.add
+      .text(68, aboutY + 36, 'About', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '17px',
+        color: SECONDARY,
+      })
+      .setOrigin(0, 0.5);
+    const aboutRight = this.add
+      .text(472, aboutY + 36, 'Cozy Clinic', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '19px',
+        color: COCOA,
+      })
+      .setOrigin(1, 0.5);
+    const aboutZone = this.add
+      .zone(270, aboutY + 36, 444, 72)
+      .setInteractive({ useHandCursor: true });
+    aboutZone.on('pointerdown', () => {
+      if (this.about.open) this.about.hide();
+      else this.about.show();
+    });
+    this.profileRows.add([aboutBg, aboutLeft, aboutRight, aboutZone]);
   }
 
   // -- M4 shared care (inbox, notes handle, compose) --
@@ -2927,6 +2959,8 @@ export class ClinicScene extends Phaser.Scene {
 
     // Clinic Shop: the coin meter opens it (visit-only HUD).
     this.shop = new ShopSheet(this);
+    // About sheet: the Profile About row opens it.
+    this.about = new AboutSheet(this);
     this.loadShop();
     this.shop.onBuy = (item: ShopItem) => {
       const res = buyItem(this.wallet.balance, this.ownedIds, item);
@@ -3034,6 +3068,7 @@ export class ClinicScene extends Phaser.Scene {
     // except Learn, which IS the Learning List full-screen.
     this.chart.hide();
     this.shop.hide();
+    this.about.hide();
     this.handoffSheet.hide();
     if (next === 'learn') {
       this.learnList.show(this.filedConds, this.openedRes);
