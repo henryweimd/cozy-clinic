@@ -74,28 +74,22 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
   + dots) LEFT the main screen for a future submenu (operator
   direction — the submenu will read "Gentle Mode" etc.). The
   strip now frames the Visit HUD contents (coin cluster left,
-  context words center, clock cluster right — see Visit); on
-  other views it rests empty.
+  context words center — see Visit; the clock left until the
+  speed element returns); on other views it rests empty.
 
 ### Nav bar (persistent, all views)
 
 - Geometry: full-width dock, x0–540, y888–960 (h72). Cream fill
-  at 80% alpha (chrome-2: was opaque), 2px top divider
-  `#8A5A3B` at 25% alpha (was 3px at 40%). Quieter styling,
-  same 4 tabs. Safe: sits below today's
-  bubble dock (936) — the Visit view re-docks the bubble higher
-  (see Visit).
-- Four tabs, each 135 wide x 72 tall (tap target 135x72):
-  Waiting (center x67), Visit (x202), Telemed (x337), Portal (x472).
-- Each tab: code-drawn icon (chrome-3, $0 — waiting = queue
-  dots, visit = care cross on sage) + Baloo 2 15px semibold
-  labels stacked; icon + label dim together (inactive 60%,
-  active 100% on a sage pill w118 h60). Three tabs: Waiting
-  (cx90) + Visit (cx270) + Learn (cx450, book icon), 180px
-  cells. Telemed + Portal tabs are PARKED (views dormant but
-  intact) until they earn fun — their icons stay in the icon
-  set for the return. A struggling visit lights an amber badge
-  on Learn (pulsing until visited).
+  at 80% alpha, 2px top divider `#8A5A3B` at 25% alpha.
+- Three tabs, 180px cells: Waiting (cx90, queue-dots icon +
+  sage count badge: 3 friends waiting) + Visit (cx270, care
+  cross) + Learn (cx450, book icon). Code-drawn icons ($0) +
+  Baloo 2 15px semibold labels stacked; icon + label dim
+  together (inactive 60%, active 100% on a sage pill w118 h60).
+  Telemed + Portal tabs are PARKED (views dormant but intact)
+  until they earn fun — their icons stay in the icon set for
+  the return. A struggling visit lights an amber badge on Learn
+  (pulsing until visited).
 - Behavior: tap = fade current view out 150ms, fade new view in
   180ms; tab pill slides 200ms `Sine.easeInOut`. Default view: Visit.
 
@@ -115,21 +109,20 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
 - SAY vs TELL (chrome-3 display law, replaces the chrome-2
   quote rule for the panel): every line declares a LineKind.
   'say' = direct speech in the speaker's own voice — quoted +
-  tagged ("MABEL" sage / "DR. NORA" sky / "YOU" cream, 14px
-  bold). 'tell' = third-person narration ABOUT the subject —
-  unquoted, and the tag hides when the subject is on screen
-  (Mabel); Nora's off-screen interventions keep her tag so the
-  player knows who stepped in. Untagged narration starts at
-  top+16 (tagged body stays top+48); panel height follows.
-  Quoting applies at render time, BEFORE the "…" truncate pass.
+  tagged ("MILO" etc. sage / "YOU" cream, 14px bold). 'tell' =
+  third-person narration ABOUT the subject — unquoted,
+  untagged. Untagged narration starts at top+16 (tagged body
+  stays top+48); panel height follows. Quoting applies at
+  render time, BEFORE the "…" truncate pass.
   Voice split: the patient OPENER is first-person 'say' (quoted
   + tagged, auto-shown on arrival — boot, nav, patient switch);
   consequence + teaching lines stay third-person narrator
-  'tell'; Nora's veto intervention is her 'say' ("stepped in!").
-  The Medical Chart carries the condition note (blurb +
-  plainWords, spoiler-free: what it IS, never what fixes it).
-  Portal rule unchanged: Nora's message bubbles quote, player
-  replies + Clinic system lines + snippets stay bare.
+  'tell'; veto hold-backs speak as YOU (no NPC doctors yet —
+  Dr. Nora is parked until practice upgrades ship). The Medical
+  Chart carries the condition note (blurb + plainWords,
+  spoiler-free: what it IS, never what fixes it). Portal rule:
+  patient bubbles quote, Clinic system lines + snippets stay
+  bare.
 - Body: Baloo 2 20px cocoa, left-aligned, max 4 lines at 20px
   within max-h; longer copy truncates with "…" (prototype rule —
   flag it in feedback if real copy ever needs scroll).
@@ -138,33 +131,37 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
 
 ### Decision / action card row (Visit + Telemed)
 
-- Geometry (unclutter): x24–516 (w492), y772–846 (h74). Two
-  cards: each w240, gap 12. Three cards: each w156, gaps 12. Tap
-  target = full card (≥156x74 — generous).
+- Geometry: x24–516 (w492), y772–846 (h74). Every visit is a
+  3-round mini-story, one row each: EXAMINE (4 maneuver cards,
+  clinical names — Inspection / Palpation / Percussion /
+  Auscultation — w114, gaps 12), DIAGNOSE (3 condition names,
+  w156), TREAT (3 action cards, w156). Tap target = full card.
+  Undo rewinds rounds too (round + score in the snapshot).
 - Decision corral: an outline frame around the row (x16–524,
   y764–856, r18) that reads "these are your choices". The top
   edge has a gap at the left holding a small tier-worded label
-  IN the border ("Choose care…" etc., 12px bold on a frosted
-  card-fill strip — part of the border, not a chip),
-  left-aligned so it never hints at the middle card. The old
-  overlapping Choose tab is retired (its scale-about-origin
-  jump fixed by the label's relative-children anchor). Corral
-  + label ride inside the card row container (fade + Telemed
-  shift together).
+  IN the border (12px bold on a frosted card-fill strip —
+  part of the border, not a chip), left-aligned so it never
+  hints at the middle card. The label names the live round:
+  "Examine…" / "Diagnose…" / tier-worded "Choose care…" etc.
+  Corral + label ride inside the card row container (fade +
+  Telemed shift together).
 - Grade stamps: the tapped card earns a sticker (r13, grade
   color, cream glyph — check / dash / cross) on its top-right
   corner plus a reinforcing toast ("Great choice! +1 Care
   Coin" / "Okay — no harm done" / "Oh no — that made things
   worse"), so right/wrong reads three ways (stamp + face +
   toast). Stamps clear with reveals on stage moves.
-- Visit end: ladder tips end the visit — stage 0 = recovered,
-  last stage = struggling (pure rules in `src/game/visit.ts`).
-  A dim + result card (x48–492, y340–620) names it plainly
-  ("Mabel is all better!" / "Milo still needs help"), shows
-  visit # + coins earned, and offers two buttons: recovered →
-  Next patient / Learn; struggling → Learn (amber, pulsing) /
-  Try again. The clock freezes; the card blocks all other taps.
-  Retry resets clock, coins baseline, undo, and state.
+- Visit end: the TREAT round ends the visit; the SET decides
+  (right diagnosis + right treatment = recovered — pure rules
+  in `src/game/visit.ts`). A dim + result card (x48–492,
+  y340–620) congratulates the PLAYER, never claims the patient
+  is better/worse ("Great work, Doctor!" / "Tough case — keep
+  going!"), shows visit # + score ("N of 3 right") + coins
+  earned, and offers two buttons: recovered → Next patient /
+  Learn; struggling → Learn (amber, pulsing) / Try again. The
+  card blocks all other taps. Retry resets coins baseline,
+  rounds, undo, and state.
 - VIEW 5 — LEARN (full-screen): the Learning List sheet behind
   the Learn tab (condition-linked authoritative resources; the
   old strip book button is gone). × returns to Visit; switching
@@ -180,14 +177,15 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
   Chrome-2: a BEST resolve also ticks the mock care-coins pill +1
   (lesser grades and blocked moves pay nothing).
 - Disabled state (e.g. DANGEROUS blocked by the engine): card
-  dims to 55% + shake 60ms x2 + Dr. Nora "stepped in" line —
-  mirrors the shipped `hootLine` veto copy.
+  dims to 55% + shake 60ms x2 + YOUR hold-back line ("you hold
+  back just in time!") — mirrors the shipped `hootLine` veto
+  copy, second person, no NPC.
 
 ### The four views
 
 VIEW 1 — VISIT (default; today's Mabel scene):
 
-- Keeps the shipped scene visible: title, Mabel, nametag
+- Keeps the shipped scene visible: wall sign, Milo, nametag
   all as today (no subtitle — the opener greets you).
 - Adds: conversation panel (y136+, replaces the old bottom bubble
   — the old bubble dock is RETIRED in this prototype; its content
@@ -205,44 +203,45 @@ VIEW 1 — VISIT (default; today's Mabel scene):
   gentle stays plain sentences; the complaint label is always
   quoted, never conjugated. Lines stack by measured height.
   Visit-only; refreshes on resolve/switch.
-- Progress HUD (chrome-3: moved OFF the mid-screen band INTO the
-  top strip; Visit-faded, strip persistent). Coin cluster left
-  (pill x24–124, h24 r12): code-drawn coin+ icon + mock count
-  14px bold, starts at 12, +1 per BEST resolve (mock — real
-  `coin_ledger` accrual later). Context center: BARE bold words
+- Progress HUD (moved OFF the mid-screen band INTO the top
+  strip; Visit-faded, strip persistent). Coin cluster left
+  (pill x24–124, h24 r12): metallic gold Care Coin (dark rim,
+  amber face, inner ring, shine dot, embossed C) + live count
+  14px bold, starts at 12, +1 per BEST round; TAPPING the
+  meter opens the Clinic Shop. Context center: BARE bold words
   14px, no pill — the strip is the frame; worded per
   gentle/steady/expert tier from the mock difficulty seed —
   new-patient ("A first hello" / "New Patient" / "New intake"),
   sick-visit ("Feeling poorly" / "Sick Visit" / "Acute visit"),
   follow-up ("Back for a check-in" / "Follow-Up Visit" /
   "Follow-up"); mock derivation (first visit → new, stage 2+ →
-  sick, else follow-up), re-derived per resolve. Clock cluster
-  right (pill x416–516, h24 r12): code-drawn clock-hands icon +
-  mm:ss 14px bold from scene start, display-only — urgency feel,
-  no rewards/penalties wired. Pills + text opaque; translucency
-  stays on the strip. The old y376–412 band is clear (Telemed's
-  LIVE pills keep their y380 home).
+  sick, else follow-up), re-derived per resolve. No clock (left
+  until the speed element returns). Pills + text opaque;
+  translucency stays on the strip.
+- Clinic Shop (behind the coin meter): tabbed Tools / Medicines
+  / Practice sheet (x24–516, y136–876), 4 rows a tab — every
+  row teaches one real-practice fact ("Saline Spray — salty
+  water that rinses stuffy noses"). Buy buttons spend live
+  coins (owned persists locally); the Helper's Desk row reads
+  honestly as Soon until staff ship. Closes on view change.
 
-VIEW 2 — WAITING ROOM (roster):
+VIEW 2 — WAITING ROOM (minis on the plate):
 
-- Opaque cream sheet x24–516, y136–876 (r24, covers Mabel —
-  deliberate: roster-picking is its own moment; Mabel returns on
-  Visit). Title row y136–184: "Waiting Room" 26px bold + mock
-  clock pill "10:24 AM".
-- Four roster rows, each w460 (x40–500) h120, gaps 12, starting
-  y196: Mabel y196–316, June y328–448, Milo y460–580, Theo
-  y592–712. (Bottom y712–876 left as breathing room + "Dr. Nora
-  is with a patient…" footnote at y826.)
-- Each row: 84px avatar circle (initial letter in fur-shade fill
-  — Mabel `#A2766B`, June `#C4A484`, Milo `#CDB9A8`, Theo
-  `#8F7364`; NO generated faces this pass), name 22px bold +
-  persona 16px secondary (two lines, x130–400), status pill
-  right (w~110 h36, 15px): Mabel "VISIT 4 • here", June "waiting",
-  Milo "checked in", Theo "napping". Tap row = squash, then
-  (roster phase): Mabel/June/Milo rows SWITCH the visit to that
-  patient (fresh state, stored root, rebuilt cards); re-tapping
-  the active patient toasts "already with you"; Theo stays mock.
-- Tap target: full row 460x120.
+- No sheet: the waiting plate IS the room. "Waiting Room" 26px
+  bold floats on the wall band (x40, y160) + hint "Tap a friend
+  to visit" 16px secondary (y194).
+- Three minis for whoever is NOT in the visit (slots x120/270/
+  420, feet y696): sprite owners stand as 76px minis with name
+  16px bold + status 13px below; Theo naps as a code-drawn
+  bundle (sky mound + "z") until he gets a sprite. Each mini
+  bobs gently (phased), grounds on a faint ellipse, and
+  tap-squashes: sprite minis SWITCH the visit (fresh rounds,
+  rebuilt cards); Theo toasts "is napping". Rebuilt every
+  arrival — never stale faces.
+- Milo leads the onboarding (existing-patient sick visit #2);
+  Mabel is the returning follow-up (#4), June the true
+  first-timer (#1). Per-patient numbers until the backend owns
+  visits.
 
 VIEW 3 — TELEMEDICINE (video-call frame) — PARKED (unclutter):
 
@@ -251,7 +250,7 @@ VIEW 3 — TELEMEDICINE (video-call frame) — PARKED (unclutter):
   border (12px `#2B2622`) inset x16–524, y128–876 (r28) drawn
   AROUND the scene — Mabel at (270,614) sits naturally inside.
 - Call chrome: red-dot "• LIVE" pill left (x28, y380, w110
-  h36, 16px bold white on `#B34A45`); "Dr. Nora › observing"
+  h36, 16px bold white on `#B34A45`); "Clinic › observing"
   pill right (x344–512, y380–416, sky fill, 14px) — both sit
   BELOW the conversation panel (panel bottom ≤370), so they
   never cover the speaker tag; bottom
@@ -269,8 +268,8 @@ VIEW 4 — PORTAL (secure messages) — PARKED (unclutter):
   Waiting. Header y136–184: "Patient Portal" 26px bold + lock
   note "mock inbox — stays on this device" 14px secondary.
 - Three thread rows, each w460 (x40–500) h92, gaps 12, from y196:
-  "Dr. Nora — Mabel's visit notes" (2 new), "Clinic — Appointment
-  reminder", "Dr. Nora — Breathe-easy plan". Row: sender 19px
+  "Clinic — Mabel's visit notes" (2 new), "Clinic — Appointment
+  reminder", "Clinic — Breathe-easy plan". Row: sender 19px
   bold, snippet 16px secondary (1 line), unread dot sage 12px,
   chevron "›" 28px right. Tap target full row.
 - Tap row = expands inline (row grows to h~220 pushing others
@@ -321,8 +320,8 @@ type VisitContext = 'new-patient' | 'sick-visit' | 'follow-up';
 const VISIT_CONTEXT_WORDING: Record<VisitContext, Record<ChromeTier, string>>;
 const MOCK_CARE_COINS_START = 12;
 const MOCK_PROFILE_LABEL = 'You';
-// quoteIfSpoken(from, me, text): named-cast speech ("Mabel",
-// "Dr. Nora") wraps in "..." at render; me/system bare.
+// quoteIfSpoken(from, me, text): patient speech ("Milo" etc.)
+// wraps in "..." at render; player/system bare.
 ```
 
 Seed values: Mabel / asthma @ stageIndex 2 ('wheezy') /
@@ -335,9 +334,12 @@ dusty-blanket (DANGEROUS → veto demo).
 Reads as part of the clinic world: a wall-mounted monitor behind
 glass, not a debug dump.
 
-- SECRET TRIGGER: tap the "Cozy Clinic" title 5 times within 3s.
-  Title zone x150–390, y28–84 (generous around the 44px text).
-  Feedback: each tap tiny title scale pulse (0.98, 60ms); 5th tap
+- Wall sign: "Cozy Clinic" hangs ON the wall (cream plaque
+  320x56 at x110–430, y36–92 + hanger rods + sage cross chip),
+  shown on waiting/visit/learn. No floating title anywhere.
+- SECRET TRIGGER: tap the wall sign 5 times within 3s.
+  Sign zone 240x64 centered (270,64). Feedback: each tap tiny
+  sign scale pulse (0.98, 60ms); 5th tap
   opens the code pad. No visible hint anywhere in player UI.
   Counter resets after 3s of no title taps.
 - CODE PAD: centered sheet x90–450 (w360), y296–664 (r24, cream,

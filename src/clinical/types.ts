@@ -98,6 +98,11 @@ export interface ConditionDef {
   /** Stage index where a fresh case presents. */
   presentsAt: number;
   actions: ActionDef[];
+  /** Exam-round: the most revealing maneuver + its finding. */
+  bestExam: string;
+  bestFinding: string;
+  /** Diagnose-round: 3 options, one is `name` (position varies). */
+  dxOptions: string[];
 }
 
 /** Result of resolving one player decision. */

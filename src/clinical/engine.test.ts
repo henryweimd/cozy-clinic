@@ -160,4 +160,18 @@ describe('shipped copy', () => {
       }
     }
   });
+
+  it('gives every condition a real exam round + diagnosis set', () => {
+    const names = Object.values(CONDITIONS).map((d) => d.name);
+    for (const def of Object.values(CONDITIONS)) {
+      expect(['inspection', 'palpation', 'percussion', 'auscultation']).toContain(def.bestExam);
+      expect(def.bestFinding.length).toBeGreaterThan(0);
+      expect(def.dxOptions).toHaveLength(3);
+      expect(def.dxOptions).toContain(def.name);
+      for (const opt of def.dxOptions) expect(names).toContain(opt);
+    }
+    // Correct answers don't all sit in one slot.
+    const slots = Object.values(CONDITIONS).map((d) => d.dxOptions.indexOf(d.name));
+    expect(new Set(slots).size).toBeGreaterThan(1);
+  });
 });

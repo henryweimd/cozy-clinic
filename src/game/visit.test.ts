@@ -1,44 +1,45 @@
 import { describe, expect, it } from 'vitest';
-import { resultCopy, visitOutcome } from './visit';
+import { resultCopy, scoreCount, visitOutcome } from './visit';
 
 describe('visitOutcome', () => {
-  it('ends recovered at stage 0, struggling at the last stage', () => {
-    expect(visitOutcome(0, 4)).toBe('recovered');
-    expect(visitOutcome(3, 4)).toBe('struggling');
+  it('takes the right diagnosis AND the right treatment', () => {
+    expect(visitOutcome({ examBest: true, dxCorrect: true, txBest: true })).toBe('recovered');
+    expect(visitOutcome({ examBest: false, dxCorrect: true, txBest: true })).toBe('recovered');
+    expect(visitOutcome({ examBest: true, dxCorrect: false, txBest: true })).toBe('struggling');
+    expect(visitOutcome({ examBest: true, dxCorrect: true, txBest: false })).toBe('struggling');
   });
 
-  it('keeps mid-ladder stages open', () => {
-    expect(visitOutcome(1, 4)).toBeNull();
-    expect(visitOutcome(2, 4)).toBeNull();
+  it('counts the set', () => {
+    expect(scoreCount({ examBest: true, dxCorrect: false, txBest: true })).toBe(2);
   });
 });
 
 describe('resultCopy', () => {
-  it('celebrates recovery and routes onward', () => {
+  it('praises the player, never the patient state', () => {
     const copy = resultCopy({
       outcome: 'recovered',
-      name: 'Mabel',
-      condition: 'Asthma',
-      visitNo: 4,
+      visitNo: 2,
       coinsEarned: 3,
+      score: { examBest: true, dxCorrect: true, txBest: true },
+      condition: 'Sniffly Cold',
     });
-    expect(copy.title).toBe('Mabel is all better!');
-    expect(copy.lines).toEqual(['Visit #4 complete', '+3 Care Coins earned']);
+    expect(copy.title).toBe('Great work, Doctor!');
+    expect(copy.lines).toEqual(['Visit #2 complete', '3 of 3 right', '+3 Care Coins earned']);
+    expect(copy.title + copy.lines.join(' ')).not.toMatch(/better|worse|cured|healed/i);
     expect(copy.primary).toBe('Next patient');
-    expect(copy.secondary).toBe('Learn about Asthma');
   });
 
   it('keeps struggling cozy and routes to learning first', () => {
     const copy = resultCopy({
       outcome: 'struggling',
-      name: 'Milo',
-      condition: 'Sniffly Cold',
       visitNo: 2,
       coinsEarned: 1,
+      score: { examBest: false, dxCorrect: false, txBest: true },
+      condition: 'Sniffly Cold',
     });
-    expect(copy.title).toBe('Milo still needs help');
+    expect(copy.title).toBe('Tough case — keep going!');
+    expect(copy.lines).toEqual(['Visit #2', '1 of 3 right', 'Every doctor keeps learning.']);
     expect(copy.primary).toBe('Learn about Sniffly Cold');
     expect(copy.secondary).toBe('Try again');
-    expect(copy.lines.join(' ')).toContain('sniffly cold');
   });
 });

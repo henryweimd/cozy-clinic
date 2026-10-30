@@ -13,11 +13,12 @@ import {
 } from '../ui/mockData';
 import type { VisitContext } from '../ui/mockData';
 import { BackendTicker } from '../ui/ticker';
-import { ToolTray } from '../ui/toolTrays';
+import { EXAM_TOOLS, ToolTray } from '../ui/toolTrays';
 import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
 import { resultCopy, visitOutcome } from '../game/visit';
-import type { VisitOutcome } from '../game/visit';
+import type { RoundScore, VisitOutcome } from '../game/visit';
+import { EXAM_OTHER_FINDING } from '../clinical/conditions';
 import { LearnList } from '../ui/learnList';
 import { AssetBrowser } from '../ui/assetBrowser';
 import { ChartDrawer } from '../ui/chartDrawer';
@@ -38,8 +39,12 @@ import {
   earn,
   emptyWallet,
   serializeWallet,
+  spend,
 } from '../game/economy';
 import type { Wallet } from '../game/economy';
+import { buyItem } from '../game/shop';
+import type { ShopItem } from '../game/shop';
+import { ShopSheet } from '../ui/shopSheet';
 import { clearUndo, emptyUndo, pushMove, undoDepth, undoMove } from '../game/undo';
 import type { UndoStack } from '../game/undo';
 
@@ -86,7 +91,7 @@ import type { UndoStack } from '../game/undo';
  * dots, middle left empty for future controls) and a translucent
  * bottom toolbar (same 4 tabs, quieter); the conversation-panel
  * tail is solid outline-color tucked under the panel; MABEL and
- * DR. NORA lines render quoted (YOU/narration unquoted); a
+ * Patient lines render quoted (YOU/narration unquoted); a
  * Visit-only progress HUD (mock care-coins pill, display-only
  * mm:ss timer, tier-worded visit-context label). Only the two bar
  * strips are translucent; every pill and every text stays opaque.
@@ -97,12 +102,8 @@ import type { UndoStack } from '../game/undo';
  * simplification per operator feedback. (1) SAY vs TELL: the
  * panel takes a LineKind — 'say' renders quoted + tagged direct
  * speech, 'tell' renders unquoted narration with NO tag when
- * its subject is on screen (Mabel); Nora's off-screen
- * interventions keep her sky tag so the player knows who
- * stepped in. All current engine copy is third-person narrator
- * voice, so every panel caller passes 'tell' — quotes return
- * when first-person trajectory dialogue ships (portal Nora
- * bubbles already quote correctly). (2) The progress HUD moves
+ * its subject is on screen (Mabel). Veto hold-backs speak as
+ * YOU (no NPC doctors yet). (2) The progress HUD moves
  * OFF the mid-screen band into the slim top strip (coin cluster
  * left, context center, clock cluster right; Visit-faded, strip
  * persistent). The profile chip + difficulty pill leave the main
@@ -200,7 +201,6 @@ const CHROME_ALPHA = 0.8;
 // opaque text pops; small pills + glyphs stay solid.
 const GLASS_PANEL = 0.86;
 const GLASS_CARD = 0.9;
-const GLASS_ROW = 0.92;
 
 const GRADE_COLOR: Record<ChoiceGrade, number> = {
   BEST: SAGE,
@@ -210,7 +210,7 @@ const GRADE_COLOR: Record<ChoiceGrade, number> = {
 };
 
 type ViewName = 'waiting' | 'visit' | 'telemed' | 'portal' | 'learn';
-type Speaker = 'MABEL' | 'JUNE' | 'MILO' | 'DR. NORA' | 'YOU';
+type Speaker = 'MABEL' | 'JUNE' | 'MILO' | 'YOU';
 
 /**
  * Playable cast (roster phase): display name -> sprite texture
@@ -236,14 +236,16 @@ interface UndoSnapshot {
   depth: number;
   coins: number;
   reveals: (ChoiceGrade | null)[];
+  round: VisitRound;
+  score: RoundScore;
 }
 
 const WALLET_STORAGE_KEY = 'cozy-wallet-v1';
+const SHOP_STORAGE_KEY = 'cozy-shop-v1';
 /**
  * SAY vs TELL (chrome-3): 'say' = direct speech in the speaker's
  * own voice (quoted + tagged); 'tell' = third-person narration
- * ABOUT the subject (unquoted; tag hidden when the subject is on
- * screen, kept for Nora's off-screen interventions).
+ * ABOUT the subject (unquoted, untagged).
  */
 type LineKind = 'say' | 'tell';
 
@@ -281,7 +283,7 @@ const PLATE_SETTING: Record<ViewName, string> = {
 // One-line pin: pin any view to any plate slug (e.g. { visit:
 // 'exam-b' }); empty = parity rule below. Unpinned views keep
 // rotating; unknown slugs are ignored (parity rule applies).
-const PLATE_PIN: Partial<Record<ViewName, string>> = {};
+const PLATE_PIN: Partial<Record<ViewName, string>> = { visit: 'exam-b' };
 /**
  * Per-view wiring rule: each view shows its setting plate; the A/B
  * variant rotates by visit-count parity (even visitNo -> A, odd ->
@@ -299,9 +301,14 @@ interface CardWidgets {
   face: Phaser.GameObjects.Graphics;
   spine: Phaser.GameObjects.Graphics;
   stamp: Phaser.GameObjects.Graphics;
+  /** Card width (156 for 3-card rounds, 114 for the 4-tool exam). */
+  w: number;
   actionId: string;
   revealed: ChoiceGrade | null;
 }
+
+/** Visit rounds: every case is a 3-beat mini-story. */
+type VisitRound = 'examine' | 'diagnose' | 'treat';
 
 interface ThreadWidgets {
   root: Phaser.GameObjects.Container;
@@ -316,9 +323,11 @@ export class ClinicScene extends Phaser.Scene {
   private roomBg!: Phaser.GameObjects.Image;
   private patient!: Phaser.GameObjects.Image;
   private patientBaseY = 0;
-  /** Active playable patient (roster phase; Mabel opens). */
-  private activeName = 'Mabel';
+  /** Active playable patient (Milo leads the onboarding). */
+  private activeName = 'Milo';
   private blinkAt = 0;
+  private sneezeAt = 0;
+  private sneezeText!: Phaser.GameObjects.Text;
   private showingFlash = false;
   private flashToken = 0;
   private engine = new ClinicalEngine();
@@ -326,7 +335,7 @@ export class ClinicScene extends Phaser.Scene {
   private patientState!: PatientState;
   private lastNodeId = 'n0';
 
-  private titleText!: Phaser.GameObjects.Text;
+  private wallSign!: Phaser.GameObjects.Container;
   private nametag!: Phaser.GameObjects.Text;
 
   // Conversation panel (the retired bubble's new home, upper dock).
@@ -341,6 +350,10 @@ export class ClinicScene extends Phaser.Scene {
   private cardRow!: Phaser.GameObjects.Container;
   private cards: CardWidgets[] = [];
   private revealedStage = -1;
+  private round: VisitRound = 'examine';
+  private roundScore: RoundScore = { examBest: false, dxCorrect: false, txBest: false };
+  /** Monotonic guard: stale delayed advances never fire. */
+  private roundToken = 0;
   private legend!: Phaser.GameObjects.Container;
   private lastCardTapMs = 0;
   private nudging = false;
@@ -351,11 +364,11 @@ export class ClinicScene extends Phaser.Scene {
   private hud!: Phaser.GameObjects.Container;
   private coinsText!: Phaser.GameObjects.Text;
   private contextText!: Phaser.GameObjects.Text;
-  private timerText!: Phaser.GameObjects.Text;
   private wallet: Wallet = emptyWallet();
+  private shop!: ShopSheet;
+  private ownedIds: string[] = [];
   private undoStack: UndoStack<UndoSnapshot> = emptyUndo();
-  private visitStartMs = 0;
-  private lastTimerSecond = -1;
+  // (visitStartMs returns with the speed element.)
 
   // G4 live-read + modules (wired in wireModules, below).
   private ticker!: BackendTicker;
@@ -370,6 +383,7 @@ export class ClinicScene extends Phaser.Scene {
   // Views + nav.
   private currentView: ViewName = 'visit';
   private waitingView!: Phaser.GameObjects.Container;
+  private minis!: Phaser.GameObjects.Container;
   private telemedView!: Phaser.GameObjects.Container;
   private portalView!: Phaser.GameObjects.Container;
   private threads: ThreadWidgets[] = [];
@@ -455,7 +469,6 @@ export class ClinicScene extends Phaser.Scene {
   create(): void {
     this.patientState = this.engine.initialState(PROTOTYPE_SEEDS.conditionId);
     this.revealedStage = this.patientState.stageIndex;
-    this.visitStartMs = this.time.now;
     this.drawRoom();
     this.drawLightOverlays();
     this.drawTitle();
@@ -474,6 +487,7 @@ export class ClinicScene extends Phaser.Scene {
     this.drawMonitor();
     this.drawToast();
     this.drawResultCard();
+    this.drawSneeze();
     this.scheduleBlink();
     this.lastCardTapMs = this.time.now;
     this.time.addEvent({
@@ -493,19 +507,7 @@ export class ClinicScene extends Phaser.Scene {
     const t = this.time.now / 1000;
     this.patient.y = this.patientBaseY + Math.sin(t * 1.8) * 3;
 
-    // Visit timer: display-only mm:ss readout, urgency feel only —
-    // no rewards or penalties read it. Text updates once per second,
-    // frozen once the visit ends (the clock stops with the case;
-    // bob + blink keep running).
-    if (!this.visitEnded) {
-      const elapsedS = Math.floor((this.time.now - this.visitStartMs) / 1000);
-      if (elapsedS !== this.lastTimerSecond) {
-        this.lastTimerSecond = elapsedS;
-        const mm = String(Math.floor(elapsedS / 60)).padStart(2, '0');
-        const ss = String(elapsedS % 60).padStart(2, '0');
-        this.timerText.setText(`${mm}:${ss}`);
-      }
-    }
+    // (Visit clock removed until the speed element returns.)
 
     // Blink: ANIMATION.md — eyes closed 120ms every 3–5s, randomized.
     // Fires ONLY when the steady face is idle AND no flash is showing
@@ -528,6 +530,37 @@ export class ClinicScene extends Phaser.Scene {
         });
       } else {
         this.scheduleBlink();
+      }
+    }
+
+    // Sneeze: sniffly colds sneeze — a quick wiggle + a rising
+    // "Achoo!" every 9–16s while a viral case sits at stage 1+
+    // in the visit, flashes and endings excepted. Milo's charm.
+    if (this.time.now >= this.sneezeAt) {
+      this.sneezeAt = this.time.now + 9000 + Math.random() * 7000;
+      if (
+        this.currentView === 'visit' &&
+        !this.visitEnded &&
+        !this.showingFlash &&
+        this.patientState.conditionId === 'viral-respiratory' &&
+        this.patientState.stageIndex >= 1
+      ) {
+        this.tweens.add({
+          targets: this.patient,
+          x: '-=5',
+          duration: 55,
+          yoyo: true,
+          repeat: 3,
+          ease: 'Sine.easeInOut',
+        });
+        this.sneezeText.setAlpha(1).setY(480);
+        this.tweens.add({
+          targets: this.sneezeText,
+          y: 436,
+          alpha: 0,
+          duration: 900,
+          ease: 'Sine.easeOut',
+        });
       }
     }
     void delta;
@@ -558,7 +591,7 @@ export class ClinicScene extends Phaser.Scene {
    * path stays fully offline even with a missing file.
    */
   private plateKey(view: ViewName): string {
-    const key = `plate-${plateForView(view, PROTOTYPE_SEEDS.visitNo)}`;
+    const key = `plate-${plateForView(view, this.visitNo())}`;
     return this.textures.exists(key) ? key : 'plate-exam-a';
   }
 
@@ -632,22 +665,45 @@ export class ClinicScene extends Phaser.Scene {
     v.setDepth(1);
   }
 
+  /**
+   * Wall sign: "Cozy Clinic" hangs ON the clinic wall (a plaque
+   * with hanger rods in the calm wall band y36–92) instead of
+   * floating text. Children are RELATIVE so the admin-tap wiggle
+   * scales about the sign center. Shown on wall-plate views
+   * (waiting/visit/learn), hidden on telemed/portal.
+   */
   private drawTitle(): void {
-    this.titleText = this.add
-      .text(270, 56, 'Cozy Clinic', {
+    const hangers = this.add.graphics();
+    hangers.lineStyle(4, OUTLINE, 1);
+    hangers.lineBetween(-80, -64, -80, -28);
+    hangers.lineBetween(80, -64, 80, -28);
+    const plaque = this.add.graphics();
+    plaque.fillStyle(CARD_FILL, 1);
+    plaque.lineStyle(3, OUTLINE, 1);
+    plaque.fillRoundedRect(-160, -28, 320, 56, 16);
+    plaque.strokeRoundedRect(-160, -28, 320, 56, 16);
+    const cross = this.add.graphics();
+    cross.fillStyle(SAGE, 1);
+    cross.lineStyle(2, OUTLINE, 1);
+    cross.fillRoundedRect(-149, -9, 18, 18, 5);
+    cross.strokeRoundedRect(-149, -9, 18, 18, 5);
+    cross.fillStyle(0xfff9ef, 1);
+    cross.fillRect(-143, -5, 6, 10);
+    cross.fillRect(-145, -3, 10, 6);
+    const words = this.add
+      .text(8, -1, 'Cozy Clinic', {
         fontFamily: FONT_FAMILY,
         fontStyle: 'bold',
-        fontSize: '44px',
+        fontSize: '30px',
         color: COCOA,
       })
-      .setOrigin(0.5)
-      .setDepth(4);
-    // No tap-teaching lead-in: the patient's opener greets you on
-    // arrival (showView), so no hardcoded name ever ships here.
-    // Secret admin trigger zone: x150–390, y28–84. No visible hint.
-    const trigger = this.add.zone(270, 56, 240, 56).setDepth(4);
+      .setOrigin(0.5, 0.5);
+    // Secret admin trigger: the plaque itself. No visible hint.
+    const trigger = this.add.zone(0, 0, 240, 64);
     trigger.setInteractive({ useHandCursor: false });
     trigger.on('pointerdown', () => this.onTitleTap());
+    this.wallSign = this.add.container(270, 64, [hangers, plaque, cross, words, trigger]);
+    this.wallSign.setDepth(4);
   }
 
   private drawPatient(): void {
@@ -668,8 +724,9 @@ export class ClinicScene extends Phaser.Scene {
     this.patientBaseY = this.patient.y;
     this.patient.setInteractive({ useHandCursor: true });
 
+    const bootEntry = MOCK_ROSTER.find((e) => e.name === this.activeName);
     this.nametag = this.add
-      .text(270, 736, 'Mabel · first patient', {
+      .text(270, 736, `${this.activeName} · ${bootEntry?.persona ?? 'first patient'}`, {
         fontFamily: FONT_FAMILY,
         fontSize: '22px',
         color: COCOA,
@@ -712,14 +769,12 @@ export class ClinicScene extends Phaser.Scene {
     const x = 270;
     // SAY vs TELL (chrome-3): 'say' quotes + tags direct speech;
     // 'tell' shows narration bare, and hides the tag when the
-    // subject is on screen (Mabel) — Nora's off-screen
-    // interventions keep her tag so the player knows who stepped
-    // in. Quoting happens BEFORE the truncate pass so the "…"
-    // rule measures the shown string.
+    // subject is on screen (Mabel). Quoting happens BEFORE the
+    // truncate pass so the "…" rule measures the shown string.
     const spoken = kind === 'say' ? quoteIfSpoken(speaker, false, text) : text;
     this.panelBody.setText(spoken);
     this.truncateToHeight(this.panelBody, 110);
-    const showTag = kind === 'say' || speaker === 'DR. NORA';
+    const showTag = kind === 'say';
     const bodyTop = showTag ? top + 48 : top + 16;
     const h = Math.min(220, Math.max(96, bodyTop - top + this.panelBody.height + 20));
     const bottom = top + h;
@@ -739,7 +794,7 @@ export class ClinicScene extends Phaser.Scene {
     this.panelTag.clear();
     this.panelTagText.setText('');
     if (showTag) {
-      const tagFill = speaker === 'DR. NORA' ? SKY : speaker === 'YOU' ? CARD_FILL : SAGE;
+      const tagFill = speaker === 'YOU' ? CARD_FILL : SAGE;
       this.panelTagText.setText(speaker);
       const tagW = this.panelTagText.width + 28;
       this.panelTag.fillStyle(tagFill, 1);
@@ -833,6 +888,25 @@ export class ClinicScene extends Phaser.Scene {
     }
   }
 
+  /** Shop owned-set persistence (local; backend locker later). */
+  private loadShop(): void {
+    try {
+      const raw = window.localStorage.getItem(SHOP_STORAGE_KEY);
+      const ids = raw ? (JSON.parse(raw) as unknown) : [];
+      this.ownedIds = Array.isArray(ids) ? ids.filter((id): id is string => typeof id === 'string') : [];
+    } catch {
+      this.ownedIds = [];
+    }
+  }
+
+  private saveShop(): void {
+    try {
+      window.localStorage.setItem(SHOP_STORAGE_KEY, JSON.stringify(this.ownedIds));
+    } catch {
+      // Play on without saving.
+    }
+  }
+
   /**
    * Restore one undone move (dev monitor today, player submenu
    * later): engine state, trajectory cursor, coins, and card
@@ -850,6 +924,15 @@ export class ClinicScene extends Phaser.Scene {
     this.currentNodeId = snap.nodeId;
     this.currentDepth = snap.depth;
     this.revealedStage = snap.state.stageIndex;
+    // Rounds rewind too: restore the round + score, rebuild the row.
+    this.roundToken += 1;
+    this.round = snap.round;
+    this.roundScore = { ...snap.score };
+    this.visitEnded = false;
+    this.hideResult();
+    this.cardRow.removeAll(true);
+    this.buildCards();
+    this.drawCorral();
     // Coins rewind by rebuilding the wallet WITHOUT a ledger lie:
     // undo is its own entry kind, not a delete.
     const diff = this.wallet.balance - snap.coins;
@@ -871,6 +954,7 @@ export class ClinicScene extends Phaser.Scene {
     this.cards.forEach((card, i) => {
       card.revealed = snap.reveals[i] ?? null;
       this.drawSpine(card, card.revealed);
+      this.drawStamp(card, card.revealed);
     });
     this.patient.setTexture(this.steadyFace());
     this.refreshChart();
@@ -910,21 +994,44 @@ export class ClinicScene extends Phaser.Scene {
     this.buildCards();
   }
 
+  /**
+   * Card defs for the live round: the 4 exam maneuvers (clinical
+   * names — the round teaches vocabulary), the 3 diagnosis
+   * options, or the treatment actions.
+   */
+  private roundCardDefs(): { id: string; label: string }[] {
+    const def = CONDITIONS[this.patientState.conditionId];
+    if (this.round === 'examine') {
+      return EXAM_TOOLS.map((t) => ({
+        id: `exam:${t.id}`,
+        label: t.hint.charAt(0).toUpperCase() + t.hint.slice(1),
+      }));
+    }
+    if (this.round === 'diagnose') {
+      return def.dxOptions.map((opt) => ({ id: `dx:${opt}`, label: opt }));
+    }
+    return this.cardRowIds().map((actionId) => {
+      const action = def.actions.find((a) => a.id === actionId);
+      return { id: actionId, label: action ? action.label : actionId };
+    });
+  }
+
   /** (Re)builds the tappable cards; the corral is re-added by drawCorral. */
   private buildCards(): void {
     this.cards = [];
-    this.cardRowIds().forEach((actionId, i) => {
-      const def = CONDITIONS[this.patientState.conditionId];
-      const action = def.actions.find((a) => a.id === actionId);
-      const label = action ? action.label : actionId;
-      const cx = 24 + i * 168 + 78;
+    const defs = this.roundCardDefs();
+    // 3 cards → w156 step 168; 4 tools → w114 step 126. Both span x24–516.
+    const w = defs.length === 4 ? 114 : 156;
+    const step = defs.length === 4 ? 126 : 168;
+    defs.forEach(({ id: actionId, label }, i) => {
+      const cx = 24 + i * step + w / 2;
       const cy = 772 + 37;
       const face = this.add.graphics();
       face.fillStyle(CARD_FILL, GLASS_CARD);
       const stamp = this.add.graphics();
       face.lineStyle(3, OUTLINE, 1);
-      face.fillRoundedRect(-78, -37, 156, 74, 16);
-      face.strokeRoundedRect(-78, -37, 156, 74, 16);
+      face.fillRoundedRect(-w / 2, -37, w, 74, 16);
+      face.strokeRoundedRect(-w / 2, -37, w, 74, 16);
       const spine = this.add.graphics();
       const labelText = this.add
         .text(0, 0, label, {
@@ -933,16 +1040,16 @@ export class ClinicScene extends Phaser.Scene {
           fontSize: '15px',
           color: COCOA,
           align: 'center',
-          wordWrap: { width: 144 },
+          wordWrap: { width: w - 12 },
         })
         .setOrigin(0.5, 0.5);
       this.truncateToHeight(labelText, 44);
       const root = this.add.container(cx, cy, [face, spine, labelText, stamp]);
-      const zone = this.add.zone(0, 0, 156, 74).setInteractive({ useHandCursor: true });
+      const zone = this.add.zone(0, 0, w, 74).setInteractive({ useHandCursor: true });
       zone.on('pointerdown', () => this.onCardTap(i));
       root.add(zone);
       this.cardRow.add(root);
-      this.cards.push({ root, face, spine, stamp, actionId, revealed: null });
+      this.cards.push({ root, face, spine, stamp, w, actionId, revealed: null });
     });
   }
 
@@ -960,8 +1067,16 @@ export class ClinicScene extends Phaser.Scene {
    */
   private drawCorral(): void {
     const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+    // The legend names the live round (examine/diagnose are
+    // tier-free teaching words; treat keeps the tier wording).
+    const wording =
+      this.round === 'examine'
+        ? 'Examine…'
+        : this.round === 'diagnose'
+          ? 'Diagnose…'
+          : CHOOSE_PROMPT_WORDING[tier];
     const label = this.add
-      .text(0, 0, CHOOSE_PROMPT_WORDING[tier], {
+      .text(0, 0, wording, {
         fontFamily: FONT_FAMILY,
         fontStyle: 'bold',
         fontSize: '12px',
@@ -1037,7 +1152,7 @@ export class ClinicScene extends Phaser.Scene {
     if (!grade) return;
     card.spine.fillStyle(GRADE_COLOR[grade], 1);
     // 8px left spine inside the card's rounded corner.
-    card.spine.fillRoundedRect(-78, -37, 8, 74, { tl: 16, tr: 0, bl: 16, br: 0 });
+    card.spine.fillRoundedRect(-card.w / 2, -37, 8, 74, { tl: 16, tr: 0, bl: 16, br: 0 });
   }
 
   private clearReveals(): void {
@@ -1051,14 +1166,14 @@ export class ClinicScene extends Phaser.Scene {
 
   /**
    * Grade stamp: a sticker on the tapped card's top-right corner
-   * (relative 58,-19, r13) so right/wrong reads instantly —
+   * (r13) so right/wrong reads instantly —
    * BEST check, NOT_GREAT dash, WRONG/DANGEROUS cross, all in
    * the grade color with a cream glyph. Cleared with reveals.
    */
   private drawStamp(card: CardWidgets, grade: ChoiceGrade | null): void {
     card.stamp.clear();
     if (!grade) return;
-    const cx = 58;
+    const cx = card.w / 2 - 20;
     const cy = -19;
     card.stamp.fillStyle(GRADE_COLOR[grade], 1);
     card.stamp.lineStyle(2, OUTLINE, 1);
@@ -1090,7 +1205,112 @@ export class ClinicScene extends Phaser.Scene {
       duration: 90,
       yoyo: true,
       ease: 'Sine.easeInOut',
-      onComplete: () => this.resolveCard(i),
+      onComplete: () => {
+        if (this.round === 'examine') this.resolveExam(i);
+        else if (this.round === 'diagnose') this.resolveDx(i);
+        else this.resolveCard(i);
+      },
+    });
+  }
+
+  /** Captures the pre-move snapshot (every round pushes undo). */
+  private snapPreMove(): UndoSnapshot {
+    return {
+      state: structuredClone(this.patientState),
+      nodeId: this.currentNodeId,
+      depth: this.currentDepth,
+      coins: this.wallet.balance,
+      reveals: this.cards.map((c) => c.revealed),
+      round: this.round,
+      score: { ...this.roundScore },
+    };
+  }
+
+  /** Rebuilds the row for a new round (fresh cards + legend). */
+  private advanceRound(next: VisitRound): void {
+    this.roundToken += 1;
+    this.round = next;
+    this.cardRow.removeAll(true);
+    this.buildCards();
+    this.drawCorral();
+  }
+
+  /**
+   * EXAMINE round: pick a maneuver. The revealing one pays BEST
+   * (+coin) and a real finding; the rest find nothing new
+   * (NOT_GREAT, no harm). Then the diagnosis round.
+   */
+  private resolveExam(i: number): void {
+    const card = this.cards[i];
+    if (!card) return;
+    const def = CONDITIONS[this.patientState.conditionId];
+    this.undoStack = pushMove(this.undoStack, this.snapPreMove());
+    const toolId = card.actionId.replace('exam:', '');
+    const best = toolId === def.bestExam;
+    const grade: ChoiceGrade = best ? 'BEST' : 'NOT_GREAT';
+    card.revealed = grade;
+    this.drawSpine(card, grade);
+    this.drawStamp(card, grade);
+    if (best) {
+      this.roundScore.examBest = true;
+      this.wallet = earn(this.wallet, EARN_BEST, 'earn:best-exam');
+      this.saveWallet();
+      this.showToast('Great exam! +1 Care Coin');
+    } else {
+      this.showToast('Hmm, nothing new');
+    }
+    this.refreshChart();
+    this.refreshHud();
+    // A beat to read the stamp, then the finding + next round.
+    const token = this.roundToken;
+    this.time.delayedCall(650, () => {
+      if (token !== this.roundToken) return;
+      this.setConversation(
+        speakerFor(this.activeName),
+        best ? def.bestFinding : EXAM_OTHER_FINDING,
+        'tell',
+      );
+      this.advanceRound('diagnose');
+    });
+  }
+
+  /**
+   * DIAGNOSE round: name the condition. Right pays BEST (+coin);
+   * wrong costs the ending (but the visit goes on — treat
+   * what's in front of you). Then the treatment round.
+   */
+  private resolveDx(i: number): void {
+    const card = this.cards[i];
+    if (!card) return;
+    const def = CONDITIONS[this.patientState.conditionId];
+    this.undoStack = pushMove(this.undoStack, this.snapPreMove());
+    const pick = card.actionId.replace('dx:', '');
+    const correct = pick === def.name;
+    const grade: ChoiceGrade = correct ? 'BEST' : 'WRONG';
+    card.revealed = grade;
+    this.drawSpine(card, grade);
+    this.drawStamp(card, grade);
+    if (correct) {
+      this.roundScore.dxCorrect = true;
+      this.wallet = earn(this.wallet, EARN_BEST, 'earn:best-dx');
+      this.saveWallet();
+      this.showToast('Correct diagnosis! +1 Care Coin');
+    } else {
+      this.showToast("Hmm — that doesn't fit");
+    }
+    this.refreshChart();
+    this.refreshHud();
+    const token = this.roundToken;
+    this.time.delayedCall(650, () => {
+      if (token !== this.roundToken) return;
+      this.setConversation(
+        speakerFor(this.activeName),
+        correct
+          ? `${def.name} it is. Now choose the treatment.`
+          : `${pick} doesn't fit — but the visit goes on. Treat what's in front of you.`,
+        'tell',
+      );
+      this.advanceRound('treat');
     });
   }
 
@@ -1103,20 +1323,14 @@ export class ClinicScene extends Phaser.Scene {
     const grade = this.engine.gradeAction(this.patientState, card.actionId);
     // Undo: capture the PRE-move snapshot (skipped for blocked moves,
     // which change nothing and would make undo a no-op step).
-    const preMove: UndoSnapshot = {
-      state: structuredClone(this.patientState),
-      nodeId: this.currentNodeId,
-      depth: this.currentDepth,
-      coins: this.wallet.balance,
-      reveals: this.cards.map((c) => c.revealed),
-    };
+    const preMove = this.snapPreMove();
     const result = this.engine.applyAction(this.patientState, card.actionId);
     if (!result.blocked) {
       this.undoStack = pushMove(this.undoStack, preMove);
     }
     if (result.blocked) {
-      // Engine veto: Nora stepped in. Dim + shake + her line —
-      // no happy bounce on a blocked move.
+      // Engine veto: your training stops you. Dim + shake + the
+      // hold-back line — no happy bounce on a blocked move.
       card.revealed = grade;
       this.drawSpine(card, grade);
       this.drawStamp(card, grade);
@@ -1129,7 +1343,7 @@ export class ClinicScene extends Phaser.Scene {
         repeat: 3,
         ease: 'Sine.easeInOut',
       });
-      this.setConversation('DR. NORA', result.blockReason ?? action.hootLine, 'say');
+      this.setConversation('YOU', result.blockReason ?? action.hootLine, 'say');
       this.holdSteady();
       return;
     }
@@ -1182,15 +1396,17 @@ export class ClinicScene extends Phaser.Scene {
       void this.growTree();
     }
     this.playResolveFlash(result.node.animationCue);
-    this.maybeEndVisit();
+    this.maybeEndVisit(grade === 'BEST');
   }
 
-  /** Ladder tips end the visit: stage 0 recovered, last struggling. */
-  private maybeEndVisit(): void {
+  /**
+   * The TREAT round ends the visit: the set of choices decides
+   * the ending (right diagnosis + right treatment recovers).
+   */
+  private maybeEndVisit(txBest: boolean): void {
     if (this.visitEnded) return;
-    const def = CONDITIONS[this.patientState.conditionId];
-    const outcome = visitOutcome(this.patientState.stageIndex, def.stages.length);
-    if (!outcome) return;
+    this.roundScore.txBest = txBest;
+    const outcome = visitOutcome(this.roundScore);
     this.visitEnded = true;
     this.showResult(outcome);
   }
@@ -1231,9 +1447,10 @@ export class ClinicScene extends Phaser.Scene {
     // Fresh visit: clock + coins baseline restart, result clears.
     this.visitEnded = false;
     this.hideResult();
-    this.visitStartMs = this.time.now;
-    this.lastTimerSecond = -1;
     this.visitStartCoins = this.wallet.balance;
+    this.roundToken += 1;
+    this.round = 'examine';
+    this.roundScore = { examBest: false, dxCorrect: false, txBest: false };
     const row = this.cast ? patientByName(this.cast, name) : null;
     const cond = row?.condition_id;
     if (
@@ -1401,8 +1618,8 @@ export class ClinicScene extends Phaser.Scene {
     // Chrome-3: the mid-screen band (was y376-412) is RETIRED —
     // the HUD now lives inside the slim top strip (y0-32, pill
     // h24 at y4, centerline y16), above the title (top ~y40).
-    // Coin cluster left, bare context words center, clock cluster
-    // right. Visit-only: fades with the visit view (showView),
+    // Coin cluster left, bare context words center. Visit-only:
+    // fades with the visit view (showView),
     // while the strip itself stays persistent. Icons are
     // code-drawn ($0, crisp, offline-safe): coin+ and clock-hands.
     // Pills + text stay opaque; translucency is the strip's only.
@@ -1411,14 +1628,25 @@ export class ClinicScene extends Phaser.Scene {
     coinsBg.lineStyle(2, OUTLINE, 1);
     coinsBg.fillRoundedRect(24, 4, 100, 24, 12);
     coinsBg.strokeRoundedRect(24, 4, 100, 24, 12);
+    // Care Coin: metallic gold disc — dark rim, amber face,
+    // pale-gold inner ring, shine dot, embossed C.
     const coin = this.add.graphics();
     coin.fillStyle(AMBER, 1);
     coin.lineStyle(2, OUTLINE, 1);
-    coin.fillCircle(44, 16, 8);
-    coin.strokeCircle(44, 16, 8);
-    coin.fillStyle(OUTLINE, 1);
-    coin.fillRect(43, 12, 2, 8);
-    coin.fillRect(40, 15, 8, 2);
+    coin.fillCircle(44, 16, 9);
+    coin.strokeCircle(44, 16, 9);
+    coin.lineStyle(1, 0xf2c66d, 1);
+    coin.strokeCircle(44, 16, 6);
+    coin.fillStyle(0xfff3d6, 1);
+    coin.fillCircle(41, 13, 2);
+    const coinC = this.add
+      .text(44, 16, 'C', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '11px',
+        color: COCOA,
+      })
+      .setOrigin(0.5, 0.5);
     this.coinsText = this.add
       .text(58, 16, '', {
         fontFamily: FONT_FAMILY,
@@ -1438,36 +1666,25 @@ export class ClinicScene extends Phaser.Scene {
       })
       .setOrigin(0.5, 0.5);
 
-    const timerBg = this.add.graphics();
-    timerBg.fillStyle(CARD_FILL, 1);
-    timerBg.lineStyle(2, OUTLINE, 1);
-    timerBg.fillRoundedRect(416, 4, 100, 24, 12);
-    timerBg.strokeRoundedRect(416, 4, 100, 24, 12);
-    const clock = this.add.graphics();
-    clock.fillStyle(CARD_FILL, 1);
-    clock.lineStyle(2, OUTLINE, 1);
-    clock.fillCircle(436, 16, 8);
-    clock.strokeCircle(436, 16, 8);
-    clock.lineStyle(2, OUTLINE, 1);
-    clock.lineBetween(436, 16, 436, 11);
-    clock.lineBetween(436, 16, 440, 16);
-    this.timerText = this.add
-      .text(450, 16, '00:00', {
-        fontFamily: FONT_FAMILY,
-        fontStyle: 'bold',
-        fontSize: '14px',
-        color: COCOA,
-      })
-      .setOrigin(0, 0.5);
+    // No clock until the speed element returns (playtest: the
+    // timer reads as pressure without purpose). visitStartMs is
+    // kept for its comeback.
 
+    // Tapping the coin meter opens the Clinic Shop.
+    const coinZone = this.add
+      .zone(74, 16, 100, 24)
+      .setInteractive({ useHandCursor: true });
+    coinZone.on('pointerdown', () => {
+      if (this.shop.open) this.shop.hide();
+      else this.shop.show(this.wallet.balance, this.ownedIds);
+    });
     this.hud = this.add.container(0, 0, [
       coinsBg,
       coin,
+      coinC,
       this.coinsText,
       this.contextText,
-      timerBg,
-      clock,
-      this.timerText,
+      coinZone,
     ]);
     // Depth 20 = above the strip bg (19), level with the nav bar
     // (a different band, so no conflict).
@@ -1475,9 +1692,20 @@ export class ClinicScene extends Phaser.Scene {
     this.refreshHud();
   }
 
+  /**
+   * Per-patient visit numbers (mock until the backend owns
+   * visits): Milo is an existing patient here sick (2), Mabel a
+   * returning follow-up (4), June a true first-timer (1).
+   */
+  private visitNo(): number {
+    if (this.activeName === 'Mabel') return 4;
+    if (this.activeName === 'June') return 1;
+    return 2;
+  }
+
   /** Mock context derivation: first visit → new, stage 2+ → sick. */
   private visitContext(): VisitContext {
-    if (PROTOTYPE_SEEDS.visitNo <= 1) return 'new-patient';
+    if (this.visitNo() <= 1) return 'new-patient';
     if (this.patientState.stageIndex >= 2) return 'sick-visit';
     return 'follow-up';
   }
@@ -1491,7 +1719,7 @@ export class ClinicScene extends Phaser.Scene {
     const fb = row ?? FALLBACK_PATIENTS.find((p) => p.name === this.activeName);
     const lines = signoutLines(
       {
-        visitNo: PROTOTYPE_SEEDS.visitNo,
+        visitNo: this.visitNo(),
         visitKind: this.visitContext(),
         name: this.activeName,
         ageYears: fb?.age_years ?? 8,
@@ -1512,14 +1740,11 @@ export class ClinicScene extends Phaser.Scene {
     this.contextText.setText(VISIT_CONTEXT_WORDING[this.visitContext()][tier]);
   }
 
-  // -- VIEW 2: waiting room (MOCK roster) --
+  // -- VIEW 2: waiting room (minis on the plate, no list) --
 
   private drawWaitingView(): void {
-    const sheet = this.add.graphics();
-    sheet.fillStyle(CREAM, GLASS_PANEL);
-    sheet.lineStyle(3, OUTLINE, 1);
-    sheet.fillRoundedRect(24, 136, 492, 740, 24);
-    sheet.strokeRoundedRect(24, 136, 492, 740, 24);
+    // No sheet: the waiting plate IS the room. Title floats on
+    // the calm wall band; minis stand on the floor below.
     const title = this.add
       .text(40, 160, 'Waiting Room', {
         fontFamily: FONT_FAMILY,
@@ -1528,116 +1753,110 @@ export class ClinicScene extends Phaser.Scene {
         color: COCOA,
       })
       .setOrigin(0, 0.5);
-    const clockLabel = this.add
-      .text(0, 0, '10:24 AM', {
-        fontFamily: FONT_FAMILY,
-        fontSize: '15px',
-        color: COCOA,
-      })
-      .setOrigin(0.5, 0.5);
-    const clockBg = this.add.graphics();
-    const clockW = clockLabel.width + 28;
-    clockBg.fillStyle(CARD_FILL, 1);
-    clockBg.lineStyle(2, OUTLINE, 1);
-    clockBg.fillRoundedRect(500 - clockW, 142, clockW, 36, 18);
-    clockBg.strokeRoundedRect(500 - clockW, 142, clockW, 36, 18);
-    clockLabel.setPosition(500 - clockW / 2, 160);
-    const footnote = this.add
-      .text(270, 826, 'Dr. Nora is with a patient…', {
+    const hint = this.add
+      .text(40, 194, 'Tap a friend to visit', {
         fontFamily: FONT_FAMILY,
         fontSize: '16px',
         color: SECONDARY,
       })
-      .setOrigin(0.5, 0.5);
-    this.waitingView = this.add.container(0, 0, [
-      sheet,
-      title,
-      clockBg,
-      clockLabel,
-      footnote,
-    ]);
+      .setOrigin(0, 0.5);
+    this.minis = this.add.container(0, 0, []);
+    this.waitingView = this.add.container(0, 0, [title, hint, this.minis]);
     this.waitingView.setDepth(10).setVisible(false).setAlpha(0);
+  }
 
-    MOCK_ROSTER.forEach((entry, i) => {
-      const yc = 196 + i * 132 + 60;
-      const bg = this.add.graphics();
-      bg.fillStyle(CARD_FILL, GLASS_ROW);
-      bg.lineStyle(3, OUTLINE, 1);
-      bg.fillRoundedRect(-230, -60, 460, 120, 16);
-      bg.strokeRoundedRect(-230, -60, 460, 120, 16);
-      const fur = Phaser.Display.Color.HexStringToColor(entry.furShade).color;
-      const avatar = this.add.graphics();
-      avatar.fillStyle(fur, 1);
-      avatar.fillCircle(-172, 0, 42);
-      const initial = this.add
-        .text(-172, 0, entry.name.charAt(0), {
-          fontFamily: FONT_FAMILY,
-          fontStyle: 'bold',
-          fontSize: '32px',
-          color: '#fff9ef',
-        })
-        .setOrigin(0.5, 0.5);
+  /**
+   * Rebuilds the waiting minis for whoever is NOT in the visit
+   * (3 slots, feet y700). Sprite owners stand as 76px minis;
+   * Theo naps as a code-drawn bundle (no sprite yet). Called on
+   * every arrival in Waiting so a switch never shows stale faces.
+   */
+  private refreshWaitingMinis(): void {
+    this.tweens.killTweensOf(this.minis.getAll());
+    this.minis.removeAll(true);
+    const waiting = MOCK_ROSTER.filter((e) => e.name !== this.activeName);
+    const slots = [120, 270, 420];
+    waiting.forEach((entry, i) => {
+      const x = slots[i] ?? 270;
+      const prefix = SPRITE_PREFIX[entry.name];
+      const parts: Phaser.GameObjects.GameObject[] = [];
+      const shadow = this.add.graphics();
+      shadow.fillStyle(0x8a5a3b, 0.14);
+      shadow.fillEllipse(0, 42, 64, 12);
+      parts.push(shadow);
+      if (prefix !== undefined) {
+        const mini = this.add.image(0, 0, `${prefix}-idle`);
+        mini.setDisplaySize(76, 76);
+        parts.push(mini);
+      } else {
+        // Napping bundle: blanket mound + head bump + drifting Z.
+        const mound = this.add.graphics();
+        mound.fillStyle(SKY, 1);
+        mound.lineStyle(3, OUTLINE, 1);
+        mound.fillEllipse(0, 12, 84, 52);
+        mound.strokeEllipse(0, 12, 84, 52);
+        mound.fillStyle(CARD_FILL, 1);
+        mound.fillCircle(-24, -8, 14);
+        mound.lineStyle(2, OUTLINE, 1);
+        mound.strokeCircle(-24, -8, 14);
+        mound.lineStyle(2, OUTLINE, 1);
+        mound.lineBetween(-29, -9, -19, -9);
+        const zed = this.add
+          .text(28, -34, 'z', {
+            fontFamily: FONT_FAMILY,
+            fontStyle: 'bold',
+            fontSize: '18px',
+            color: SECONDARY,
+          })
+          .setOrigin(0.5, 0.5);
+        parts.push(mound, zed);
+      }
       const name = this.add
-        .text(-116, -28, entry.name, {
+        .text(0, 58, entry.name, {
           fontFamily: FONT_FAMILY,
           fontStyle: 'bold',
-          fontSize: '22px',
+          fontSize: '16px',
           color: COCOA,
         })
-        .setOrigin(0, 0);
-      const persona = this.add
-        .text(-116, 4, entry.persona, {
+        .setOrigin(0.5, 0.5);
+      const status = this.add
+        .text(0, 80, entry.status, {
           fontFamily: FONT_FAMILY,
-          fontSize: '16px',
+          fontSize: '13px',
           color: SECONDARY,
         })
-        .setOrigin(0, 0);
-      const statusLabel = this.add
-        .text(0, 0, entry.status, {
-          fontFamily: FONT_FAMILY,
-          fontSize: '15px',
-          color: COCOA,
-        })
         .setOrigin(0.5, 0.5);
-      const statusW = Math.max(110, statusLabel.width + 24);
-      const statusBg = this.add.graphics();
-      const here = entry.id === 'mock-patient-mabel';
-      statusBg.fillStyle(here ? SAGE : CARD_FILL, 1);
-      statusBg.lineStyle(2, OUTLINE, 1);
-      statusBg.fillRoundedRect(218 - statusW, -18, statusW, 36, 18);
-      statusBg.strokeRoundedRect(218 - statusW, -18, statusW, 36, 18);
-      statusLabel.setPosition(218 - statusW / 2, 0);
-      const row = this.add.container(270, yc, [
-        bg,
-        avatar,
-        initial,
-        name,
-        persona,
-        statusBg,
-        statusLabel,
-      ]);
-      const zone = this.add.zone(0, 0, 460, 120).setInteractive({ useHandCursor: true });
+      parts.push(name, status);
+      const mini = this.add.container(x, 658, parts);
+      const zone = this.add
+        .zone(0, 10, 130, 180)
+        .setInteractive({ useHandCursor: true });
       zone.on('pointerdown', () => {
         this.tweens.add({
-          targets: row,
-          scaleX: 0.97,
-          scaleY: 0.97,
+          targets: mini,
+          scaleX: 0.96,
+          scaleY: 0.96,
           duration: 90,
           yoyo: true,
           ease: 'Sine.easeInOut',
         });
-        if (SPRITE_PREFIX[entry.name] !== undefined) {
-          if (entry.name === this.activeName) {
-            this.showToast(`${entry.name} is already with you!`);
-          } else {
-            this.switchPatient(entry.name);
-          }
+        if (prefix !== undefined) {
+          this.switchPatient(entry.name);
         } else {
-          this.showToast(`${entry.name} isn't playable yet`);
+          this.showToast(`${entry.name} is napping`);
         }
       });
-      row.add(zone);
-      this.waitingView.add(row);
+      mini.add(zone);
+      // Gentle per-mini bob (phased so they don't march together).
+      this.tweens.add({
+        targets: mini,
+        y: 658 + 3,
+        duration: 1600 + i * 250,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
+      });
+      this.minis.add(mini);
     });
   }
 
@@ -1662,7 +1881,7 @@ export class ClinicScene extends Phaser.Scene {
     noraBg.fillStyle(SKY, 1);
     noraBg.fillRoundedRect(344, 380, 168, 36, 18);
     const nora = this.add
-      .text(428, 398, 'Dr. Nora › observing', {
+      .text(428, 398, 'Clinic › observing', {
         fontFamily: FONT_FAMILY,
         fontSize: '14px',
         color: COCOA,
@@ -1791,7 +2010,7 @@ export class ClinicScene extends Phaser.Scene {
       const bubbleBg = this.add.graphics();
       extras.add(bubbleBg);
       for (const msg of thread.messages) {
-        // Quoted speech (mock copy): Dr. Nora's lines wrap in quotes;
+        // Quoted speech (mock copy): patient lines wrap in quotes;
         // player replies + Clinic system lines stay unquoted. Snippets
         // stay bare (truncated previews, never full lines).
         const bubble = this.add.text(msg.me ? 484 : 56, ey + 8, quoteIfSpoken(thread.from, msg.me, msg.text), {
@@ -1934,6 +2153,22 @@ export class ClinicScene extends Phaser.Scene {
     this.learnBadge = this.add.container(TAB_X.learn + 22, 900, [badge]);
     this.learnBadge.setVisible(false);
     nav.add(this.learnBadge);
+    // Waiting badge: how many friends are waiting (roster minus
+    // the visit — 3 with the fixed cast, drawn once).
+    const waitingBadge = this.add.graphics();
+    waitingBadge.fillStyle(SAGE, 1);
+    waitingBadge.lineStyle(2, OUTLINE, 1);
+    waitingBadge.fillCircle(0, 0, 10);
+    waitingBadge.strokeCircle(0, 0, 10);
+    const waitingCount = this.add
+      .text(0, 0, `${MOCK_ROSTER.length - 1}`, {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '13px',
+        color: COCOA,
+      })
+      .setOrigin(0.5, 0.5);
+    nav.add(this.add.container(TAB_X.waiting + 28, 900, [waitingBadge, waitingCount]));
   }
 
   /**
@@ -2044,6 +2279,29 @@ export class ClinicScene extends Phaser.Scene {
       if (this.currentView === 'learn') this.showView('visit');
     };
 
+    // Clinic Shop: the coin meter opens it (visit-only HUD).
+    this.shop = new ShopSheet(this);
+    this.loadShop();
+    this.shop.onBuy = (item: ShopItem) => {
+      const res = buyItem(this.wallet.balance, this.ownedIds, item);
+      if (!res) {
+        this.showToast('Not enough coins yet — earn more in visits');
+        return;
+      }
+      const paid = spend(this.wallet, item.cost, `spend:${item.id}`);
+      if (!paid) {
+        this.showToast('Not enough coins yet — earn more in visits');
+        return;
+      }
+      this.wallet = paid;
+      this.saveWallet();
+      this.ownedIds = res.owned;
+      this.saveShop();
+      this.refreshHud();
+      this.shop.refresh(this.wallet.balance, this.ownedIds);
+      this.showToast(`${item.name} is yours!`);
+    };
+
     // Live cast: Supabase first, fallback offline. Resolves read
     // the loaded trees instantly — never mid-tap network.
     void loadCast().then((cast) => {
@@ -2097,15 +2355,18 @@ export class ClinicScene extends Phaser.Scene {
     if (next === 'visit' || next === 'telemed') {
       this.setConversation(speakerFor(this.activeName), this.openerText(), 'say');
     }
+    // Waiting minis rebuild every arrival (never stale faces).
+    if (next === 'waiting') this.refreshWaitingMinis();
     // G4 module visibility: ticker everywhere except Telemed (call
     // buttons own that bottom band); tray + chart drawer Visit-only
     // (no hands through a video call).
     this.ticker.setVisible(next !== 'telemed');
     this.tray.setVisible(next === 'visit');
     this.chartDrawer.setVisible(next === 'visit');
-    // Overlays close on any view change (both no-op when shut) —
+    // Overlays close on any view change (all no-op when shut) —
     // except Learn, which IS the Learning List full-screen.
     this.chart.hide();
+    this.shop.hide();
     if (next === 'learn') {
       const def = CONDITIONS[this.patientState.conditionId];
       this.learnList.show(def.id, def.name);
@@ -2114,6 +2375,7 @@ export class ClinicScene extends Phaser.Scene {
       this.learnList.hide();
     }
     this.nametag.setVisible(next === 'visit');
+    this.wallSign.setVisible(next === 'waiting' || next === 'visit' || next === 'learn');
     this.syncPanelVisibility();
     const cardY = next === 'telemed' ? -60 : 0;
     if (instant) {
@@ -2180,10 +2442,10 @@ export class ClinicScene extends Phaser.Scene {
   private onTitleTap(): void {
     if (this.adminOpen) return;
     this.titleTaps += 1;
-    this.tweens.killTweensOf(this.titleText);
-    this.titleText.setScale(1);
+    this.tweens.killTweensOf(this.wallSign);
+    this.wallSign.setScale(1);
     this.tweens.add({
-      targets: this.titleText,
+      targets: this.wallSign,
       scaleX: 0.98,
       scaleY: 0.98,
       duration: 60,
@@ -2415,7 +2677,7 @@ export class ClinicScene extends Phaser.Scene {
         'vitals:',
         `energy ${this.patientState.vitals.energy} · comfort ${this.patientState.vitals.comfort} · breath ${this.patientState.vitals.breathing}`,
       ],
-      ['visit:', `#${PROTOTYPE_SEEDS.visitNo} · node: ${this.lastNodeId}`],
+      ['visit:', `#${this.visitNo()} · node: ${this.lastNodeId}`],
       ['wording:', `${PROTOTYPE_SEEDS.wordingTier} · difficulty: ${PROTOTYPE_SEEDS.difficulty}/3`],
     ];
     let y = 224;
@@ -2579,7 +2841,7 @@ export class ClinicScene extends Phaser.Scene {
     card.fillRoundedRect(48, 340, 444, 280, 24);
     card.strokeRoundedRect(48, 340, 444, 280, 24);
     this.resultTitle = this.add
-      .text(270, 380, '', {
+      .text(270, 372, '', {
         fontFamily: FONT_FAMILY,
         fontStyle: 'bold',
         fontSize: '26px',
@@ -2588,7 +2850,7 @@ export class ClinicScene extends Phaser.Scene {
       })
       .setOrigin(0.5, 0.5);
     this.resultLines = this.add
-      .text(270, 412, '', {
+      .text(270, 404, '', {
         fontFamily: FONT_FAMILY,
         fontSize: '17px',
         color: COCOA,
@@ -2611,7 +2873,7 @@ export class ClinicScene extends Phaser.Scene {
       .zone(0, 0, 380, 52)
       .setInteractive({ useHandCursor: true });
     primaryZone.on('pointerdown', () => this.onResultPrimary());
-    this.resultPrimary = this.add.container(270, 512, [
+    this.resultPrimary = this.add.container(270, 518, [
       this.resultPrimaryBg,
       this.resultPrimaryText,
       primaryZone,
@@ -2631,7 +2893,7 @@ export class ClinicScene extends Phaser.Scene {
       .zone(0, 0, 380, 44)
       .setInteractive({ useHandCursor: true });
     secondaryZone.on('pointerdown', () => this.onResultSecondary());
-    this.resultSecondary = this.add.container(270, 566, [
+    this.resultSecondary = this.add.container(270, 570, [
       secondaryBg,
       this.resultSecondaryText,
       secondaryZone,
@@ -2653,10 +2915,10 @@ export class ClinicScene extends Phaser.Scene {
     const def = CONDITIONS[this.patientState.conditionId];
     const copy = resultCopy({
       outcome,
-      name: this.activeName,
-      condition: def.name,
-      visitNo: PROTOTYPE_SEEDS.visitNo,
+      visitNo: this.visitNo(),
       coinsEarned: this.wallet.balance - this.visitStartCoins,
+      score: { ...this.roundScore },
+      condition: def.name,
     });
     this.resultTitle.setText(copy.title);
     this.resultLines.setText(copy.lines.join('\n'));
@@ -2738,5 +3000,19 @@ export class ClinicScene extends Phaser.Scene {
   private scheduleBlink(): void {
     // Randomized 3–5s so the cast never blinks in unison (art bible).
     this.blinkAt = this.time.now + 3000 + Math.random() * 2000;
+  }
+
+  private drawSneeze(): void {
+    this.sneezeText = this.add
+      .text(270, 480, 'Achoo!', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '24px',
+        color: COCOA,
+      })
+      .setOrigin(0.5, 0.5)
+      .setAlpha(0)
+      .setDepth(6);
+    this.sneezeAt = this.time.now + 6000 + Math.random() * 4000;
   }
 }

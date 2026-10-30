@@ -82,9 +82,9 @@ export interface PrototypeSeeds {
 }
 
 export const PROTOTYPE_SEEDS: PrototypeSeeds = {
-  patientName: 'Mabel',
-  conditionId: 'asthma',
-  visitNo: 4,
+  patientName: 'Milo',
+  conditionId: 'viral-respiratory',
+  visitNo: 2,
   wordingTier: 'gentle',
   difficulty: 1,
   devCode: 'MABEL',
@@ -101,14 +101,21 @@ export const CARD_ROW_IDS: readonly string[] = [
   'dusty-blanket',
 ];
 
-/** Waiting-room roster, top to bottom (spec geometry order). */
+/** Waiting-room roster (Milo leads; minis show whoever is waiting). */
 export const MOCK_ROSTER: readonly MockRosterEntry[] = [
+  {
+    id: 'mock-patient-milo',
+    name: 'Milo',
+    persona: 'curious kid',
+    furShade: '#CDB9A8',
+    status: 'VISIT 2 • here',
+  },
   {
     id: 'mock-patient-mabel',
     name: 'Mabel',
     persona: 'our first patient',
     furShade: '#A2766B',
-    status: 'VISIT 4 • here',
+    status: 'VISIT 4 • follow-up',
   },
   {
     id: 'mock-patient-june',
@@ -116,13 +123,6 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
     persona: 'gentle first-timer',
     furShade: '#C4A484',
     status: 'waiting',
-  },
-  {
-    id: 'mock-patient-milo',
-    name: 'Milo',
-    persona: 'curious kid',
-    furShade: '#CDB9A8',
-    status: 'checked in',
   },
   {
     id: 'mock-patient-theo',
@@ -205,16 +205,18 @@ export const MOCK_PROFILE_LABEL = 'You';
 
 /**
  * QUOTED-SPEECH RULE (chrome-2 display law): spoken lines by named
- * cast (Mabel, Dr. Nora) render wrapped in straight double quotes;
- * narration, player ("me"), and system (Clinic) lines stay
- * unquoted — talking vs describing unmistakable. Applied at RENDER
- * time (conversation panel + portal bubbles), never baked into row
- * data, so future real Supabase rows inherit the rule.
+ * patient cast (Mabel, June, Milo) render wrapped in straight
+ * double quotes; narration, player, and system (Clinic) lines
+ * stay unquoted — talking vs describing unmistakable. Applied at
+ * RENDER time (conversation panel + portal bubbles), never baked
+ * into row data, so future real Supabase rows inherit the rule.
+ * (No NPC doctors yet — Dr. Nora is parked until the practice
+ * upgrade system ships.)
  */
 export function quoteIfSpoken(from: string, me: boolean, text: string): string {
   if (me) return text;
   const key = from.trim().toUpperCase();
-  if (key === 'MABEL' || key === 'JUNE' || key === 'MILO' || key === 'DR. NORA' || key === 'DR NORA') {
+  if (key === 'MABEL' || key === 'JUNE' || key === 'MILO') {
     return `"${text}"`;
   }
   return text;
@@ -224,7 +226,7 @@ export function quoteIfSpoken(from: string, me: boolean, text: string): string {
 export const MOCK_THREADS: readonly MockThread[] = [
   {
     id: 'mock-thread-visit-notes',
-    from: 'Dr. Nora',
+    from: 'Clinic',
     subject: "Mabel's visit notes",
     snippet: 'Slow breaths, puffer close…',
     unread: 2,
@@ -247,7 +249,7 @@ export const MOCK_THREADS: readonly MockThread[] = [
   },
   {
     id: 'mock-thread-sip-tips',
-    from: 'Dr. Nora',
+    from: 'Clinic',
     subject: 'Breathe-easy plan',
     snippet: 'Three cozy tricks for…',
     unread: 1,

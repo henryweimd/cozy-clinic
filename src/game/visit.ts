@@ -1,24 +1,34 @@
 /**
- * Visit-end rules + result copy (pure, unit-tested). A visit ends
- * at either ladder tip: stage 0 = recovered (got it right),
- * last stage = struggling (got it wrong — the wrong path
- * teaches too, and the result routes to learning first).
+ * Visit-end rules + result copy (pure, unit-tested). A visit is a
+ * 3-round mini-story (examine → diagnose → treat); the SET of
+ * choices decides the ending. Recovered takes the right
+ * diagnosis AND the right treatment; the exam round pays coins
+ * and findings. Copy congratulates the PLAYER — never claims
+ * the patient is better or worse.
  */
 
 export type VisitOutcome = 'recovered' | 'struggling';
 
-export function visitOutcome(stageIndex: number, stageCount: number): VisitOutcome | null {
-  if (stageIndex <= 0) return 'recovered';
-  if (stageIndex >= stageCount - 1) return 'struggling';
-  return null;
+export interface RoundScore {
+  examBest: boolean;
+  dxCorrect: boolean;
+  txBest: boolean;
+}
+
+export function visitOutcome(score: RoundScore): VisitOutcome {
+  return score.dxCorrect && score.txBest ? 'recovered' : 'struggling';
+}
+
+export function scoreCount(score: RoundScore): number {
+  return (score.examBest ? 1 : 0) + (score.dxCorrect ? 1 : 0) + (score.txBest ? 1 : 0);
 }
 
 export interface ResultCopyInput {
   outcome: VisitOutcome;
-  name: string;
-  condition: string;
   visitNo: number;
   coinsEarned: number;
+  score: RoundScore;
+  condition: string;
 }
 
 export interface ResultCopy {
@@ -29,20 +39,18 @@ export interface ResultCopy {
 }
 
 export function resultCopy(input: ResultCopyInput): ResultCopy {
+  const scoreLine = `${scoreCount(input.score)} of 3 right`;
   if (input.outcome === 'recovered') {
     return {
-      title: `${input.name} is all better!`,
-      lines: [`Visit #${input.visitNo} complete`, `+${input.coinsEarned} Care Coins earned`],
+      title: 'Great work, Doctor!',
+      lines: [`Visit #${input.visitNo} complete`, scoreLine, `+${input.coinsEarned} Care Coins earned`],
       primary: 'Next patient',
       secondary: `Learn about ${input.condition}`,
     };
   }
   return {
-    title: `${input.name} still needs help`,
-    lines: [
-      `Visit #${input.visitNo} · The wrong path teaches too`,
-      `Learn what helps ${input.condition.toLowerCase()}.`,
-    ],
+    title: 'Tough case — keep going!',
+    lines: [`Visit #${input.visitNo}`, scoreLine, 'Every doctor keeps learning.'],
     primary: `Learn about ${input.condition}`,
     secondary: 'Try again',
   };

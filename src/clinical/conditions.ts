@@ -1,5 +1,8 @@
 import type { ConditionDef } from './types';
 
+/** Exam-round finding when the pick isn't the revealing one. */
+export const EXAM_OTHER_FINDING = 'That exam finds nothing new.';
+
 /**
  * The four launch conditions (brief Section 6).
  *
@@ -12,6 +15,9 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     id: 'dehydration',
     name: 'Dehydration',
     plainWords: 'Not enough water in the body. Everything feels dry and slow.',
+    bestExam: 'palpation',
+    bestFinding: 'A gentle skin pinch stays peaked — very dry inside.',
+    dxOptions: ['Asthma', 'Dehydration', 'Sniffly Cold'],
     stages: [
       { id: 'sipped', label: 'Sipped', blurb: 'Feeling good and bouncy.', says: "Just here for my check-in — I'm feeling good and bouncy!" },
       { id: 'thirsty', label: 'Thirsty', blurb: 'A bit dry and slow.', says: "My mouth feels dry and I'm moving a little slow today." },
@@ -50,7 +56,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
         gradeByStage: ['DANGEROUS', 'DANGEROUS', 'DANGEROUS', 'DANGEROUS'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: {},
-        hootLine: 'Too much salt at once would make things worse — stepped in!',
+        hootLine: 'Too much salt at once would make things worse — you hold back just in time!',
       },
     ],
   },
@@ -59,6 +65,9 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     id: 'viral-respiratory',
     name: 'Sniffly Cold',
     plainWords: 'A common cold: sniffles, sneezes, and a worn-out feeling.',
+    bestExam: 'inspection',
+    bestFinding: 'Peeking in: red nose, sneezy eyes, chest sounds clear.',
+    dxOptions: ['Sniffly Cold', 'High Blood Pressure', 'Asthma'],
     stages: [
       { id: 'breezy', label: 'Breezy', blurb: 'Nose clear, feeling bouncy.', says: "Just here for my check-in — my nose is clear and I feel bouncy!" },
       { id: 'sniffly', label: 'Sniffly', blurb: 'Sniffles and sneezes.', says: 'My nose is sniffly and I keep sneezing. Achoo!' },
@@ -97,7 +106,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
         gradeByStage: ['DANGEROUS', 'DANGEROUS', 'DANGEROUS', 'DANGEROUS'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: {},
-        hootLine: 'An ice plunge would shock a feverish body — stepped in!',
+        hootLine: 'An ice plunge would shock a feverish body — you stop it just in time!',
       },
     ],
   },
@@ -106,6 +115,9 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     id: 'asthma',
     name: 'Asthma',
     plainWords: 'Tight, twitchy airways that turn breaths whistly.',
+    bestExam: 'auscultation',
+    bestFinding: 'Listening in: soft whistles deep in the airways.',
+    dxOptions: ['Sniffly Cold', 'Asthma', 'Dehydration'],
     stages: [
       { id: 'clear', label: 'Clear', blurb: 'Breathing easy.', says: "Just here for my check-in — I'm breathing easy!" },
       { id: 'tight', label: 'Tight', blurb: 'Chest feels a bit tight.', says: 'My chest feels a little tight today.' },
@@ -144,7 +156,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
         gradeByStage: ['DANGEROUS', 'DANGEROUS', 'DANGEROUS', 'DANGEROUS'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: {},
-        hootLine: 'A dust cloud could slam airways shut — stepped in!',
+        hootLine: 'A dust cloud could slam airways shut — you hold the blanket still!',
       },
     ],
   },
@@ -153,6 +165,9 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     id: 'hypertension',
     name: 'High Blood Pressure',
     plainWords: 'Blood pressure running higher than it should be.',
+    bestExam: 'palpation',
+    bestFinding: 'A fingertip on the wrist: pulse strong and hurried.',
+    dxOptions: ['Dehydration', 'Asthma', 'High Blood Pressure'],
     stages: [
       { id: 'steady', label: 'Steady', blurb: 'Calm and even.', says: "Just here for my check-in — I'm feeling steady!" },
       { id: 'creeping', label: 'Creeping up', blurb: 'A little tense lately.', says: "I've been feeling a little tense lately. Are my numbers okay?" },
@@ -191,7 +206,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
         gradeByStage: ['DANGEROUS', 'DANGEROUS', 'DANGEROUS', 'DANGEROUS'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: {},
-        hootLine: 'Extra doses can drop pressure too far — stepped in!',
+        hootLine: 'Extra doses can drop pressure too far — you set the extras aside!',
       },
     ],
   },

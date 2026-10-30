@@ -24,9 +24,9 @@ const SYSTEM = [
   "Rules: narrative <= 60 words, third person, present tense, matches the given",
   "stage/vitals exactly (never invent symptoms or improvement); teaching <= 40",
   "words, one real health fact tied to the choice. Never diagnose, never dose,",
-  "never name a real drug brand. Blocked beats name the intervener Dr. Nora",
-  "(never 'a helper'/'a grown-up'); no scene-setting filler — stay on the",
-  "patient. Cover EVERY child key given.",
+  "never name a real drug brand. Blocked beats say a helper steps in",
+  "(never name them — no NPC doctors exist yet); no scene-setting",
+  "filler — stay on the patient. Cover EVERY child key given.",
 ].join(" ");
 
 interface ChildSpec {
