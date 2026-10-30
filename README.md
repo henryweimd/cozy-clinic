@@ -52,6 +52,21 @@ the real `.env` locally — it is never committed. Without it (or without the
 same two vars on Vercel), the game silently runs on its offline fallback pack,
 so the demo path completes with zero network.
 
+## Guided demo (90 seconds)
+
+Playable today on the live build; every step works, nothing staged:
+
+1. Meet Milo — visit #2, he recognizes you in the opening seconds.
+2. Answer 3 quiz rounds: examine → diagnose → treat.
+3. Tap Next patient; reorder the Waiting queue with the arrows.
+4. Leave a care note (open a 2nd tab as another doctor to see it land).
+5. Read a Learn topic (+2 coins), spend coins in the Shop, check Profile.
+6. Cheer a colleague from any care note.
+
+Judges' overlay: tap the painted COZY CLINIC wall sign 5 times, enter
+the documented code `MABEL`, then `› DEMO` in the staff terminal for
+this script plus the tooling table in-game.
+
 ## How it works
 
 - **The Living Chart (signature mechanic).** Patient memory is the core loop:
@@ -131,5 +146,5 @@ Docs map: [`docs/UI_PROTOTYPE.md`](./docs/UI_PROTOTYPE.md) (interface spec),
 [`PROGRESS.md`](./PROGRESS.md) (build log).
 
 ---
-*Last verified 2026-10-29 against `main` @ `bb04c34` (90/90 tests, build green,
+*Last verified 2026-10-29 against `main` @ `2581d42` (90/90 tests, build green,
 live URL up).*
