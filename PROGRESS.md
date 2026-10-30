@@ -1968,3 +1968,18 @@ clearance — then a polish fix loop for real findings.
   missing (paused maneuver stream, no UI consumer); the 4
   exam-*.png are unreferenced spares.
 - Spend $0.00 (ledger ~$0.74 cumulative).
+
+## Sign swap: UI wordmark (2026-10-30)
+
+- OWNERSHIP: `public/assets/room/clinic-exam-b.png` (restored),
+  `src/scenes/ClinicScene.ts` (drawTitle + visibility),
+  `README.md`, `art/manifest.json`, auditor.
+- Painted sign sat too low once the top strip went away:
+  exam-b restored from the pristine presign master ($0),
+  and the visit header is now a UI wordmark — cocoa
+  COZY CLINIC + thin rules at y90, visit-only. Waiting
+  keeps its painted signs; the 5-tap trigger rides the
+  same band on the same views.
+- Verification: auditor 0 findings (new wordmark checks);
+  146/146; tsc clean; build green; live 200.
+- Spend $0.00 (ledger ~$0.74 cumulative).
