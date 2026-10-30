@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   WALLET_START,
   canAfford,
+  comboBonus,
   deserializeWallet,
   earn,
   emptyWallet,
@@ -51,6 +52,13 @@ describe('WS-E wallet', () => {
     expect(deserializeWallet('{"balance":3,"entries":[{"seq":0}]}')).toEqual(
       emptyWallet(),
     );
+  });
+
+  it('pays the combo: +0, +1, +2, capped', () => {
+    expect(comboBonus(0)).toBe(0);
+    expect(comboBonus(1)).toBe(1);
+    expect(comboBonus(2)).toBe(2);
+    expect(comboBonus(9)).toBe(2);
   });
 });
 

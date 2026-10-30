@@ -41,6 +41,8 @@ import { HandoffSheet } from '../ui/handoffSheet';
 import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
 import { examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
+import { EMPTY_STREAK, earnsDailyBonus, nextStreak, streakBonus } from '../game/streak';
+import type { StreakState } from '../game/streak';
 import type { RoundScore, VisitOutcome } from '../game/visit';
 import { actionLabel, CONDITION_TIER_NAMES, EXAM_OTHER_FINDING } from '../clinical/conditions';
 import type { ConditionId } from '../clinical/types';
@@ -65,6 +67,7 @@ import {
   EARN_LEARN_FIRST,
   EARN_PERFECT,
   EARN_QUIZ_PASS,
+  comboBonus,
   deserializeWallet,
   earn,
   emptyWallet,
@@ -270,6 +273,7 @@ interface UndoSnapshot {
   reveals: (ChoiceGrade | null)[];
   round: VisitRound;
   score: RoundScore;
+  combo: number;
 }
 
 const WALLET_STORAGE_KEY = 'cozy-wallet-v1';
@@ -278,6 +282,7 @@ const LEARN_FILED_KEY = 'cozy-learn-filed-v1';
 const LEARN_OPENED_KEY = 'cozy-learn-opened-v1';
 const LEARN_PASSED_KEY = 'cozy-learn-passed-v1';
 const DIFFICULTY_KEY = 'cozy-difficulty-v1';
+const STREAK_KEY = 'cozy-streak-v1';
 const HANDLE_STORAGE_KEY = 'cozy-doctor-handle-v1';
 const TEAM_STORAGE_KEY = 'cozy-team-tag-v1';
 const OUTBOX_STORAGE_KEY = 'cozy-handoff-outbox-v1';
@@ -455,6 +460,11 @@ export class ClinicScene extends Phaser.Scene {
   private passedQuiz = new Set<string>();
   /** Live reading level (1 Gentle → 3 Expert), Profile-owned. */
   private difficulty: 1 | 2 | 3 = PROTOTYPE_SEEDS.difficulty;
+  /** Consecutive correct picks this visit (the combo chain). */
+  private visitCombo = 0;
+  /** Daily streak state + one pending day-bonus toast. */
+  private streak: StreakState = { ...EMPTY_STREAK };
+  private pendingStreak: { day: number; bonus: number } | null = null;
   /** Tier the card row was last built with (rebuild on switch). */
   private cardTier: ChromeTier | null = null;
   private cast: CastData | null = null;
@@ -570,6 +580,7 @@ export class ClinicScene extends Phaser.Scene {
     // Difficulty first: cards build at the live tier (no
     // boot-time rebuild flicker for returning Steady/Expert).
     this.loadDifficulty();
+    this.loadStreak();
     this.patientState = this.engine.initialState(PROTOTYPE_SEEDS.conditionId);
     this.revealedStage = this.patientState.stageIndex;
     this.drawRoom();
@@ -1112,6 +1123,32 @@ export class ClinicScene extends Phaser.Scene {
     }
   }
 
+  private loadStreak(): void {
+    try {
+      const raw = window.localStorage.getItem(STREAK_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as StreakState;
+      if (
+        typeof parsed?.streak === 'number' &&
+        Number.isInteger(parsed.streak) &&
+        parsed.streak >= 0 &&
+        (parsed.lastDay === null || typeof parsed.lastDay === 'string')
+      ) {
+        this.streak = { lastDay: parsed.lastDay, streak: parsed.streak };
+      }
+    } catch {
+      this.streak = { ...EMPTY_STREAK };
+    }
+  }
+
+  private saveStreak(): void {
+    try {
+      window.localStorage.setItem(STREAK_KEY, JSON.stringify(this.streak));
+    } catch {
+      /* private-mode play: the session keeps the chain */
+    }
+  }
+
   /** Profile segmented control: rewords the visit on return. */
   private setDifficulty(next: 1 | 2 | 3): void {
     if (next === this.difficulty) return;
@@ -1173,6 +1210,30 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   /**
+   * Visit combo: consecutive correct picks pay extra (the chain
+   * rewinds with undo and restarts every visit). The combo call
+   * replaces Birch's cheer on loud picks (one suffix per toast —
+   * the pill never overflows).
+   */
+  private awardCombo(): number {
+    const extra = comboBonus(this.visitCombo);
+    this.visitCombo += 1;
+    if (extra > 0) {
+      this.wallet = earn(this.wallet, extra, 'earn:combo');
+      this.visitEarned += extra;
+    }
+    return extra;
+  }
+
+  private breakCombo(): void {
+    this.visitCombo = 0;
+  }
+
+  private praiseSuffix(): string {
+    return this.visitCombo >= 2 ? ` · Combo x${this.visitCombo}!` : this.cheerSuffix();
+  }
+
+  /**
    * Restore one undone move (HUD Rewind pill + dev monitor):
    * engine state, trajectory cursor, coins, and card spines all
    * rewind together.
@@ -1193,6 +1254,7 @@ export class ClinicScene extends Phaser.Scene {
     this.roundToken += 1;
     this.round = snap.round;
     this.roundScore = { ...snap.score };
+    this.visitCombo = snap.combo;
     this.visitEarned = snap.visitEarned;
     this.visitEnded = false;
     this.hideResult();
@@ -1509,6 +1571,7 @@ export class ClinicScene extends Phaser.Scene {
   /** Captures the pre-move snapshot (every round pushes undo). */
   private snapPreMove(): UndoSnapshot {
     return {
+      combo: this.visitCombo,
       state: structuredClone(this.patientState),
       nodeId: this.currentNodeId,
       depth: this.currentDepth,
@@ -1636,11 +1699,13 @@ export class ClinicScene extends Phaser.Scene {
     if (best) {
       this.roundScore.examBest = true;
       const examPay = this.correctPayout();
+      const total = examPay + this.awardCombo();
       this.wallet = earn(this.wallet, examPay, 'earn:best-exam');
       this.visitEarned += examPay;
       this.saveWallet();
-      this.showToast(`Great exam! +${examPay} ${this.coinWord(examPay)}${this.cheerSuffix()}`);
+      this.showToast(`Great exam! +${total} ${this.coinWord(total)}${this.praiseSuffix()}`);
     } else {
+      this.breakCombo();
       this.showToast('Hmm, nothing new');
     }
     this.refreshChart();
@@ -1687,11 +1752,13 @@ export class ClinicScene extends Phaser.Scene {
     if (correct) {
       this.roundScore.dxCorrect = true;
       const dxPay = this.correctPayout();
+      const total = dxPay + this.awardCombo();
       this.wallet = earn(this.wallet, dxPay, 'earn:best-dx');
       this.visitEarned += dxPay;
       this.saveWallet();
-      this.showToast(`Correct diagnosis! +${dxPay} ${this.coinWord(dxPay)}${this.cheerSuffix()}`);
+      this.showToast(`Correct diagnosis! +${total} ${this.coinWord(total)}${this.praiseSuffix()}`);
     } else {
+      this.breakCombo();
       this.showToast("Hmm — that doesn't fit");
     }
     this.refreshChart();
@@ -1763,8 +1830,11 @@ export class ClinicScene extends Phaser.Scene {
     this.drawStamp(card, grade);
     // Right/wrong reads three ways: stamp + face + toast.
     const txPay = this.correctPayout();
+    const txExtra = grade === 'BEST' ? this.awardCombo() : 0;
+    if (grade !== 'BEST') this.breakCombo();
     if (grade === 'BEST') {
-      this.showToast(`Great choice! +${txPay} ${this.coinWord(txPay)}${this.cheerSuffix()}`);
+      const total = txPay + txExtra;
+      this.showToast(`Great choice! +${total} ${this.coinWord(total)}${this.praiseSuffix()}`);
     }
     else if (grade === 'NOT_GREAT') this.showToast('Okay — no harm done');
     else this.showToast('Oh no — that made things worse');
@@ -1814,6 +1884,23 @@ export class ClinicScene extends Phaser.Scene {
   private maybeEndVisit(txBest: boolean): void {
     if (this.visitEnded) return;
     this.roundScore.txBest = txBest;
+    // Daily streak: the first completion of the day pays the
+    // escalating bonus (its toast waits for the next arrival —
+    // the ending modal owns this screen).
+    const today = new Date();
+    const dayStr = (d: Date): string =>
+      `${d.getFullYear()}-${`${d.getMonth() + 1}`.padStart(2, '0')}-${`${d.getDate()}`.padStart(2, '0')}`;
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    if (earnsDailyBonus(this.streak, dayStr(today))) {
+      this.streak = nextStreak(this.streak, dayStr(today), dayStr(yesterday));
+      const bonus = streakBonus(this.streak.streak);
+      this.wallet = earn(this.wallet, bonus, 'earn:streak');
+      this.visitEarned += bonus;
+      this.saveWallet();
+      this.saveStreak();
+      this.pendingStreak = { day: this.streak.streak, bonus };
+    }
     if (isPerfectVisit(this.roundScore)) {
       // Flawless 3/3: the perfect-visit bonus lands before the
       // ending modal so its coins-earned line includes it.
@@ -1872,6 +1959,7 @@ export class ClinicScene extends Phaser.Scene {
     this.roundToken += 1;
     this.round = 'examine';
     this.roundScore = { examBest: false, dxCorrect: false, txBest: false };
+    this.visitCombo = 0;
     const row = this.cast ? patientByName(this.cast, name) : null;
     // Live row first, fallback second (never the previous
     // patient's disease when the cast is slow or missing).
@@ -3376,6 +3464,12 @@ export class ClinicScene extends Phaser.Scene {
         this.setConversation(speakerFor(this.activeName), greet, 'say');
         this.greetThenQuiz(returning);
       }
+    }
+    // The day-bonus toast waits for a modal-free arrival.
+    if (next !== 'visit' && next !== 'telemed' && this.pendingStreak) {
+      const { day, bonus } = this.pendingStreak;
+      this.pendingStreak = null;
+      this.showToast(`Day ${day} streak! +${bonus} ${this.coinWord(bonus)}`);
     }
     // Waiting rows rebuild every arrival (never stale faces).
     if (next === 'waiting') this.refreshWaitingRows();

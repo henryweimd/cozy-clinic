@@ -68,6 +68,8 @@ Playable today on the live build; every step works, nothing staged:
 6. Flip Reading level (Gentle/Steady/Expert) in Profile — the live
    visit rewords on return, same right answers.
 7. Cheer a colleague from any care note.
+8. Chain straight correct picks for combo pay; finish a visit daily
+   for the escalating streak bonus.
 
 Judges' overlay: tap the painted COZY CLINIC wall sign 5 times, enter
 the documented code `MABEL`, then `› DEMO` in the staff terminal for

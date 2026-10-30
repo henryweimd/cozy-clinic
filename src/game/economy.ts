@@ -31,6 +31,17 @@ export const EARN_PERFECT = 2;
 /** Base Learn-quiz prize (one per topic), before the medicine boost. */
 export const EARN_QUIZ_PASS = 5;
 
+/**
+ * Visit combo: consecutive correct picks pay extra. Takes the
+ * streak BEFORE this pick: the 2nd straight pays +1, the 3rd
+ * (and beyond) +2. Anything less than correct resets the
+ * chain (the scene owns the counter + its undo rewind).
+ */
+export function comboBonus(consecutiveBefore: number): number {
+  if (consecutiveBefore < 1) return 0;
+  return Math.min(consecutiveBefore, 2);
+}
+
 export function emptyWallet(start = WALLET_START): Wallet {
   return { balance: start, entries: [] };
 }
