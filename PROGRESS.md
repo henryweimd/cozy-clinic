@@ -2046,3 +2046,18 @@ clearance — then a polish fix loop for real findings.
 - Verification: auditor 0 findings; 148/148 (20 files); tsc
   clean; build green; live 200.
 - Spend $0.00 (ledger ~$0.74 cumulative).
+
+## Judges-arch: live readout + RESET (2026-10-30)
+
+- OWNERSHIP: `src/scenes/ClinicScene.ts` (arch page, DEMO nav,
+  lastReword, RESET), auditor E10.
+- Rubric read (Indie: creativity, technical ambition, whether
+  it works): judges couldn't SEE the ambition. The staff
+  terminal grows page 3 (DEMO -> ARCH): live cast source +
+  counts, tree depth, last reword call (live ms or local
+  reason), outbox queue, veto status, plus the static
+  pipeline diagram. RESET wipes cozy-* keys and reboots for
+  clean judging runs (staff-only, no confirm).
+- Verification: auditor 0 findings (new E10); 148/148; tsc
+  clean; build green; live 200.
+- Spend $0.00 (ledger ~$0.74 cumulative).

@@ -234,3 +234,22 @@ programmatic verification only.
 Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
 
 STOP.
+
+## Run 16 — judges-arch (2026-10-30)
+
+Phase: live architecture readout + demo RESET for judges.
+
+Files changed: 1 (ClinicScene). Commit `bcc7d91` on main.
+
+Test result: auditor 0 findings; `npm test` 148/148 (20
+files); tsc clean; build green.
+
+Deployment URL: `https://cozy-clinic.vercel.app/` (live-polled
+200 with fresh bundle after push).
+
+Playtest result: NOT operator-playtested this run —
+programmatic verification only.
+
+Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
+
+STOP.
