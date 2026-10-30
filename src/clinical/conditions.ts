@@ -39,6 +39,11 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     examBestId: 'skin-spring',
     bestFinding: 'Lifted skin stays peaked — poor turgor, very dry inside.',
     dxOptions: ['asthma', 'dehydration', 'viral-respiratory'],
+    dxPearl: {
+      right: 'Droopy + very thirsty: fluids will perk them up.',
+      wrong: 'Droopy and thirsty means drying out inside.',
+    },
+    visitPearl: 'Small sips of water fix drying out',
     examQuiz: {
       gentle: '{name} is all droopy and very thirsty. Which check shows dryness best?',
       steady: 'Droopy and very thirsty. Which bedside check shows fluid loss best?',
@@ -103,6 +108,11 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     examBestId: 'neck-glands',
     bestFinding: 'Neck glands feel normal with no white spots — zero Centor points. A virus, not strep.',
     dxOptions: ['viral-respiratory', 'hypertension', 'asthma'],
+    dxPearl: {
+      right: 'Cough + runny nose with zero Centor points: a virus, not strep.',
+      wrong: 'Cough and sniffles point to a cold — what fits those?',
+    },
+    visitPearl: 'Cough + sniffles, zero Centor: a virus',
     examQuiz: {
       gentle: '{name} has a scratchy throat AND lots of cough and sniffles. What rules out strep?',
       steady: 'Sore throat with cough and runny nose. Which check rules out strep?',
@@ -167,6 +177,11 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     examBestId: 'wheeze-listen',
     bestFinding: 'Soft whistles on breathing out — the classic asthma sound.',
     dxOptions: ['viral-respiratory', 'asthma', 'dehydration'],
+    dxPearl: {
+      right: 'Whistly breaths + tight chest: classic asthma.',
+      wrong: 'Whistles when breathing out are the giveaway.',
+    },
+    visitPearl: 'Whistly airways need puffer + spacer',
     examQuiz: {
       gentle: "{name}'s chest feels tight and funny. What do you check first?",
       steady: 'Tight chest, hard to breathe. What do you check first?',
@@ -231,6 +246,11 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     examBestId: 'recuff',
     bestFinding: 'After five quiet minutes the cuff still reads high — it counts.',
     dxOptions: ['dehydration', 'asthma', 'hypertension'],
+    dxPearl: {
+      right: 'High twice after quiet rest — it counts.',
+      wrong: 'Two high readings after rest: trust the cuff.',
+    },
+    visitPearl: 'No symptoms? Cuffs still catch it early',
     examQuiz: {
       gentle: "{name}'s numbers are running high. What do you do first?",
       steady: 'Blood pressure running high. Which step comes first?',

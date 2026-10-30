@@ -115,6 +115,10 @@ export interface ConditionDef {
   dxOptions: ConditionId[];
   /** Exam-round quiz question per tier ({name}/{demo} filled in). */
   examQuiz: { gentle: string; steady: string; expert: string };
+  /** Diagnose-round teaching: why the pick fits (right) or not. */
+  dxPearl: { right: string; wrong: string };
+  /** The visit's one-line takeaway (result modal, ≤40 chars). */
+  visitPearl: string;
 }
 
 /** Result of resolving one player decision. */

@@ -64,6 +64,8 @@ export interface ResultCopyInput {
   coinsEarned: number;
   score: RoundScore;
   condition: string;
+  /** The visit's one-line takeaway (the report card's line 3). */
+  pearl: string;
 }
 
 export interface ResultCopy {
@@ -78,14 +80,19 @@ export function resultCopy(input: ResultCopyInput): ResultCopy {
   if (input.outcome === 'recovered') {
     return {
       title: 'Great work, Doctor!',
-      lines: [`Visit #${input.visitNo} complete`, scoreLine, `+${input.coinsEarned} Care Coins earned`],
+      lines: [
+        `Visit #${input.visitNo} complete`,
+        scoreLine,
+        input.pearl,
+        `+${input.coinsEarned} Care Coins earned`,
+      ],
       primary: 'Next patient',
       secondary: `Learn about ${input.condition}`,
     };
   }
   return {
     title: 'Tough case — keep going!',
-    lines: [`Visit #${input.visitNo}`, scoreLine, 'Every doctor keeps learning.'],
+    lines: [`Visit #${input.visitNo}`, scoreLine, input.pearl, 'Every doctor keeps learning.'],
     // Learning is invited (pulsing Learn badge + tab), never
     // obliged: both endings lead with the next patient.
     primary: 'Next patient',

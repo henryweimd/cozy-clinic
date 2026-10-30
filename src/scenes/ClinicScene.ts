@@ -1701,11 +1701,12 @@ export class ClinicScene extends Phaser.Scene {
     this.time.delayedCall(1500, () => {
       if (token !== this.roundToken) return;
       if (this.isQuizView()) {
+        // The pearl teaches WHY (every round teaches per-choice).
         this.setConversation(
           speakerFor(this.activeName),
           correct
-            ? `${pickLabel} it is. Now choose the treatment.`
-            : `${pickLabel} doesn't fit — but the visit goes on. Treat what's in front of you.`,
+            ? `${pickLabel} it is — ${def.dxPearl.right} Now choose the treatment.`
+            : `${pickLabel} doesn't fit. ${def.dxPearl.wrong} Treat what's in front of you.`,
           'tell',
         );
       }
@@ -3975,13 +3976,15 @@ export class ClinicScene extends Phaser.Scene {
         align: 'center',
       })
       .setOrigin(0.5, 0.5);
+    // Four lines now (the pearl is line 3): starts higher,
+    // sits tighter — ends ~486, clear of the primary (492).
     this.resultLines = this.add
-      .text(270, 404, '', {
+      .text(270, 392, '', {
         fontFamily: FONT_FAMILY,
         fontSize: '17px',
         color: COCOA,
         align: 'center',
-        lineSpacing: 6,
+        lineSpacing: 4,
       })
       .setOrigin(0.5, 0);
     // Buttons carry RELATIVE children so the struggling pulse
@@ -4051,6 +4054,7 @@ export class ClinicScene extends Phaser.Scene {
       coinsEarned: this.visitEarned,
       score: { ...this.roundScore },
       condition: def.name,
+      pearl: def.visitPearl,
     });
     this.resultTitle.setText(copy.title);
     this.resultLines.setText(copy.lines.join('\n'));

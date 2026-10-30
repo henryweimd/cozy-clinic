@@ -31,4 +31,14 @@ describe.each(CONDITION_IDS)('treatment wording %s', (condition) => {
       ).toBe(true);
     }
   });
+
+  it('teaches per-choice: bounded dx pearls + a one-line visit pearl', () => {
+    const def = CONDITIONS[condition];
+    expect(def.dxPearl.right.length).toBeGreaterThan(10);
+    expect(def.dxPearl.right.length).toBeLessThanOrEqual(70);
+    expect(def.dxPearl.wrong.length).toBeGreaterThan(10);
+    expect(def.dxPearl.wrong.length).toBeLessThanOrEqual(70);
+    expect(def.visitPearl.length).toBeGreaterThan(10);
+    expect(def.visitPearl.length).toBeLessThanOrEqual(40);
+  });
 });

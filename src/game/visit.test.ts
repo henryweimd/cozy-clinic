@@ -46,9 +46,15 @@ describe('resultCopy', () => {
       coinsEarned: 3,
       score: { examBest: true, dxCorrect: true, txBest: true },
       condition: 'Sniffly Cold',
+      pearl: 'Cough + sniffles, zero Centor: a virus',
     });
     expect(copy.title).toBe('Great work, Doctor!');
-    expect(copy.lines).toEqual(['Visit #2 complete', '3 of 3 right', '+3 Care Coins earned']);
+    expect(copy.lines).toEqual([
+      'Visit #2 complete',
+      '3 of 3 right',
+      'Cough + sniffles, zero Centor: a virus',
+      '+3 Care Coins earned',
+    ]);
     expect(copy.title + copy.lines.join(' ')).not.toMatch(/better|worse|cured|healed/i);
     expect(copy.primary).toBe('Next patient');
   });
@@ -60,9 +66,15 @@ describe('resultCopy', () => {
       coinsEarned: 1,
       score: { examBest: false, dxCorrect: false, txBest: true },
       condition: 'Sniffly Cold',
+      pearl: 'Cough + sniffles, zero Centor: a virus',
     });
     expect(copy.title).toBe('Tough case — keep going!');
-    expect(copy.lines).toEqual(['Visit #2', '1 of 3 right', 'Every doctor keeps learning.']);
+    expect(copy.lines).toEqual([
+      'Visit #2',
+      '1 of 3 right',
+      'Cough + sniffles, zero Centor: a virus',
+      'Every doctor keeps learning.',
+    ]);
     expect(copy.primary).toBe('Next patient');
     expect(copy.secondary).toBe('Try again');
   });
