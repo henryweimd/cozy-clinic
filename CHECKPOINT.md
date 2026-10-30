@@ -1,24 +1,21 @@
-# CHECKPOINT — Marathon: economy, Theo, About, exam tray, population (2026-10-30)
+# CHECKPOINT — Run 2: medical fix, profile, critic sweep, rail, learn cards (2026-10-30)
 
-Phase: operator-ordered marathon (status strip, Theo, economy,
-6-hour judging iteration) + two live inserts (About sheet, exam
-modalities to the tray).
+Phase: operator corrections (Centor error, profile model, tray
+tappability, Learn links) + critic defect-hunt backlog.
 
-Files: shop/economy/visit/sprites/examFindings (+tests), ClinicScene,
-shopSheet/aboutSheet/toolTrays, mockData, fallbackPack, conditions
-untouched, README, demo script, bibles, manifest, auditor (E2/E3/F).
+Files: conditions/engine.test, sharedCare(+test), profileEditor
+(new), ClinicScene, toolTrays, chartDrawer, learnList(+test),
+mockData(+test), fallbackPack, auditor (rail rects, E4, E5).
 
-Test result: auditor 0 findings; `npm test` 100/100; tsc clean;
-build green. Supabase: exam_findings 16/16 seeded, anon REST
-proven; Priya/Ellis persona fields synced.
+Test result: auditor 0 findings; `npm test` 107/107; tsc clean;
+build green. Supabase: learning_resources.summary 4/4 backfilled.
 
 Deployment URL: `https://cozy-clinic.vercel.app/` (live-polled
 200 after push).
 
-Playtest result: operator playing live between chunks; two
-corrections landed (About placement, tray-not-cards). Phone
-playtest of Theo/Priya/Ellis + tray reveals pending.
+Playtest result: NOT operator-playtested this run (operator
+playtesting in parallel) — programmatic verification only.
 
-Image spend this run: $0.19 (ledger ~$0.74 cumulative, STOP at $120).
+Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
 
 STOP.

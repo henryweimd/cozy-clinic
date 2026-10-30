@@ -1,5 +1,37 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 2 (2026-10-30): medical fix, profile identity, critic sweep, rail, learn cards
+
+- MEDICAL FIX (shipped alone, first): the viral case rewarded a
+  Centor point TOWARD strep — backwards for a cold. Rewrote stems
+  + finding to rule strep OUT (zero Centor points); direction-lock
+  test; verified no strep in stored narratives; other 3 conditions
+  re-checked faithful.
+- Profile identity: Doctor Demo default; Doctor/Practice rows open
+  an editor (preset chips + typed names, cleaned); DOM input is the
+  only typed text in the game; inbox sorts teammates-first so
+  notes/cheers refine to your practice. Backend roster awaits login
+  (players table is read-only).
+- Critic sweep (7 defects): tray close re-asks quiz; single pick
+  per round (vetoes stay open); visitEarned accumulator
+  (undo-aware); beats view-guarded; roster-derived quotes;
+  fallback condition/persona; Birch cheers aloud.
+- Tab rail: chart/exam/notes as 52x56 right-edge icon tabs (44px+
+  touch gate), sliders dock tabs, radio rule, notes parks both.
+- Learn cards: 4 pre-cached summaries (Supabase + fallback,
+  Muse-authored, $0 runtime); rows open in-app collector cards
+  with Collected stamps; external link only via Read more —
+  iPhone web-app safe. +2 economy unchanged.
+- Verdicts every chunk: tsc, 107/107 tests, auditor 0, build
+  green, live 200. Image spend run 2: $0 (ledger ~$0.74).
+
+Not done: operator phone playtest of run 1+2; prize-linked Learn
+quizzes, undo submenu, login, speed clock (deferred); demo video
++ README firsthand paragraph (near-finish).
+
+Next: operator playtest notes; otherwise judging-polish loop
+within the Nov 3 noon ET freeze.
+
 ## Marathon run (2026-10-30): economy, Theo, About, exam tray, population
 
 Done, all live on `main` (operator playtesting between chunks):
