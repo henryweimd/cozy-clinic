@@ -180,6 +180,16 @@ export class ShopSheet {
           wordWrap: { width: 300 },
         })
         .setOrigin(0, 0);
+      // The payout effect, in green: what the coins actually buy.
+      const effect = this.scene.add
+        .text(48, y + 88, item.effect, {
+          fontFamily: THEME.font,
+          fontStyle: 'bold',
+          fontSize: '13px',
+          color: THEME.leaf,
+          wordWrap: { width: 300 },
+        })
+        .setOrigin(0, 0);
       const btnLabel = item.soon ? 'Soon' : owned ? 'Owned' : `${item.cost} coins`;
       const btnBg = this.scene.add.graphics();
       btnBg.fillStyle(item.soon || owned ? THEME.cardFill : THEME.sage, 1);
@@ -194,7 +204,7 @@ export class ShopSheet {
           color: THEME.cocoa,
         })
         .setOrigin(0.5, 0.5);
-      const row = this.scene.add.container(0, 0, [name, blurb, btnBg, btnText]);
+      const row = this.scene.add.container(0, 0, [name, blurb, effect, btnBg, btnText]);
       if (!item.soon && !owned) {
         const zone = this.scene.add
           .zone(437, y + 18, 110, 36)

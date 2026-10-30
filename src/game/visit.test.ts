@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { examQuestion, resultCopy, roundQuestion, scoreCount, visitOutcome } from './visit';
+import { examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from './visit';
 
 describe('visitOutcome', () => {
   it('takes the right diagnosis AND the right treatment', () => {
@@ -11,6 +11,15 @@ describe('visitOutcome', () => {
 
   it('counts the set', () => {
     expect(scoreCount({ examBest: true, dxCorrect: false, txBest: true })).toBe(2);
+  });
+});
+
+describe('isPerfectVisit', () => {
+  it('needs all three rounds right', () => {
+    expect(isPerfectVisit({ examBest: true, dxCorrect: true, txBest: true })).toBe(true);
+    expect(isPerfectVisit({ examBest: false, dxCorrect: true, txBest: true })).toBe(false);
+    expect(isPerfectVisit({ examBest: true, dxCorrect: false, txBest: true })).toBe(false);
+    expect(isPerfectVisit({ examBest: true, dxCorrect: true, txBest: false })).toBe(false);
   });
 });
 

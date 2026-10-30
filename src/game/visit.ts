@@ -23,6 +23,11 @@ export function scoreCount(score: RoundScore): number {
   return (score.examBest ? 1 : 0) + (score.dxCorrect ? 1 : 0) + (score.txBest ? 1 : 0);
 }
 
+/** All three rounds right — earns the perfect-visit bonus. */
+export function isPerfectVisit(score: RoundScore): boolean {
+  return score.examBest && score.dxCorrect && score.txBest;
+}
+
 type QuizTier = 'gentle' | 'steady' | 'expert';
 
 /** Diagnose/treat round questions per tier ({name} filled in). */

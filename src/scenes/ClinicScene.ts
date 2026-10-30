@@ -8,7 +8,6 @@ import {
   MOCK_ROSTER,
   MOCK_THREADS,
   PROTOTYPE_SEEDS,
-  VISIT_CONTEXT_WORDING,
   moveWaiting,
   quoteIfSpoken,
   waitingNames,
@@ -32,7 +31,7 @@ import type { Cheer, CheerDraft, HandoffDraft, HandoffNote } from '../data/share
 import { HandoffSheet } from '../ui/handoffSheet';
 import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
-import { examQuestion, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
+import { examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
 import type { RoundScore, VisitOutcome } from '../game/visit';
 import { CONDITION_TIER_NAMES, EXAM_OTHER_FINDING } from '../clinical/conditions';
 import type { ConditionId } from '../clinical/types';
@@ -53,6 +52,7 @@ import { FALLBACK_PATIENTS } from '../data/fallbackPack';
 import {
   EARN_BEST,
   EARN_LEARN_FIRST,
+  EARN_PERFECT,
   deserializeWallet,
   earn,
   emptyWallet,
@@ -60,7 +60,7 @@ import {
   spend,
 } from '../game/economy';
 import type { Wallet } from '../game/economy';
-import { buyItem } from '../game/shop';
+import { buyItem, learnBonus, nurseBonus, perfectBonus, toolBonus } from '../game/shop';
 import type { ShopItem } from '../game/shop';
 import { ShopSheet } from '../ui/shopSheet';
 import { clearUndo, emptyUndo, pushMove, undoDepth, undoMove } from '../game/undo';
@@ -1072,6 +1072,15 @@ export class ClinicScene extends Phaser.Scene {
     }
   }
 
+  /** Correct-tap payout: base + owned tools + Nurse Birch. */
+  private correctPayout(): number {
+    return EARN_BEST + toolBonus(this.ownedIds) + nurseBonus(this.ownedIds);
+  }
+
+  private coinWord(n: number): string {
+    return n === 1 ? 'Care Coin' : 'Care Coins';
+  }
+
   /**
    * Restore one undone move (dev monitor today, player submenu
    * later): engine state, trajectory cursor, coins, and card
@@ -1470,9 +1479,10 @@ export class ClinicScene extends Phaser.Scene {
     this.drawStamp(card, grade);
     if (best) {
       this.roundScore.examBest = true;
-      this.wallet = earn(this.wallet, EARN_BEST, 'earn:best-exam');
+      const examPay = this.correctPayout();
+      this.wallet = earn(this.wallet, examPay, 'earn:best-exam');
       this.saveWallet();
-      this.showToast('Great exam! +1 Care Coin');
+      this.showToast(`Great exam! +${examPay} ${this.coinWord(examPay)}`);
     } else {
       this.showToast('Hmm, nothing new');
     }
@@ -1515,9 +1525,10 @@ export class ClinicScene extends Phaser.Scene {
     this.drawStamp(card, grade);
     if (correct) {
       this.roundScore.dxCorrect = true;
-      this.wallet = earn(this.wallet, EARN_BEST, 'earn:best-dx');
+      const dxPay = this.correctPayout();
+      this.wallet = earn(this.wallet, dxPay, 'earn:best-dx');
       this.saveWallet();
-      this.showToast('Correct diagnosis! +1 Care Coin');
+      this.showToast(`Correct diagnosis! +${dxPay} ${this.coinWord(dxPay)}`);
     } else {
       this.showToast("Hmm — that doesn't fit");
     }
@@ -1586,18 +1597,19 @@ export class ClinicScene extends Phaser.Scene {
     this.drawSpine(card, grade);
     this.drawStamp(card, grade);
     // Right/wrong reads three ways: stamp + face + toast.
-    if (grade === 'BEST') this.showToast('Great choice! +1 Care Coin');
+    const txPay = this.correctPayout();
+    if (grade === 'BEST') this.showToast(`Great choice! +${txPay} ${this.coinWord(txPay)}`);
     else if (grade === 'NOT_GREAT') this.showToast('Okay — no harm done');
     else this.showToast('Oh no — that made things worse');
     this.refreshChart();
     if (grade === 'BEST') {
-      // Care Coins wallet: +1 per correct (BEST) resolve. Blocked
-      // moves and lesser grades pay nothing. Persisted locally;
-      // the coin_ledger table replaces local saves later.
-      this.wallet = earn(this.wallet, EARN_BEST, 'earn:best-resolve');
+      // Care Coins wallet: correct (BEST) resolves pay the shop-
+      // boosted payout. Blocked moves and lesser grades pay
+      // nothing. Persisted locally; the coin_ledger table
+      // replaces local saves later.
+      this.wallet = earn(this.wallet, txPay, 'earn:best-resolve');
       this.saveWallet();
     }
-    // Stage may have moved — the context label re-derives (mock).
     this.refreshHud();
     // G4 encounter rounds on REAL trajectories: the engine still
     // computes state (physics), but the words come from the
@@ -1634,6 +1646,13 @@ export class ClinicScene extends Phaser.Scene {
   private maybeEndVisit(txBest: boolean): void {
     if (this.visitEnded) return;
     this.roundScore.txBest = txBest;
+    if (isPerfectVisit(this.roundScore)) {
+      // Flawless 3/3: the perfect-visit bonus lands before the
+      // ending modal so its coins-earned line includes it.
+      const perfectPay = EARN_PERFECT + perfectBonus(this.ownedIds);
+      this.wallet = earn(this.wallet, perfectPay, 'earn:perfect-visit');
+      this.saveWallet();
+    }
     const outcome = visitOutcome(this.roundScore);
     this.visitEnded = true;
     this.showResult(outcome);
@@ -1968,8 +1987,9 @@ export class ClinicScene extends Phaser.Scene {
 
   private refreshHud(): void {
     this.coinsText.setText(`${this.wallet.balance}`);
-    const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
-    this.contextText.setText(VISIT_CONTEXT_WORDING[this.visitContext()][tier]);
+    // Center strip stays blank: reserved real estate for future
+    // real status messages (operator note 2026-10-29).
+    this.contextText.setText('');
   }
 
   // -- VIEW 2: waiting room (a list, not a room) --
@@ -2898,10 +2918,11 @@ export class ClinicScene extends Phaser.Scene {
       }
       this.openedRes.add(r.id);
       this.saveLearn();
-      this.wallet = earn(this.wallet, EARN_LEARN_FIRST, 'earn:learn-first');
+      const readPay = EARN_LEARN_FIRST + learnBonus(this.ownedIds);
+      this.wallet = earn(this.wallet, readPay, 'earn:learn-first');
       this.saveWallet();
       this.refreshHud();
-      this.showToast(`Good reading! +${EARN_LEARN_FIRST} Care Coins`);
+      this.showToast(`Good reading! +${readPay} ${this.coinWord(readPay)}`);
       // Re-mark the row read (same sheet, same geometry).
       this.learnList.show(this.filedConds, this.openedRes);
     };
@@ -2929,7 +2950,9 @@ export class ClinicScene extends Phaser.Scene {
       this.saveShop();
       this.refreshHud();
       this.shop.refresh(this.wallet.balance, this.ownedIds);
-      this.showToast(`${item.name} is yours!`);
+      this.showToast(
+        item.id === 'nurse-birch' ? 'Nurse Birch joined your clinic!' : `${item.name} is yours!`,
+      );
     };
 
     // Live cast: Supabase first, fallback offline. Resolves read

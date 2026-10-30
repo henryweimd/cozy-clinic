@@ -15,6 +15,8 @@ export const THEME = {
   rose: 0xc9706b,
   cocoa: '#5c4633',
   secondary: '#8a6f52',
+  /** Benefit lines (shop effects): flat leaf green, opaque text. */
+  leaf: '#4e7a51',
   /** Bar-strip translucency only — pills + text stay opaque. */
   chromeAlpha: 0.8,
   /** Glass law: trays/drawers (narrow, more glass) + modal sheets. */
