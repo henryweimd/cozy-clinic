@@ -16,6 +16,7 @@ import {
 import type { VisitContext } from '../ui/mockData';
 import { BackendTicker } from '../ui/ticker';
 import { ToolTray } from '../ui/toolTrays';
+import { DOCTOR_HANDLES } from '../data/sharedCare';
 import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
 import { examQuestion, resultCopy, roundQuestion, visitOutcome } from '../game/visit';
@@ -248,6 +249,7 @@ const WALLET_STORAGE_KEY = 'cozy-wallet-v1';
 const SHOP_STORAGE_KEY = 'cozy-shop-v1';
 const LEARN_FILED_KEY = 'cozy-learn-filed-v1';
 const LEARN_OPENED_KEY = 'cozy-learn-opened-v1';
+const HANDLE_STORAGE_KEY = 'cozy-doctor-handle-v1';
 /**
  * SAY vs TELL (chrome-3): 'say' = direct speech in the speaker's
  * own voice (quoted + tagged); 'tell' = third-person narration
@@ -873,6 +875,32 @@ export class ClinicScene extends Phaser.Scene {
   private openerText(): string {
     const def = CONDITIONS[this.patientState.conditionId];
     return def.stages[this.patientState.stageIndex]?.says ?? 'Hello!';
+  }
+
+  /** Doctor handle (preset identity until login ships). */
+  private doctorHandle = DOCTOR_HANDLES[0] ?? 'Fox';
+
+  private loadHandle(): void {
+    try {
+      const raw = window.localStorage.getItem(HANDLE_STORAGE_KEY);
+      if (raw && (DOCTOR_HANDLES as readonly string[]).includes(raw)) {
+        this.doctorHandle = raw;
+      } else if (!raw) {
+        const pick = DOCTOR_HANDLES[Math.floor(Math.random() * DOCTOR_HANDLES.length)] ?? 'Fox';
+        this.doctorHandle = pick;
+        this.saveHandle();
+      }
+    } catch {
+      /* fresh session keeps the default */
+    }
+  }
+
+  private saveHandle(): void {
+    try {
+      window.localStorage.setItem(HANDLE_STORAGE_KEY, this.doctorHandle);
+    } catch {
+      /* private-mode play keeps the session handle */
+    }
   }
 
   /** Learning List persistence (filed topics + opened ids). */
@@ -2239,7 +2267,7 @@ export class ClinicScene extends Phaser.Scene {
       })
       .setOrigin(0, 0.5);
     const hint = this.add
-      .text(48, 202, 'Doctor name + login ship after the freeze', {
+      .text(48, 202, 'Tap your doctor row to swap handles · login later', {
         fontFamily: FONT_FAMILY,
         fontSize: '15px',
         color: SECONDARY,
@@ -2257,7 +2285,7 @@ export class ClinicScene extends Phaser.Scene {
       ['Care Coins', `${this.wallet.balance}`],
       ['Topics filed', `${this.filedConds.length}`],
       ['Topics read', `${this.openedRes.size}`],
-      ['Doctor name', 'coming soon'],
+      ['Doctor', `Doctor ${this.doctorHandle}`],
     ];
     stats.forEach(([label, value], i) => {
       const y = 232 + i * 84;
@@ -2283,6 +2311,18 @@ export class ClinicScene extends Phaser.Scene {
         .setOrigin(1, 0.5);
       this.profileRows.add([bg, left, right]);
     });
+    // The Doctor row cycles the preset handle (tap-only identity).
+    const swapZone = this.add
+      .zone(270, 232 + 3 * 84 + 36, 444, 72)
+      .setInteractive({ useHandCursor: true });
+    swapZone.on('pointerdown', () => {
+      const i = DOCTOR_HANDLES.indexOf(this.doctorHandle);
+      this.doctorHandle = DOCTOR_HANDLES[(i + 1) % DOCTOR_HANDLES.length] ?? 'Fox';
+      this.saveHandle();
+      this.showToast(`You are Doctor ${this.doctorHandle}`);
+      this.refreshProfileRows();
+    });
+    this.profileRows.add(swapZone);
   }
 
   // -- nav bar (persistent, all views) --
@@ -2466,6 +2506,7 @@ export class ClinicScene extends Phaser.Scene {
     // strip book button is gone — the tab owns learning now).
     this.learnList = new LearnList(this);
     this.loadLearn();
+    this.loadHandle();
     this.learnList.onOpen = (r) => {
       window.open(r.url, '_blank', 'noopener');
       if (this.openedRes.has(r.id)) {

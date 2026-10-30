@@ -1576,3 +1576,25 @@ clearance — then a polish fix loop for real findings.
   questions. EXAM_TOOLS survives only in the dormant tool tray.
 - Verification: auditor 0 findings; 78/78; tsc clean; build green.
 - Spend $0.00.
+
+## M4a shared-care schema + identity (2026-10-29)
+
+- M4A OWNERSHIP: Supabase migration `create_shared_care_tables`,
+  `src/data/sharedCare.ts` + `sharedCare.test.ts` (new),
+  `src/data/fallbackPack.ts` (FallbackHandoff + 2 samples),
+  `src/scenes/ClinicScene.ts` (Profile handle row only),
+  README/PROGRESS/CHECKPOINT. Compose UI + polling sync are M4b.
+- Schema: `handoffs` (patient FK, from_handle, preset_id,
+  encounter_summary auto-written, outcome, score) + `encouragements`
+  (from/to handles, preset_id) + `players.handle` (unique) +
+  `players.team_tag`; RLS on, anon SELECT everywhere, bounded
+  anon INSERT on the two share tables (shape enforced by CHECKs).
+- Client: 6 preset handles, 6 tier-worded handoff presets, 4
+  cheers; loadHandoffs (live else fallback) + sendHandoff
+  (throws offline for the M4b outbox); Profile Doctor row
+  tap-cycles the handle, persisted.
+- Next: M4b handoff compose picker + inbox/continuity UI +
+  polling sync (two-session demo); M4c teams/cheers if freeze
+  allows; then 60-second hook pass.
+- Verification: auditor 0 findings; 84/84; tsc clean; build green.
+- Spend $0.00.

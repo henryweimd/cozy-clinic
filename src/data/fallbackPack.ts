@@ -60,6 +60,17 @@ export interface FallbackResource {
   audience: string;
 }
 
+export interface FallbackHandoff {
+  id: string;
+  patient_id: string;
+  from_handle: string;
+  preset_id: string;
+  encounter_summary: string;
+  outcome: string;
+  score: number;
+  created_at: string;
+}
+
 export const FALLBACK_PATIENTS: FallbackPatient[] = [
   {
     "id": "fb50f32f-0dd1-4b47-983b-06b76e3ecaa9",
@@ -5306,5 +5317,28 @@ export const FALLBACK_RESOURCES: FallbackResource[] = [
     "url": "https://medlineplus.gov/highbloodpressure.html",
     "source": "NIH MedlinePlus",
     "audience": "layperson"
+  }
+];
+
+export const FALLBACK_HANDOFFS: FallbackHandoff[] = [
+  {
+    "id": "handoff-fb-milo-01",
+    "patient_id": "1949914c-8e7a-4297-bc6b-d120a45f7df3",
+    "from_handle": "Wren",
+    "preset_id": "rest-up",
+    "encounter_summary": "Sick visit · 2 of 3 right",
+    "outcome": "struggling",
+    "score": 2,
+    "created_at": "2026-10-28T12:00:00.000Z"
+  },
+  {
+    "id": "handoff-fb-mabel-01",
+    "patient_id": "fb50f32f-0dd1-4b47-983b-06b76e3ecaa9",
+    "from_handle": "Fox",
+    "preset_id": "recheck-breathing",
+    "encounter_summary": "Follow-up · 3 of 3 right",
+    "outcome": "recovered",
+    "score": 3,
+    "created_at": "2026-10-27T12:00:00.000Z"
   }
 ];
