@@ -1619,3 +1619,22 @@ clearance — then a polish fix loop for real findings.
   id so inbox matching works across sources.
 - Verification: auditor 0 findings; 86/86; tsc clean; build green.
 - Spend $0.00.
+
+## M4c teams + cheers (2026-10-29)
+
+- M4C OWNERSHIP: migration `add_team_tag_to_handoffs`,
+  `src/data/sharedCare.ts` + tests (teams, cheers, bylines),
+  `src/data/fallbackPack.ts` (team tags, cheer sample),
+  `src/ui/handoffSheet.ts` (cheer pills), `src/scenes/ClinicScene.ts`
+  (team state, cheer inbox/outbox, Profile rows), auditor,
+  README/PROGRESS/CHECKPOINT.
+- Teams: Sun/Moon/Star preset tags, Profile tap-cycle, persisted;
+  sent notes carry the tag; incoming shows "Doctor Wren · Moon".
+- Cheers: Cheer! pill on every incoming note sends the next
+  rotating preset ("Great catch!" …); incoming cheers toast +
+  count in Profile; offline cheer outbox with live flush;
+  self-cheers kindly refused.
+- Proven: anon REST INSERT 201 + read-back on `encouragements`
+  (probe cleaned).
+- Verification: auditor 0 findings; 90/90; tsc clean; build green.
+- Spend $0.00.

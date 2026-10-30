@@ -64,10 +64,19 @@ export interface FallbackHandoff {
   id: string;
   patient_id: string;
   from_handle: string;
+  team_tag: string | null;
   preset_id: string;
   encounter_summary: string;
   outcome: string;
   score: number;
+  created_at: string;
+}
+
+export interface FallbackCheer {
+  id: string;
+  from_handle: string;
+  to_handle: string;
+  preset_id: string;
   created_at: string;
 }
 
@@ -5325,6 +5334,7 @@ export const FALLBACK_HANDOFFS: FallbackHandoff[] = [
     "id": "handoff-fb-milo-01",
     "patient_id": "1949914c-8e7a-4297-bc6b-d120a45f7df3",
     "from_handle": "Wren",
+    "team_tag": "Moon",
     "preset_id": "rest-up",
     "encounter_summary": "Sick visit · 2 of 3 right",
     "outcome": "struggling",
@@ -5335,10 +5345,21 @@ export const FALLBACK_HANDOFFS: FallbackHandoff[] = [
     "id": "handoff-fb-mabel-01",
     "patient_id": "fb50f32f-0dd1-4b47-983b-06b76e3ecaa9",
     "from_handle": "Fox",
+    "team_tag": "Sun",
     "preset_id": "recheck-breathing",
     "encounter_summary": "Follow-up · 3 of 3 right",
     "outcome": "recovered",
     "score": 3,
     "created_at": "2026-10-27T12:00:00.000Z"
+  }
+];
+
+export const FALLBACK_CHEERS: FallbackCheer[] = [
+  {
+    "id": "cheer-fb-01",
+    "from_handle": "Wren",
+    "to_handle": "Fox",
+    "preset_id": "Great catch!",
+    "created_at": "2026-10-28T12:00:00.000Z"
   }
 ];

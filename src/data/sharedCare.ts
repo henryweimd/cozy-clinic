@@ -1,4 +1,4 @@
-import { FALLBACK_HANDOFFS } from './fallbackPack';
+import { FALLBACK_CHEERS, FALLBACK_HANDOFFS } from './fallbackPack';
 import type { FallbackHandoff } from './fallbackPack';
 
 /**
@@ -55,11 +55,17 @@ export interface HandoffNote {
   id: string;
   patient_id: string;
   from_handle: string;
+  team_tag: string | null;
   preset_id: string;
   encounter_summary: string;
   outcome: 'recovered' | 'struggling';
   score: number;
   created_at: string;
+}
+
+/** Pure: "Doctor Wren · Moon" (tag omitted when absent). */
+export function doctorByline(fromHandle: string, teamTag: string | null): string {
+  return teamTag ? `Doctor ${fromHandle} · ${teamTag}` : `Doctor ${fromHandle}`;
 }
 
 /** Pure: tier wording for a preset (kind fallback for unknown ids). */
@@ -85,12 +91,71 @@ function toNote(row: FallbackHandoff): HandoffNote {
     id: row.id,
     patient_id: row.patient_id,
     from_handle: row.from_handle,
+    team_tag: row.team_tag ?? null,
     preset_id: row.preset_id,
     encounter_summary: row.encounter_summary,
     outcome: row.outcome === 'recovered' ? 'recovered' : 'struggling',
     score: row.score,
     created_at: row.created_at,
   };
+}
+
+export interface CheerInbox {
+  cheers: Cheer[];
+  source: 'live' | 'fallback';
+}
+
+/** Cheers addressed to one handle (live, else fallback samples). */
+export async function loadCheers(toHandle: string): Promise<CheerInbox> {
+  const fallback = (): CheerInbox => ({
+    cheers: FALLBACK_CHEERS.filter((c) => c.to_handle === toHandle).map((c) => ({
+      id: c.id,
+      from_handle: c.from_handle,
+      to_handle: c.to_handle,
+      preset_id: c.preset_id,
+      created_at: c.created_at,
+    })),
+    source: 'fallback',
+  });
+  if (SUPABASE_URL === undefined || SUPABASE_ANON_KEY === undefined) {
+    return fallback();
+  }
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/encouragements?select=*&to_handle=eq.${encodeURIComponent(toHandle)}&order=created_at.desc&limit=10`,
+      {
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+      },
+    );
+    if (!res.ok) throw new Error(`encouragements: ${res.status}`);
+    const rows = (await res.json()) as Cheer[];
+    return { cheers: rows, source: 'live' };
+  } catch {
+    return fallback();
+  }
+}
+
+/**
+ * Sends one cheer (throws offline/unauthorized — the caller
+ * queues it and retries later).
+ */
+export async function sendCheer(draft: CheerDraft): Promise<void> {
+  if (SUPABASE_URL === undefined || SUPABASE_ANON_KEY === undefined) {
+    throw new Error('offline');
+  }
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/encouragements`, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(draft),
+  });
+  if (!res.ok) throw new Error(`encouragements: ${res.status}`);
 }
 
 export interface HandoffInbox {
@@ -128,25 +193,43 @@ export async function loadHandoffs(): Promise<HandoffInbox> {
 export interface HandoffDraft {
   patient_id: string;
   from_handle: string;
+  team_tag: string | null;
   preset_id: string;
   encounter_summary: string;
   outcome: 'recovered' | 'struggling';
   score: number;
 }
 
-/** Pure: outbox queue ops (unit-tested). */
-export function pushOutbox(
-  outbox: readonly HandoffDraft[],
-  draft: HandoffDraft,
-): HandoffDraft[] {
+/** Preset team tags (tap-only teams until tags/handles ship fully). */
+export const TEAM_TAGS: readonly string[] = ['Sun', 'Moon', 'Star'];
+
+export interface Cheer {
+  id: string;
+  from_handle: string;
+  to_handle: string;
+  preset_id: string;
+  created_at: string;
+}
+
+export interface CheerDraft {
+  from_handle: string;
+  to_handle: string;
+  preset_id: string;
+}
+
+/** Pure: next cheer in rotation + the following cursor (unit-tested). */
+export function nextCheer(cursor: number): { cheer: string; next: number } {
+  const cheer = CHEER_PRESETS[cursor % CHEER_PRESETS.length] ?? 'Great catch!';
+  return { cheer, next: cursor + 1 };
+}
+
+/** Pure: outbox queue ops, generic over draft kinds (unit-tested). */
+export function pushOutbox<T>(outbox: readonly T[], draft: T): T[] {
   return [...outbox, draft];
 }
 
 /** Pure: drop the first n flushed drafts (unit-tested). */
-export function shiftOutbox(
-  outbox: readonly HandoffDraft[],
-  n: number,
-): HandoffDraft[] {
+export function shiftOutbox<T>(outbox: readonly T[], n: number): T[] {
   return outbox.slice(Math.max(0, n));
 }
 

@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { HANDOFF_PRESETS, handoffText } from '../data/sharedCare';
+import { HANDOFF_PRESETS, doctorByline, handoffText } from '../data/sharedCare';
 import type { CareTier, HandoffNote } from '../data/sharedCare';
 import { THEME } from './chromeTheme';
 
@@ -33,6 +33,7 @@ export class HandoffSheet {
   private isOpen = false;
   onSelect: (presetId: string) => void = () => {};
   onSend: () => void = () => {};
+  onCheer: (toHandle: string) => void = () => {};
   /** Fired only by the × button (programmatic hide() stays silent). */
   onClose: () => void = () => {};
 
@@ -100,26 +101,41 @@ export class HandoffSheet {
       const bg = this.scene.add.graphics();
       bg.fillStyle(THEME.cardFill, 1);
       bg.lineStyle(2, THEME.outline, 1);
-      bg.fillRoundedRect(48, y, 444, 64, 14);
-      bg.strokeRoundedRect(48, y, 444, 64, 14);
+      bg.fillRoundedRect(48, y, 444, 84, 14);
+      bg.strokeRoundedRect(48, y, 444, 84, 14);
       const line = this.scene.add
-        .text(64, y + 10, `Doctor ${n.from_handle}: ${handoffText(n.preset_id, state.tier)}`, {
+        .text(64, y + 8, `${doctorByline(n.from_handle, n.team_tag)}: ${handoffText(n.preset_id, state.tier)}`, {
           fontFamily: THEME.font,
           fontStyle: 'bold',
           fontSize: '15px',
           color: THEME.cocoa,
-          wordWrap: { width: 412 },
+          wordWrap: { width: 292 },
         })
         .setOrigin(0, 0);
       const sub = this.scene.add
-        .text(64, y + 36, n.encounter_summary, {
+        .text(64, y + 58, n.encounter_summary, {
           fontFamily: THEME.font,
           fontSize: '13px',
           color: THEME.secondary,
         })
         .setOrigin(0, 0);
-      this.body.add([bg, line, sub]);
-      y += 74;
+      const cheerBg = this.scene.add.graphics();
+      cheerBg.fillStyle(THEME.amber, 1);
+      cheerBg.fillRoundedRect(372, y + 22, 108, 40, 20);
+      const cheerText = this.scene.add
+        .text(426, y + 42, 'Cheer!', {
+          fontFamily: THEME.font,
+          fontStyle: 'bold',
+          fontSize: '15px',
+          color: '#ffffff',
+        })
+        .setOrigin(0.5, 0.5);
+      const cheerZone = this.scene.add
+        .zone(426, y + 42, 108, 40)
+        .setInteractive({ useHandCursor: true });
+      cheerZone.on('pointerdown', () => this.onCheer(n.from_handle));
+      this.body.add([bg, line, sub, cheerBg, cheerText, cheerZone]);
+      y += 94;
     }
     // Compose header.
     this.body.add(

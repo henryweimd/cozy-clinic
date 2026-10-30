@@ -16,15 +16,19 @@ import {
 import type { VisitContext } from '../ui/mockData';
 import { BackendTicker } from '../ui/ticker';
 import { ToolTray } from '../ui/toolTrays';
-import { DOCTOR_HANDLES } from '../data/sharedCare';
+import { DOCTOR_HANDLES, TEAM_TAGS } from '../data/sharedCare';
 import {
+  doctorByline,
   handoffSummary,
+  loadCheers,
   loadHandoffs,
+  nextCheer,
   pushOutbox,
+  sendCheer,
   sendHandoff,
   shiftOutbox,
 } from '../data/sharedCare';
-import type { HandoffDraft, HandoffNote } from '../data/sharedCare';
+import type { Cheer, CheerDraft, HandoffDraft, HandoffNote } from '../data/sharedCare';
 import { HandoffSheet } from '../ui/handoffSheet';
 import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
@@ -259,7 +263,9 @@ const SHOP_STORAGE_KEY = 'cozy-shop-v1';
 const LEARN_FILED_KEY = 'cozy-learn-filed-v1';
 const LEARN_OPENED_KEY = 'cozy-learn-opened-v1';
 const HANDLE_STORAGE_KEY = 'cozy-doctor-handle-v1';
+const TEAM_STORAGE_KEY = 'cozy-team-tag-v1';
 const OUTBOX_STORAGE_KEY = 'cozy-handoff-outbox-v1';
+const CHEER_OUTBOX_KEY = 'cozy-cheer-outbox-v1';
 /**
  * SAY vs TELL (chrome-3): 'say' = direct speech in the speaker's
  * own voice (quoted + tagged); 'tell' = third-person narration
@@ -404,6 +410,12 @@ export class ClinicScene extends Phaser.Scene {
   private selectedPreset: string | null = null;
   private outbox: HandoffDraft[] = [];
   private seenNoteIds = new Set<string>();
+  /** M4c teams + cheers. */
+  private teamTag = TEAM_TAGS[0] ?? 'Sun';
+  private cheers: Cheer[] = [];
+  private cheerOutbox: CheerDraft[] = [];
+  private seenCheerIds = new Set<string>();
+  private cheerCursor = 0;
   private notesHandle!: Phaser.GameObjects.Container;
   private notesBadge!: Phaser.GameObjects.Graphics;
   /** Filed conditions (visit order — the list accumulates). */
@@ -920,6 +932,46 @@ export class ClinicScene extends Phaser.Scene {
   private saveOutbox(): void {
     try {
       window.localStorage.setItem(OUTBOX_STORAGE_KEY, JSON.stringify(this.outbox));
+    } catch {
+      /* private-mode play keeps the session outbox */
+    }
+  }
+
+  private loadTeam(): void {
+    try {
+      const raw = window.localStorage.getItem(TEAM_STORAGE_KEY);
+      if (raw && (TEAM_TAGS as readonly string[]).includes(raw)) this.teamTag = raw;
+    } catch {
+      /* fresh session keeps the default */
+    }
+  }
+
+  private saveTeam(): void {
+    try {
+      window.localStorage.setItem(TEAM_STORAGE_KEY, this.teamTag);
+    } catch {
+      /* private-mode play keeps the session tag */
+    }
+  }
+
+  private loadCheerOutbox(): void {
+    try {
+      const raw = window.localStorage.getItem(CHEER_OUTBOX_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as CheerDraft[];
+      if (Array.isArray(parsed)) {
+        this.cheerOutbox = parsed.filter(
+          (d) => typeof d?.to_handle === 'string' && typeof d?.preset_id === 'string',
+        );
+      }
+    } catch {
+      this.cheerOutbox = [];
+    }
+  }
+
+  private saveCheerOutbox(): void {
+    try {
+      window.localStorage.setItem(CHEER_OUTBOX_KEY, JSON.stringify(this.cheerOutbox));
     } catch {
       /* private-mode play keeps the session outbox */
     }
@@ -2001,7 +2053,7 @@ export class ClinicScene extends Phaser.Scene {
       const shared = rowNotes.find((n) => n.from_handle !== this.doctorHandle);
       if (shared) {
         const flag = this.add
-          .text(152, y + 72, `Note from Doctor ${shared.from_handle}`, {
+          .text(152, y + 72, `Note from ${doctorByline(shared.from_handle, shared.team_tag)}`, {
             fontFamily: FONT_FAMILY,
             fontSize: '13px',
             color: SECONDARY,
@@ -2328,7 +2380,7 @@ export class ClinicScene extends Phaser.Scene {
       })
       .setOrigin(0, 0.5);
     const hint = this.add
-      .text(48, 202, 'Tap your doctor row to swap handles · login later', {
+      .text(48, 202, 'Tap Doctor or Team to swap · login later', {
         fontFamily: FONT_FAMILY,
         fontSize: '15px',
         color: SECONDARY,
@@ -2347,6 +2399,8 @@ export class ClinicScene extends Phaser.Scene {
       ['Topics filed', `${this.filedConds.length}`],
       ['Topics read', `${this.openedRes.size}`],
       ['Doctor', `Doctor ${this.doctorHandle}`],
+      ['Team', `Team ${this.teamTag}`],
+      ['Cheers', `${this.cheers.length}`],
     ];
     stats.forEach(([label, value], i) => {
       const y = 232 + i * 84;
@@ -2382,8 +2436,22 @@ export class ClinicScene extends Phaser.Scene {
       this.saveHandle();
       this.showToast(`You are Doctor ${this.doctorHandle}`);
       this.refreshProfileRows();
+      // A new handle means a new cheer address.
+      void this.refreshInbox('switch');
     });
     this.profileRows.add(swapZone);
+    // The Team row cycles the preset team tag.
+    const teamZone = this.add
+      .zone(270, 232 + 4 * 84 + 36, 444, 72)
+      .setInteractive({ useHandCursor: true });
+    teamZone.on('pointerdown', () => {
+      const i = TEAM_TAGS.indexOf(this.teamTag);
+      this.teamTag = TEAM_TAGS[(i + 1) % TEAM_TAGS.length] ?? 'Sun';
+      this.saveTeam();
+      this.showToast(`You are on Team ${this.teamTag}`);
+      this.refreshProfileRows();
+    });
+    this.profileRows.add(teamZone);
   }
 
   // -- M4 shared care (inbox, notes handle, compose) --
@@ -2413,33 +2481,42 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   /**
-   * Pulls the inbox (live, else fallback samples), toasts the
-   * first unseen note from another doctor, flushes the outbox
-   * on live reads, and re-syncs the badge + waiting rows.
-   * Overlap-guarded: polls never stack.
+   * Pulls the inbox + cheers (live, else fallback samples),
+   * toasts the first unseen item from another doctor, flushes
+   * both outboxes on live reads, and re-syncs the badge +
+   * waiting rows. Overlap-guarded: polls never stack.
    */
   private async refreshInbox(reason: 'boot' | 'poll' | 'switch'): Promise<void> {
     if (this.refreshingInbox) return;
     this.refreshingInbox = true;
     try {
-      const { notes, source } = await loadHandoffs();
+      const [{ notes, source }, cheerInbox] = await Promise.all([
+        loadHandoffs(),
+        loadCheers(this.doctorHandle),
+      ]);
       this.inbox = notes;
       this.inboxSource = source;
+      this.cheers = cheerInbox.cheers;
       if (reason !== 'boot') {
         const fresh = notes.find(
           (n) => !this.seenNoteIds.has(n.id) && n.from_handle !== this.doctorHandle,
         );
         if (fresh) {
           const who = this.patientNameFor(fresh.patient_id);
-          this.showToast(
-            `New note from Doctor ${fresh.from_handle}${who ? ` on ${who}` : ''}`,
-          );
+          const byline = doctorByline(fresh.from_handle, fresh.team_tag);
+          this.showToast(`New note from ${byline}${who ? ` on ${who}` : ''}`);
+        }
+        const freshCheer = this.cheers.find((c) => !this.seenCheerIds.has(c.id));
+        if (freshCheer) {
+          this.showToast(`${doctorByline(freshCheer.from_handle, null)}: ${freshCheer.preset_id}`);
         }
       }
       for (const n of notes) this.seenNoteIds.add(n.id);
+      for (const c of this.cheers) this.seenCheerIds.add(c.id);
       if (source === 'live') await this.flushOutbox();
       this.syncNotesBadge();
       if (this.currentView === 'waiting') this.refreshWaitingRows();
+      if (this.currentView === 'profile') this.refreshProfileRows();
       if (this.handoffSheet.open) this.showHandoffSheet();
     } finally {
       this.refreshingInbox = false;
@@ -2457,14 +2534,52 @@ export class ClinicScene extends Phaser.Scene {
         break;
       }
     }
-    if (sent === 0) return;
-    this.outbox = shiftOutbox(this.outbox, sent);
-    this.saveOutbox();
-    this.showToast(sent === 1 ? 'Queued note sent' : `${sent} queued notes sent`);
-    const { notes } = await loadHandoffs();
-    this.inbox = notes;
-    for (const n of notes) this.seenNoteIds.add(n.id);
+    if (sent > 0) {
+      this.outbox = shiftOutbox(this.outbox, sent);
+      this.saveOutbox();
+      this.showToast(sent === 1 ? 'Queued note sent' : `${sent} queued notes sent`);
+      const { notes } = await loadHandoffs();
+      this.inbox = notes;
+      for (const n of notes) this.seenNoteIds.add(n.id);
+    }
+    let cheered = 0;
+    for (const draft of this.cheerOutbox) {
+      try {
+        await sendCheer(draft);
+        cheered += 1;
+      } catch {
+        break;
+      }
+    }
+    if (cheered > 0) {
+      this.cheerOutbox = shiftOutbox(this.cheerOutbox, cheered);
+      this.saveCheerOutbox();
+      this.showToast(cheered === 1 ? 'Queued cheer sent' : `${cheered} queued cheers sent`);
+    }
     this.syncNotesBadge();
+  }
+
+  /** Sends the next rotating cheer to a colleague (or queues it). */
+  private async sendCheerTo(toHandle: string): Promise<void> {
+    if (toHandle === this.doctorHandle) {
+      this.showToast('Cheer a colleague, not yourself!');
+      return;
+    }
+    const { cheer, next } = nextCheer(this.cheerCursor);
+    this.cheerCursor = next;
+    const draft: CheerDraft = {
+      from_handle: this.doctorHandle,
+      to_handle: toHandle,
+      preset_id: cheer,
+    };
+    try {
+      await sendCheer(draft);
+      this.showToast(`Sent "${cheer}" to Doctor ${toHandle}`);
+    } catch {
+      this.cheerOutbox = pushOutbox(this.cheerOutbox, draft);
+      this.saveCheerOutbox();
+      this.showToast('Cheer saved — sends when online');
+    }
   }
 
   /** Badge dots the handle when another doctor wrote here. */
@@ -2524,6 +2639,7 @@ export class ClinicScene extends Phaser.Scene {
     const draft: HandoffDraft = {
       patient_id: patientId,
       from_handle: this.doctorHandle,
+      team_tag: this.teamTag,
       preset_id: preset,
       encounter_summary: handoffSummary(this.visitNo(), score, this.visitEnded),
       outcome: visitOutcome(this.roundScore),
@@ -2725,6 +2841,8 @@ export class ClinicScene extends Phaser.Scene {
     this.loadLearn();
     this.loadHandle();
     this.loadOutbox();
+    this.loadTeam();
+    this.loadCheerOutbox();
     // Care-notes sheet: incoming continuity + preset compose.
     this.handoffSheet = new HandoffSheet(this);
     this.handoffSheet.onSelect = (presetId) => {
@@ -2733,6 +2851,9 @@ export class ClinicScene extends Phaser.Scene {
     };
     this.handoffSheet.onSend = () => {
       void this.sendActiveNote();
+    };
+    this.handoffSheet.onCheer = (toHandle) => {
+      void this.sendCheerTo(toHandle);
     };
     // Inbox: boot read + 20s poll (two doctors share a patient).
     void this.refreshInbox('boot');
