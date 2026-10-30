@@ -44,6 +44,7 @@ import { HandoffSheet } from '../ui/handoffSheet';
 import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
 import { examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
+import { reword } from '../game/reword';
 import { EMPTY_STREAK, earnsDailyBonus, nextStreak, streakBonus } from '../game/streak';
 import type { StreakState } from '../game/streak';
 import { playSfx, setSfxMuted, unlockSfx } from '../game/sfx';
@@ -540,6 +541,11 @@ export class ClinicScene extends Phaser.Scene {
 
   // Visit-end result overlay + Learn badge.
   private visitEnded = false;
+  /** Pre-warmed Muse greeting variants, keyed patient:tier. */
+  private greetCache = new Map<string, string>();
+  /** The ticker notes the proxy going live exactly once. */
+  private museNoted = false;
+
   /** Coins earned by THIS visit's rounds (never net-of-spend). */
   private visitEarned = 0;
   /** Last round quiz asked (tray close re-surfaces it). */
@@ -1739,6 +1745,29 @@ export class ClinicScene extends Phaser.Scene {
       this.setConversation(speakerFor(this.activeName), this.openerText(), 'say');
       this.time.delayedCall(2000, askLive);
     });
+  }
+
+  /**
+   * Pre-warms a Muse paraphrase of a greeting for a LATER visit
+   * (same patient + tier). Only terms already in the line are
+   * pinned for the veto — the model is never asked to add
+   * content. Silent unless live, and then only once (ticker).
+   */
+  private async warmGreeting(key: string, local: string, complaint: string): Promise<void> {
+    if (this.greetCache.has(key)) return;
+    this.greetCache.set(key, local);
+    const low = local.toLowerCase();
+    const keep = ['doctor', complaint].filter(
+      (k) => k.length > 0 && low.includes(k.toLowerCase()),
+    );
+    const res = await reword(local, this.tier(), keep, 'greeting');
+    if (res.live && res.text !== local) {
+      this.greetCache.set(key, res.text);
+      if (!this.museNoted) {
+        this.museNoted = true;
+        this.ticker.noteRewordLive();
+      }
+    }
   }
 
   /**
@@ -3537,9 +3566,15 @@ export class ClinicScene extends Phaser.Scene {
         // the hook lands in the opening seconds, not minutes.
         const entry = MOCK_ROSTER.find((e) => e.name === this.activeName);
         const returning = this.visitNo() >= 2 && entry !== undefined;
-        const greet = returning && entry ? entry.welcomeBack : this.openerText();
+        // Live Muse variants pre-warm in the background (pre-computed
+        // like trajectories); the local line shows instantly and the
+        // variant — if any — lands on a later visit. No mid-read swap.
+        const gkey = `${this.activeName}:${this.tier()}`;
+        const local = returning && entry ? entry.welcomeBack : this.openerText();
+        const greet = returning ? (this.greetCache.get(gkey) ?? local) : local;
         this.setConversation(speakerFor(this.activeName), greet, 'say');
         this.greetThenQuiz(returning);
+        if (returning && entry) void this.warmGreeting(gkey, local, entry.complaint);
       }
     }
     // The day-bonus toast waits for a modal-free arrival.
@@ -4022,7 +4057,7 @@ export class ClinicScene extends Phaser.Scene {
     line(64, y, 'TOOLING (model → does → breaks):', '#9fe8b8', true);
     y += 26;
     const tools: [string, string][] = [
-      ['Spark 1.3 edge fns: pre-computed futures;', 'else fallback pack only'],
+      ['Spark 1.3 edge fns: futures + greeting reword;', 'else fallback pack only'],
       ['Muse Image (mcp): mascots + plates;', 'else placeholders'],
       ['Muse Code: build + tests + art pipeline;', 'else no PROGRESS story'],
     ];

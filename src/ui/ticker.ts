@@ -93,6 +93,12 @@ export class BackendTicker {
     });
   }
 
+  /** One-shot: the Muse reword proxy went live (row 1 kept). */
+  noteRewordLive(): void {
+    const first = this.rows[0]?.text.replace(/^> /, '') ?? '';
+    this.setLines([first, 'muse-reword: live · greeting variants on']);
+  }
+
   /** One mock-feed tick: scrolls line 2 up, pulls the next line. */
   tickMock(): void {
     if (!this.useMockFeed) return;

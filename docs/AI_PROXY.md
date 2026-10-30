@@ -68,3 +68,24 @@ model `muse-spark-1.3`, `response_format: { type: 'json_object' }`.
   SELECT on all 6 tables (synthetic data), writes via functions.
 - Audit: `supabase/seed/audit-h2.md` (0/204 vetoes). Offline
   snapshot: `src/data/fallbackPack.ts` (+ shape tests).
+
+## PROXY RUN (2026-10-30): muse-reword
+
+- `muse-reword` (deployed, verify_jwt on): runtime paraphrase of
+  visit greetings at the live reading level. Source of truth:
+  `supabase/functions/muse-reword/index.ts` (deployed via CLI —
+  the MCP token lacks `edge_functions_write`).
+- Request: `{ text (≤500), tier, keep (≤8 terms), context }`.
+  The model rewords ONLY: vetoed server-side (shape, length,
+  kept terms verbatim, one line, no markup, no new medical
+  claims). Any failure echoes the input with `fallback: true`.
+- Model notes (recorded from live debugging): Muse always
+  reasons and bills it against `max_tokens` — the first builds
+  died with `finish_reason: length` and null content. Fix:
+  `reasoning_effort: "minimal"` + `max_tokens: 2048`.
+- Client: `src/game/reword.ts` (shape guard + 8s timeout; any
+  failure resolves local with `live: false`). The scene
+  pre-warms one variant per patient:tier in the background and
+  shows it on a LATER visit — local shows instantly, never a
+  mid-read swap. The ticker notes liveness once; grades never
+  depend on this output.
