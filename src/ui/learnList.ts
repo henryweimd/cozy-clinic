@@ -6,12 +6,14 @@ import { THEME } from './chromeTheme';
 /**
  * E1 Learning List: the formal-education submenu (submenu ONLY —
  * never on the main screen, per the uncluttered-main law). Rows
- * link conditions to authoritative layperson sources; the
- * backend cache (learning_resources) feeds it, Supabase first
- * with the fallback pack offline. Tapping a row reports out;
- * the integration decides what opens (later: in-game reader).
+ * open in-app COLLECTOR CARDS: a pre-cached plain-language
+ * summary (learning_resources.summary, Supabase + fallback)
+ * with the authoritative link tucked inside as "Read more" —
+ * players never leave the game to read. Read rows flip to
+ * "read"; their card carries a Collected stamp.
  *
  * Geometry: full sheet x24-516, y136-876 like Waiting/Portal.
+ * Card x48-492 y216-600; buttons placed by measured text.
  * Depth 24.
  */
 
@@ -43,7 +45,11 @@ export class LearnList {
   private title: Phaser.GameObjects.Text;
   private body: Phaser.GameObjects.Container;
   private isOpen = false;
+  private lastFiled: { id: string; name: string }[] = [];
+  private lastOpened: ReadonlySet<string> = new Set();
   onOpen: (resource: FallbackResource) => void = () => {};
+  /** "Read more" inside a card (the ONLY external link). */
+  onExternal: (resource: FallbackResource) => void = () => {};
   /** Fired only by the × button (programmatic hide() stays silent). */
   onClose: () => void = () => {};
 
@@ -93,6 +99,8 @@ export class LearnList {
    * spent); unread rows offer it.
    */
   show(filed: { id: string; name: string }[], opened: ReadonlySet<string>): void {
+    this.lastFiled = filed;
+    this.lastOpened = opened;
     this.body.removeAll(true);
     this.title.setText('Learning List');
     const rows = filedTopics(filed);
@@ -128,7 +136,10 @@ export class LearnList {
       const zone = this.scene.add
         .zone(270, y + 48, 444, 96)
         .setInteractive({ useHandCursor: true });
-      zone.on('pointerdown', () => this.onOpen(r));
+      zone.on('pointerdown', () => {
+        this.onOpen(r);
+        this.showCard(r);
+      });
       row.add(zone);
       this.body.add(row);
     });
@@ -151,6 +162,90 @@ export class LearnList {
       duration: 180,
       ease: 'Sine.easeOut',
     });
+  }
+
+  /** Collector card: the cached summary + tucked-in web link. */
+  showCard(r: FallbackResource): void {
+    this.body.removeAll(true);
+    this.title.setText('Learning List');
+    const bg = this.scene.add.graphics();
+    bg.fillStyle(THEME.cardFill, 1);
+    bg.lineStyle(2, THEME.outline, 1);
+    bg.fillRoundedRect(48, 216, 444, 384, 16);
+    bg.strokeRoundedRect(48, 216, 444, 384, 16);
+    const name = this.scene.add
+      .text(72, 236, r.title, {
+        fontFamily: THEME.font,
+        fontStyle: 'bold',
+        fontSize: '21px',
+        color: THEME.cocoa,
+      })
+      .setOrigin(0, 0);
+    const collected = this.lastOpened.has(r.id);
+    if (collected) {
+      const stamp = this.scene.add
+        .text(468, 240, 'Collected', {
+          fontFamily: THEME.font,
+          fontStyle: 'bold',
+          fontSize: '15px',
+          color: THEME.leaf,
+        })
+        .setOrigin(1, 0);
+      this.body.add(stamp);
+    }
+    const src = this.scene.add
+      .text(72, 268, `${r.source} · pre-read summary`, {
+        fontFamily: THEME.font,
+        fontSize: '14px',
+        color: THEME.secondary,
+      })
+      .setOrigin(0, 0);
+    const summary = this.scene.add
+      .text(72, 296, r.summary, {
+        fontFamily: THEME.font,
+        fontSize: '16px',
+        color: THEME.cocoa,
+        wordWrap: { width: 396 },
+        lineSpacing: 4,
+      })
+      .setOrigin(0, 0);
+    // Buttons ride below the measured summary (summaries vary).
+    const by = 296 + summary.height + 20;
+    const backBg = this.scene.add.graphics();
+    backBg.fillStyle(THEME.cardFill, 1);
+    backBg.lineStyle(2, THEME.outline, 1);
+    backBg.fillRoundedRect(72, by, 188, 48, 24);
+    backBg.strokeRoundedRect(72, by, 188, 48, 24);
+    const backText = this.scene.add
+      .text(166, by + 24, 'Back', {
+        fontFamily: THEME.font,
+        fontStyle: 'bold',
+        fontSize: '17px',
+        color: THEME.cocoa,
+      })
+      .setOrigin(0.5, 0.5);
+    const backZone = this.scene.add
+      .zone(166, by + 24, 188, 48)
+      .setInteractive({ useHandCursor: true });
+    backZone.on('pointerdown', () => this.show(this.lastFiled, this.lastOpened));
+    const moreBg = this.scene.add.graphics();
+    moreBg.fillStyle(THEME.sage, 1);
+    moreBg.lineStyle(2, THEME.outline, 1);
+    moreBg.fillRoundedRect(276, by, 192, 48, 24);
+    moreBg.strokeRoundedRect(276, by, 192, 48, 24);
+    const moreText = this.scene.add
+      .text(372, by + 24, 'Read more', {
+        fontFamily: THEME.font,
+        fontStyle: 'bold',
+        fontSize: '17px',
+        color: '#ffffff',
+      })
+      .setOrigin(0.5, 0.5);
+    const moreZone = this.scene.add
+      .zone(372, by + 24, 192, 48)
+      .setInteractive({ useHandCursor: true });
+    moreZone.on('pointerdown', () => this.onExternal(r));
+    this.body.add([bg, name, src, summary, backBg, backText, backZone, moreBg, moreText, moreZone]);
   }
 
   hide(): void {

@@ -14,6 +14,18 @@ describe('resourcesFor', () => {
   });
 });
 
+describe('card summaries', () => {
+  it('pre-caches a bounded summary on every resource', () => {
+    for (const id of ['asthma', 'dehydration', 'viral-respiratory', 'hypertension']) {
+      for (const r of resourcesFor(id)) {
+        expect(r.summary.length).toBeGreaterThan(40);
+        // Card budget: 7 wrapped lines max (auditor mirrors).
+        expect(r.summary.length).toBeLessThanOrEqual(600);
+      }
+    }
+  });
+});
+
 describe('filedTopics', () => {
   it('accumulates in visit order and never drops older topics', () => {
     const one = filedTopics([{ id: 'asthma', name: 'Asthma' }]);

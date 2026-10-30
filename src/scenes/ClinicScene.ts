@@ -3056,7 +3056,8 @@ export class ClinicScene extends Phaser.Scene {
       },
     });
     this.learnList.onOpen = (r) => {
-      window.open(r.url, '_blank', 'noopener');
+      // The card opens in-app (no tab leaves the game); the
+      // authoritative link hides inside it as "Read more".
       if (this.openedRes.has(r.id)) {
         this.showToast('Happy re-reading!');
         return;
@@ -3068,8 +3069,9 @@ export class ClinicScene extends Phaser.Scene {
       this.saveWallet();
       this.refreshHud();
       this.showToast(`Good reading! +${readPay} ${this.coinWord(readPay)}`);
-      // Re-mark the row read (same sheet, same geometry).
-      this.learnList.show(this.filedConds, this.openedRes);
+    };
+    this.learnList.onExternal = (r) => {
+      window.open(r.url, '_blank', 'noopener');
     };
     this.learnList.onClose = () => {
       if (this.currentView === 'learn') this.showView('visit');
