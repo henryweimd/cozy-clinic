@@ -4,6 +4,8 @@ import {
   DOCTOR_HANDLES,
   HANDOFF_PRESETS,
   TEAM_TAGS,
+  cleanHandle,
+  cleanTeam,
   doctorByline,
   handoffSummary,
   handoffText,
@@ -11,6 +13,7 @@ import {
   nextCheer,
   pushOutbox,
   shiftOutbox,
+  teammatesFirst,
 } from './sharedCare';
 import type { HandoffDraft, HandoffNote } from './sharedCare';
 import { FALLBACK_CHEERS, FALLBACK_HANDOFFS, FALLBACK_PATIENTS } from './fallbackPack';
@@ -111,6 +114,53 @@ describe('teams + cheers', () => {
       cursor = next;
     }
     expect(seen.size).toBe(CHEER_PRESETS.length);
+  });
+
+  it('cleans typed doctor names, strips titles, rejects junk', () => {
+    expect(cleanHandle('Fox')).toBe('Fox');
+    expect(cleanHandle('  Amir  ')).toBe('Amir');
+    expect(cleanHandle('Dr. Amir')).toBe('Amir');
+    expect(cleanHandle('doctor amir')).toBe('amir');
+    expect(cleanHandle("O'Brien")).toBe("O'Brien");
+    expect(cleanHandle('Jo  Lee')).toBe('Jo Lee');
+    expect(cleanHandle('x')).toBeNull();
+    expect(cleanHandle('123')).toBeNull();
+    expect(cleanHandle('a'.repeat(17))).toBeNull();
+    expect(cleanHandle('<b>hi')).toBeNull();
+    expect(cleanHandle('')).toBeNull();
+  });
+
+  it('cleans typed practice names (roomier, allows &)', () => {
+    expect(cleanTeam('Sun')).toBe('Sun');
+    expect(cleanTeam('Sunnyvale & Kids')).toBe('Sunnyvale & Kids');
+    expect(cleanTeam('x')).toBeNull();
+    expect(cleanTeam('a'.repeat(21))).toBeNull();
+  });
+
+  it('floats same-practice notes first, newest within groups', () => {
+    const mk = (id: string, team: string | null, at: string): HandoffNote => ({
+      id,
+      patient_id: 'p',
+      from_handle: 'Fox',
+      team_tag: team,
+      preset_id: 'keep-fluids',
+      encounter_summary: 's',
+      outcome: 'recovered',
+      score: 3,
+      created_at: at,
+    });
+    const notes = [
+      mk('old-mine', 'Sun', '2026-10-27T10:00:00Z'),
+      mk('new-other', 'Moon', '2026-10-28T10:00:00Z'),
+      mk('new-mine', 'Sun', '2026-10-28T12:00:00Z'),
+      mk('untagged', null, '2026-10-28T13:00:00Z'),
+    ];
+    expect(teammatesFirst(notes, 'Sun').map((n) => n.id)).toEqual([
+      'new-mine',
+      'old-mine',
+      'untagged',
+      'new-other',
+    ]);
   });
 
   it('addresses fallback cheers to real handles with known presets', () => {

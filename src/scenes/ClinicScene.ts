@@ -16,7 +16,14 @@ import type { VisitContext } from '../ui/mockData';
 import { BackendTicker } from '../ui/ticker';
 import { ToolTray } from '../ui/toolTrays';
 import type { ToolDef } from '../ui/toolTrays';
-import { DOCTOR_HANDLES, TEAM_TAGS } from '../data/sharedCare';
+import {
+  DEMO_HANDLE,
+  DOCTOR_HANDLES,
+  TEAM_TAGS,
+  cleanHandle,
+  cleanTeam,
+  teammatesFirst,
+} from '../data/sharedCare';
 import {
   doctorByline,
   handoffSummary,
@@ -66,6 +73,8 @@ import type { Wallet } from '../game/economy';
 import { buyItem, learnBonus, nurseBonus, perfectBonus, toolBonus } from '../game/shop';
 import type { ShopItem } from '../game/shop';
 import { AboutSheet } from '../ui/aboutSheet';
+import { ProfileEditor } from '../ui/profileEditor';
+import type { ProfileKind } from '../ui/profileEditor';
 import { ShopSheet } from '../ui/shopSheet';
 import { blinkCloseMs, blinkGapMs, bobRate, SPRITE_PREFIX } from '../game/sprites';
 import { takeTrayHint } from '../game/hints';
@@ -404,6 +413,7 @@ export class ClinicScene extends Phaser.Scene {
   private wallet: Wallet = emptyWallet();
   private shop!: ShopSheet;
   private about!: AboutSheet;
+  private editor!: ProfileEditor;
   private ownedIds: string[] = [];
   private undoStack: UndoStack<UndoSnapshot> = emptyUndo();
   // (visitStartMs returns with the speed element.)
@@ -936,7 +946,7 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   /** Doctor handle (preset identity until login ships). */
-  private doctorHandle = DOCTOR_HANDLES[0] ?? 'Fox';
+  private doctorHandle = DEMO_HANDLE;
 
   /** M4 outbox persistence (offline-written handoffs). */
   private loadOutbox(): void {
@@ -965,7 +975,9 @@ export class ClinicScene extends Phaser.Scene {
   private loadTeam(): void {
     try {
       const raw = window.localStorage.getItem(TEAM_STORAGE_KEY);
-      if (raw && (TEAM_TAGS as readonly string[]).includes(raw)) this.teamTag = raw;
+      const clean = raw ? cleanTeam(raw) : null;
+      this.teamTag = clean ?? (TEAM_TAGS[0] ?? 'Sun');
+      if (!clean) this.saveTeam();
     } catch {
       /* fresh session keeps the default */
     }
@@ -1005,13 +1017,9 @@ export class ClinicScene extends Phaser.Scene {
   private loadHandle(): void {
     try {
       const raw = window.localStorage.getItem(HANDLE_STORAGE_KEY);
-      if (raw && (DOCTOR_HANDLES as readonly string[]).includes(raw)) {
-        this.doctorHandle = raw;
-      } else if (!raw) {
-        const pick = DOCTOR_HANDLES[Math.floor(Math.random() * DOCTOR_HANDLES.length)] ?? 'Fox';
-        this.doctorHandle = pick;
-        this.saveHandle();
-      }
+      const clean = raw ? cleanHandle(raw) : null;
+      this.doctorHandle = clean ?? DEMO_HANDLE;
+      if (!clean) this.saveHandle();
     } catch {
       /* fresh session keeps the default */
     }
@@ -2443,7 +2451,7 @@ export class ClinicScene extends Phaser.Scene {
       })
       .setOrigin(0, 0.5);
     const hint = this.add
-      .text(48, 202, 'Tap Doctor or Team to swap · login later', {
+      .text(48, 202, 'Tap Doctor or Team to edit · login later', {
         fontFamily: FONT_FAMILY,
         fontSize: '15px',
         color: SECONDARY,
@@ -2489,30 +2497,20 @@ export class ClinicScene extends Phaser.Scene {
         .setOrigin(1, 0.5);
       this.profileRows.add([bg, left, right]);
     });
-    // The Doctor row cycles the preset handle (tap-only identity).
+    // The Doctor row opens the identity editor (presets + typed).
     const swapZone = this.add
       .zone(270, 232 + 3 * 84 + 36, 444, 72)
       .setInteractive({ useHandCursor: true });
     swapZone.on('pointerdown', () => {
-      const i = DOCTOR_HANDLES.indexOf(this.doctorHandle);
-      this.doctorHandle = DOCTOR_HANDLES[(i + 1) % DOCTOR_HANDLES.length] ?? 'Fox';
-      this.saveHandle();
-      this.showToast(`You are Doctor ${this.doctorHandle}`);
-      this.refreshProfileRows();
-      // A new handle means a new cheer address.
-      void this.refreshInbox('switch');
+      this.editor.show('doctor', this.doctorHandle, DOCTOR_HANDLES);
     });
     this.profileRows.add(swapZone);
-    // The Team row cycles the preset team tag.
+    // The Team row opens the practice editor (presets + typed).
     const teamZone = this.add
       .zone(270, 232 + 4 * 84 + 36, 444, 72)
       .setInteractive({ useHandCursor: true });
     teamZone.on('pointerdown', () => {
-      const i = TEAM_TAGS.indexOf(this.teamTag);
-      this.teamTag = TEAM_TAGS[(i + 1) % TEAM_TAGS.length] ?? 'Sun';
-      this.saveTeam();
-      this.showToast(`You are on Team ${this.teamTag}`);
-      this.refreshProfileRows();
+      this.editor.show('team', this.teamTag, TEAM_TAGS);
     });
     this.profileRows.add(teamZone);
     // The About row opens the project sheet (7th row, same card).
@@ -2568,9 +2566,11 @@ export class ClinicScene extends Phaser.Scene {
   /** Newest-first inbox notes for one roster name. */
   private notesFor(name: string): HandoffNote[] {
     const ids = this.patientIdsFor(name);
-    return this.inbox
-      .filter((n) => ids.includes(n.patient_id))
-      .sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
+    // Own-practice notes head the list (cheers ride along).
+    return teammatesFirst(
+      this.inbox.filter((n) => ids.includes(n.patient_id)),
+      this.teamTag,
+    );
   }
 
   /**
@@ -2999,6 +2999,39 @@ export class ClinicScene extends Phaser.Scene {
     this.shop = new ShopSheet(this);
     // About sheet: the Profile About row opens it.
     this.about = new AboutSheet(this);
+    // Profile editor: Doctor + Practice rows open it.
+    this.editor = new ProfileEditor(this);
+    this.editor.onSave = (kind: ProfileKind, value: string) => {
+      if (kind === 'doctor') {
+        const clean = cleanHandle(value);
+        if (!clean) {
+          this.showToast('Names need 2+ letters — try again');
+          return;
+        }
+        this.doctorHandle = clean;
+        this.saveHandle();
+        this.editor.hide();
+        this.showToast(`You are Doctor ${clean}`);
+        this.refreshProfileRows();
+        // A new handle means a new cheer address.
+        void this.refreshInbox('switch');
+      } else {
+        const clean = cleanTeam(value);
+        if (!clean) {
+          this.showToast('Names need 2+ letters — try again');
+          return;
+        }
+        this.teamTag = clean;
+        this.saveTeam();
+        this.editor.hide();
+        this.showToast(
+          (TEAM_TAGS as readonly string[]).includes(clean)
+            ? `You are on Team ${clean}`
+            : `Your practice is ${clean}`,
+        );
+        this.refreshProfileRows();
+      }
+    };
     this.loadShop();
     this.shop.onBuy = (item: ShopItem) => {
       const res = buyItem(this.wallet.balance, this.ownedIds, item);
@@ -3111,6 +3144,7 @@ export class ClinicScene extends Phaser.Scene {
     this.chart.hide();
     this.shop.hide();
     this.about.hide();
+    this.editor.hide();
     this.handoffSheet.hide();
     if (next === 'learn') {
       this.learnList.show(this.filedConds, this.openedRes);

@@ -3,9 +3,10 @@ import type { FallbackHandoff } from './fallbackPack';
 
 /**
  * M4 shared care: handoff notes + preset encouragements between
- * player-doctors. No free chat, no typed text anywhere: doctors
- * pick preset handles, notes reference preset ids, and the
- * encounter summary is auto-written by the game. Supabase first,
+ * player-doctors. No free chat: notes reference preset ids and
+ * the encounter summary is auto-written by the game. Typed text
+ * exists ONLY for profile identity (doctor + practice names);
+ * everything clinical stays preset-only. Supabase first,
  * fallback pack offline (same law as the cast layer).
  */
 
@@ -63,9 +64,50 @@ export interface HandoffNote {
   created_at: string;
 }
 
+/** Demo default until the player names their doctor. */
+export const DEMO_HANDLE = 'Demo';
+
+/**
+ * Clean a typed doctor name: trims, collapses spaces, strips a
+ * leading Dr/Doctor (the byline adds it), allows letters,
+ * digits, space, dot, hyphen, apostrophe, 2–16 chars with a
+ * letter. Null when unusable — the editor keeps prompting.
+ */
+export function cleanHandle(raw: string): string | null {
+  const s = raw.trim().replace(/\s+/g, ' ').replace(/^(doctor|dr\.?)\s+/i, '');
+  if (!/^[A-Za-z0-9 .'-]{2,16}$/.test(s)) return null;
+  if (!/[A-Za-z]/.test(s)) return null;
+  return s;
+}
+
+/** Clean a typed practice name: same spirit, 2–20 chars + &. */
+export function cleanTeam(raw: string): string | null {
+  const s = raw.trim().replace(/\s+/g, ' ');
+  if (!/^[A-Za-z0-9 .&'-]{2,20}$/.test(s)) return null;
+  if (!/[A-Za-z]/.test(s)) return null;
+  return s;
+}
+
 /** Pure: "Doctor Wren · Moon" (tag omitted when absent). */
 export function doctorByline(fromHandle: string, teamTag: string | null): string {
   return teamTag ? `Doctor ${fromHandle} · ${teamTag}` : `Doctor ${fromHandle}`;
+}
+
+/**
+ * Pure: teammates-first inbox order — notes from the player's
+ * own practice head the list (cheers ride along on the same
+ * notes), newest-first within each group.
+ */
+export function teammatesFirst(
+  notes: readonly HandoffNote[],
+  teamTag: string,
+): HandoffNote[] {
+  return [...notes].sort((a, b) => {
+    const am = a.team_tag === teamTag ? 0 : 1;
+    const bm = b.team_tag === teamTag ? 0 : 1;
+    if (am !== bm) return am - bm;
+    return a.created_at < b.created_at ? 1 : a.created_at > b.created_at ? -1 : 0;
+  });
 }
 
 /** Pure: tier wording for a preset (kind fallback for unknown ids). */
