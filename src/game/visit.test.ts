@@ -44,7 +44,7 @@ describe('resultCopy', () => {
     expect(copy.primary).toBe('Next patient');
   });
 
-  it('keeps struggling cozy and routes to learning first', () => {
+  it('keeps struggling cozy and never obliges learning', () => {
     const copy = resultCopy({
       outcome: 'struggling',
       visitNo: 2,
@@ -54,7 +54,7 @@ describe('resultCopy', () => {
     });
     expect(copy.title).toBe('Tough case — keep going!');
     expect(copy.lines).toEqual(['Visit #2', '1 of 3 right', 'Every doctor keeps learning.']);
-    expect(copy.primary).toBe('Learn about Sniffly Cold');
+    expect(copy.primary).toBe('Next patient');
     expect(copy.secondary).toBe('Try again');
   });
 });

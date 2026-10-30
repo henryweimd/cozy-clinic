@@ -1558,3 +1558,21 @@ clearance — then a polish fix loop for real findings.
   (`src/data/maneuvers.*`, 7 illustrations in
   generated-images/); mv-skin-pinch still queued for reword.
 - Operator phone playtest pending (round-1 + round-2 notes).
+
+## Round-2 follow-ups (2026-10-29, same day)
+
+- OWNERSHIP: `src/game/visit.ts` + tests, `src/scenes/ClinicScene.ts`
+  (result flow), `src/clinical/*` (exam quiz data), auditor,
+  UI_PROTOTYPE, PROGRESS/CHECKPOINT.
+- (a) Next-patient flow: both endings lead with "Next patient";
+  struggling secondary stays "Try again"; Learn invited via the
+  pulsing badge, never obliged. Finished visits re-offer their
+  ending modal on return (never dead cards).
+- (b) Exam round rebuilt as case-specific bedside quizzes (the
+  generic 4-maneuver row is gone): dehydration skin
+  spring-back, sore-throat Centor neck-gland check, asthma
+  peak-flow blows, hypertension cuff re-check — 3 options each
+  on the standard 3-card row, best slots varied, tier-worded
+  questions. EXAM_TOOLS survives only in the dormant tool tray.
+- Verification: auditor 0 findings; 78/78; tsc clean; build green.
+- Spend $0.00.

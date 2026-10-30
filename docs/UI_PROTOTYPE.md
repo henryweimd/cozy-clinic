@@ -132,18 +132,20 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
 ### Decision / action card row (Visit + Telemed)
 
 - Geometry: x24–516 (w492), y772–846 (h74). Every visit is a
-  3-round mini-story, one row each: EXAMINE (4 maneuver cards,
-  clinical names — Inspection / Palpation / Percussion /
-  Auscultation — w114, gaps 12), DIAGNOSE (3 condition names,
-  w156), TREAT (3 action cards, w156). Tap target = full card.
-  Undo rewinds rounds too (round + score in the snapshot).
+  3-round mini-story, one 3-card row each (w156): EXAMINE (3
+  bedside checks UNIQUE to the case — e.g. a Centor-criterion
+  neck-gland check for sore throat — never a generic maneuver
+  list), DIAGNOSE (3 tier-worded condition names), TREAT (3
+  action cards). Tap target = full card. Undo rewinds rounds
+  too (round + score in the snapshot).
 - Decision corral: an outline frame around the row (x16–524,
   y764–856, r18) that reads "these are your choices". The top
   edge has a gap at the left holding a small tier-worded label
   IN the border (12px bold on a frosted card-fill strip —
   part of the border, not a chip), left-aligned so it never
-  hints at the middle card. The label names the live round:
-  "Examine…" / "Diagnose…" / tier-worded "Choose care…" etc.
+  hints at the middle card. The label names the live round +
+  step: "1 · Examine…" / "2 · Diagnose…" / "3 · Choose care…"
+  (tier-worded) etc.
   Corral + label ride inside the card row container (fade +
   Telemed shift together).
 - Grade stamps: the tapped card earns a sticker (r13, grade

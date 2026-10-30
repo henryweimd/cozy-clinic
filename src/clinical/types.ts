@@ -98,8 +98,10 @@ export interface ConditionDef {
   /** Stage index where a fresh case presents. */
   presentsAt: number;
   actions: ActionDef[];
-  /** Exam-round: the most revealing maneuver + its finding. */
-  bestExam: string;
+  /** Exam-round: 3 bedside checks unique to this case + the best id. */
+  examOptions: { id: string; label: string }[];
+  examBestId: string;
+  /** Exam-round: the best check's finding. */
   bestFinding: string;
   /** Diagnose-round: 3 option ids, one is `id` (position varies). */
   dxOptions: ConditionId[];

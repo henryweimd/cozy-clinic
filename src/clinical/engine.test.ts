@@ -161,10 +161,15 @@ describe('shipped copy', () => {
     }
   });
 
-  it('gives every condition a real exam round + diagnosis set', () => {
+  it('gives every condition a unique exam quiz + diagnosis set', () => {
     const ids = Object.values(CONDITIONS).map((d) => d.id);
     for (const def of Object.values(CONDITIONS)) {
-      expect(['inspection', 'palpation', 'percussion', 'auscultation']).toContain(def.bestExam);
+      // Case-specific bedside checks (3 unique options, best inside).
+      expect(def.examOptions).toHaveLength(3);
+      const optIds = def.examOptions.map((o) => o.id);
+      expect(new Set(optIds).size).toBe(3);
+      expect(optIds).toContain(def.examBestId);
+      for (const opt of def.examOptions) expect(opt.label.length).toBeGreaterThan(0);
       expect(def.bestFinding.length).toBeGreaterThan(0);
       expect(def.dxOptions).toHaveLength(3);
       expect(def.dxOptions).toContain(def.id);
@@ -174,8 +179,12 @@ describe('shipped copy', () => {
         expect(CONDITION_TIER_NAMES[def.id][tier].length).toBeGreaterThan(0);
       }
     }
-    // Correct answers don't all sit in one slot.
-    const slots = Object.values(CONDITIONS).map((d) => d.dxOptions.indexOf(d.id));
-    expect(new Set(slots).size).toBeGreaterThan(1);
+    // Correct answers don't all sit in one slot (either round).
+    const dxSlots = Object.values(CONDITIONS).map((d) => d.dxOptions.indexOf(d.id));
+    expect(new Set(dxSlots).size).toBeGreaterThan(1);
+    const examSlots = Object.values(CONDITIONS).map((d) =>
+      d.examOptions.findIndex((o) => o.id === d.examBestId),
+    );
+    expect(new Set(examSlots).size).toBeGreaterThan(1);
   });
 });

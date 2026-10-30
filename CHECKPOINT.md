@@ -31,4 +31,12 @@ Untouched: `src/data/maneuvers.*` + 7 illustrations remain
 uncommitted for the paused-phase resume (mv-skin-pinch reword
 still queued).
 
+## Follow-ups (same day, one commit)
+
+Next-patient endings (Learn invited, never obliged; finished
+visits re-offer their modal) + case-specific exam quizzes
+(Centor neck glands, skin spring-back, peak flow, cuff
+re-check; generic 4-tool row deleted). Auditor 0; 78/78; tsc
+clean; build green; $0.00.
+
 STOP.

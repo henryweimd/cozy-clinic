@@ -80,7 +80,9 @@ export function resultCopy(input: ResultCopyInput): ResultCopy {
   return {
     title: 'Tough case — keep going!',
     lines: [`Visit #${input.visitNo}`, scoreLine, 'Every doctor keeps learning.'],
-    primary: `Learn about ${input.condition}`,
+    // Learning is invited (pulsing Learn badge + tab), never
+    // obliged: both endings lead with the next patient.
+    primary: 'Next patient',
     secondary: 'Try again',
   };
 }

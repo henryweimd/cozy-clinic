@@ -15,7 +15,7 @@ import {
 } from '../ui/mockData';
 import type { VisitContext } from '../ui/mockData';
 import { BackendTicker } from '../ui/ticker';
-import { EXAM_TOOLS, ToolTray } from '../ui/toolTrays';
+import { ToolTray } from '../ui/toolTrays';
 import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
 import { examQuestion, resultCopy, roundQuestion, visitOutcome } from '../game/visit';
@@ -309,7 +309,7 @@ interface CardWidgets {
   face: Phaser.GameObjects.Graphics;
   spine: Phaser.GameObjects.Graphics;
   stamp: Phaser.GameObjects.Graphics;
-  /** Card width (156 for 3-card rounds, 114 for the 4-tool exam). */
+  /** Card width (156 for 3-card rounds, 114 for future 4–5 rows). */
   w: number;
   actionId: string;
   revealed: ChoiceGrade | null;
@@ -456,6 +456,8 @@ export class ClinicScene extends Phaser.Scene {
   private resultSecondaryText!: Phaser.GameObjects.Text;
   private learnBadge!: Phaser.GameObjects.Container;
   private resultOutcome: VisitOutcome | null = null;
+  /** Last finished outcome (re-shows the modal on return trips). */
+  private lastOutcome: VisitOutcome | null = null;
 
   constructor() {
     super('clinic');
@@ -1033,10 +1035,8 @@ export class ClinicScene extends Phaser.Scene {
   private roundCardDefs(): { id: string; label: string }[] {
     const def = CONDITIONS[this.patientState.conditionId];
     if (this.round === 'examine') {
-      return EXAM_TOOLS.map((t) => ({
-        id: `exam:${t.id}`,
-        label: t.hint.charAt(0).toUpperCase() + t.hint.slice(1),
-      }));
+      // Case-specific bedside checks (never the generic 4-tool row).
+      return def.examOptions.map((opt) => ({ id: `exam:${opt.id}`, label: opt.label }));
     }
     if (this.round === 'diagnose') {
       const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
@@ -1052,7 +1052,8 @@ export class ClinicScene extends Phaser.Scene {
   private buildCards(): void {
     this.cards = [];
     const defs = this.roundCardDefs();
-    // 3 cards → w156 step 168; 4 tools → w114 step 126. Both span x24–516.
+    // 3 cards → w156 step 168; 4–5 (later difficulty) → w114 step 126.
+    // Both span x24–516. Every live round deals 3.
     const w = defs.length === 4 ? 114 : 156;
     const step = defs.length === 4 ? 126 : 168;
     defs.forEach(({ id: actionId, label }, i) => {
@@ -1317,8 +1318,8 @@ export class ClinicScene extends Phaser.Scene {
     if (!card) return;
     const def = CONDITIONS[this.patientState.conditionId];
     this.undoStack = pushMove(this.undoStack, this.snapPreMove());
-    const toolId = card.actionId.replace('exam:', '');
-    const best = toolId === def.bestExam;
+    const pickId = card.actionId.replace('exam:', '');
+    const best = pickId === def.examBestId;
     const grade: ChoiceGrade = best ? 'BEST' : 'NOT_GREAT';
     card.revealed = grade;
     this.drawSpine(card, grade);
@@ -1529,6 +1530,7 @@ export class ClinicScene extends Phaser.Scene {
     this.activeName = name;
     // Fresh visit: clock + coins baseline restart, result clears.
     this.visitEnded = false;
+    this.lastOutcome = null;
     this.hideResult();
     this.visitStartCoins = this.wallet.balance;
     this.roundToken += 1;
@@ -2560,8 +2562,13 @@ export class ClinicScene extends Phaser.Scene {
     // showing, no tap-teaching needed — then the live quiz
     // follows. (Boot lands here too.)
     if (next === 'visit' || next === 'telemed') {
-      this.setConversation(speakerFor(this.activeName), this.openerText(), 'say');
-      this.greetThenQuiz();
+      if (this.visitEnded && this.lastOutcome) {
+        // A finished visit re-offers its ending (never dead cards).
+        this.showResult(this.lastOutcome);
+      } else {
+        this.setConversation(speakerFor(this.activeName), this.openerText(), 'say');
+        this.greetThenQuiz();
+      }
     }
     // Waiting rows rebuild every arrival (never stale faces).
     if (next === 'waiting') this.refreshWaitingRows();
@@ -3117,6 +3124,7 @@ export class ClinicScene extends Phaser.Scene {
 
   private showResult(outcome: VisitOutcome): void {
     this.resultOutcome = outcome;
+    this.lastOutcome = outcome;
     const def = CONDITIONS[this.patientState.conditionId];
     // File the visit's topics (deduped — the list accumulates).
     if (!this.filedConds.some((c) => c.id === def.id)) {
@@ -3147,9 +3155,10 @@ export class ClinicScene extends Phaser.Scene {
       ease: 'Sine.easeOut',
     });
     if (outcome === 'struggling') {
-      // Struggling routes to learning: badge + pulsing primary.
-      this.learnBadge.setVisible(true);
+      // Struggling invites learning (pulsing badge) while the
+      // primary leads onward to the next patient, never obliged.
       this.tweens.killTweensOf(this.learnBadge);
+      this.learnBadge.setScale(1).setVisible(true);
       this.tweens.add({
         targets: this.learnBadge,
         scaleX: 1.3,
@@ -3179,13 +3188,9 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   private onResultPrimary(): void {
-    if (this.resultOutcome === 'recovered') {
-      this.hideResult();
-      this.showView('waiting');
-    } else {
-      this.hideResult();
-      this.showView('learn');
-    }
+    // 'Next patient' on both endings — the visit always moves on.
+    this.hideResult();
+    this.showView('waiting');
   }
 
   private onResultSecondary(): void {
