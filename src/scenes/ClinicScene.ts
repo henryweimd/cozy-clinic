@@ -11,6 +11,7 @@ import {
   MOCK_ROSTER,
   MOCK_THREADS,
   PROTOTYPE_SEEDS,
+  introNames,
   moveWaiting,
   nearestLevelStop,
   quoteIfSpoken,
@@ -45,6 +46,8 @@ import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
 import { examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
 import { reword } from '../game/reword';
+import { isMemoryMap, memoryLine, recordMemory } from '../game/memory';
+import type { MemoryMap } from '../game/memory';
 import { COIN_GOLD, drawBook, drawCoin, drawTeamBadge } from '../ui/icons';
 import { EMPTY_STREAK, earnsDailyBonus, nextStreak, streakBonus } from '../game/streak';
 import type { StreakState } from '../game/streak';
@@ -295,6 +298,14 @@ const HANDLE_STORAGE_KEY = 'cozy-doctor-handle-v1';
 const TEAM_STORAGE_KEY = 'cozy-team-tag-v1';
 const OUTBOX_STORAGE_KEY = 'cozy-handoff-outbox-v1';
 const CHEER_OUTBOX_KEY = 'cozy-cheer-outbox-v1';
+const MEMORY_KEY = 'cozy-visit-memory-v1';
+const ONBOARD_KEY = 'cozy-onboard-v1';
+/** First-visit coach beats (skippable, once ever). */
+const ONBOARD_STEPS: readonly string[] = [
+  'Your patient says hello — then a quiz appears below.',
+  'Tap the best answer. Streaks pay combo coins!',
+  'Clear all 3 rounds, then meet the next patient.',
+];
 /**
  * SAY vs TELL (chrome-3): 'say' = direct speech in the speaker's
  * own voice (quoted + tagged); 'tell' = third-person narration
@@ -493,7 +504,7 @@ export class ClinicScene extends Phaser.Scene {
   private levelSlider!: Phaser.GameObjects.Container;
   private waitingRows!: Phaser.GameObjects.Container;
   /** Queue order (names); the player reorders with the chevrons. */
-  private waitingOrder: string[] = MOCK_ROSTER.map((e) => e.name);
+  private waitingOrder: string[] = introNames(MOCK_ROSTER.map((e) => e.name));
   private telemedView!: Phaser.GameObjects.Container;
   private portalView!: Phaser.GameObjects.Container;
   private threads: ThreadWidgets[] = [];
@@ -545,6 +556,13 @@ export class ClinicScene extends Phaser.Scene {
   private greetCache = new Map<string, string>();
   /** The ticker notes the proxy going live exactly once. */
   private museNoted = false;
+  /** What each patient remembers about your last visit (persisted). */
+  private visitMemory: MemoryMap = {};
+  /** First-visit coach overlay state (-1 = done/hidden). */
+  private onboardStep = -1;
+  private onboardRoot!: Phaser.GameObjects.Container;
+  private onboardText!: Phaser.GameObjects.Text;
+  private onboardNext!: Phaser.GameObjects.Text;
   /** Respects the OS: infinite pulses + idle bob go static. */
   private reducedMotion = false;
 
@@ -610,6 +628,7 @@ export class ClinicScene extends Phaser.Scene {
     this.loadStreak();
     this.loadSfx();
     this.loadTicker();
+    this.loadMemory();
     // Audio unlocks on the first tap (autoplay policy); every
     // cue after that just plays.
     this.input.once('pointerdown', () => unlockSfx());
@@ -634,6 +653,7 @@ export class ClinicScene extends Phaser.Scene {
     this.drawMonitor();
     this.drawToast();
     this.drawResultCard();
+    this.drawOnboard();
     this.drawSneeze();
     this.scheduleBlink();
     this.lastCardTapMs = this.time.now;
@@ -1167,6 +1187,26 @@ export class ClinicScene extends Phaser.Scene {
       window.localStorage.setItem(DIFFICULTY_KEY, `${this.difficulty}`);
     } catch {
       /* private-mode play: the session keeps the switch */
+    }
+  }
+
+  /** Visit memory persistence (guarded like every other store). */
+  private loadMemory(): void {
+    try {
+      const raw = window.localStorage.getItem(MEMORY_KEY);
+      if (!raw) return;
+      const parsed: unknown = JSON.parse(raw);
+      if (isMemoryMap(parsed)) this.visitMemory = parsed;
+    } catch {
+      this.visitMemory = {};
+    }
+  }
+
+  private saveMemory(): void {
+    try {
+      window.localStorage.setItem(MEMORY_KEY, JSON.stringify(this.visitMemory));
+    } catch {
+      /* private-mode play: the session keeps the memories */
     }
   }
 
@@ -2080,6 +2120,13 @@ export class ClinicScene extends Phaser.Scene {
   private switchPatient(name: string): void {
     if (SPRITE_PREFIX[name] === undefined) return;
     this.activeName = name;
+    // The room narrates the handoff (waiting-2: most friends are
+    // on the way, not on screen).
+    const waiting = waitingNames(this.waitingOrder, name).length;
+    this.ticker.setLines([
+      `${name} is with you`,
+      waiting > 0 ? `${waiting} waiting` : 'room is clear',
+    ]);
     // Fresh visit: clock + coins baseline restart, result clears.
     this.visitEnded = false;
     this.lastOutcome = null;
@@ -2362,7 +2409,21 @@ export class ClinicScene extends Phaser.Scene {
   private refreshWaitingRows(): void {
     this.waitingRows.removeAll(true);
     const names = waitingNames(this.waitingOrder, this.activeName);
-    names.forEach((rowName, i) => {
+    // Waiting-2: a real room accumulates — two friends on screen,
+    // the rest on the way (chevrons still reorder the full queue).
+    const shown = names.slice(0, 2);
+    const hidden = names.length - shown.length;
+    if (hidden > 0) {
+      const more = this.add
+        .text(270, 232 + shown.length * 116 + 8, `+${hidden} more on the way`, {
+          fontFamily: FONT_FAMILY,
+          fontSize: '14px',
+          color: SECONDARY,
+        })
+        .setOrigin(0.5, 0);
+      this.waitingRows.add(more);
+    }
+    shown.forEach((rowName, i) => {
       const entry = MOCK_ROSTER.find((e) => e.name === rowName);
       if (!entry) return;
       const y = 232 + i * 116;
@@ -3628,12 +3689,19 @@ export class ClinicScene extends Phaser.Scene {
         // like trajectories); the local line shows instantly and the
         // variant — if any — lands on a later visit. No mid-read swap.
         const gkey = `${this.activeName}:${this.tier()}`;
-        const local = returning && entry ? entry.welcomeBack : this.openerText();
+        // Memory beats the generic welcome: one quiet line when
+        // this patient remembers your last visit (same beat, no
+        // extra timing — the Muse variant may still paraphrase).
+        const remembered = returning ? memoryLine(this.visitMemory[this.activeName]) : null;
+        const local =
+          remembered ?? (returning && entry ? entry.welcomeBack : this.openerText());
         const greet = returning ? (this.greetCache.get(gkey) ?? local) : local;
         this.setConversation(speakerFor(this.activeName), greet, 'say');
         this.greetThenQuiz(returning);
         if (returning && entry) void this.warmGreeting(gkey, local, entry.complaint);
       }
+      // First-visit coach (visit only, once ever, skippable).
+      if (next === 'visit') this.maybeShowOnboard();
     }
     // The day-bonus toast waits for a modal-free arrival.
     if (next !== 'visit' && next !== 'telemed' && this.pendingStreak) {
@@ -3670,6 +3738,7 @@ export class ClinicScene extends Phaser.Scene {
       this.learnList.hide();
     }
     this.nametag.setVisible(next === 'visit');
+    if (next !== 'visit') this.onboardRoot.setVisible(false);
     // The exam patient never leaks into Waiting/Learn/Profile.
     this.patient.setVisible(next === 'visit' || next === 'telemed');
     this.patientShadow.setVisible(next === 'visit' || next === 'telemed');
@@ -4356,6 +4425,94 @@ export class ClinicScene extends Phaser.Scene {
 
   // -- visit-end result overlay (depth 44, topmost) --
 
+  /**
+   * First-visit coach overlay: three beats under the panel,
+   * Skip always visible, once ever (flagged). Depth 25 wins
+   * over drawers while it shows — it is a 3-tap transient.
+   */
+  private drawOnboard(): void {
+    const bg = this.add.graphics();
+    bg.fillStyle(CARD_FILL, 1);
+    bg.lineStyle(2, OUTLINE, 1);
+    bg.fillRoundedRect(48, 368, 444, 116, 16);
+    bg.strokeRoundedRect(48, 368, 444, 116, 16);
+    this.onboardText = this.add
+      .text(68, 384, '', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '16px',
+        color: COCOA,
+        wordWrap: { width: 404 },
+      })
+      .setOrigin(0, 0);
+    const skip = this.add
+      .text(68, 458, 'Skip', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '17px',
+        color: SECONDARY,
+      })
+      .setOrigin(0, 0.5);
+    const skipZone = this.add
+      .zone(118, 458, 100, 44)
+      .setInteractive({ useHandCursor: true });
+    skipZone.on('pointerdown', () => this.finishOnboard());
+    this.onboardNext = this.add
+      .text(472, 458, 'Next ›', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '17px',
+        color: COCOA,
+      })
+      .setOrigin(1, 0.5);
+    const nextZone = this.add
+      .zone(422, 458, 100, 44)
+      .setInteractive({ useHandCursor: true });
+    nextZone.on('pointerdown', () => this.advanceOnboard());
+    this.onboardRoot = this.add.container(0, 0, [bg, this.onboardText, skip, skipZone, this.onboardNext, nextZone]);
+    this.onboardRoot.setDepth(25).setVisible(false);
+  }
+
+  private paintOnboard(): void {
+    this.onboardText.setText(ONBOARD_STEPS[this.onboardStep] ?? '');
+    const last = this.onboardStep >= ONBOARD_STEPS.length - 1;
+    this.onboardNext.setText(last ? 'Done' : 'Next ›');
+  }
+
+  private maybeShowOnboard(): void {
+    if (this.onboardStep !== -1) {
+      this.onboardRoot.setVisible(true);
+      return;
+    }
+    let seen = true;
+    try {
+      seen = window.localStorage.getItem(ONBOARD_KEY) === '1';
+    } catch {
+      seen = true;
+    }
+    if (seen || this.visitEnded || this.lastOutcome !== null) return;
+    this.onboardStep = 0;
+    this.paintOnboard();
+    this.onboardRoot.setVisible(true);
+  }
+
+  private advanceOnboard(): void {
+    if (this.onboardStep >= ONBOARD_STEPS.length - 1) this.finishOnboard();
+    else {
+      this.onboardStep += 1;
+      this.paintOnboard();
+    }
+  }
+
+  private finishOnboard(): void {
+    this.onboardStep = -1;
+    this.onboardRoot.setVisible(false);
+    try {
+      window.localStorage.setItem(ONBOARD_KEY, '1');
+    } catch {
+      /* blocked storage already implies seen */
+    }
+  }
+
   private drawResultCard(): void {
     // Fullscreen dim zone FIRST (bottom): swallows every tap
     // outside the two buttons — the visit is over, choose.
@@ -4468,6 +4625,10 @@ export class ClinicScene extends Phaser.Scene {
       condition: def.name,
       pearl: def.visitPearl,
     });
+    // The patient remembers YOUR score for next time (subtle,
+    // player-praising; memory.ts owns the wording law).
+    this.visitMemory = recordMemory(this.visitMemory, this.activeName, scoreCount(this.roundScore));
+    this.saveMemory();
     this.resultTitle.setText(copy.title);
     this.resultLines.setText(copy.lines.join('\n'));
     // Earnings line (recovered only): coin pinned left of the

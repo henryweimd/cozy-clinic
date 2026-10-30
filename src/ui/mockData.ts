@@ -53,6 +53,8 @@ export interface MockRosterEntry {
   visitKind: string;
   /** Returning-patient recognition (first greeting beat, visit #2+). */
   welcomeBack: string;
+  /** False while held out of the intro patient set (e.g. Mabel). */
+  intro: boolean;
 }
 
 /** Pure: whoever is NOT in the exam room, in queue order. */
@@ -64,6 +66,12 @@ export function waitingNames(order: readonly string[], activeName: string): stri
  * Pure: swap one step toward the front (-1) or back (+1).
  * Out-of-range moves return the order unchanged (new array).
  */
+/** Pure: the intro set — held patients join in a later run. */
+export function introNames(order: readonly string[]): string[] {
+  const held = new Set(MOCK_ROSTER.filter((e) => !e.intro).map((e) => e.name));
+  return order.filter((n) => !held.has(n));
+}
+
 export function moveWaiting(
   order: readonly string[],
   name: string,
@@ -142,6 +150,7 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
     complaint: 'sneezy, runny nose',
     visitKind: 'sick visit',
     welcomeBack: 'Doctor! You came back!',
+    intro: true,
   },
   {
     id: 'mock-patient-mabel',
@@ -152,6 +161,7 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
     complaint: 'wheezy breaths',
     visitKind: 'follow-up',
     welcomeBack: 'Oh good — my doctor is here!',
+    intro: false,
   },
   {
     id: 'mock-patient-june',
@@ -162,6 +172,7 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
     complaint: 'first check-up',
     visitKind: 'new patient',
     welcomeBack: 'Hello! I am new here!',
+    intro: true,
   },
   {
     id: 'mock-patient-theo',
@@ -172,6 +183,7 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
     complaint: 'sleepy + warm',
     visitKind: 'sick visit',
     welcomeBack: 'Mmm… oh! Doctor!',
+    intro: true,
   },
   {
     id: 'mock-patient-priya',
@@ -182,6 +194,7 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
     complaint: 'tired + thirsty',
     visitKind: 'sick visit',
     welcomeBack: 'Practice wiped me out!',
+    intro: true,
   },
   {
     id: 'mock-patient-ellis',
@@ -192,6 +205,7 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
     complaint: 'headachy',
     visitKind: 'new patient',
     welcomeBack: 'Ahoy, Doctor. My head aches.',
+    intro: true,
   },
 ];
 

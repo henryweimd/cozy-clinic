@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   LEVEL_STOP_X,
   MOCK_ROSTER,
+  introNames,
   moveWaiting,
   nearestLevelStop,
   quoteIfSpoken,
@@ -67,5 +68,15 @@ describe('nearestLevelStop', () => {
     expect(nearestLevelStop(mid)).toBe(1);
     expect(nearestLevelStop(0)).toBe(1);
     expect(nearestLevelStop(9999)).toBe(4);
+  });
+});
+
+describe('introNames', () => {
+  it('holds Mabel out of the intro set, keeping queue order', () => {
+    const order = MOCK_ROSTER.map((e) => e.name);
+    const intro = introNames(order);
+    expect(intro).not.toContain('Mabel');
+    expect(intro).toContain('Milo');
+    expect(intro).toEqual(order.filter((n) => n !== 'Mabel'));
   });
 });
