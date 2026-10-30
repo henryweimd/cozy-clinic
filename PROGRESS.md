@@ -1983,3 +1983,23 @@ clearance — then a polish fix loop for real findings.
 - Verification: auditor 0 findings (new wordmark checks);
   146/146; tsc clean; build green; live 200.
 - Spend $0.00 (ledger ~$0.74 cumulative).
+
+## Profile2: full-screen + badge + lockups (2026-10-30)
+
+- OWNERSHIP: `src/scenes/ClinicScene.ts` (profile layout +
+  trigger views), `src/ui/icons.ts` (+test: drawTeamBadge),
+  `src/ui/profileEditor.ts` (insets), auditor (E4 + panels).
+- Whole-screen Profile: opaque full-bleed ground replaces the
+  floating washed sheet. Fixed the latent trap this exposed:
+  the invisible dev-trigger band no longer covers Profile.
+- Team card carries a badge logo — rayed sun, crescent moon,
+  5-point star, sage disc + initial for typed names.
+- Coins/Topics panels are horizontal lockups now: big icon,
+  28px count + chevron, one micro label (the stacked 26/12/13
+  trio read as clutter). Fonts bumped at the small spots
+  (doctor sub 14, cheers 12, micros 13).
+- Editor chips were flush ON the card borders — inset 12px
+  with 12px gutters; write bar inset to match.
+- Verification: auditor 0 findings; 148/148 (20 files); tsc
+  clean; build green; live 200.
+- Spend $0.00 (ledger ~$0.74 cumulative).

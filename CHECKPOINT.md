@@ -172,3 +172,24 @@ programmatic verification only.
 Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
 
 STOP.
+
+## Run 13 — profile2 (2026-10-30)
+
+Phase: full-screen Profile, team badge, panel lockups, editor
+insets, font bumps.
+
+Files changed: 4 (ClinicScene, icons + test, profileEditor).
+Commit `3dbe0c2` on main.
+
+Test result: auditor 0 findings; `npm test` 148/148 (20
+files); tsc clean; build green.
+
+Deployment URL: `https://cozy-clinic.vercel.app/` (live-polled
+200 with fresh bundle after push).
+
+Playtest result: NOT operator-playtested this run —
+programmatic verification only.
+
+Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
+
+STOP.
