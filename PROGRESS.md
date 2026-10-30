@@ -2061,3 +2061,24 @@ clearance — then a polish fix loop for real findings.
 - Verification: auditor 0 findings (new E10); 148/148; tsc
   clean; build green; live 200.
 - Spend $0.00 (ledger ~$0.74 cumulative).
+
+## Alive: memory + onboard + waiting-2 (2026-10-30)
+
+- OWNERSHIP: `src/game/memory.ts` (+test), `src/ui/mockData.ts`
+  (+test: intro flag), `src/scenes/ClinicScene.ts` (memory
+  store/greet, overlay, waiting window), auditor (E11 + waits).
+- Memory beats, kept subtle per operator: one quiet greeting
+  line reflecting YOUR last score ("You got everything right
+  last time!" / "Thanks for helping last time!" / "I'm glad
+  you're my doctor.") — player-praising, never a health claim,
+  same beat (no added timing), persisted across sessions.
+- First-visit coach: 3 beats under the panel with Skip always
+  visible, once ever via flag. Veterans see it once and skip.
+- Waiting-2: two friends on screen + "+N more on the way";
+  chevrons still reorder the full queue (down on row 2 pulls
+  the hidden third into view); ticker narrates row taps.
+- Mabel held from the intro set via the intro flag (data and
+  art stay shipped; she rejoins in a later run).
+- Verification: auditor 0 findings (new E11); 153/153 (21
+  files); tsc clean; build green; live 200.
+- Spend $0.00 (ledger ~$0.74 cumulative).
