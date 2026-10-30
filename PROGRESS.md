@@ -1,5 +1,37 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Marathon run (2026-10-30): economy, Theo, About, exam tray, population
+
+Done, all live on `main` (operator playtesting between chunks):
+
+- Economy with teeth: every shop item states its payout effect;
+  tools/medicines/practice boost correct-tap/reading/perfect-visit
+  payouts; Nurse Birch (50c) is the first staff hire; perfect-visit
+  base +2. Status strip blanked (reserved real estate).
+- Theo ships: 6-expression cocoa-taupe toddler + knit cap, roster
+  wired, sleepy blink (220ms/2–3.5s). New `sprites.ts` roster +
+  parity test; auditor section F checks on-disk frames.
+- Profile About row + project sheet (offline, no links out).
+- Exam findings in Supabase (`exam_findings`, 16 rows, tiered
+  gentle/steady/expert) + fallback mirror + boot loader. First
+  placed as main-card gather phase; operator corrected — now the
+  right-edge exam tray reveals findings, main cards keep quizzes.
+- Population: Priya (17F dehydration) + Ellis (71M hypertension)
+  ship full sets; roster is 6 with per-patient motion (Priya eager
+  2.3, Ellis calm 1.4 + slow lids). DB fur/accessories synced both
+  sources. Waiting list fits 5 rows in-sheet.
+- README + in-game demo script refreshed for all of the above.
+- Verdicts every chunk: tsc clean, 100/101→100/100 tests, auditor 0
+  findings, build green, live 200. Image spend this run: $0.19
+  (Theo $0.07, Priya/Ellis $0.12; ledger ~$0.74 cumulative).
+
+Not done: operator phone playtest of the new chunks; prize-linked
+Learn quizzes, undo submenu, login, speed clock (all deferred by
+operator); demo video + README firsthand paragraph (near-finish).
+
+Next: operator playtest notes; otherwise judging-polish loop
+(Impact/Tooling/Demo/Tech Depth) within the Nov 3 noon ET freeze.
+
 ## Done (Phase 01, this chunk)
 
 - Repo hygiene: `AGENTS.md` present, `.gitignore` expanded, `.env.example`
