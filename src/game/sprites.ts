@@ -11,6 +11,8 @@ export const SPRITE_PREFIX: Record<string, string> = {
   June: 'june',
   Milo: 'milo',
   Theo: 'theo',
+  Priya: 'priya',
+  Ellis: 'ellis',
 };
 
 export function spritePrefix(name: string): string | undefined {
@@ -22,10 +24,22 @@ export const SPRITE_FRAMES = ['idle', 'blink', 'happy', 'sick', 'pained', 'relie
 
 /** Eyes-closed ms per blink (ANIMATION.md default 120). */
 export function blinkCloseMs(name: string): number {
-  return name === 'Theo' ? 220 : 120;
+  if (name === 'Theo') return 220;
+  if (name === 'Ellis') return 160;
+  return 120;
 }
 
 /** [min, max] ms between blinks (ANIMATION.md default 3000-5000). */
 export function blinkGapMs(name: string): [number, number] {
   return name === 'Theo' ? [2000, 3500] : [3000, 5000];
+}
+
+/**
+ * Idle-bob angular speed in rad/s (ANIMATION.md default 1.8).
+ * Priya bounces eager; Ellis sways slow and calm.
+ */
+export function bobRate(name: string): number {
+  if (name === 'Priya') return 2.3;
+  if (name === 'Ellis') return 1.4;
+  return 1.8;
 }

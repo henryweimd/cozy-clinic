@@ -173,6 +173,26 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
     visitKind: 'sick visit',
     welcomeBack: 'Mmm… oh! Doctor!',
   },
+  {
+    id: 'mock-patient-priya',
+    name: 'Priya',
+    persona: 'team captain',
+    furShade: '#C2A878',
+    status: 'waiting',
+    complaint: 'tired + thirsty',
+    visitKind: 'sick visit',
+    welcomeBack: 'Practice wiped me out!',
+  },
+  {
+    id: 'mock-patient-ellis',
+    name: 'Ellis',
+    persona: 'retired sailor',
+    furShade: '#8E8A80',
+    status: 'waiting',
+    complaint: 'headachy',
+    visitKind: 'new patient',
+    welcomeBack: 'Ahoy, Doctor. My head aches.',
+  },
 ];
 
 /**

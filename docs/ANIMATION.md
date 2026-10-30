@@ -106,6 +106,10 @@ Blink:
 - Closed duration: exactly 120 ms (`delayedCall(120)`).
 - Theo exception (sleepy toddler): 220 ms closed, 2000–3500 ms
   gap — heavier, drowsier blinks (`src/game/sprites.ts`).
+- Ellis exception (elder): 160 ms closed, standard gap —
+  slower lids, same rhythm.
+- Bob-rate exceptions: Priya 2.3 rad/s (eager bounce),
+  Ellis 1.4 rad/s (calm sway); amplitude stays 3 px.
 - Swap rule (simplest robust rule — no blink variants are ever
   ordered for sick/pained/relieved): the timer fires ONLY when
   the steady face is idle AND no flash is showing AND the

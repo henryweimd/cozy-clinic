@@ -4,8 +4,9 @@ import { MOCK_ROSTER, moveWaiting, waitingNames } from './mockData';
 describe('waitingNames', () => {
   it('excludes whoever is in the exam room, keeping queue order', () => {
     const order = MOCK_ROSTER.map((e) => e.name);
-    expect(waitingNames(order, 'Milo')).toEqual(['Mabel', 'June', 'Theo']);
-    expect(waitingNames(order, 'June')).toEqual(['Milo', 'Mabel', 'Theo']);
+    expect(waitingNames(order, 'Milo')).toEqual(order.filter((n) => n !== 'Milo'));
+    expect(waitingNames(order, 'June')).toEqual(order.filter((n) => n !== 'June'));
+    expect(waitingNames(order, 'Milo')).not.toContain('Milo');
   });
 
   it('gives every entry a complaint + visit kind for the list line', () => {

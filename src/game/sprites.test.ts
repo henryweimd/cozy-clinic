@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { MOCK_ROSTER } from '../ui/mockData';
-import { blinkCloseMs, blinkGapMs, SPRITE_FRAMES, spritePrefix } from './sprites';
+import { blinkCloseMs, blinkGapMs, bobRate, SPRITE_FRAMES, spritePrefix } from './sprites';
 
 describe('sprite roster parity', () => {
   it('gives every rostered patient a sprite prefix', () => {
@@ -22,5 +22,12 @@ describe('sprite roster parity', () => {
     const [lo, hi] = blinkGapMs('Theo');
     expect(lo).toBeLessThan(3000);
     expect(hi).toBeLessThanOrEqual(5000);
+    expect(blinkCloseMs('Ellis')).toBeGreaterThan(120);
+  });
+
+  it('bobs eager Priya faster and calm Ellis slower', () => {
+    expect(bobRate('Milo')).toBe(1.8);
+    expect(bobRate('Priya')).toBeGreaterThan(1.8);
+    expect(bobRate('Ellis')).toBeLessThan(1.8);
   });
 });

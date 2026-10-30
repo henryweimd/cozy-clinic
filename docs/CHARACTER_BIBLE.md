@@ -146,4 +146,6 @@ body plan, no new species without a bible amendment.
 | June (idle current) | Gentle first-timer, slightly shy | Honey-taupe `#C4A484` | Slightly larger blush, gentle | Sage head-scarf |
 | Milo (idle current) | Curious kid, asks questions | Porcelain-taupe `#CDB9A8` | Curious head-tilt in idle (motion) | Round slate glasses (prop, never face paint) |
 | Theo (SHIPS) | Sleepy toddler, slow blinks | Cocoa-taupe `#8F7364` | Sleepier blink cadence (motion: 220ms/2–3.5s) | Butter-yellow knit cap (fixed; never touches face) |
+| Priya (SHIPS) | Eager teen team captain | Golden-taupe `#C2A878` | Faster eager bob (motion: 2.3 rad/s) | Coral sport headband (fixed; above face plate) |
+| Ellis (SHIPS) | Gentle elder retired sailor | Stone-taupe `#8E8A80` | Slow calm bob (1.4 rad/s) + slow lids (160ms close) | White sailor cap + navy collar (fixed outfit) |
 | Dr. Nora (reserved) | Reassuring AI colleague doctor | Rose-taupe `#A2766B` | Reassuring half-smile | White coat + sage scrubs (outfit, same silhouette) |

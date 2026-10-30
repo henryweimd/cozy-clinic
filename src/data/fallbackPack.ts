@@ -179,7 +179,7 @@ export const FALLBACK_PATIENTS: FallbackPatient[] = [
     "persona": "team captain",
     "fur_shade": "#C2A878",
     "facial_features": "bright focused eyes",
-    "accessories_clothing": "sports headband, friendship bracelets",
+    "accessories_clothing": "coral sport headband",
     "start_stage": 2
   },
   {
@@ -242,9 +242,9 @@ export const FALLBACK_PATIENTS: FallbackPatient[] = [
     "age_years": 71,
     "sex": "M",
     "persona": "retired sailor",
-    "fur_shade": "#7E8F69",
-    "facial_features": "bushy brows, weathered smile",
-    "accessories_clothing": "anchor pin, striped scarf",
+    "fur_shade": "#8E8A80",
+    "facial_features": "slow heavy lids, calm smile",
+    "accessories_clothing": "white sailor cap, navy collar",
     "start_stage": 2
   }
 ];

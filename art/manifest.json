@@ -1210,5 +1210,12 @@
   "theo_spend_usd": 0.07,
   "theo_spend_note": "7 images (idle v1 + reframe attempt + 5 expression edits) x $0.01; ledger ~$0.62 cumulative; at >= $120 STOP - not reached",
   "theo_contact_sheet": "art/contact-sheets/plate-theo.png",
-  "theo_note": "Theo SHIPS 2026-10-30: cocoa-taupe sleepy toddler, butter-yellow knit cap (fixed, never face), 6-frame set via shadow-shelf cleanup + paste_x=22; bbox within 1px across set; sleepy blink 220ms/2-3.5s in src/game/sprites.ts"
+  "theo_note": "Theo SHIPS 2026-10-30: cocoa-taupe sleepy toddler, butter-yellow knit cap (fixed, never face), 6-frame set via shadow-shelf cleanup + paste_x=22; bbox within 1px across set; sleepy blink 220ms/2-3.5s in src/game/sprites.ts",
+  "priya_spend_usd": 0.06,
+  "priya_note": "Priya SHIPS 2026-10-30: golden-taupe teen captain, coral headband (fixed, above face); 6-frame set via shelf cleanup + paste_x=24; eager bob 2.3 rad/s",
+  "priya_contact_sheet": "art/contact-sheets/plate-priya.png",
+  "ellis_spend_usd": 0.06,
+  "ellis_note": "Ellis SHIPS 2026-10-30: stone-taupe elder sailor, white cap + navy collar (fixed outfit); 6-frame set via 0.88 rescale + cap-white restore + shelf cleanup + paste_x=22; calm bob 1.4, lids 160ms",
+  "ellis_contact_sheet": "art/contact-sheets/plate-ellis.png",
+  "population_spend_note": "12 images x $0.01; ledger ~$0.81 cumulative; at >= $120 STOP - not reached"
 }

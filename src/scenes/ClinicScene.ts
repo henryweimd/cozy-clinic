@@ -66,7 +66,7 @@ import { buyItem, learnBonus, nurseBonus, perfectBonus, toolBonus } from '../gam
 import type { ShopItem } from '../game/shop';
 import { AboutSheet } from '../ui/aboutSheet';
 import { ShopSheet } from '../ui/shopSheet';
-import { blinkCloseMs, blinkGapMs, SPRITE_PREFIX } from '../game/sprites';
+import { blinkCloseMs, blinkGapMs, bobRate, SPRITE_PREFIX } from '../game/sprites';
 import { clearUndo, emptyUndo, pushMove, undoDepth, undoMove } from '../game/undo';
 import type { UndoStack } from '../game/undo';
 
@@ -233,13 +233,17 @@ const GRADE_COLOR: Record<ChoiceGrade, number> = {
 };
 
 type ViewName = 'waiting' | 'visit' | 'telemed' | 'portal' | 'learn' | 'profile';
-type Speaker = 'MABEL' | 'JUNE' | 'MILO' | 'THEO' | 'YOU';
+type Speaker = 'MABEL' | 'JUNE' | 'MILO' | 'THEO' | 'PRIYA' | 'ELLIS' | 'YOU';
 
 
 
 function speakerFor(patientName: string): Speaker {
   const key = patientName.trim().toUpperCase();
-  if (key === 'JUNE' || key === 'MILO' || key === 'MABEL' || key === 'THEO') return key;
+  if (
+    key === 'JUNE' || key === 'MILO' || key === 'MABEL' || key === 'THEO' ||
+    key === 'PRIYA' || key === 'ELLIS'
+  )
+    return key;
   return 'MABEL';
 }
 
@@ -511,8 +515,10 @@ export class ClinicScene extends Phaser.Scene {
     this.load.image('mabel-sick', 'assets/characters/mochi-reboot-sick.png');
     this.load.image('mabel-pained', 'assets/characters/mochi-reboot-pained.png');
     this.load.image('mabel-relieved', 'assets/characters/mochi-reboot-relieved.png');
-    // Roster phase: June + Milo + Theo full expression sets (own names).
-    for (const slug of ['june', 'milo', 'theo']) {
+    // Roster phase: every SPRITE_PREFIX but Mabel preloads its
+    // own-named set (derived, so the roster can't skew).
+    for (const slug of Object.values(SPRITE_PREFIX)) {
+      if (slug === 'mabel') continue;
       for (const frame of ['idle', 'blink', 'happy', 'sick', 'pained', 'relieved']) {
         this.load.image(`${slug}-${frame}`, `assets/characters/${slug}-${frame}.png`);
       }
@@ -570,9 +576,10 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   update(_time: number, delta: number): void {
-    // Idle bob: ANIMATION.md — 3px @ 1.8 rad/s, owns mabel.y.
+    // Idle bob: ANIMATION.md — 3px @ the roster's rad/s rate,
+    // owns the patient's y.
     const t = this.time.now / 1000;
-    this.patient.y = this.patientBaseY + Math.sin(t * 1.8) * 3;
+    this.patient.y = this.patientBaseY + Math.sin(t * bobRate(this.activeName)) * 3;
 
     // (Visit clock removed until the speed element returns.)
 
