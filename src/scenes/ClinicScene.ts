@@ -89,7 +89,7 @@ import type { ProfileKind } from '../ui/profileEditor';
 import { ShopSheet } from '../ui/shopSheet';
 import { blinkCloseMs, blinkGapMs, bobRate, SPRITE_PREFIX } from '../game/sprites';
 import { takeFirstQuizHint, takeTrayHint, takeUndoHint } from '../game/hints';
-import { clearUndo, emptyUndo, pushMove, undoDepth, undoLabel, undoMove } from '../game/undo';
+import { clearUndo, emptyUndo, pushMove, undoDepth, undoMove } from '../game/undo';
 import type { UndoStack } from '../game/undo';
 
 /**
@@ -427,9 +427,6 @@ export class ClinicScene extends Phaser.Scene {
   // Chrome-2 progress HUD (Visit only; coins + context are MOCK, the
   // timer is a display-only readout — nothing gameplay reads it).
   private hud!: Phaser.GameObjects.Container;
-  private undoPill!: Phaser.GameObjects.Container;
-  private undoText!: Phaser.GameObjects.Text;
-  private undoZone!: Phaser.GameObjects.Zone;
   private wallet: Wallet = emptyWallet();
   private shop!: ShopSheet;
   private about!: AboutSheet;
@@ -1728,7 +1725,7 @@ export class ClinicScene extends Phaser.Scene {
           undoDepth(this.undoStack) > 0 &&
           takeUndoHint(window.localStorage)
         ) {
-          this.showToast('Changed your mind? Undo is top-right');
+          this.showToast('Changed your mind? Undo is in Profile');
         } else if (round === 'examine' && takeTrayHint(window.localStorage)) {
           this.showToast('Stuck? The exam tray (left edge) holds clues');
         }
@@ -1792,6 +1789,15 @@ export class ClinicScene extends Phaser.Scene {
         this.museNoted = true;
         this.ticker.noteRewordLive();
       }
+    }
+    // Live AI narrates itself on the ribbon — but only while the
+    // ribbon shows (muted/offline stays silent, never forced).
+    if (res.note !== 'offline' && tickerVisible(this.currentView, this.tickerOn)) {
+      this.ticker.pushLive(
+        res.live
+          ? `reword live · variant ready (${res.latencyMs}ms)`
+          : `reword veto · ${res.note} (local kept)`,
+      );
     }
   }
 
@@ -2253,33 +2259,10 @@ export class ClinicScene extends Phaser.Scene {
   // -- progress HUD (Visit only; chrome-4: floating pill, no strip) --
 
   private drawHud(): void {
-    // Chrome-4: the top strip is RETIRED (operator: distracting;
-    // a translucent bar returns later). Coins moved to Profile
-    // (the Care Coins row opens the Shop); mid-visit, toasts +
-    // the result lines carry earnings feedback. The visit keeps
-    // exactly one floater: the Rewind pill, top-right, present
-    // only while a move can rewind (refreshHud owns it).
-    // (No clock until the speed element returns; visitStartMs is
-    // kept for its comeback.)
-    const undoBg = this.add.graphics();
-    undoBg.fillStyle(CARD_FILL, 1);
-    undoBg.lineStyle(2, OUTLINE, 1);
-    undoBg.fillRoundedRect(446, 40, 88, 36, 18);
-    undoBg.strokeRoundedRect(446, 40, 88, 36, 18);
-    this.undoText = this.add
-      .text(490, 58, '', {
-        fontFamily: FONT_FAMILY,
-        fontStyle: 'bold',
-        fontSize: '13px',
-        color: COCOA,
-      })
-      .setOrigin(0.5, 0.5);
-    this.undoZone = this.add.zone(490, 58, 96, 44).setInteractive({ useHandCursor: true });
-    this.undoZone.on('pointerdown', () => {
-      if (undoDepth(this.undoStack) > 0) this.doUndo();
-    });
-    this.undoPill = this.add.container(0, 0, [undoBg, this.undoText, this.undoZone]);
-    this.hud = this.add.container(0, 0, [this.undoPill]);
+    // The visit screen is bare by operator order: no strip, no
+    // pill. Undo lives in Profile (bottom card); this container
+    // stays so view fades keep their handle.
+    this.hud = this.add.container(0, 0, []);
     // Depth 20 = above the plate, level with the nav bar (a
     // different band, so no conflict).
     this.hud.setDepth(20);
@@ -2329,13 +2312,10 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   private refreshHud(): void {
-    // Chrome-4: the floater is the whole HUD (coins live in
-    // Profile; the strip's reserved center went with it).
-    const depth = undoDepth(this.undoStack);
-    this.undoText.setText(undoLabel(depth));
-    this.undoPill.setVisible(depth > 0);
-    // Visibility alone doesn't release taps: disable the zone too.
-    if (this.undoZone.input) this.undoZone.input.enabled = depth > 0;
+    // No visit floater: the only undo face is the Profile card,
+    // which rebuilds on every Profile arrival — refresh it live
+    // when a move resolves or rewinds underneath it.
+    if (this.currentView === 'profile') this.refreshProfileRows();
   }
 
   // -- VIEW 2: waiting room (a list, not a room) --
@@ -2960,6 +2940,28 @@ export class ClinicScene extends Phaser.Scene {
       else this.about.show(this.sfxMuted, this.tickerOn);
     });
     this.profileRows.add(aboutZone);
+    // Undo card (640..728): the visit's rewind control lives at
+    // the bottom of Profile, never on the visit screen. Taps
+    // rewind one move in place; the count refreshes with it.
+    const uy = 640;
+    card(48, uy, 444, 88);
+    const depth = undoDepth(this.undoStack);
+    label(68, uy + 30, 'Undo last move', '19px', COCOA, true, 0);
+    label(
+      68,
+      uy + 60,
+      depth > 0 ? `${depth} ${depth === 1 ? 'move' : 'moves'} can rewind` : 'nothing to undo yet',
+      '14px',
+      SECONDARY,
+      false,
+      0,
+    );
+    label(472, uy + 44, `${depth}`, '26px', COCOA, true, 1);
+    const undoCardZone = this.add
+      .zone(270, uy + 44, 444, 88)
+      .setInteractive({ useHandCursor: true });
+    undoCardZone.on('pointerdown', () => this.doUndo());
+    this.profileRows.add(undoCardZone);
   }
 
   // -- M4 shared care (inbox, notes handle, compose) --
