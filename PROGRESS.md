@@ -1672,3 +1672,20 @@ clearance — then a polish fix loop for real findings.
   absence: sheets already block lower zones, no bug.
 - Verification: auditor 0 findings; 90/90; tsc clean; build green.
 - Spend $0.00.
+
+## Sign restyle: subtle wall lettering (2026-10-29)
+
+- SIGN2 OWNERSHIP: 4 room plates, `art/manifest.json` (ledger),
+  `art/contact-sheets/plates-sign2-*`, auditor rect,
+  PROGRESS/CHECKPOINT. No code touched.
+- Oak plaque replaced per operator note: single-line COZY CLINIC
+  painted directly on the wall plaster, wide, larger thin
+  capitals, low contrast — architecture, not a UI element.
+  Relocated to canvas (270,90) via diff-vs-presign script onto
+  pristine presign bases; seams verified invisible at zoom.
+- Operator deferrals recorded: demo video + firsthand README
+  paragraph wait until the game is nearly finished (need real
+  captures); maneuver library stays paused (no UI consumer —
+  exam round is case quizzes now).
+- Verification: auditor 0 findings; 90/90; tsc clean; build green.
+- Spend $0.04 (ledger ~$0.55 cumulative).

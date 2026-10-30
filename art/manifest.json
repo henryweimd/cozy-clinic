@@ -1200,5 +1200,9 @@
   "sign_spend_usd": 0.04,
   "sign_spend_note": "4 images (painted COZY CLINIC wall-sign edits on exam-a/exam-b/waiting-a/waiting-b) x $0.01; model placed signs mid-wall so plaques were relocated to canvas (270,92) via scripted cut/inpaint (/tmp/sign-move.py); exam-a rebuilt from presign master; ledger ~$0.51 cumulative; at >= $120 STOP - not reached",
   "sign_contact_sheet": "art/contact-sheets/plates-sign-2026-10-29.png",
-  "sign_run": "wall-signs-2026-10-29"
+  "sign_run": "wall-signs-2026-10-29",
+  "sign2_spend_usd": 0.04,
+  "sign2_spend_note": "4 images (subtle single-line COZY CLINIC wall lettering redo on exam-a/exam-b/waiting-a/waiting-b) x $0.01; relocated to canvas (270,90) via diff-vs-presign script (/tmp/sign2-move.py) onto pristine presign bases; ledger ~$0.55 cumulative; at >= $120 STOP - not reached",
+  "sign2_contact_sheet": "art/contact-sheets/plates-sign2-2026-10-29.png",
+  "sign2_run": "wall-signs-subtle-2026-10-29"
 }
