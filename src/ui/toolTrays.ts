@@ -6,9 +6,9 @@ import { THEME } from './chromeTheme';
  * edge with the four real physical-exam maneuvers — inspection
  * (look, incl. ears/nose/throat), palpation (feel), percussion
  * (tap + listen), auscultation (listen with stethoscope). Tap the
- * handle to slide open/closed; tap a maneuver to begin it (the
- * exam loops wire sounds, illustrations, and result lines — this
- * module only reports the pick).
+ * handle to slide open/closed; tap a maneuver to reveal its
+ * disease-specific finding in the panel (this module only
+ * reports the pick — the scene reads exam_findings).
  *
  * Geometry: the HANDLE is fixed at x516-540 (24px tab,
  * y300-560, depth 23); the PANEL slides behind it from x540

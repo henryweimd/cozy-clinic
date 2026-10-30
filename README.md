@@ -57,10 +57,13 @@ so the demo path completes with zero network.
 Playable today on the live build; every step works, nothing staged:
 
 1. Meet Milo — visit #2, he recognizes you in the opening seconds.
-2. Answer 3 quiz rounds: examine → diagnose → treat.
-3. Tap Next patient; reorder the Waiting queue with the arrows.
+2. Answer the examine quiz, then diagnose → treat.
+3. Tap Next patient into a 6-strong roster (sleepy Theo to elder
+   Ellis); reorder the Waiting queue. The right-edge exam tray
+   holds Look / Feel / Tap / Listen with per-disease findings.
 4. Leave a care note (open a 2nd tab as another doctor to see it land).
-5. Read a Learn topic (+2 coins), spend coins in the Shop, check Profile.
+5. Read a Learn topic (+2 coins), spend coins in the Shop (every item
+   boosts payouts), check Profile + the About sheet.
 6. Cheer a colleague from any care note.
 
 Judges' overlay: tap the painted COZY CLINIC wall sign 5 times, enter
@@ -84,8 +87,9 @@ this script plus the tooling table in-game.
   gone wrong and why) and returns the choice to the player.
 - **Runtime AI path:** browser game → Supabase Edge Function → Meta Model API.
   The browser NEVER calls Meta directly and NEVER holds a model key.
-- **Offline by design.** A 204 KB fallback snapshot (12 patients, 204 nodes)
-  ships in `src/data/fallbackPack.ts`; live reads fall back to it seamlessly.
+- **Offline by design.** A fallback snapshot (12 patients, 204 nodes,
+  16 tiered exam findings) ships in `src/data/fallbackPack.ts`; live
+  reads fall back to it seamlessly.
 
 ## Meta AI tooling
 

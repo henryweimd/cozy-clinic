@@ -19,13 +19,6 @@ export interface ExamFindingsData {
 
 export const MODALITIES: readonly ExamModality[] = ['look', 'feel', 'tap', 'listen'];
 
-export const MODALITY_LABEL: Record<ExamModality, string> = {
-  look: 'Look',
-  feel: 'Feel',
-  tap: 'Tap',
-  listen: 'Listen',
-};
-
 export async function loadExamFindings(): Promise<ExamFindingsData> {
   if (SUPABASE_URL === undefined || SUPABASE_ANON_KEY === undefined) {
     return { findings: FALLBACK_EXAM_FINDINGS, source: 'fallback' };

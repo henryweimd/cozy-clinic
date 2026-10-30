@@ -15,6 +15,7 @@ import {
 import type { VisitContext } from '../ui/mockData';
 import { BackendTicker } from '../ui/ticker';
 import { ToolTray } from '../ui/toolTrays';
+import type { ToolDef } from '../ui/toolTrays';
 import { DOCTOR_HANDLES, TEAM_TAGS } from '../data/sharedCare';
 import {
   doctorByline,
@@ -31,7 +32,7 @@ import type { Cheer, CheerDraft, HandoffDraft, HandoffNote } from '../data/share
 import { HandoffSheet } from '../ui/handoffSheet';
 import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
-import { examQuestion, gatherQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
+import { examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
 import type { RoundScore, VisitOutcome } from '../game/visit';
 import { CONDITION_TIER_NAMES, EXAM_OTHER_FINDING } from '../clinical/conditions';
 import type { ConditionId } from '../clinical/types';
@@ -50,7 +51,7 @@ import {
 import type { CastData } from '../data/patients';
 import { FALLBACK_EXAM_FINDINGS, FALLBACK_PATIENTS } from '../data/fallbackPack';
 import type { ExamModality, FallbackExamFinding } from '../data/fallbackPack';
-import { findingFor, loadExamFindings, MODALITIES, MODALITY_LABEL } from '../data/examFindings';
+import { findingFor, loadExamFindings } from '../data/examFindings';
 import {
   EARN_BEST,
   EARN_LEARN_FIRST,
@@ -335,8 +336,14 @@ interface CardWidgets {
 
 /** Visit rounds: every case is a 3-beat mini-story. */
 type VisitRound = 'examine' | 'diagnose' | 'treat';
-/** Examine sub-phases: gather all four findings, then the quiz. */
-type ExamPhase = 'gather' | 'quiz';
+
+/** Tray maneuver -> exam_findings modality. */
+const TOOL_MODALITY: Record<ToolDef['id'], ExamModality> = {
+  inspection: 'look',
+  palpation: 'feel',
+  percussion: 'tap',
+  auscultation: 'listen',
+};
 
 interface ThreadWidgets {
   root: Phaser.GameObjects.Container;
@@ -380,8 +387,6 @@ export class ClinicScene extends Phaser.Scene {
   private cards: CardWidgets[] = [];
   private revealedStage = -1;
   private round: VisitRound = 'examine';
-  private examPhase: ExamPhase = 'gather';
-  private examGathered = new Set<ExamModality>();
   private roundScore: RoundScore = { examBest: false, dxCorrect: false, txBest: false };
   /** Monotonic guard: stale delayed advances never fire. */
   private roundToken = 0;
@@ -1188,12 +1193,8 @@ export class ClinicScene extends Phaser.Scene {
   private roundCardDefs(): { id: string; label: string }[] {
     const def = CONDITIONS[this.patientState.conditionId];
     if (this.round === 'examine') {
-      // Gather first: the 4 exam steps, each revealing its
-      // disease-specific finding (Supabase, tier-worded) — then
-      // the case-specific quiz while findings are fresh.
-      if (this.examPhase === 'gather') {
-        return MODALITIES.map((m) => ({ id: `mod:${m}`, label: MODALITY_LABEL[m] }));
-      }
+      // Case-specific bedside checks (never the generic 4-step
+      // row — Look/Feel/Tap/Listen live in the exam tray).
       return def.examOptions.map((opt) => ({ id: `exam:${opt.id}`, label: opt.label }));
     }
     if (this.round === 'diagnose') {
@@ -1399,10 +1400,8 @@ export class ClinicScene extends Phaser.Scene {
       yoyo: true,
       ease: 'Sine.easeInOut',
       onComplete: () => {
-        if (this.round === 'examine') {
-          if (this.examPhase === 'gather') this.resolveModality(i);
-          else this.resolveExam(i);
-        } else if (this.round === 'diagnose') this.resolveDx(i);
+        if (this.round === 'examine') this.resolveExam(i);
+        else if (this.round === 'diagnose') this.resolveDx(i);
         else this.resolveCard(i);
       },
     });
@@ -1448,9 +1447,7 @@ export class ClinicScene extends Phaser.Scene {
     const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
     const q =
       round === 'examine'
-        ? this.examPhase === 'gather'
-          ? gatherQuestion(tier, this.activeName)
-          : examQuestion(def.examQuiz[tier], this.activeName, this.demoTag())
+        ? examQuestion(def.examQuiz[tier], this.activeName, this.demoTag())
         : roundQuestion(round, tier, this.activeName);
     this.setConversation(speakerFor(this.activeName), q, 'tell');
   }
@@ -1480,45 +1477,6 @@ export class ClinicScene extends Phaser.Scene {
       this.setConversation(speakerFor(this.activeName), this.openerText(), 'say');
       this.time.delayedCall(2000, askLive);
     });
-  }
-
-  /**
-   * EXAMINE gather phase: one of Look/Feel/Tap/Listen. Free and
-   * ungraded — the finding reads in the panel, the card takes a
-   * sage spine (done, not right), and re-taps re-read. No undo
-   * push: nothing about the case changes until the quiz. When
-   * all four are gathered, the quiz deals itself.
-   */
-  private resolveModality(i: number): void {
-    const card = this.cards[i];
-    if (!card) return;
-    const modality = card.actionId.replace('mod:', '') as ExamModality;
-    const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
-    const finding =
-      findingFor(this.examFindings, this.patientState.conditionId, modality, tier) ??
-      EXAM_OTHER_FINDING;
-    this.examGathered.add(modality);
-    card.spine.clear();
-    card.spine.fillStyle(SAGE, 1);
-    card.spine.fillRoundedRect(-card.w / 2, -37, 8, 74, { tl: 16, tr: 0, bl: 16, br: 0 });
-    this.setConversation(speakerFor(this.activeName), finding, 'tell');
-    if (this.examGathered.size < MODALITIES.length) return;
-    const token = this.roundToken;
-    // The last finding reads, then the quiz lands (guarded).
-    this.time.delayedCall(1400, () => {
-      if (token !== this.roundToken) return;
-      this.advanceExamPhase();
-    });
-  }
-
-  /** Gather -> quiz: same round, fresh cards + the case quiz. */
-  private advanceExamPhase(): void {
-    this.roundToken += 1;
-    this.examPhase = 'quiz';
-    this.cardRow.removeAll(true);
-    this.buildCards();
-    this.drawCorral();
-    this.showQuestion('examine');
   }
 
   /**
@@ -1761,8 +1719,6 @@ export class ClinicScene extends Phaser.Scene {
     this.visitStartCoins = this.wallet.balance;
     this.roundToken += 1;
     this.round = 'examine';
-    this.examPhase = 'gather';
-    this.examGathered.clear();
     this.roundScore = { examBest: false, dxCorrect: false, txBest: false };
     const row = this.cast ? patientByName(this.cast, name) : null;
     const cond = row?.condition_id;
@@ -2951,10 +2907,21 @@ export class ClinicScene extends Phaser.Scene {
       callback: () => this.ticker.tickMock(),
     });
 
-    // Tray: Visit-only exam chrome.
+    // Tray: Visit-only exam chrome. The tray IS the physical
+    // exam — each maneuver reveals its disease-specific finding
+    // (Supabase, tier-worded). Free and ungraded, always
+    // available; the main cards keep only real choices.
     this.tray = new ToolTray(this);
     this.tray.onPick = (tool) => {
-      this.showToast(`${tool.label} (${tool.hint}) — exam loops soon`);
+      const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+      const finding =
+        findingFor(
+          this.examFindings,
+          this.patientState.conditionId,
+          TOOL_MODALITY[tool.id],
+          tier,
+        ) ?? EXAM_OTHER_FINDING;
+      this.setConversation(speakerFor(this.activeName), finding, 'tell');
     };
 
     // Chart drawer: succinct Medical Chart, left side.
@@ -3573,10 +3540,10 @@ export class ClinicScene extends Phaser.Scene {
     // nothing aspirational ships in this list.
     const steps = [
       '1 Meet Milo — visit #2, he remembers you',
-      '2 Answer 3 quiz rounds: exam/dx/treat',
-      '3 Next patient; reorder the Waiting queue',
+      '2 Examine quiz, then dx/treat rounds',
+      '3 Next patient (6 now); tray = exam',
       '4 Leave a care note (2nd tab = doctor 2)',
-      '5 Learn topic (+2), Shop, Profile stats',
+      '5 Learn (+2), Shop boosts, Profile, About',
       '6 Cheer a colleague from any care note',
     ];
     for (const step of steps) {
