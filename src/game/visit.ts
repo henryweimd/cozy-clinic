@@ -57,6 +57,17 @@ export function examQuestion(template: string, name: string, demo: string): stri
   return template.replace('{name}', name).replace('{demo}', demo);
 }
 
+/** Gather-phase prompt: tap all four exam steps before the quiz. */
+const GATHER_PROMPT: Record<QuizTier, string> = {
+  gentle: 'Tap each check to look {name} over.',
+  steady: 'Work the exam: tap each step for its finding.',
+  expert: 'Examine systematically — elicit all four findings.',
+};
+
+export function gatherQuestion(tier: QuizTier, name: string): string {
+  return GATHER_PROMPT[tier].replace('{name}', name);
+}
+
 export interface ResultCopyInput {
   outcome: VisitOutcome;
   visitNo: number;

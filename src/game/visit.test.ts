@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from './visit';
+import { examQuestion, gatherQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from './visit';
 
 describe('visitOutcome', () => {
   it('takes the right diagnosis AND the right treatment', () => {
@@ -20,6 +20,14 @@ describe('isPerfectVisit', () => {
     expect(isPerfectVisit({ examBest: false, dxCorrect: true, txBest: true })).toBe(false);
     expect(isPerfectVisit({ examBest: true, dxCorrect: false, txBest: true })).toBe(false);
     expect(isPerfectVisit({ examBest: true, dxCorrect: true, txBest: false })).toBe(false);
+  });
+});
+
+describe('gatherQuestion', () => {
+  it('names the patient in gentle, not in expert', () => {
+    expect(gatherQuestion('gentle', 'Mabel')).toContain('Mabel');
+    expect(gatherQuestion('expert', 'Mabel')).not.toContain('Mabel');
+    expect(gatherQuestion('steady', 'Mabel').length).toBeGreaterThan(10);
   });
 });
 
