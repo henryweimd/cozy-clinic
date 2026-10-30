@@ -1638,3 +1638,25 @@ clearance — then a polish fix loop for real findings.
   (probe cleaned).
 - Verification: auditor 0 findings; 90/90; tsc clean; build green.
 - Spend $0.00.
+
+## Hook pass: 60s recognition + demo overlay (2026-10-29)
+
+- HOOK OWNERSHIP: `src/ui/mockData.ts` + tests (welcomeBack),
+  `src/scenes/ClinicScene.ts` (recognition beat, boot pulse,
+  demo overlay page), auditor (coverage), README (guided demo),
+  PROGRESS/CHECKPOINT.
+- Returning patients (visit #2+: Milo, Mabel) greet with
+  recognition first ("Doctor! You came back!"), then the symptom
+  opener, then the quiz — token-guarded beats, new patients
+  unchanged. Boot pulses the cards on the first tick (one
+  obvious action); later arrivals keep the 6s grace.
+- Demo overlay: staff terminal gains a DEMO page (guided 90s
+  path, every step playable today + tooling table per brief),
+  hidden during ordinary gameplay; README mirrors the script +
+  the documented route (5 sign taps + MABEL).
+- Fresh-load verification: headless browsers still SIGABRT, so
+  verified by boot-path trace (boot → Milo #2 → recognition →
+  opener → quiz → card pulse) + panel-fit + overlay geometry
+  math, not by playing. Operator/judge live play still pending.
+- Verification: auditor 0 findings; 90/90; tsc clean; build green.
+- Spend $0.00.

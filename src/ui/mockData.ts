@@ -51,6 +51,8 @@ export interface MockRosterEntry {
   complaint: string;
   /** Waiting-list line: new patient / sick visit / follow-up. */
   visitKind: string;
+  /** Returning-patient recognition (first greeting beat, visit #2+). */
+  welcomeBack: string;
 }
 
 /** Pure: whoever is NOT in the exam room, in queue order. */
@@ -139,6 +141,7 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
     status: 'VISIT 2 • here',
     complaint: 'sneezy, runny nose',
     visitKind: 'sick visit',
+    welcomeBack: 'Doctor! You came back!',
   },
   {
     id: 'mock-patient-mabel',
@@ -148,6 +151,7 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
     status: 'VISIT 4 • follow-up',
     complaint: 'wheezy breaths',
     visitKind: 'follow-up',
+    welcomeBack: 'Oh good — my doctor is here!',
   },
   {
     id: 'mock-patient-june',
@@ -157,6 +161,7 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
     status: 'waiting',
     complaint: 'first check-up',
     visitKind: 'new patient',
+    welcomeBack: 'Hello! I am new here!',
   },
   {
     id: 'mock-patient-theo',
@@ -166,6 +171,7 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
     status: 'napping',
     complaint: 'sleepy + warm',
     visitKind: 'sick visit',
+    welcomeBack: 'Mmm… oh! Doctor!',
   },
 ];
 

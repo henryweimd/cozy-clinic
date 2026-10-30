@@ -469,6 +469,8 @@ export class ClinicScene extends Phaser.Scene {
   private monitor!: Phaser.GameObjects.Container;
   private monitorBackdrop!: Phaser.GameObjects.Container;
   private monitorContent!: Phaser.GameObjects.Container;
+  /** Staff terminal page: live state, or the guided demo script. */
+  private monitorPage: 'staff' | 'demo' = 'staff';
   private assetBrowser!: AssetBrowser;
 
   // Toast.
@@ -557,6 +559,10 @@ export class ClinicScene extends Phaser.Scene {
     this.showView('visit', true);
     // The chart defaults OPEN on the patient's first appearance.
     this.chartDrawer.setOpen(true);
+    // Boot-only: the cards pulse on the first tick so the first
+    // action is obvious immediately (later arrivals keep the 6s
+    // grace showView grants).
+    this.lastCardTapMs = this.time.now - 6000;
   }
 
   update(_time: number, delta: number): void {
@@ -1424,12 +1430,24 @@ export class ClinicScene extends Phaser.Scene {
    * tab change cancels the handoff). Re-asking on return trips
    * re-orients the player mid-visit.
    */
-  private greetThenQuiz(): void {
+  private greetThenQuiz(returning: boolean): void {
     const token = this.roundToken;
-    this.time.delayedCall(2000, () => {
+    const askLive = (): void => {
       if (token !== this.roundToken) return;
       if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
       this.showQuestion(this.round);
+    };
+    this.time.delayedCall(2000, () => {
+      if (token !== this.roundToken) return;
+      if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
+      if (!returning) {
+        this.showQuestion(this.round);
+        return;
+      }
+      // Returning patients: recognition first, then the symptom
+      // opener, then the quiz (each beat token-guarded).
+      this.setConversation(speakerFor(this.activeName), this.openerText(), 'say');
+      this.time.delayedCall(2000, askLive);
     });
   }
 
@@ -2922,7 +2940,7 @@ export class ClinicScene extends Phaser.Scene {
       // The opener re-reads live once the cast lands.
       if (this.panelOpen) {
         this.setConversation(speakerFor(this.activeName), this.openerText(), 'say');
-        this.greetThenQuiz();
+        this.greetThenQuiz(false);
       }
     });
   }
@@ -2964,8 +2982,13 @@ export class ClinicScene extends Phaser.Scene {
         // A finished visit re-offers its ending (never dead cards).
         this.showResult(this.lastOutcome);
       } else {
-        this.setConversation(speakerFor(this.activeName), this.openerText(), 'say');
-        this.greetThenQuiz();
+        // Returning patients (visit #2+) recognize you first —
+        // the hook lands in the opening seconds, not minutes.
+        const entry = MOCK_ROSTER.find((e) => e.name === this.activeName);
+        const returning = this.visitNo() >= 2 && entry !== undefined;
+        const greet = returning && entry ? entry.welcomeBack : this.openerText();
+        this.setConversation(speakerFor(this.activeName), greet, 'say');
+        this.greetThenQuiz(returning);
       }
     }
     // Waiting rows rebuild every arrival (never stale faces).
@@ -3272,6 +3295,12 @@ export class ClinicScene extends Phaser.Scene {
   /** Rebuilt on every open — every value below is a LIVE read. */
   private buildMonitorContent(): void {
     this.monitorContent.removeAll(true);
+    // Demo overlay (hidden during ordinary gameplay): the guided
+    // 90-second path + the tooling table, per the brief.
+    if (this.monitorPage === 'demo') {
+      this.buildDemoContent();
+      return;
+    }
     const def = CONDITIONS[this.patientState.conditionId];
     const stage = def.stages[this.patientState.stageIndex];
     const title = this.add
@@ -3366,10 +3395,104 @@ export class ClinicScene extends Phaser.Scene {
       this.doUndo();
       this.buildMonitorContent();
     });
-    this.monitorContent.add([memKey, memValue, undoLine, undoZone, hint, assetsBtn, assetsZone]);
+    const demoBtn = this.add
+      .text(376, 648, '› DEMO', {
+        fontFamily: MONO_FONT,
+        fontStyle: 'bold',
+        fontSize: '14px',
+        color: '#e8c96a',
+      })
+      .setOrigin(1, 0);
+    const demoZone = this.add
+      .zone(340, 656, 80, 28)
+      .setInteractive({ useHandCursor: true });
+    demoZone.on('pointerdown', () => {
+      this.monitorPage = 'demo';
+      this.buildMonitorContent();
+    });
+    this.monitorContent.add([memKey, memValue, undoLine, undoZone, hint, assetsBtn, assetsZone, demoBtn, demoZone]);
+  }
+
+  /** Guided demo path + tooling table (judges' overlay). */
+  private buildDemoContent(): void {
+    const title = this.add
+      .text(64, 184, 'COZY CLINIC — DEMO SCRIPT', {
+        fontFamily: MONO_FONT,
+        fontStyle: 'bold',
+        fontSize: '17px',
+        color: '#e8c96a',
+      })
+      .setOrigin(0, 0);
+    this.monitorContent.add(title);
+    const line = (x: number, y: number, text: string, color: string, bold = false): void => {
+      this.monitorContent.add(
+        this.add
+          .text(x, y, text, {
+            fontFamily: MONO_FONT,
+            fontStyle: bold ? 'bold' : 'normal',
+            fontSize: '14px',
+            color,
+          })
+          .setOrigin(0, 0),
+      );
+    };
+    let y = 220;
+    line(64, y, 'GUIDED PATH (90s, all playable now):', '#9fe8b8', true);
+    y += 26;
+    // Every step below works on the deployed build today —
+    // nothing aspirational ships in this list.
+    const steps = [
+      '1 Meet Milo — visit #2, he remembers you',
+      '2 Answer 3 quiz rounds: exam/dx/treat',
+      '3 Next patient; reorder the Waiting queue',
+      '4 Leave a care note (2nd tab = doctor 2)',
+      '5 Learn topic (+2), Shop, Profile stats',
+      '6 Cheer a colleague from any care note',
+    ];
+    for (const step of steps) {
+      line(64, y, step, '#eaf5e9');
+      y += 24;
+    }
+    y += 8;
+    line(64, y, 'TOOLING (model → does → breaks):', '#9fe8b8', true);
+    y += 26;
+    const tools: [string, string][] = [
+      ['Spark 1.3 edge fns: pre-computed futures;', 'else fallback pack only'],
+      ['Muse Image (mcp): mascots + plates;', 'else placeholders'],
+      ['Muse Code: build + tests + art pipeline;', 'else no PROGRESS story'],
+    ];
+    for (const [a, b] of tools) {
+      line(64, y, a, '#eaf5e9');
+      line(84, y + 20, b, '#eaf5e9');
+      y += 46;
+    }
+    const hint = this.add
+      .text(64, 648, 'tap outside or × to close', {
+        fontFamily: MONO_FONT,
+        fontSize: '14px',
+        color: '#9fe8b8',
+      })
+      .setOrigin(0, 0);
+    const backBtn = this.add
+      .text(476, 648, '‹ BACK', {
+        fontFamily: MONO_FONT,
+        fontStyle: 'bold',
+        fontSize: '14px',
+        color: '#e8c96a',
+      })
+      .setOrigin(1, 0);
+    const backZone = this.add
+      .zone(440, 656, 80, 28)
+      .setInteractive({ useHandCursor: true });
+    backZone.on('pointerdown', () => {
+      this.monitorPage = 'staff';
+      this.buildMonitorContent();
+    });
+    this.monitorContent.add([hint, backBtn, backZone]);
   }
 
   private openMonitor(): void {
+    this.monitorPage = 'staff';
     this.buildMonitorContent();
     this.monitorBackdrop.setVisible(true);
     this.monitor.setVisible(true).setY(-750);

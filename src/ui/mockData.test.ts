@@ -12,6 +12,7 @@ describe('waitingNames', () => {
     for (const e of MOCK_ROSTER) {
       expect(e.complaint.length).toBeGreaterThan(0);
       expect(e.visitKind.length).toBeGreaterThan(0);
+      expect(e.welcomeBack.length).toBeGreaterThan(0);
     }
   });
 });
