@@ -101,8 +101,10 @@ export interface ConditionDef {
   /** Exam-round: the most revealing maneuver + its finding. */
   bestExam: string;
   bestFinding: string;
-  /** Diagnose-round: 3 options, one is `name` (position varies). */
-  dxOptions: string[];
+  /** Diagnose-round: 3 option ids, one is `id` (position varies). */
+  dxOptions: ConditionId[];
+  /** Exam-round quiz question per tier ({name}/{demo} filled in). */
+  examQuiz: { gentle: string; steady: string; expert: string };
 }
 
 /** Result of resolving one player decision. */

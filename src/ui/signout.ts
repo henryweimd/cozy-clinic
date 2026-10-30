@@ -50,8 +50,9 @@ export function signoutLines(input: SignoutInput, tier: ChromeTier): string[] {
   }
   if (tier === 'steady') {
     const visit = VISIT_CONTEXT_WORDING[input.visitKind].steady;
+    // No name anywhere in the chart — the nametag owns it.
     return [
-      `${visit} #${input.visitNo} · ${input.name}, ${input.ageYears}${input.sex}`,
+      `${visit} #${input.visitNo} · ${input.ageYears}${input.sex}`,
       `Here for "${c}"`,
       `History: ${input.condition} · Meds: ${medsStr}`,
       input.observation,

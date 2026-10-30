@@ -24,6 +24,8 @@ export interface Wallet {
 
 export const WALLET_START = 12;
 export const EARN_BEST = 1;
+/** First open of a Learning List topic (reading pays, once each). */
+export const EARN_LEARN_FIRST = 2;
 
 export function emptyWallet(start = WALLET_START): Wallet {
   return { balance: start, entries: [] };

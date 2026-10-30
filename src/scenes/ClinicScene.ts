@@ -9,16 +9,19 @@ import {
   MOCK_THREADS,
   PROTOTYPE_SEEDS,
   VISIT_CONTEXT_WORDING,
+  moveWaiting,
   quoteIfSpoken,
+  waitingNames,
 } from '../ui/mockData';
 import type { VisitContext } from '../ui/mockData';
 import { BackendTicker } from '../ui/ticker';
 import { EXAM_TOOLS, ToolTray } from '../ui/toolTrays';
 import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
-import { resultCopy, visitOutcome } from '../game/visit';
+import { examQuestion, resultCopy, roundQuestion, visitOutcome } from '../game/visit';
 import type { RoundScore, VisitOutcome } from '../game/visit';
-import { EXAM_OTHER_FINDING } from '../clinical/conditions';
+import { CONDITION_TIER_NAMES, EXAM_OTHER_FINDING } from '../clinical/conditions';
+import type { ConditionId } from '../clinical/types';
 import { LearnList } from '../ui/learnList';
 import { AssetBrowser } from '../ui/assetBrowser';
 import { ChartDrawer } from '../ui/chartDrawer';
@@ -35,6 +38,7 @@ import type { CastData } from '../data/patients';
 import { FALLBACK_PATIENTS } from '../data/fallbackPack';
 import {
   EARN_BEST,
+  EARN_LEARN_FIRST,
   deserializeWallet,
   earn,
   emptyWallet,
@@ -209,7 +213,7 @@ const GRADE_COLOR: Record<ChoiceGrade, number> = {
   DANGEROUS: ROSE,
 };
 
-type ViewName = 'waiting' | 'visit' | 'telemed' | 'portal' | 'learn';
+type ViewName = 'waiting' | 'visit' | 'telemed' | 'portal' | 'learn' | 'profile';
 type Speaker = 'MABEL' | 'JUNE' | 'MILO' | 'YOU';
 
 /**
@@ -242,6 +246,8 @@ interface UndoSnapshot {
 
 const WALLET_STORAGE_KEY = 'cozy-wallet-v1';
 const SHOP_STORAGE_KEY = 'cozy-shop-v1';
+const LEARN_FILED_KEY = 'cozy-learn-filed-v1';
+const LEARN_OPENED_KEY = 'cozy-learn-opened-v1';
 /**
  * SAY vs TELL (chrome-3): 'say' = direct speech in the speaker's
  * own voice (quoted + tagged); 'tell' = third-person narration
@@ -250,11 +256,12 @@ const SHOP_STORAGE_KEY = 'cozy-shop-v1';
 type LineKind = 'say' | 'tell';
 
 const TAB_X: Record<ViewName, number> = {
-  waiting: 90,
-  visit: 270,
-  learn: 450,
+  waiting: 68,
+  visit: 202,
+  learn: 338,
+  profile: 472,
   // Telemed + Portal tabs are parked (views kept dormant, code
-  // intact) — the bar is Waiting + Visit + Learn.
+  // intact) — the bar is Waiting + Visit + Learn + Profile.
   telemed: 337,
   portal: 472,
 };
@@ -279,6 +286,7 @@ const PLATE_SETTING: Record<ViewName, string> = {
   telemed: 'telemed',
   portal: 'portal',
   learn: 'exam',
+  profile: 'exam',
 };
 // One-line pin: pin any view to any plate slug (e.g. { visit:
 // 'exam-b' }); empty = parity rule below. Unpinned views keep
@@ -322,6 +330,7 @@ interface ThreadWidgets {
 export class ClinicScene extends Phaser.Scene {
   private roomBg!: Phaser.GameObjects.Image;
   private patient!: Phaser.GameObjects.Image;
+  private patientShadow!: Phaser.GameObjects.Ellipse;
   private patientBaseY = 0;
   /** Active playable patient (Milo leads the onboarding). */
   private activeName = 'Milo';
@@ -335,7 +344,7 @@ export class ClinicScene extends Phaser.Scene {
   private patientState!: PatientState;
   private lastNodeId = 'n0';
 
-  private wallSign!: Phaser.GameObjects.Container;
+  private devTrigger!: Phaser.GameObjects.Container;
   private nametag!: Phaser.GameObjects.Text;
 
   // Conversation panel (the retired bubble's new home, upper dock).
@@ -375,6 +384,10 @@ export class ClinicScene extends Phaser.Scene {
   private tray!: ToolTray;
   private chart!: LivingChart;
   private learnList!: LearnList;
+  /** Filed conditions (visit order — the list accumulates). */
+  private filedConds: { id: string; name: string }[] = [];
+  /** Opened resource ids (their +2 is spent). */
+  private openedRes = new Set<string>();
   private cast: CastData | null = null;
   private activePatientId: string | null = null;
   private currentNodeId: string | null = null;
@@ -383,7 +396,11 @@ export class ClinicScene extends Phaser.Scene {
   // Views + nav.
   private currentView: ViewName = 'visit';
   private waitingView!: Phaser.GameObjects.Container;
-  private minis!: Phaser.GameObjects.Container;
+  private profileView!: Phaser.GameObjects.Container;
+  private profileRows!: Phaser.GameObjects.Container;
+  private waitingRows!: Phaser.GameObjects.Container;
+  /** Queue order (names); the player reorders with the chevrons. */
+  private waitingOrder: string[] = MOCK_ROSTER.map((e) => e.name);
   private telemedView!: Phaser.GameObjects.Container;
   private portalView!: Phaser.GameObjects.Container;
   private threads: ThreadWidgets[] = [];
@@ -395,20 +412,22 @@ export class ClinicScene extends Phaser.Scene {
     telemed: [],
     portal: [],
     learn: [],
+    profile: [],
   };
   private tabIcons: Record<ViewName, Phaser.GameObjects.Graphics | null> = {
     waiting: null,
     visit: null,
     telemed: null,
     portal: null,
+    profile: null,
     learn: null,
   };
   private muteOn = true;
   private camOn = true;
 
   // Admin stack.
-  private titleTaps = 0;
-  private titleResetTimer?: Phaser.Time.TimerEvent;
+  private devTaps = 0;
+  private devResetTimer?: Phaser.Time.TimerEvent;
   private adminOpen = false;
   private pad!: Phaser.GameObjects.Container;
   private padDots!: Phaser.GameObjects.Graphics;
@@ -480,6 +499,7 @@ export class ClinicScene extends Phaser.Scene {
     this.drawWaitingView();
     this.drawTelemedChrome();
     this.drawPortalView();
+    this.drawProfileView();
     this.drawNavBar();
     this.drawTopBar();
     this.wireModules();
@@ -673,37 +693,16 @@ export class ClinicScene extends Phaser.Scene {
    * (waiting/visit/learn), hidden on telemed/portal.
    */
   private drawTitle(): void {
-    const hangers = this.add.graphics();
-    hangers.lineStyle(4, OUTLINE, 1);
-    hangers.lineBetween(-80, -64, -80, -28);
-    hangers.lineBetween(80, -64, 80, -28);
-    const plaque = this.add.graphics();
-    plaque.fillStyle(CARD_FILL, 1);
-    plaque.lineStyle(3, OUTLINE, 1);
-    plaque.fillRoundedRect(-160, -28, 320, 56, 16);
-    plaque.strokeRoundedRect(-160, -28, 320, 56, 16);
-    const cross = this.add.graphics();
-    cross.fillStyle(SAGE, 1);
-    cross.lineStyle(2, OUTLINE, 1);
-    cross.fillRoundedRect(-149, -9, 18, 18, 5);
-    cross.strokeRoundedRect(-149, -9, 18, 18, 5);
-    cross.fillStyle(0xfff9ef, 1);
-    cross.fillRect(-143, -5, 6, 10);
-    cross.fillRect(-145, -3, 10, 6);
-    const words = this.add
-      .text(8, -1, 'Cozy Clinic', {
-        fontFamily: FONT_FAMILY,
-        fontStyle: 'bold',
-        fontSize: '30px',
-        color: COCOA,
-      })
-      .setOrigin(0.5, 0.5);
-    // Secret admin trigger: the plaque itself. No visible hint.
+    // The Cozy Clinic sign is PAINTED into the plates now (art
+    // bible appendix) — no code-drawn plaque. This keeps only
+    // the secret admin trigger: an invisible zone sitting on the
+    // painted sign's screen band (y58–122), still 5 taps, still
+    // no visible hint.
     const trigger = this.add.zone(0, 0, 240, 64);
     trigger.setInteractive({ useHandCursor: false });
-    trigger.on('pointerdown', () => this.onTitleTap());
-    this.wallSign = this.add.container(270, 64, [hangers, plaque, cross, words, trigger]);
-    this.wallSign.setDepth(4);
+    trigger.on('pointerdown', () => this.onDevTrigger());
+    this.devTrigger = this.add.container(270, 90, [trigger]);
+    this.devTrigger.setDepth(4);
   }
 
   private drawPatient(): void {
@@ -714,7 +713,8 @@ export class ClinicScene extends Phaser.Scene {
     // with clear walking space to the bench (left) and the
     // plant/cabinet lane (right). Same 212px@(270,614) geometry
     // the reboot contact-sheet composite validated.
-    this.add.ellipse(270, 722, 150, 24, 0x8a5a3b, 0.18).setDepth(4);
+    this.patientShadow = this.add.ellipse(270, 722, 150, 24, 0x8a5a3b, 0.18);
+    this.patientShadow.setDepth(4);
 
     // Mabel opens on her steady face for the live state (sick at the
     // stage-2 asthma opener) — idle is one steady state, not the home.
@@ -774,7 +774,10 @@ export class ClinicScene extends Phaser.Scene {
     const spoken = kind === 'say' ? quoteIfSpoken(speaker, false, text) : text;
     this.panelBody.setText(spoken);
     this.truncateToHeight(this.panelBody, 110);
-    const showTag = kind === 'say';
+    // The patient's name lives ONLY on the bottom nametag — patient
+    // 'say' lines carry quotes, not a tag. YOU keeps its tag so the
+    // player always knows the hold-back voice is theirs.
+    const showTag = kind === 'say' && speaker === 'YOU';
     const bodyTop = showTag ? top + 48 : top + 16;
     const h = Math.min(220, Math.max(96, bodyTop - top + this.panelBody.height + 20));
     const bottom = top + h;
@@ -868,6 +871,34 @@ export class ClinicScene extends Phaser.Scene {
   private openerText(): string {
     const def = CONDITIONS[this.patientState.conditionId];
     return def.stages[this.patientState.stageIndex]?.says ?? 'Hello!';
+  }
+
+  /** Learning List persistence (filed topics + opened ids). */
+  private loadLearn(): void {
+    try {
+      const filed = window.localStorage.getItem(LEARN_FILED_KEY);
+      if (filed) {
+        const parsed = JSON.parse(filed) as { id: string; name: string }[];
+        if (Array.isArray(parsed)) this.filedConds = parsed.filter((c) => c?.id && c?.name);
+      }
+      const opened = window.localStorage.getItem(LEARN_OPENED_KEY);
+      if (opened) {
+        const parsed = JSON.parse(opened) as string[];
+        if (Array.isArray(parsed)) this.openedRes = new Set(parsed);
+      }
+    } catch {
+      this.filedConds = [];
+      this.openedRes = new Set();
+    }
+  }
+
+  private saveLearn(): void {
+    try {
+      window.localStorage.setItem(LEARN_FILED_KEY, JSON.stringify(this.filedConds));
+      window.localStorage.setItem(LEARN_OPENED_KEY, JSON.stringify([...this.openedRes]));
+    } catch {
+      /* private-mode play: the session list still accumulates */
+    }
   }
 
   /** Wallet persistence (local; coin_ledger replaces it later). */
@@ -1008,7 +1039,8 @@ export class ClinicScene extends Phaser.Scene {
       }));
     }
     if (this.round === 'diagnose') {
-      return def.dxOptions.map((opt) => ({ id: `dx:${opt}`, label: opt }));
+      const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+      return def.dxOptions.map((opt) => ({ id: `dx:${opt}`, label: CONDITION_TIER_NAMES[opt][tier] }));
     }
     return this.cardRowIds().map((actionId) => {
       const action = def.actions.find((a) => a.id === actionId);
@@ -1067,14 +1099,15 @@ export class ClinicScene extends Phaser.Scene {
    */
   private drawCorral(): void {
     const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
-    // The legend names the live round (examine/diagnose are
-    // tier-free teaching words; treat keeps the tier wording).
+    // The legend names the live round + its step (examine and
+    // diagnose are tier-free teaching words; treat keeps the
+    // tier wording).
     const wording =
       this.round === 'examine'
-        ? 'Examine…'
+        ? '1 · Examine…'
         : this.round === 'diagnose'
-          ? 'Diagnose…'
-          : CHOOSE_PROMPT_WORDING[tier];
+          ? '2 · Diagnose…'
+          : `3 · ${CHOOSE_PROMPT_WORDING[tier]}`;
     const label = this.add
       .text(0, 0, wording, {
         fontFamily: FONT_FAMILY,
@@ -1086,9 +1119,10 @@ export class ClinicScene extends Phaser.Scene {
     const strip = this.add.graphics();
     strip.fillStyle(CARD_FILL, 0.32);
     strip.fillRoundedRect(-label.width / 2 - 8, -8, label.width + 16, 16, 8);
-    // Left-aligned: label left edge at x44, clear of the corner arc.
-    this.legend = this.add.container(44 + label.width / 2, 764, [strip, label]);
-    const gapX1 = 44 + label.width + 8 + 2;
+    // Left-aligned: label left edge at x42, clear of the corner
+    // arc, ending left of the middle card at every wording.
+    this.legend = this.add.container(42 + label.width / 2, 764, [strip, label]);
+    const gapX1 = 42 + label.width + 8 + 2;
     const frame = this.add.graphics();
     frame.lineStyle(3, OUTLINE, 1);
     frame.beginPath();
@@ -1226,13 +1260,51 @@ export class ClinicScene extends Phaser.Scene {
     };
   }
 
-  /** Rebuilds the row for a new round (fresh cards + legend). */
+  /** Rebuilds the row for a new round (fresh cards + legend + quiz). */
   private advanceRound(next: VisitRound): void {
     this.roundToken += 1;
     this.round = next;
     this.cardRow.removeAll(true);
     this.buildCards();
     this.drawCorral();
+    this.showQuestion(next);
+  }
+
+  /** Demo tag for expert wording (8yF-style), live or fallback. */
+  private demoTag(): string {
+    const row = this.cast ? patientByName(this.cast, this.activeName) : null;
+    const fb = row ?? FALLBACK_PATIENTS.find((p) => p.name === this.activeName);
+    return `${fb?.age_years ?? 8}y${fb?.sex ?? 'F'}`;
+  }
+
+  /**
+   * Round quiz question in the panel (untagged narration — the
+   * game asking YOU). Examine's is per-condition; diagnose/treat
+   * are tier templates. This is the explicit Choose cue.
+   */
+  private showQuestion(round: VisitRound): void {
+    const def = CONDITIONS[this.patientState.conditionId];
+    const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+    const q =
+      round === 'examine'
+        ? examQuestion(def.examQuiz[tier], this.activeName, this.demoTag())
+        : roundQuestion(round, tier, this.activeName);
+    this.setConversation(speakerFor(this.activeName), q, 'tell');
+  }
+
+  /**
+   * Greeting beat: the opener first, then the live round's quiz
+   * slides in 2s later (token-guarded — a fast tap, switch, or
+   * tab change cancels the handoff). Re-asking on return trips
+   * re-orients the player mid-visit.
+   */
+  private greetThenQuiz(): void {
+    const token = this.roundToken;
+    this.time.delayedCall(2000, () => {
+      if (token !== this.roundToken) return;
+      if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
+      this.showQuestion(this.round);
+    });
   }
 
   /**
@@ -1261,16 +1333,20 @@ export class ClinicScene extends Phaser.Scene {
     }
     this.refreshChart();
     this.refreshHud();
-    // A beat to read the stamp, then the finding + next round.
+    // The finding reads, then the next quiz lands (both beats
+    // token-guarded so switches/undos cancel the chain).
     const token = this.roundToken;
-    this.time.delayedCall(650, () => {
+    this.time.delayedCall(900, () => {
       if (token !== this.roundToken) return;
       this.setConversation(
         speakerFor(this.activeName),
         best ? def.bestFinding : EXAM_OTHER_FINDING,
         'tell',
       );
-      this.advanceRound('diagnose');
+      this.time.delayedCall(1800, () => {
+        if (token !== this.roundToken) return;
+        this.advanceRound('diagnose');
+      });
     });
   }
 
@@ -1284,8 +1360,10 @@ export class ClinicScene extends Phaser.Scene {
     if (!card) return;
     const def = CONDITIONS[this.patientState.conditionId];
     this.undoStack = pushMove(this.undoStack, this.snapPreMove());
-    const pick = card.actionId.replace('dx:', '');
-    const correct = pick === def.name;
+    const pick = card.actionId.replace('dx:', '') as ConditionId;
+    const correct = pick === def.id;
+    const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+    const pickLabel = CONDITION_TIER_NAMES[pick]?.[tier] ?? pick;
     const grade: ChoiceGrade = correct ? 'BEST' : 'WRONG';
     card.revealed = grade;
     this.drawSpine(card, grade);
@@ -1301,16 +1379,21 @@ export class ClinicScene extends Phaser.Scene {
     this.refreshChart();
     this.refreshHud();
     const token = this.roundToken;
-    this.time.delayedCall(650, () => {
+    // 1.5s to read the stamp + confirmation, then the next quiz.
+    this.time.delayedCall(1500, () => {
       if (token !== this.roundToken) return;
       this.setConversation(
         speakerFor(this.activeName),
         correct
-          ? `${def.name} it is. Now choose the treatment.`
-          : `${pick} doesn't fit — but the visit goes on. Treat what's in front of you.`,
+          ? `${pickLabel} it is. Now choose the treatment.`
+          : `${pickLabel} doesn't fit — but the visit goes on. Treat what's in front of you.`,
         'tell',
       );
-      this.advanceRound('treat');
+      // The confirmation reads briefly, then the treat quiz lands.
+      this.time.delayedCall(1600, () => {
+        if (token !== this.roundToken) return;
+        this.advanceRound('treat');
+      });
     });
   }
 
@@ -1731,7 +1814,7 @@ export class ClinicScene extends Phaser.Scene {
       },
       tier,
     );
-    this.chartDrawer.setContent({ name: this.activeName, lines });
+    this.chartDrawer.setContent({ lines });
   }
 
   private refreshHud(): void {
@@ -1740,13 +1823,19 @@ export class ClinicScene extends Phaser.Scene {
     this.contextText.setText(VISIT_CONTEXT_WORDING[this.visitContext()][tier]);
   }
 
-  // -- VIEW 2: waiting room (minis on the plate, no list) --
+  // -- VIEW 2: waiting room (a list, not a room) --
 
   private drawWaitingView(): void {
-    // No sheet: the waiting plate IS the room. Title floats on
-    // the calm wall band; minis stand on the floor below.
+    // A washed sheet over the plate: the furniture recedes and
+    // the queue reads as a plain list on a nice backdrop. Same
+    // sheet geometry as the Learning List.
+    const sheet = this.add.graphics();
+    sheet.fillStyle(CREAM, CHROME_ALPHA);
+    sheet.lineStyle(3, OUTLINE, 1);
+    sheet.fillRoundedRect(24, 136, 492, 740, 24);
+    sheet.strokeRoundedRect(24, 136, 492, 740, 24);
     const title = this.add
-      .text(40, 160, 'Waiting Room', {
+      .text(48, 172, 'Waiting Room', {
         fontFamily: FONT_FAMILY,
         fontStyle: 'bold',
         fontSize: '26px',
@@ -1754,88 +1843,110 @@ export class ClinicScene extends Phaser.Scene {
       })
       .setOrigin(0, 0.5);
     const hint = this.add
-      .text(40, 194, 'Tap a friend to visit', {
+      .text(48, 202, 'Tap a friend to visit · arrows reorder', {
         fontFamily: FONT_FAMILY,
-        fontSize: '16px',
+        fontSize: '15px',
         color: SECONDARY,
       })
       .setOrigin(0, 0.5);
-    this.minis = this.add.container(0, 0, []);
-    this.waitingView = this.add.container(0, 0, [title, hint, this.minis]);
+    this.waitingRows = this.add.container(0, 0, []);
+    this.waitingView = this.add.container(0, 0, [sheet, title, hint, this.waitingRows]);
     this.waitingView.setDepth(10).setVisible(false).setAlpha(0);
   }
 
   /**
-   * Rebuilds the waiting minis for whoever is NOT in the visit
-   * (3 slots, feet y700). Sprite owners stand as 76px minis;
-   * Theo naps as a code-drawn bundle (no sprite yet). Called on
-   * every arrival in Waiting so a switch never shows stale faces.
+   * Rebuilds the waiting LIST for whoever is NOT in the exam
+   * room, in queue order: mini + name + complaint + visit kind
+   * per row, NEXT on the head, chevrons to reorder. Called on
+   * every arrival in Waiting so a switch never shows stale rows.
+   * Nothing from the exam room leaks in: no patient sprite (see
+   * showView), no cards, no tray, no drawer.
    */
-  private refreshWaitingMinis(): void {
-    this.tweens.killTweensOf(this.minis.getAll());
-    this.minis.removeAll(true);
-    const waiting = MOCK_ROSTER.filter((e) => e.name !== this.activeName);
-    const slots = [120, 270, 420];
-    waiting.forEach((entry, i) => {
-      const x = slots[i] ?? 270;
-      const prefix = SPRITE_PREFIX[entry.name];
+  private refreshWaitingRows(): void {
+    this.waitingRows.removeAll(true);
+    const names = waitingNames(this.waitingOrder, this.activeName);
+    names.forEach((rowName, i) => {
+      const entry = MOCK_ROSTER.find((e) => e.name === rowName);
+      if (!entry) return;
+      const y = 232 + i * 116;
       const parts: Phaser.GameObjects.GameObject[] = [];
-      const shadow = this.add.graphics();
-      shadow.fillStyle(0x8a5a3b, 0.14);
-      shadow.fillEllipse(0, 42, 64, 12);
-      parts.push(shadow);
+      // Row card (the head row carries a sage tint = NEXT).
+      const bg = this.add.graphics();
+      bg.fillStyle(i === 0 ? SAGE : CARD_FILL, i === 0 ? 0.35 : 1);
+      bg.lineStyle(2, OUTLINE, 1);
+      bg.fillRoundedRect(48, y, 444, 104, 16);
+      bg.strokeRoundedRect(48, y, 444, 104, 16);
+      parts.push(bg);
+      const prefix = SPRITE_PREFIX[entry.name];
       if (prefix !== undefined) {
-        const mini = this.add.image(0, 0, `${prefix}-idle`);
-        mini.setDisplaySize(76, 76);
-        parts.push(mini);
+        const face = this.add.image(108, y + 52, `${prefix}-idle`);
+        face.setDisplaySize(64, 64);
+        parts.push(face);
       } else {
-        // Napping bundle: blanket mound + head bump + drifting Z.
-        const mound = this.add.graphics();
-        mound.fillStyle(SKY, 1);
-        mound.lineStyle(3, OUTLINE, 1);
-        mound.fillEllipse(0, 12, 84, 52);
-        mound.strokeEllipse(0, 12, 84, 52);
-        mound.fillStyle(CARD_FILL, 1);
-        mound.fillCircle(-24, -8, 14);
-        mound.lineStyle(2, OUTLINE, 1);
-        mound.strokeCircle(-24, -8, 14);
-        mound.lineStyle(2, OUTLINE, 1);
-        mound.lineBetween(-29, -9, -19, -9);
-        const zed = this.add
-          .text(28, -34, 'z', {
+        // Elegant placeholder: soft concentric rings + monogram
+        // (never a bare oval) until the sprite ships.
+        const rings = this.add.graphics();
+        rings.fillStyle(SAGE, 0.3);
+        rings.fillCircle(108, y + 52, 32);
+        rings.fillStyle(CARD_FILL, 1);
+        rings.fillCircle(108, y + 52, 25);
+        rings.lineStyle(2, OUTLINE, 1);
+        rings.strokeCircle(108, y + 52, 25);
+        const initial = this.add
+          .text(108, y + 52, entry.name.charAt(0), {
             fontFamily: FONT_FAMILY,
             fontStyle: 'bold',
-            fontSize: '18px',
-            color: SECONDARY,
+            fontSize: '26px',
+            color: COCOA,
           })
           .setOrigin(0.5, 0.5);
-        parts.push(mound, zed);
+        parts.push(rings, initial);
       }
-      const name = this.add
-        .text(0, 58, entry.name, {
+      const who = this.add
+        .text(152, y + 22, entry.name, {
           fontFamily: FONT_FAMILY,
           fontStyle: 'bold',
-          fontSize: '16px',
+          fontSize: '19px',
           color: COCOA,
         })
-        .setOrigin(0.5, 0.5);
-      const status = this.add
-        .text(0, 80, entry.status, {
+        .setOrigin(0, 0);
+      const what = this.add
+        .text(152, y + 50, `${entry.complaint} · ${entry.visitKind}`, {
           fontFamily: FONT_FAMILY,
-          fontSize: '13px',
+          fontSize: '15px',
           color: SECONDARY,
         })
-        .setOrigin(0.5, 0.5);
-      parts.push(name, status);
-      const mini = this.add.container(x, 658, parts);
-      const zone = this.add
-        .zone(0, 10, 130, 180)
+        .setOrigin(0, 0);
+      parts.push(who, what);
+      if (i === 0) {
+        const tag = this.add.graphics();
+        tag.fillStyle(SAGE, 1);
+        tag.fillRoundedRect(352, y + 16, 58, 26, 13);
+        const tagText = this.add
+          .text(381, y + 29, 'NEXT', {
+            fontFamily: FONT_FAMILY,
+            fontStyle: 'bold',
+            fontSize: '13px',
+            color: '#ffffff',
+          })
+          .setOrigin(0.5, 0.5);
+        parts.push(tag, tagText);
+      }
+      // Reorder chevrons (right column; the row tap owns the rest).
+      const chev = this.add.graphics();
+      chev.fillStyle(OUTLINE, 0.65);
+      chev.fillTriangle(444, y + 24, 476, y + 24, 460, y + 8);
+      chev.fillTriangle(444, y + 80, 476, y + 80, 460, y + 96);
+      parts.push(chev);
+      const row = this.add.container(0, 0, parts);
+      const tapZone = this.add
+        .zone(239, y + 52, 382, 104)
         .setInteractive({ useHandCursor: true });
-      zone.on('pointerdown', () => {
+      tapZone.on('pointerdown', () => {
         this.tweens.add({
-          targets: mini,
-          scaleX: 0.96,
-          scaleY: 0.96,
+          targets: row,
+          scaleX: 0.98,
+          scaleY: 0.98,
           duration: 90,
           yoyo: true,
           ease: 'Sine.easeInOut',
@@ -1843,20 +1954,26 @@ export class ClinicScene extends Phaser.Scene {
         if (prefix !== undefined) {
           this.switchPatient(entry.name);
         } else {
-          this.showToast(`${entry.name} is napping`);
+          this.showToast(`${entry.name} is still napping`);
         }
       });
-      mini.add(zone);
-      // Gentle per-mini bob (phased so they don't march together).
-      this.tweens.add({
-        targets: mini,
-        y: 658 + 3,
-        duration: 1600 + i * 250,
-        yoyo: true,
-        repeat: -1,
-        ease: 'Sine.easeInOut',
+      row.add(tapZone);
+      const upZone = this.add
+        .zone(460, y + 26, 52, 48)
+        .setInteractive({ useHandCursor: true });
+      upZone.on('pointerdown', () => {
+        this.waitingOrder = moveWaiting(this.waitingOrder, rowName, -1);
+        this.refreshWaitingRows();
       });
-      this.minis.add(mini);
+      const downZone = this.add
+        .zone(460, y + 78, 52, 48)
+        .setInteractive({ useHandCursor: true });
+      downZone.on('pointerdown', () => {
+        this.waitingOrder = moveWaiting(this.waitingOrder, rowName, 1);
+        this.refreshWaitingRows();
+      });
+      row.add([upZone, downZone]);
+      this.waitingRows.add(row);
     });
   }
 
@@ -1877,17 +1994,17 @@ export class ClinicScene extends Phaser.Scene {
         color: '#ffffff',
       })
       .setOrigin(0.5, 0.5);
-    const noraBg = this.add.graphics();
-    noraBg.fillStyle(SKY, 1);
-    noraBg.fillRoundedRect(344, 380, 168, 36, 18);
-    const nora = this.add
+    const peerBg = this.add.graphics();
+    peerBg.fillStyle(SKY, 1);
+    peerBg.fillRoundedRect(344, 380, 168, 36, 18);
+    const peer = this.add
       .text(428, 398, 'Clinic › observing', {
         fontFamily: FONT_FAMILY,
         fontSize: '14px',
         color: COCOA,
       })
       .setOrigin(0.5, 0.5);
-    this.telemedView = this.add.container(0, 0, [frame, liveBg, live, noraBg, nora]);
+    this.telemedView = this.add.container(0, 0, [frame, liveBg, live, peerBg, peer]);
     this.telemedView.setDepth(11).setVisible(false).setAlpha(0);
 
     const mkCallButton = (
@@ -2100,6 +2217,72 @@ export class ClinicScene extends Phaser.Scene {
     });
   }
 
+  // -- VIEW 5: player profile (placeholder; the players table waits) --
+
+  private drawProfileView(): void {
+    // Same washed-sheet geometry as Waiting/Learn. The stats
+    // are LIVE (wallet + Learn progress); identity + login
+    // ship after the freeze on the `players` table.
+    const sheet = this.add.graphics();
+    sheet.fillStyle(CREAM, CHROME_ALPHA);
+    sheet.lineStyle(3, OUTLINE, 1);
+    sheet.fillRoundedRect(24, 136, 492, 740, 24);
+    sheet.strokeRoundedRect(24, 136, 492, 740, 24);
+    const title = this.add
+      .text(48, 172, 'Profile', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '26px',
+        color: COCOA,
+      })
+      .setOrigin(0, 0.5);
+    const hint = this.add
+      .text(48, 202, 'Doctor name + login ship after the freeze', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '15px',
+        color: SECONDARY,
+      })
+      .setOrigin(0, 0.5);
+    this.profileRows = this.add.container(0, 0, []);
+    this.profileView = this.add.container(0, 0, [sheet, title, hint, this.profileRows]);
+    this.profileView.setDepth(10).setVisible(false).setAlpha(0);
+  }
+
+  /** Rebuilds the live stat rows on every Profile arrival. */
+  private refreshProfileRows(): void {
+    this.profileRows.removeAll(true);
+    const stats: [string, string][] = [
+      ['Care Coins', `${this.wallet.balance}`],
+      ['Topics filed', `${this.filedConds.length}`],
+      ['Topics read', `${this.openedRes.size}`],
+      ['Doctor name', 'coming soon'],
+    ];
+    stats.forEach(([label, value], i) => {
+      const y = 232 + i * 84;
+      const bg = this.add.graphics();
+      bg.fillStyle(CARD_FILL, 1);
+      bg.lineStyle(2, OUTLINE, 1);
+      bg.fillRoundedRect(48, y, 444, 72, 16);
+      bg.strokeRoundedRect(48, y, 444, 72, 16);
+      const left = this.add
+        .text(68, y + 36, label, {
+          fontFamily: FONT_FAMILY,
+          fontSize: '17px',
+          color: SECONDARY,
+        })
+        .setOrigin(0, 0.5);
+      const right = this.add
+        .text(472, y + 36, value, {
+          fontFamily: FONT_FAMILY,
+          fontStyle: 'bold',
+          fontSize: '19px',
+          color: COCOA,
+        })
+        .setOrigin(1, 0.5);
+      this.profileRows.add([bg, left, right]);
+    });
+  }
+
   // -- nav bar (persistent, all views) --
 
   private drawNavBar(): void {
@@ -2122,6 +2305,7 @@ export class ClinicScene extends Phaser.Scene {
       { view: 'waiting', label: 'Waiting' },
       { view: 'visit', label: 'Visit' },
       { view: 'learn', label: 'Learn' },
+      { view: 'profile', label: 'Profile' },
     ];
     for (const tab of tabs) {
       const cx = TAB_X[tab.view];
@@ -2137,8 +2321,9 @@ export class ClinicScene extends Phaser.Scene {
         })
         .setOrigin(0.5, 0.5);
       this.tabTexts[tab.view] = [label];
+      // 132 wide: 4 tabs at 138 spacing, 6px gutters, no overlap.
       const zone = this.add
-        .zone(cx, 924, 180, 72)
+        .zone(cx, 924, 132, 72)
         .setInteractive({ useHandCursor: true });
       zone.on('pointerdown', () => this.showView(tab.view));
       nav.add([icon, label, zone]);
@@ -2204,6 +2389,12 @@ export class ClinicScene extends Phaser.Scene {
       g.fillRoundedRect(cx - 10, cy - 12, 20, 24, 3);
       g.strokeRoundedRect(cx - 10, cy - 12, 20, 24, 3);
       g.lineBetween(cx - 5, cy - 12, cx - 5, cy + 12);
+    } else if (view === 'profile') {
+      g.fillStyle(CARD_FILL, 1);
+      g.lineStyle(2, OUTLINE, 1);
+      g.fillCircle(cx, cy - 5, 7);
+      g.strokeCircle(cx, cy - 5, 7);
+      g.fillTriangle(cx - 13, cy + 12, cx + 13, cy + 12, cx, cy - 2);
     } else {
       g.lineStyle(2, OUTLINE, 1);
       g.strokeRoundedRect(cx - 15, cy - 10, 30, 20, 3);
@@ -2272,8 +2463,21 @@ export class ClinicScene extends Phaser.Scene {
     // Learning List: full-screen behind the Learn tab (the old
     // strip book button is gone — the tab owns learning now).
     this.learnList = new LearnList(this);
+    this.loadLearn();
     this.learnList.onOpen = (r) => {
-      this.showToast(`${r.title} opens in the reader soon`);
+      window.open(r.url, '_blank', 'noopener');
+      if (this.openedRes.has(r.id)) {
+        this.showToast('Happy re-reading!');
+        return;
+      }
+      this.openedRes.add(r.id);
+      this.saveLearn();
+      this.wallet = earn(this.wallet, EARN_LEARN_FIRST, 'earn:learn-first');
+      this.saveWallet();
+      this.refreshHud();
+      this.showToast(`Good reading! +${EARN_LEARN_FIRST} Care Coins`);
+      // Re-mark the row read (same sheet, same geometry).
+      this.learnList.show(this.filedConds, this.openedRes);
     };
     this.learnList.onClose = () => {
       if (this.currentView === 'learn') this.showView('visit');
@@ -2318,6 +2522,7 @@ export class ClinicScene extends Phaser.Scene {
       // The opener re-reads live once the cast lands.
       if (this.panelOpen) {
         this.setConversation(speakerFor(this.activeName), this.openerText(), 'say');
+        this.greetThenQuiz();
       }
     });
   }
@@ -2348,15 +2553,20 @@ export class ClinicScene extends Phaser.Scene {
     this.fadeSwap(this.waitingView, next === 'waiting', instant);
     this.fadeSwap(this.portalView, next === 'portal', instant);
     this.fadeSwap(this.telemedView, next === 'telemed', instant);
+    this.fadeSwap(this.profileView, next === 'profile', instant);
     this.fadeSwap(this.cardRow, next === 'visit' || next === 'telemed', instant);
     this.fadeSwap(this.hud, next === 'visit', instant);
     // The patient greets you on arrival — the opener is already
-    // showing, no tap-teaching needed. (Boot lands here too.)
+    // showing, no tap-teaching needed — then the live quiz
+    // follows. (Boot lands here too.)
     if (next === 'visit' || next === 'telemed') {
       this.setConversation(speakerFor(this.activeName), this.openerText(), 'say');
+      this.greetThenQuiz();
     }
-    // Waiting minis rebuild every arrival (never stale faces).
-    if (next === 'waiting') this.refreshWaitingMinis();
+    // Waiting rows rebuild every arrival (never stale faces).
+    if (next === 'waiting') this.refreshWaitingRows();
+    // Profile stats rebuild every arrival (never stale coins).
+    if (next === 'profile') this.refreshProfileRows();
     // G4 module visibility: ticker everywhere except Telemed (call
     // buttons own that bottom band); tray + chart drawer Visit-only
     // (no hands through a video call).
@@ -2368,14 +2578,18 @@ export class ClinicScene extends Phaser.Scene {
     this.chart.hide();
     this.shop.hide();
     if (next === 'learn') {
-      const def = CONDITIONS[this.patientState.conditionId];
-      this.learnList.show(def.id, def.name);
+      this.learnList.show(this.filedConds, this.openedRes);
       this.clearLearnBadge();
     } else {
       this.learnList.hide();
     }
     this.nametag.setVisible(next === 'visit');
-    this.wallSign.setVisible(next === 'waiting' || next === 'visit' || next === 'learn');
+    // The exam patient never leaks into Waiting/Learn/Profile.
+    this.patient.setVisible(next === 'visit' || next === 'telemed');
+    this.patientShadow.setVisible(next === 'visit' || next === 'telemed');
+    this.devTrigger.setVisible(
+      next === 'waiting' || next === 'visit' || next === 'learn' || next === 'profile',
+    );
     this.syncPanelVisibility();
     const cardY = next === 'telemed' ? -60 : 0;
     if (instant) {
@@ -2439,24 +2653,15 @@ export class ClinicScene extends Phaser.Scene {
 
   // -- DEV ADMIN: secret trigger + code pad + wall monitor --
 
-  private onTitleTap(): void {
+  private onDevTrigger(): void {
     if (this.adminOpen) return;
-    this.titleTaps += 1;
-    this.tweens.killTweensOf(this.wallSign);
-    this.wallSign.setScale(1);
-    this.tweens.add({
-      targets: this.wallSign,
-      scaleX: 0.98,
-      scaleY: 0.98,
-      duration: 60,
-      yoyo: true,
+    this.devTaps += 1;
+    this.devResetTimer?.remove();
+    this.devResetTimer = this.time.delayedCall(3000, () => {
+      this.devTaps = 0;
     });
-    this.titleResetTimer?.remove();
-    this.titleResetTimer = this.time.delayedCall(3000, () => {
-      this.titleTaps = 0;
-    });
-    if (this.titleTaps >= 5) {
-      this.titleTaps = 0;
+    if (this.devTaps >= 5) {
+      this.devTaps = 0;
       this.openPad();
     }
   }
@@ -2913,6 +3118,11 @@ export class ClinicScene extends Phaser.Scene {
   private showResult(outcome: VisitOutcome): void {
     this.resultOutcome = outcome;
     const def = CONDITIONS[this.patientState.conditionId];
+    // File the visit's topics (deduped — the list accumulates).
+    if (!this.filedConds.some((c) => c.id === def.id)) {
+      this.filedConds.push({ id: def.id, name: def.name });
+      this.saveLearn();
+    }
     const copy = resultCopy({
       outcome,
       visitNo: this.visitNo(),

@@ -26,7 +26,7 @@ describe('signoutLines', () => {
 
   it('expands abbreviations at steady tier', () => {
     expect(signoutLines(MABEL, 'steady')).toEqual([
-      'Sick Visit #4 · Mabel, 8F',
+      'Sick Visit #4 · 8F',
       'Here for "wheezy"',
       'History: Asthma · Meds: none',
       MABEL.observation,
@@ -52,6 +52,14 @@ describe('signoutLines', () => {
     const medded = { ...MABEL, meds: ['daily controller'] };
     expect(signoutLines(medded, 'expert')[2]).toBe('PMH Asthma · Meds: daily controller');
     expect(signoutLines(medded, 'gentle')[2]).toBe('Has asthma. Takes daily controller.');
+  });
+
+  it('never repeats the patient name (the nametag owns it)', () => {
+    for (const tier of ['gentle', 'steady', 'expert'] as const) {
+      for (const line of signoutLines(MABEL, tier)) {
+        expect(line).not.toContain('Mabel');
+      }
+    }
   });
 
   it('fits the drawer budget', () => {

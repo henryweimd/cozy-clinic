@@ -47,6 +47,34 @@ export interface MockRosterEntry {
   /** Future Supabase column: fur_shade. */
   furShade: string;
   status: string;
+  /** Waiting-list line: chief complaint in lay words. */
+  complaint: string;
+  /** Waiting-list line: new patient / sick visit / follow-up. */
+  visitKind: string;
+}
+
+/** Pure: whoever is NOT in the exam room, in queue order. */
+export function waitingNames(order: readonly string[], activeName: string): string[] {
+  return order.filter((n) => n !== activeName);
+}
+
+/**
+ * Pure: swap one step toward the front (-1) or back (+1).
+ * Out-of-range moves return the order unchanged (new array).
+ */
+export function moveWaiting(
+  order: readonly string[],
+  name: string,
+  dir: -1 | 1,
+): string[] {
+  const next = [...order];
+  const i = next.indexOf(name);
+  const j = i + dir;
+  if (i < 0 || j < 0 || j >= next.length) return next;
+  const a = next[i] as string;
+  next[i] = next[j] as string;
+  next[j] = a;
+  return next;
 }
 
 /** Future `portal_threads` + `portal_messages` row shapes (mock seed). */
@@ -109,6 +137,8 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
     persona: 'curious kid',
     furShade: '#CDB9A8',
     status: 'VISIT 2 • here',
+    complaint: 'sneezy, runny nose',
+    visitKind: 'sick visit',
   },
   {
     id: 'mock-patient-mabel',
@@ -116,6 +146,8 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
     persona: 'our first patient',
     furShade: '#A2766B',
     status: 'VISIT 4 • follow-up',
+    complaint: 'wheezy breaths',
+    visitKind: 'follow-up',
   },
   {
     id: 'mock-patient-june',
@@ -123,6 +155,8 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
     persona: 'gentle first-timer',
     furShade: '#C4A484',
     status: 'waiting',
+    complaint: 'first check-up',
+    visitKind: 'new patient',
   },
   {
     id: 'mock-patient-theo',
@@ -130,6 +164,8 @@ export const MOCK_ROSTER: readonly MockRosterEntry[] = [
     persona: 'sleepy toddler',
     furShade: '#8F7364',
     status: 'napping',
+    complaint: 'sleepy + warm',
+    visitKind: 'sick visit',
   },
 ];
 

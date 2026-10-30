@@ -1498,3 +1498,63 @@ clearance — then a polish fix loop for real findings.
   row; patient switch clears history. +1 snapshot-shape test
   (durable collateral). 49/49, build green, auditor 0. $0.00.
   Player undo UI queued with the submenu phase.
+
+## Active chunk: maneuver library (continuous run)
+
+- MANEUVER-LIB OWNERSHIP: this phase owns ONLY
+  `src/data/maneuvers.ts` + `src/data/maneuvers.test.ts`,
+  `public/assets/exam/mv-*.png`, `art/manifest.json` (8 appends),
+  `art/contact-sheets/*maneuver*`, plus PROGRESS.md and
+  CHECKPOINT.md. Exam-loop UI wiring is queued, not here.
+  Cap $0.08.
+
+## Maneuver library PAUSED (operator UI redirect 2026-10-29)
+
+- State: data + tests written (uncommitted), 7/8 illustrations
+  generated (wheeze/breath/throat/gland/mouth/pulse/heart);
+  mv-skin-pinch moderation-rejected ("pinching skin" wording) —
+  retry with "fingertips resting on hand" framing. No exports,
+  no manifest, no commit yet. Resume: reword + generate 1,
+  validate 8, manifest, commit.
+
+## Active chunk: unclutter UI (chips→drawer, corral, 2-tab nav)
+
+- UNCLUTTER OWNERSHIP: this phase owns ONLY `src/ui/chartDrawer.ts`
+  (new), `src/scenes/ClinicScene.ts` (chips removal, corral+
+  legend, 2-tab nav, drawer wiring), `docs/UI_PROTOTYPE.md`
+  (chips/nav/corral spec), plus PROGRESS.md and CHECKPOINT.md.
+
+## Playtest round 2 (2026-10-29, shipped)
+
+- ROUND-2 OWNERSHIP: this phase owned `src/scenes/ClinicScene.ts`
+  (quiz chain, waiting list, profile tab, dev trigger, patient
+  gating, legend/tab geometry), `src/clinical/types.ts` +
+  `conditions.ts` + `engine.test.ts` (examQuiz, tier Dx ids),
+  `src/game/visit.ts` + `visit.test.ts` (round questions),
+  `src/game/economy.ts` (EARN_LEARN_FIRST), `src/ui/learnList.ts`
+  + `learnList.test.ts` (new), `src/ui/mockData.ts` +
+  `mockData.test.ts` (new), `src/ui/signout.ts` +
+  `signout.test.ts` + `chartDrawer.ts` (name dedup), 4 room
+  plates (painted signs), `art/manifest.json` (sign ledger),
+  `art/contact-sheets/plates-sign-*`, README/PROGRESS/CHECKPOINT.
+- All 6 operator notes landed: (1) name dedup — nametag only,
+  say tags + drawer name gone; (2) quiz rounds — per-round
+  questions, tier Dx names, numbered legend, 2-beat result
+  pacing; (3) painted COZY CLINIC wall signs in exam-a/b +
+  waiting-a/b (code plaque removed, 5-tap dev trigger kept
+  invisible on the sign band); (4) Learn accumulates filed
+  topics across visits, opens MedlinePlus links, +2 first-read
+  coins, persisted; (5) waiting room rebuilt as a plain list
+  (mini + complaint + visit kind, NEXT tag, chevron reorder,
+  ring+monogram placeholder for Theo, exam patient/cards/tray
+  no longer leak in); (6) Profile tab placeholder with live
+  stats + `players` table migration (uuid pk, display_name,
+  tier, coins, topics_read, RLS + anon SELECT like the rest).
+- Verification: auditor 0 findings (round-2 geometry incl.
+  legend/tab fixes); `npm test` 78/78; tsc clean; build green.
+- Image spend: $0.04 (4 sign edits); ledger ~$0.51 cumulative.
+  At >= $120 STOP — not reached.
+- Untouched/paused: maneuver library files stay uncommitted
+  (`src/data/maneuvers.*`, 7 illustrations in
+  generated-images/); mv-skin-pinch still queued for reword.
+- Operator phone playtest pending (round-1 + round-2 notes).

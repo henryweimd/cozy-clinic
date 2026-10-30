@@ -23,6 +23,35 @@ export function scoreCount(score: RoundScore): number {
   return (score.examBest ? 1 : 0) + (score.dxCorrect ? 1 : 0) + (score.txBest ? 1 : 0);
 }
 
+type QuizTier = 'gentle' | 'steady' | 'expert';
+
+/** Diagnose/treat round questions per tier ({name} filled in). */
+const ROUND_QUESTIONS: Record<'diagnose' | 'treat', Record<QuizTier, string>> = {
+  diagnose: {
+    gentle: 'What do you think {name} has? Pick below.',
+    steady: "What's your diagnosis? Choose one.",
+    expert: 'Your diagnosis?',
+  },
+  treat: {
+    gentle: 'How will you help {name} feel better? Choose one.',
+    steady: 'Choose the treatment.',
+    expert: 'Your management plan? Choose one.',
+  },
+};
+
+export function roundQuestion(
+  round: 'diagnose' | 'treat',
+  tier: QuizTier,
+  name: string,
+): string {
+  return ROUND_QUESTIONS[round][tier].replace('{name}', name);
+}
+
+/** Fills {name} + {demo} (8yF-style) in an exam quiz template. */
+export function examQuestion(template: string, name: string, demo: string): string {
+  return template.replace('{name}', name).replace('{demo}', demo);
+}
+
 export interface ResultCopyInput {
   outcome: VisitOutcome;
   visitNo: number;

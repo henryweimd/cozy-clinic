@@ -42,7 +42,7 @@ path. Never real patient data.
 
 ```bash
 npm install
-npm test        # full suite — must pass (67 tests, green at last update)
+npm test        # full suite — must pass (78 tests, green at last update)
 npm run dev     # serves at http://localhost:5173 — open in a browser
 npm run build   # production build into dist/
 ```
@@ -103,19 +103,21 @@ the core of the game — are only possible because generation is this cheap.
 ## Current build
 
 - **3 playable patients** (Mabel, June, Milo — each with a 6-expression set,
-  per-patient visits and quotes) plus a waiting room of minis; Milo opens
-  onboarding as an existing-patient sick visit.
-- **3-round visits:** examine (4 real maneuvers: inspection, palpation,
-  percussion, auscultation) → diagnose (3 options) → treat; endings praise
+  per-patient visits and quotes) plus a waiting-room list with queue reorder;
+  Milo opens onboarding as an existing-patient sick visit.
+- **3-round quiz visits:** examine → diagnose → treat, each round asking its
+  question first (tier-worded Gentle/Steady/Expert); endings praise
   the player with an N-of-3 score line, never claiming the patient better/worse.
 - **4 conditions** as tested state transitions: asthma, sniffly cold (viral
   respiratory), dehydration, hypertension.
-- **Living Chart** memory beads, **Learning List** (MedlinePlus-backed),
-  **Clinic Shop** (Care Coins wallet, Tools/Medicines/Practice), **10-move undo**,
-  exam tool trays, chart drawer, signout handoff, dev asset browser.
+- **Living Chart** memory beads, **Learning List** (accumulating,
+  MedlinePlus-backed, +2 coins per first read), **Clinic Shop** (Care Coins
+  wallet, Tools/Medicines/Practice), **10-move undo**, exam tool trays,
+  chart drawer, signout handoff, dev asset browser, **Profile** tab
+  (placeholder over the new `players` table).
 - **Art:** Jolly-style 3D mascots on clean photorealistic clinic plates
-  (8 backdrops), Baloo 2 vendored offline; art law in
-  [`ART_BIBLE.md`](./ART_BIBLE.md).
+  (8 backdrops, painted COZY CLINIC wall signs), Baloo 2 vendored offline;
+  art law in [`ART_BIBLE.md`](./ART_BIBLE.md).
 - **Quality gates:** full test suite green, `tsc` clean, production build
   green, programmatic layout audit at 0 findings, live deployment verified.
 
@@ -127,5 +129,5 @@ Docs map: [`docs/UI_PROTOTYPE.md`](./docs/UI_PROTOTYPE.md) (interface spec),
 [`PROGRESS.md`](./PROGRESS.md) (build log).
 
 ---
-*Last verified 2026-10-29 against `main` @ `4f4bf30` (67/67 tests, build green,
+*Last verified 2026-10-29 against `main` @ `e52743e` (78/78 tests, build green,
 live URL up).*

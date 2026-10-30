@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { resultCopy, scoreCount, visitOutcome } from './visit';
+import { examQuestion, resultCopy, roundQuestion, scoreCount, visitOutcome } from './visit';
 
 describe('visitOutcome', () => {
   it('takes the right diagnosis AND the right treatment', () => {
@@ -11,6 +11,21 @@ describe('visitOutcome', () => {
 
   it('counts the set', () => {
     expect(scoreCount({ examBest: true, dxCorrect: false, txBest: true })).toBe(2);
+  });
+});
+
+describe('round questions', () => {
+  it('asks every round at every tier with the name filled in', () => {
+    for (const tier of ['gentle', 'steady', 'expert'] as const) {
+      expect(roundQuestion('diagnose', tier, 'Milo')).not.toContain('{name}');
+      expect(roundQuestion('treat', tier, 'Milo')).not.toContain('{name}');
+      expect(roundQuestion('diagnose', tier, 'Milo').length).toBeGreaterThan(0);
+    }
+    expect(roundQuestion('diagnose', 'gentle', 'Milo')).toContain('Milo');
+  });
+
+  it('fills exam templates', () => {
+    expect(examQuestion('{name} + {demo}?', 'Milo', '7yM')).toBe('Milo + 7yM?');
   });
 });
 

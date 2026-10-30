@@ -20,6 +20,23 @@ export function resourcesFor(conditionId: string): FallbackResource[] {
   return FALLBACK_RESOURCES.filter((r) => r.condition_id === conditionId);
 }
 
+/** One filed topic: its resource + the condition that filed it. */
+export interface FiledTopic {
+  resource: FallbackResource;
+  conditionName: string;
+}
+
+/**
+ * Pure: flatten filed conditions (visit order) into topics
+ * (unit-tested). The list accumulates — it never drops a topic
+ * for a newer one.
+ */
+export function filedTopics(filed: { id: string; name: string }[]): FiledTopic[] {
+  return filed.flatMap((c) =>
+    resourcesFor(c.id).map((resource) => ({ resource, conditionName: c.name })),
+  );
+}
+
 export class LearnList {
   private root: Phaser.GameObjects.Container;
   private sheet: Phaser.GameObjects.Graphics;
@@ -70,12 +87,18 @@ export class LearnList {
     this.root.setDepth(24).setVisible(false).setAlpha(0);
   }
 
-  show(conditionId: string, conditionName: string): void {
+  /**
+   * The accumulated list: every filed condition's topics in
+   * visit order. `opened` marks read topics (their +2 is
+   * spent); unread rows offer it.
+   */
+  show(filed: { id: string; name: string }[], opened: ReadonlySet<string>): void {
     this.body.removeAll(true);
-    this.title.setText(`Learning: ${conditionName}`);
-    const rows = resourcesFor(conditionId);
-    rows.forEach((r, i) => {
+    this.title.setText('Learning List');
+    const rows = filedTopics(filed);
+    rows.forEach(({ resource: r, conditionName }, i) => {
       const y = 216 + i * 108;
+      const read = opened.has(r.id);
       const bg = this.scene.add.graphics();
       bg.fillStyle(THEME.cardFill, 1);
       bg.lineStyle(2, THEME.outline, 1);
@@ -90,11 +113,16 @@ export class LearnList {
         })
         .setOrigin(0, 0);
       const src = this.scene.add
-        .text(68, y + 50, `${r.source} \u00b7 ${r.audience === 'pro' ? 'pro' : 'everyone'}`, {
-          fontFamily: THEME.font,
-          fontSize: '15px',
-          color: THEME.secondary,
-        })
+        .text(
+          68,
+          y + 50,
+          `${r.source} \u00b7 ${conditionName} \u00b7 ${read ? 'read' : '+2 on first read'}`,
+          {
+            fontFamily: THEME.font,
+            fontSize: '15px',
+            color: THEME.secondary,
+          },
+        )
         .setOrigin(0, 0);
       const row = this.scene.add.container(0, 0, [bg, name, src]);
       const zone = this.scene.add
@@ -106,7 +134,7 @@ export class LearnList {
     });
     if (rows.length === 0) {
       const empty = this.scene.add
-        .text(270, 300, 'Nothing filed here yet.', {
+        .text(270, 300, 'Finish a visit to file topics here.', {
           fontFamily: THEME.font,
           fontSize: '17px',
           color: THEME.secondary,

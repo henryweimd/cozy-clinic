@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ClinicalEngine } from './engine';
-import { CONDITIONS } from './conditions';
+import { CONDITIONS, CONDITION_TIER_NAMES } from './conditions';
 import type { ConditionId } from './types';
 
 const CONDITION_IDS = Object.keys(CONDITIONS) as ConditionId[];
@@ -162,16 +162,20 @@ describe('shipped copy', () => {
   });
 
   it('gives every condition a real exam round + diagnosis set', () => {
-    const names = Object.values(CONDITIONS).map((d) => d.name);
+    const ids = Object.values(CONDITIONS).map((d) => d.id);
     for (const def of Object.values(CONDITIONS)) {
       expect(['inspection', 'palpation', 'percussion', 'auscultation']).toContain(def.bestExam);
       expect(def.bestFinding.length).toBeGreaterThan(0);
       expect(def.dxOptions).toHaveLength(3);
-      expect(def.dxOptions).toContain(def.name);
-      for (const opt of def.dxOptions) expect(names).toContain(opt);
+      expect(def.dxOptions).toContain(def.id);
+      for (const opt of def.dxOptions) expect(ids).toContain(opt);
+      for (const tier of ['gentle', 'steady', 'expert'] as const) {
+        expect(def.examQuiz[tier].length).toBeGreaterThan(20);
+        expect(CONDITION_TIER_NAMES[def.id][tier].length).toBeGreaterThan(0);
+      }
     }
     // Correct answers don't all sit in one slot.
-    const slots = Object.values(CONDITIONS).map((d) => d.dxOptions.indexOf(d.name));
+    const slots = Object.values(CONDITIONS).map((d) => d.dxOptions.indexOf(d.id));
     expect(new Set(slots).size).toBeGreaterThan(1);
   });
 });

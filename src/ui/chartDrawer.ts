@@ -22,7 +22,6 @@ const DRAWER_TOP = 300;
 const DRAWER_H = 260;
 
 export interface ChartContent {
-  name: string;
   /** Signout lines (visit/who, complaint, history+meds, observation). */
   lines: string[];
 }
@@ -31,7 +30,6 @@ export class ChartDrawer {
   private panel: Phaser.GameObjects.Container;
   private handle: Phaser.GameObjects.Container;
   private handleGlyph: Phaser.GameObjects.Text;
-  private nameText: Phaser.GameObjects.Text;
   private lineTexts: Phaser.GameObjects.Text[] = [];
   private open = false;
 
@@ -67,19 +65,15 @@ export class ChartDrawer {
           lineSpacing: 4,
         })
         .setOrigin(0, 0);
-    this.nameText = mk(DRAWER_TOP + 24, '20px', true, THEME.cocoa);
-    // Four signout lines, positioned by measured height in
-    // setContent (visit line bold, the rest regular).
+    // No name line — the patient's name lives ONLY on the
+    // bottom nametag. Four signout lines, positioned by measured
+    // height in setContent (visit line bold, the rest regular).
     for (let i = 0; i < 4; i += 1) {
       this.lineTexts.push(
         mk(DRAWER_TOP + 60, '14px', i === 0, i === 0 ? THEME.secondary : THEME.cocoa),
       );
     }
-    this.panel = this.scene.add.container(PANEL_CLOSED_X, 0, [
-      bg,
-      this.nameText,
-      ...this.lineTexts,
-    ]);
+    this.panel = this.scene.add.container(PANEL_CLOSED_X, 0, [bg, ...this.lineTexts]);
     this.panel.setDepth(22);
 
     const tab = this.scene.add.graphics();
@@ -104,8 +98,7 @@ export class ChartDrawer {
   }
 
   setContent(content: ChartContent): void {
-    this.nameText.setText(content.name);
-    let y = DRAWER_TOP + 24 + this.nameText.height + 10;
+    let y = DRAWER_TOP + 24;
     this.lineTexts.forEach((text, i) => {
       text.setText(content.lines[i] ?? '');
       text.setY(y);

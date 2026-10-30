@@ -1,7 +1,15 @@
-import type { ConditionDef } from './types';
+import type { ConditionDef, ConditionId } from './types';
 
 /** Exam-round finding when the pick isn't the revealing one. */
 export const EXAM_OTHER_FINDING = 'That exam finds nothing new.';
+
+/** Condition display names per tier (diagnose-round options). */
+export const CONDITION_TIER_NAMES: Record<ConditionId, { gentle: string; steady: string; expert: string }> = {
+  dehydration: { gentle: 'Dried Out', steady: 'Dehydration', expert: 'Dehydration' },
+  'viral-respiratory': { gentle: 'Sniffly Cold', steady: 'Common Cold', expert: 'Viral URI' },
+  asthma: { gentle: 'Asthma', steady: 'Asthma', expert: 'Asthma Exacerbation' },
+  hypertension: { gentle: 'High Blood Pressure', steady: 'High Blood Pressure', expert: 'Hypertension' },
+};
 
 /**
  * The four launch conditions (brief Section 6).
@@ -17,7 +25,12 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     plainWords: 'Not enough water in the body. Everything feels dry and slow.',
     bestExam: 'palpation',
     bestFinding: 'A gentle skin pinch stays peaked — very dry inside.',
-    dxOptions: ['Asthma', 'Dehydration', 'Sniffly Cold'],
+    dxOptions: ['asthma', 'dehydration', 'viral-respiratory'],
+    examQuiz: {
+      gentle: '{name} is all droopy and very thirsty. Which exam tells you the most?',
+      steady: 'Droopy and very thirsty. Which exam is most revealing?',
+      expert: '{demo} with poor turgor. Highest-yield exam?',
+    },
     stages: [
       { id: 'sipped', label: 'Sipped', blurb: 'Feeling good and bouncy.', says: "Just here for my check-in — I'm feeling good and bouncy!" },
       { id: 'thirsty', label: 'Thirsty', blurb: 'A bit dry and slow.', says: "My mouth feels dry and I'm moving a little slow today." },
@@ -67,7 +80,12 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     plainWords: 'A common cold: sniffles, sneezes, and a worn-out feeling.',
     bestExam: 'inspection',
     bestFinding: 'Peeking in: red nose, sneezy eyes, chest sounds clear.',
-    dxOptions: ['Sniffly Cold', 'High Blood Pressure', 'Asthma'],
+    dxOptions: ['viral-respiratory', 'hypertension', 'asthma'],
+    examQuiz: {
+      gentle: '{name} has a runny nose and lots of sneezes. Which exam tells you the most?',
+      steady: 'Runny nose and sneezing. Which exam is most revealing?',
+      expert: '{demo} with rhinorrhea and sneezing. Highest-yield exam?',
+    },
     stages: [
       { id: 'breezy', label: 'Breezy', blurb: 'Nose clear, feeling bouncy.', says: "Just here for my check-in — my nose is clear and I feel bouncy!" },
       { id: 'sniffly', label: 'Sniffly', blurb: 'Sniffles and sneezes.', says: 'My nose is sniffly and I keep sneezing. Achoo!' },
@@ -117,7 +135,12 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     plainWords: 'Tight, twitchy airways that turn breaths whistly.',
     bestExam: 'auscultation',
     bestFinding: 'Listening in: soft whistles deep in the airways.',
-    dxOptions: ['Sniffly Cold', 'Asthma', 'Dehydration'],
+    dxOptions: ['viral-respiratory', 'asthma', 'dehydration'],
+    examQuiz: {
+      gentle: "{name}'s breaths sound whistly. Which exam tells you the most?",
+      steady: 'Whistly breaths and a tight chest. Which exam is most revealing?',
+      expert: '{demo} with wheeze. Highest-yield exam?',
+    },
     stages: [
       { id: 'clear', label: 'Clear', blurb: 'Breathing easy.', says: "Just here for my check-in — I'm breathing easy!" },
       { id: 'tight', label: 'Tight', blurb: 'Chest feels a bit tight.', says: 'My chest feels a little tight today.' },
@@ -167,7 +190,12 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     plainWords: 'Blood pressure running higher than it should be.',
     bestExam: 'palpation',
     bestFinding: 'A fingertip on the wrist: pulse strong and hurried.',
-    dxOptions: ['Dehydration', 'Asthma', 'High Blood Pressure'],
+    dxOptions: ['dehydration', 'asthma', 'hypertension'],
+    examQuiz: {
+      gentle: "{name}'s numbers are running high. Which exam tells you the most?",
+      steady: 'Blood pressure running high. Which exam is most revealing?',
+      expert: '{demo} with elevated BP. Highest-yield exam?',
+    },
     stages: [
       { id: 'steady', label: 'Steady', blurb: 'Calm and even.', says: "Just here for my check-in — I'm feeling steady!" },
       { id: 'creeping', label: 'Creeping up', blurb: 'A little tense lately.', says: "I've been feeling a little tense lately. Are my numbers okay?" },
