@@ -1,5 +1,19 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 4 (2026-10-30): chrome-4 (strip out, rail left, note glyph)
+
+- Top strip + coin cluster removed (operator: distracting); a
+  translucent bar returns later. Rewind floats top-right.
+- Coins live in Profile: Care Coins row opens the Shop (row
+  re-reads after purchases); tappable rows carry ›.
+- Rail mirrored to the left edge; sliders + dock + badge follow.
+- Care notes glyph redrawn as a written note (folded sheet +
+  ink lines); tray hint reworded to the left edge.
+- Verdicts: tsc, 131/131, auditor 0, build green, live 200.
+  Image spend: $0.
+
+Parked: muse-reword proxy (needs the Supabase secret NAME).
+
 ## Run 3 (2026-10-30): hook, rewind, quiz prizes, tiers, pearls, loops
 
 - 60s hook: audited boot (in-visit, +2s quiz, pulse, 6-10s
