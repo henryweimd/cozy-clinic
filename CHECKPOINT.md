@@ -46,3 +46,26 @@ through run 5; coin icon still unloved but parked).
 Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
 
 STOP.
+
+## Run 7 — proxy (2026-10-30)
+
+Phase: live muse-reword Edge Function + greeting pre-warm
+client + ticker/terminal transparency.
+
+Files changed: 6 (function source, reword client + test,
+ClinicScene, ticker, AI_PROXY). Commit `1124d17` on main.
+
+Test result: auditor 0 findings; `npm test` 143/143 (19
+files); tsc clean; build green. Live curl: gentle + expert
+paraphrases, fallback:false, veto holding.
+
+Deployment URL: `https://cozy-clinic.vercel.app/` (live-polled
+200 with fresh bundle after push).
+
+Playtest result: NOT operator-playtested this run —
+programmatic verification only (operator: playtest acceptable
+through run 5; coin icon still unloved but parked).
+
+Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
+
+STOP.

@@ -1870,3 +1870,30 @@ clearance — then a polish fix loop for real findings.
 - Verification: auditor 0 findings; 138/138 (18 files); tsc
   clean; build green; live 200 with fresh bundle.
 - Spend $0.00 (ledger ~$0.74 cumulative).
+
+## Proxy run: live muse-reword (2026-10-30)
+
+- OWNERSHIP: `supabase/functions/muse-reword/index.ts`,
+  `src/game/reword.ts` (+test), `src/scenes/ClinicScene.ts`
+  (greeting block + warmGreeting + terminal line),
+  `src/ui/ticker.ts` (noteRewordLive), `docs/AI_PROXY.md`,
+  auditor ALL, PROGRESS/CHECKPOINT.
+- Unblocked by operator: Supabase secret name is META_API_KEY.
+  Function deployed via CLI (MCP token lacks
+  edge_functions_write/read); verify_jwt on, anon JWT passes.
+- Debugging trail: first builds returned null content with
+  finish_reason length at max_tokens 200 AND 1024 — Muse
+  bills hidden reasoning against the output budget. Fix from
+  provider docs: reasoning_effort minimal + max_tokens 2048.
+  Verified live via curl: gentle + expert paraphrases with
+  fallback:false and kept terms intact.
+- Game design: greetings stay single-voice locally (patient
+  exclamations are plain speech at every tier — no tier gap);
+  the proxy pre-warms one variant per patient:tier in the
+  background for a LATER visit. Local shows instantly, never
+  a mid-read swap; ticker notes liveness once; grades never
+  depend on model output. Offline demo completes untouched.
+- Verification: auditor 0 findings; 143/143 (19 files); tsc
+  clean; build green; live 200 with fresh bundle.
+- Spend $0.00 (ledger ~$0.74 cumulative; runtime Muse calls
+  bill to the operator's Meta key per call).
