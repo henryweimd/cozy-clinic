@@ -24,7 +24,7 @@ describe('reword', () => {
     // Unroutable URL: connection refuses fast, no network touched.
     await expect(
       reword('hi', 'gentle', [], 'greeting', { url: 'http://127.0.0.1:1', key: 'k' }),
-    ).resolves.toEqual({ text: 'hi', live: false });
+    ).resolves.toEqual({ text: 'hi', live: false, latencyMs: expect.any(Number), note: 'down' });
   });
 
   it('returns the live paraphrase on success', async () => {
@@ -37,7 +37,7 @@ describe('reword', () => {
     );
     await expect(
       reword('hi', 'gentle', [], 'greeting', { url: 'https://x.test', key: 'k' }),
-    ).resolves.toEqual({ text: 'Hey, Doc!', live: true });
+    ).resolves.toEqual({ text: 'Hey, Doc!', live: true, latencyMs: expect.any(Number), note: 'ok' });
   });
 
   it('falls back local on veto echo, http error, or throw', async () => {
@@ -47,24 +47,18 @@ describe('reword', () => {
     }));
     vi.stubGlobal('fetch', echo);
     const opts = { url: 'https://x.test', key: 'k' };
-    await expect(reword('hi', 'gentle', [], 'greeting', opts)).resolves.toEqual({
-      text: 'hi',
-      live: false,
-    });
-    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false })));
-    await expect(reword('hi', 'gentle', [], 'greeting', opts)).resolves.toEqual({
-      text: 'hi',
-      live: false,
-    });
+    const echoed = await reword('hi', 'gentle', [], 'greeting', opts);
+    expect(echoed).toMatchObject({ text: 'hi', live: false, note: 'veto' });
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, status: 500 })));
+    const failed = await reword('hi', 'gentle', [], 'greeting', opts);
+    expect(failed).toMatchObject({ text: 'hi', live: false, note: 'http 500' });
     vi.stubGlobal(
       'fetch',
       vi.fn(async () => {
         throw new Error('down');
       }),
     );
-    await expect(reword('hi', 'gentle', [], 'greeting', opts)).resolves.toEqual({
-      text: 'hi',
-      live: false,
-    });
+    const downed = await reword('hi', 'gentle', [], 'greeting', opts);
+    expect(downed).toMatchObject({ text: 'hi', live: false, note: 'down' });
   });
 });

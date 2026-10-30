@@ -99,6 +99,12 @@ export class BackendTicker {
     this.setLines([first, 'muse-reword: live · greeting variants on']);
   }
 
+  /** One scroll step: row 2 climbs, the live note lands (11px mono). */
+  pushLive(line: string): void {
+    const second = this.rows[1]?.text.replace(/^> /, '') ?? '';
+    this.setLines([second, line]);
+  }
+
   /** One mock-feed tick: scrolls line 2 up, pulls the next line. */
   tickMock(): void {
     if (!this.useMockFeed) return;

@@ -19,6 +19,9 @@ const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as
 export interface RewordResult {
   text: string;
   live: boolean;
+  /** Ticker fodder: ms for the call, and why-not when local. */
+  latencyMs: number;
+  note: string;
 }
 
 export interface RewordOpts {
@@ -41,12 +44,18 @@ export async function reword(
   context: string,
   opts: RewordOpts = {},
 ): Promise<RewordResult> {
-  const local: RewordResult = { text, live: false };
+  const local = (note: string, latencyMs: number): RewordResult => ({
+    text,
+    live: false,
+    latencyMs,
+    note,
+  });
   const url = opts.url ?? SUPABASE_URL;
   const key = opts.key ?? SUPABASE_ANON_KEY;
-  if (url === undefined || key === undefined) return local;
+  if (url === undefined || key === undefined) return local('offline', 0);
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), opts.timeoutMs ?? 8000);
+  const started = Date.now();
   try {
     const res = await fetch(`${url}/functions/v1/muse-reword`, {
       method: 'POST',
@@ -58,12 +67,17 @@ export async function reword(
       body: JSON.stringify({ text, tier, keep, context }),
       signal: ctrl.signal,
     });
-    if (!res.ok) return local;
+    const ms = Date.now() - started;
+    if (!res.ok) return local(`http ${res.status}`, ms);
     const data: unknown = await res.json();
-    if (!isRewordResponse(data) || data.fallback) return local;
-    return { text: data.text, live: true };
+    if (!isRewordResponse(data)) return local('shape', ms);
+    if (data.fallback) {
+      const reason = (data as { reason?: unknown }).reason;
+      return local(typeof reason === 'string' ? reason : 'veto', ms);
+    }
+    return { text: data.text, live: true, latencyMs: ms, note: 'ok' };
   } catch {
-    return local;
+    return local('down', Date.now() - started);
   } finally {
     clearTimeout(timer);
   }
