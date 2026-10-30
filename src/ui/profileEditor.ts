@@ -129,16 +129,18 @@ export class ProfileEditor {
     const chipsEnd = 300 + rows * 52;
     this.drawCard(220, chipsEnd + 100);
     this.presets.forEach((preset, i) => {
-      const cx = 48 + (i % 3) * 148;
+      // Inset grid: 12px off the card borders, 12px gutters
+      // (chips used to sit exactly ON the card edges).
+      const cx = 60 + (i % 3) * 144;
       const cy = 300 + Math.floor(i / 3) * 52;
       const picked = preset === current;
       const bg = this.scene.add.graphics();
       bg.fillStyle(picked ? THEME.sage : THEME.cardFill, 1);
       bg.lineStyle(2, THEME.outline, 1);
-      bg.fillRoundedRect(cx, cy, 140, 44, 22);
-      bg.strokeRoundedRect(cx, cy, 140, 44, 22);
+      bg.fillRoundedRect(cx, cy, 132, 44, 22);
+      bg.strokeRoundedRect(cx, cy, 132, 44, 22);
       const label = this.scene.add
-        .text(cx + 70, cy + 22, preset, {
+        .text(cx + 66, cy + 22, preset, {
           fontFamily: THEME.font,
           fontStyle: 'bold',
           fontSize: '17px',
@@ -146,7 +148,7 @@ export class ProfileEditor {
         })
         .setOrigin(0.5, 0.5);
       const zone = this.scene.add
-        .zone(cx + 70, cy + 22, 140, 44)
+        .zone(cx + 66, cy + 22, 132, 44)
         .setInteractive({ useHandCursor: true });
       zone.on('pointerdown', () => this.onSave(this.kind, preset));
       this.body.add([bg, label, zone]);
@@ -155,8 +157,8 @@ export class ProfileEditor {
     const wbg = this.scene.add.graphics();
     wbg.fillStyle(THEME.cardFill, 1);
     wbg.lineStyle(2, THEME.outline, 1);
-    wbg.fillRoundedRect(48, wy, 444, 48, 24);
-    wbg.strokeRoundedRect(48, wy, 444, 48, 24);
+    wbg.fillRoundedRect(60, wy, 420, 48, 24);
+    wbg.strokeRoundedRect(60, wy, 420, 48, 24);
     const wlabel = this.scene.add
       .text(270, wy + 24, 'Write your own…', {
         fontFamily: THEME.font,
@@ -166,7 +168,7 @@ export class ProfileEditor {
       })
       .setOrigin(0.5, 0.5);
     const wzone = this.scene.add
-      .zone(270, wy + 24, 444, 48)
+      .zone(270, wy + 24, 420, 48)
       .setInteractive({ useHandCursor: true });
     wzone.on('pointerdown', () => this.renderWrite());
     this.body.add([wbg, wlabel, wzone]);

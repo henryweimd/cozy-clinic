@@ -45,7 +45,7 @@ import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
 import { examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
 import { reword } from '../game/reword';
-import { COIN_GOLD, drawBook, drawCoin } from '../ui/icons';
+import { COIN_GOLD, drawBook, drawCoin, drawTeamBadge } from '../ui/icons';
 import { EMPTY_STREAK, earnsDailyBonus, nextStreak, streakBonus } from '../game/streak';
 import type { StreakState } from '../game/streak';
 import { playSfx, setSfxMuted, unlockSfx } from '../game/sfx';
@@ -2738,15 +2738,14 @@ export class ClinicScene extends Phaser.Scene {
   // -- VIEW 5: player profile (placeholder; the players table waits) --
 
   private drawProfileView(): void {
-    // Compact sheet (136..636): identity cards + panels end at
-    // 604 — no dead rows below. Stats are LIVE (wallet + Learn
-    // progress); identity + login ship after the freeze on the
-    // `players` table.
+    // Whole-screen experience: an opaque full-bleed ground, no
+    // visit room showing through. Identity cards + panels end at
+    // 604; the calm void below is settings-page air. Stats are
+    // LIVE (wallet + Learn progress); identity + login ship
+    // after the freeze on the `players` table.
     const sheet = this.add.graphics();
-    sheet.fillStyle(CREAM, CHROME_ALPHA);
-    sheet.lineStyle(3, OUTLINE, 1);
-    sheet.fillRoundedRect(24, 136, 492, 500, 24);
-    sheet.strokeRoundedRect(24, 136, 492, 500, 24);
+    sheet.fillStyle(CREAM, 1);
+    sheet.fillRect(0, 0, 540, 960);
     const title = this.add
       .text(48, 172, 'Profile', {
         fontFamily: FONT_FAMILY,
@@ -2875,7 +2874,7 @@ export class ClinicScene extends Phaser.Scene {
     this.profileRows.add(disc);
     label(108, dy + 48, (this.doctorHandle[0] ?? 'D').toUpperCase(), '26px', '#ffffff', true, 0.5);
     label(150, dy + 36, `Doctor ${this.doctorHandle.slice(0, 8)}`, '22px', COCOA, true, 0);
-    label(150, dy + 66, 'your doctor \u00b7 tap to change', '13px', SECONDARY, false, 0);
+    label(150, dy + 66, 'your doctor \u00b7 tap to change', '14px', SECONDARY, false, 0);
     const badge = this.add.graphics();
     badge.fillStyle(COIN_GOLD, 1);
     badge.lineStyle(2, OUTLINE, 1);
@@ -2883,7 +2882,7 @@ export class ClinicScene extends Phaser.Scene {
     badge.strokeCircle(452, dy + 30, 15);
     this.profileRows.add(badge);
     label(452, dy + 30, `${this.cheers.length}`, '14px', COCOA, true, 0.5);
-    label(452, dy + 53, 'cheers', '11px', SECONDARY, false, 0.5);
+    label(452, dy + 53, 'cheers', '12px', SECONDARY, false, 0.5);
     const docZone = this.add
       .zone(270, dy + 48, 444, 96)
       .setInteractive({ useHandCursor: true });
@@ -2891,11 +2890,17 @@ export class ClinicScene extends Phaser.Scene {
       this.editor.show('doctor', this.doctorHandle, DOCTOR_HANDLES);
     });
     this.profileRows.add(docZone);
-    // Team card (340..404).
+    // Team card (340..404): badge logo + tag, left-aligned
+    // like the doctor card. Typed names get a sage disc w/ initial.
     const ty = 340;
     card(48, ty, 444, 64);
-    label(68, ty + 32, 'Team', '17px', SECONDARY, false, 0);
-    label(472, ty + 32, `${this.teamTag.slice(0, 14)} \u203a`, '19px', COCOA, true, 1);
+    const teamBadge = this.add.graphics();
+    drawTeamBadge(teamBadge, 100, ty + 32, 18, this.teamTag);
+    this.profileRows.add(teamBadge);
+    if (!['sun', 'moon', 'star'].includes(this.teamTag.toLowerCase())) {
+      label(100, ty + 32, (this.teamTag[0] ?? 'T').toUpperCase(), '20px', '#ffffff', true, 0.5);
+    }
+    label(134, ty + 32, `${this.teamTag.slice(0, 14)} \u203a`, '20px', COCOA, true, 0);
     const teamZone = this.add
       .zone(270, ty + 32, 444, 64)
       .setInteractive({ useHandCursor: true });
@@ -2903,16 +2908,15 @@ export class ClinicScene extends Phaser.Scene {
       this.editor.show('team', this.teamTag, TEAM_TAGS);
     });
     this.profileRows.add(teamZone);
-    // Coins panel (48..258 x 416..536): metallic coin, big
-    // balance, Shop link. Taps open the Clinic Shop.
+    // Coins panel (48..258 x 416..536): horizontal lockup —
+    // big coin, balance + chevron, micro label. Taps open Shop.
     const py = 416;
     card(48, py, 210, 120);
     const coin = this.add.graphics();
-    drawCoin(coin, 96, py + 60, 16);
+    drawCoin(coin, 88, py + 60, 18);
     this.profileRows.add(coin);
-    label(242, py + 46, `${this.wallet.balance}`, '26px', COCOA, true, 1);
-    label(242, py + 74, 'care coins', '12px', SECONDARY, false, 1);
-    label(242, py + 98, 'Shop \u203a', '13px', COCOA, true, 1);
+    label(120, py + 46, `${this.wallet.balance} \u203a`, '28px', COCOA, true, 0);
+    label(120, py + 76, 'care coins', '13px', SECONDARY, false, 0);
     const coinZone = this.add
       .zone(153, py + 60, 210, 120)
       .setInteractive({ useHandCursor: true });
@@ -2920,15 +2924,14 @@ export class ClinicScene extends Phaser.Scene {
       if (!this.shop.open) this.shop.show(this.wallet.balance, this.ownedIds);
     });
     this.profileRows.add(coinZone);
-    // Topics panel (282..492 x 416..536): book, N-of-M read,
-    // Learn link. Taps open the Learning List.
+    // Topics panel (282..492 x 416..536): book + N-of-M +
+    // chevron. Taps open the Learning List.
     card(282, py, 210, 120);
     const book = this.add.graphics();
-    drawBook(book, 330, py + 60, 20);
+    drawBook(book, 326, py + 60, 18);
     this.profileRows.add(book);
-    label(476, py + 46, `${this.openedRes.size} of ${this.filedConds.length}`, '26px', COCOA, true, 1);
-    label(476, py + 74, 'topics read', '12px', SECONDARY, false, 1);
-    label(476, py + 98, 'Learn \u203a', '13px', COCOA, true, 1);
+    label(362, py + 46, `${this.openedRes.size} of ${this.filedConds.length} \u203a`, '28px', COCOA, true, 0);
+    label(362, py + 76, 'topics read', '13px', SECONDARY, false, 0);
     const topicsZone = this.add
       .zone(387, py + 60, 210, 120)
       .setInteractive({ useHandCursor: true });
@@ -3657,7 +3660,7 @@ export class ClinicScene extends Phaser.Scene {
     this.patient.setVisible(next === 'visit' || next === 'telemed');
     this.patientShadow.setVisible(next === 'visit' || next === 'telemed');
     this.devTrigger.setVisible(
-      next === 'waiting' || next === 'visit' || next === 'learn' || next === 'profile',
+      next === 'waiting' || next === 'visit' || next === 'learn',
     );
     // The UI wordmark owns visit (its plate lost the painted
     // sign); waiting keeps paint, other views stay bare.

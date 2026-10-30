@@ -11,6 +11,8 @@ export const COIN_DEEP = 0xb97a2a;
 const INK = 0x8a5a3b;
 const PAPER = 0xfffdf5;
 const FAINT = 0xc9a87f;
+const CARD_BG = 0xfff9ef;
+const SAGE = 0xa9c6a2;
 
 /** Metallic Care Coin: gold body, inner ring, care cross, specular. */
 export function drawCoin(
@@ -61,4 +63,66 @@ export function drawBook(
     g.lineBetween(x - s + 6, y + dy, x - 8, y + dy);
     g.lineBetween(x + 8, y + dy, x + s - 6, y + dy);
   }
+}
+
+/**
+ * Team badge: Sun gets rays, Moon a crescent (cut with the card
+ * fill), Star a 5-point path, anything typed a sage disc (the
+ * scene overlays the initial). (x, y) is the center; r the body.
+ */
+export function drawTeamBadge(
+  g: Phaser.GameObjects.Graphics,
+  x: number,
+  y: number,
+  r: number,
+  tag: string,
+): void {
+  const t = tag.toLowerCase();
+  if (t === 'sun') {
+    g.lineStyle(3, COIN_DEEP, 1);
+    for (let i = 0; i < 8; i += 1) {
+      const a = (i / 8) * Math.PI * 2;
+      g.lineBetween(
+        x + Math.cos(a) * (r + 3),
+        y + Math.sin(a) * (r + 3),
+        x + Math.cos(a) * (r + 9),
+        y + Math.sin(a) * (r + 9),
+      );
+    }
+    g.fillStyle(COIN_GOLD, 1);
+    g.lineStyle(2, INK, 1);
+    g.fillCircle(x, y, r);
+    g.strokeCircle(x, y, r);
+    return;
+  }
+  if (t === 'moon') {
+    g.fillStyle(COIN_GOLD, 1);
+    g.lineStyle(2, INK, 1);
+    g.fillCircle(x, y, r);
+    g.strokeCircle(x, y, r);
+    g.fillStyle(CARD_BG, 1);
+    g.fillCircle(x + r * 0.45, y - r * 0.25, r * 0.78);
+    return;
+  }
+  if (t === 'star') {
+    g.fillStyle(COIN_GOLD, 1);
+    g.lineStyle(2, INK, 1);
+    g.beginPath();
+    for (let i = 0; i < 10; i += 1) {
+      const rr = i % 2 === 0 ? r : r * 0.45;
+      const a = -Math.PI / 2 + (i / 10) * Math.PI * 2;
+      const px = x + Math.cos(a) * rr;
+      const py = y + Math.sin(a) * rr;
+      if (i === 0) g.moveTo(px, py);
+      else g.lineTo(px, py);
+    }
+    g.closePath();
+    g.fillPath();
+    g.strokePath();
+    return;
+  }
+  g.fillStyle(SAGE, 1);
+  g.lineStyle(2, INK, 1);
+  g.fillCircle(x, y, r);
+  g.strokeCircle(x, y, r);
 }

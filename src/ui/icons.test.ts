@@ -1,5 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
-import { COIN_DEEP, COIN_GOLD, COIN_LIGHT, drawBook, drawCoin } from './icons';
+import {
+  COIN_DEEP,
+  COIN_GOLD,
+  COIN_LIGHT,
+  drawBook,
+  drawCoin,
+  drawTeamBadge,
+} from './icons';
 
 /** Records Graphics calls so the coin design locks without a canvas. */
 function stubGraphics(): {
@@ -20,6 +27,12 @@ function stubGraphics(): {
     fillRoundedRect: rec('fillRoundedRect'),
     strokeRoundedRect: rec('strokeRoundedRect'),
     lineBetween: rec('lineBetween'),
+    beginPath: rec('beginPath'),
+    moveTo: rec('moveTo'),
+    lineTo: rec('lineTo'),
+    closePath: rec('closePath'),
+    fillPath: rec('fillPath'),
+    strokePath: rec('strokePath'),
   } as unknown as Phaser.GameObjects.Graphics;
   return { g, calls };
 }
@@ -92,5 +105,34 @@ describe('drawBook', () => {
       expect(Math.min(ax, bx)).toBeGreaterThanOrEqual(100 - 20);
       expect(Math.max(ax, bx)).toBeLessThanOrEqual(100 + 20);
     }
+  });
+});
+
+describe('drawTeamBadge', () => {
+  it('rays the sun, cuts the moon, paths the star', () => {
+    const sun = stubGraphics();
+    drawTeamBadge(sun.g, 100, 200, 18, 'Sun');
+    expect(sun.calls.filter((c) => c.op === 'lineBetween')).toHaveLength(8);
+    expect(sun.calls.filter((c) => c.op === 'fillCircle')).toHaveLength(1);
+
+    const moon = stubGraphics();
+    drawTeamBadge(moon.g, 100, 200, 18, 'moon');
+    // Body + card-fill cutout.
+    expect(moon.calls.filter((c) => c.op === 'fillCircle')).toHaveLength(2);
+
+    const star = stubGraphics();
+    drawTeamBadge(star.g, 100, 200, 18, 'STAR');
+    const ops = star.calls.map((c) => c.op);
+    expect(ops.filter((o) => o === 'lineTo')).toHaveLength(9);
+    expect(ops).toContain('moveTo');
+    expect(ops).toContain('fillPath');
+    expect(ops).toContain('strokePath');
+  });
+
+  it('falls back to a sage disc for typed names', () => {
+    const { g, calls } = stubGraphics();
+    drawTeamBadge(g, 100, 200, 18, 'Sunnyvale');
+    expect(calls[0]).toEqual({ op: 'fillStyle', args: [0xa9c6a2, 1] });
+    expect(calls.filter((c) => c.op === 'fillCircle')).toHaveLength(1);
   });
 });
