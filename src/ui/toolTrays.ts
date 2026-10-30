@@ -1,21 +1,21 @@
 import Phaser from 'phaser';
+import { RAIL_SLOTS, RAIL_X, TAB_H, TAB_W } from './chartDrawer';
 import { THEME } from './chromeTheme';
 
 /**
  * T1 exam tool tray: a translucent tray sliding from the right
  * edge with the four real physical-exam maneuvers — inspection
  * (look, incl. ears/nose/throat), palpation (feel), percussion
- * (tap + listen), auscultation (listen with stethoscope). Tap the
- * handle to slide open/closed; tap a maneuver to reveal its
- * disease-specific finding in the panel (this module only
- * reports the pick — the scene reads exam_findings).
+ * (tap + listen), auscultation (listen with stethoscope). Middle
+ * tab of the right-edge rail: tap the tab to slide open/closed;
+ * tap a maneuver to reveal its disease-specific finding in the
+ * panel (this module only reports the pick — the scene reads
+ * exam_findings).
  *
- * Geometry: the HANDLE is fixed at x516-540 (24px tab,
- * y300-560, depth 23); the PANEL slides behind it from x540
- * (fully off-screen, closed) to x348 (open, 192 wide, depth 22).
- * Closed shows the tab only; open keeps the tab riding the
- * panel's right edge. Visit-only chrome: exam tools make no
- * sense through a video call.
+ * Geometry: the TAB is 52x56 at x488 (slot y426, depth 23) and
+ * docks to x296 when open; the PANEL slides from x540 (closed)
+ * to x348 (open, 192 wide, y300-560, depth 22). Visit-only
+ * chrome: exam tools make no sense through a video call.
  */
 
 export interface ToolDef {
@@ -33,19 +33,17 @@ export const EXAM_TOOLS: readonly ToolDef[] = [
   { id: 'auscultation', label: 'Listen', hint: 'auscultation' },
 ];
 
-const HANDLE_X = 516;
-const HANDLE_W = 24;
 const PANEL_W = 192;
 const PANEL_CLOSED_X = 540;
 const PANEL_OPEN_X = 540 - PANEL_W;
+const DOCK_X = PANEL_OPEN_X - TAB_W;
 const TRAY_TOP = 300;
 const TRAY_H = 260;
 
 export class ToolTray {
   private panel: Phaser.GameObjects.Container;
   private panelBg: Phaser.GameObjects.Graphics;
-  private handle: Phaser.GameObjects.Container;
-  private handleGlyph: Phaser.GameObjects.Text;
+  private tab: Phaser.GameObjects.Container;
   private open = false;
   onPick: (tool: ToolDef) => void = () => {};
   onToggle: (open: boolean) => void = () => {};
@@ -71,32 +69,42 @@ export class ToolTray {
     this.panel.setDepth(22);
     EXAM_TOOLS.forEach((tool, i) => this.buildRow(tool, i));
 
-    // Fixed handle tab: always anchored at the right edge, above
-    // the panel so it stays tappable open or closed.
-    const tab = this.scene.add.graphics();
-    tab.fillStyle(THEME.cream, THEME.glassPanel);
-    tab.lineStyle(3, THEME.outline, 1);
-    tab.fillRoundedRect(0, TRAY_TOP, HANDLE_W, TRAY_H, { tl: 8, tr: 0, bl: 8, br: 0 });
-    tab.strokeRoundedRect(0, TRAY_TOP, HANDLE_W, TRAY_H, { tl: 8, tr: 0, bl: 8, br: 0 });
-    this.handleGlyph = this.scene.add
-      .text(HANDLE_W / 2, TRAY_TOP + TRAY_H / 2, '\u2039', {
-        fontFamily: THEME.font,
-        fontStyle: 'bold',
-        fontSize: '28px',
-        color: THEME.cocoa,
-      })
-      .setOrigin(0.5, 0.5);
+    // Rail tab: docks to the panel's leading edge when open.
+    const tabBg = this.scene.add.graphics();
+    tabBg.fillStyle(THEME.cream, THEME.glassPanel);
+    tabBg.lineStyle(3, THEME.outline, 1);
+    tabBg.fillRoundedRect(RAIL_X, RAIL_SLOTS.exam, TAB_W, TAB_H, {
+      tl: 14,
+      tr: 0,
+      bl: 14,
+      br: 0,
+    });
+    tabBg.strokeRoundedRect(RAIL_X, RAIL_SLOTS.exam, TAB_W, TAB_H, {
+      tl: 14,
+      tr: 0,
+      bl: 14,
+      br: 0,
+    });
+    // Magnifier icon: lens + handle (look closer).
+    const icon = this.scene.add.graphics();
+    const cx = RAIL_X + TAB_W / 2;
+    const cy = RAIL_SLOTS.exam + TAB_H / 2;
+    icon.lineStyle(3, THEME.outline, 1);
+    icon.fillStyle(THEME.cardFill, 1);
+    icon.fillCircle(cx - 3, cy - 3, 10);
+    icon.strokeCircle(cx - 3, cy - 3, 10);
+    icon.lineBetween(cx + 4, cy + 4, cx + 12, cy + 12);
     const zone = this.scene.add
-      .zone(HANDLE_W / 2, TRAY_TOP + TRAY_H / 2, HANDLE_W, TRAY_H)
+      .zone(cx, cy, TAB_W, TAB_H)
       .setInteractive({ useHandCursor: true });
     zone.on('pointerdown', () => this.toggle());
-    this.handle = this.scene.add.container(HANDLE_X, 0, [tab, this.handleGlyph, zone]);
-    this.handle.setDepth(23);
+    this.tab = this.scene.add.container(0, 0, [tabBg, icon, zone]);
+    this.tab.setDepth(23);
   }
 
   private buildRow(tool: ToolDef, i: number): void {
-    // Rows live in the panel's left 168px (the handle covers the
-    // right 24px when open).
+    // Rows live in the panel's left 168px; the tab docks to the
+    // panel's leading (left) edge when open.
     const cy = TRAY_TOP + 40 + i * 60;
     const icon = this.scene.add.graphics();
     drawToolIcon(icon, tool.id, 44, cy);
@@ -125,21 +133,41 @@ export class ToolTray {
   }
 
   toggle(): void {
-    this.open = !this.open;
-    this.onToggle(this.open);
-    this.handleGlyph.setText(this.open ? '\u203a' : '\u2039');
-    this.scene.tweens.killTweensOf(this.panel);
+    this.setOpen(!this.open);
+  }
+
+  setOpen(open: boolean, instant = false): void {
+    const changed = open !== this.open;
+    this.open = open;
+    if (changed) this.onToggle(open);
+    const tabX = open ? DOCK_X - RAIL_X : 0;
+    this.scene.tweens.killTweensOf([this.panel, this.tab]);
+    if (instant) {
+      this.panel.setX(open ? PANEL_OPEN_X : PANEL_CLOSED_X);
+      this.tab.setX(tabX);
+      return;
+    }
     this.scene.tweens.add({
       targets: this.panel,
-      x: this.open ? PANEL_OPEN_X : PANEL_CLOSED_X,
+      x: open ? PANEL_OPEN_X : PANEL_CLOSED_X,
+      duration: 220,
+      ease: 'Sine.easeInOut',
+    });
+    this.scene.tweens.add({
+      targets: this.tab,
+      x: tabX,
       duration: 220,
       ease: 'Sine.easeInOut',
     });
   }
 
+  get isOpen(): boolean {
+    return this.open;
+  }
+
   setVisible(visible: boolean): void {
     this.panel.setVisible(visible);
-    this.handle.setVisible(visible);
+    this.tab.setVisible(visible);
   }
 }
 

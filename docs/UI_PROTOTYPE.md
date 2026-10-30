@@ -198,7 +198,7 @@ VIEW 1 — VISIT (default; today's Mabel scene):
 - Nametag (y736 — tap it for the Living Chart). The old vitals
   chip row (breath/comfort/visit#) is REMOVED from the main view
   (unclutter: dev-facing values) — its content moves into the
-  Medical Chart drawer: a left drawer mirroring the exam tray
+  Medical Chart drawer: top tab of the right-edge rail (radio with exam)
   (handle x0–24, panel x0–192, y300–560), auto-open on each
   patient's first appearance, handle toggles. Contents: the
   patient's SIGNOUT (signout.ts, tier-aware): expert reads like

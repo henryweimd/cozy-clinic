@@ -45,7 +45,7 @@ import { CONDITION_TIER_NAMES, EXAM_OTHER_FINDING } from '../clinical/conditions
 import type { ConditionId } from '../clinical/types';
 import { LearnList } from '../ui/learnList';
 import { AssetBrowser } from '../ui/assetBrowser';
-import { ChartDrawer } from '../ui/chartDrawer';
+import { RAIL_SLOTS, RAIL_X, TAB_H, TAB_W, ChartDrawer } from '../ui/chartDrawer';
 import {
   childFor,
   childSpecs,
@@ -175,7 +175,7 @@ import type { UndoStack } from '../game/undo';
  * Same geometry, same motion, same 212px stage for everyone.
  *
  * UNCLUTTER (2026-10-29): vitals chips REMOVED from the main view
- * (dev-facing values) — replaced by a Medical Chart left drawer
+ * (dev-facing values) — replaced by a Medical Chart rail tab
  * (name, visit type + #, condition + stage, one-line blurb),
  * auto-open on each patient's first appearance, handle toggles.
  * The Choose tab is replaced by a decision CORRAL: an outline
@@ -2744,27 +2744,40 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   private drawNotesHandle(): void {
-    // Second left tab under the chart drawer (y576-676): care
-    // notes. Same glass tab language, envelope glyph, amber
-    // badge dot when another doctor left a note.
+    // Bottom tab of the right-edge rail (slot y490): care notes.
+    // Same 52x56 glass tab language, envelope glyph, amber badge
+    // dot when another doctor left a note. Opens the note sheet
+    // (a modal, not a slider) and parks both drawers.
+    const cx = RAIL_X + TAB_W / 2;
+    const cy = RAIL_SLOTS.notes + TAB_H / 2;
     const tab = this.add.graphics();
     tab.fillStyle(CREAM, CHROME_ALPHA);
     tab.lineStyle(3, OUTLINE, 1);
-    tab.fillRoundedRect(0, 576, 24, 100, { tl: 0, tr: 8, bl: 0, br: 8 });
-    tab.strokeRoundedRect(0, 576, 24, 100, { tl: 0, tr: 8, bl: 0, br: 8 });
+    tab.fillRoundedRect(RAIL_X, RAIL_SLOTS.notes, TAB_W, TAB_H, {
+      tl: 14,
+      tr: 0,
+      bl: 14,
+      br: 0,
+    });
+    tab.strokeRoundedRect(RAIL_X, RAIL_SLOTS.notes, TAB_W, TAB_H, {
+      tl: 14,
+      tr: 0,
+      bl: 14,
+      br: 0,
+    });
     const glyph = this.add.graphics();
-    glyph.lineStyle(2, OUTLINE, 1);
-    glyph.strokeRoundedRect(5, 618, 14, 10, 2);
-    glyph.lineBetween(5, 619, 12, 624);
-    glyph.lineBetween(19, 619, 12, 624);
+    glyph.lineStyle(2.5, OUTLINE, 1);
+    glyph.strokeRoundedRect(cx - 11, cy - 8, 22, 16, 3);
+    glyph.lineBetween(cx - 11, cy - 7, cx, cy + 1);
+    glyph.lineBetween(cx + 11, cy - 7, cx, cy + 1);
     this.notesBadge = this.add.graphics();
     this.notesBadge.fillStyle(AMBER, 1);
     this.notesBadge.lineStyle(2, OUTLINE, 1);
-    this.notesBadge.fillCircle(18, 586, 6);
-    this.notesBadge.strokeCircle(18, 586, 6);
+    this.notesBadge.fillCircle(RAIL_X + TAB_W - 8, RAIL_SLOTS.notes + 10, 7);
+    this.notesBadge.strokeCircle(RAIL_X + TAB_W - 8, RAIL_SLOTS.notes + 10, 7);
     this.notesBadge.setVisible(false);
     const zone = this.add
-      .zone(12, 626, 24, 100)
+      .zone(cx, cy, TAB_W, TAB_H)
       .setInteractive({ useHandCursor: true });
     zone.on('pointerdown', () => this.showHandoffSheet());
     this.notesHandle = this.add.container(0, 0, [tab, glyph, this.notesBadge, zone]);
@@ -2773,6 +2786,9 @@ export class ClinicScene extends Phaser.Scene {
 
   /** (Re)builds the sheet for the active patient + live tier. */
   private showHandoffSheet(): void {
+    // The sheet is modal: park both sliders behind it.
+    this.chartDrawer.setOpen(false, true);
+    this.tray.setOpen(false, true);
     const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
     this.handoffSheet.show({
       patientName: this.activeName,
@@ -2983,12 +2999,19 @@ export class ClinicScene extends Phaser.Scene {
         ) ?? EXAM_OTHER_FINDING;
       this.setConversation(speakerFor(this.activeName), finding, 'tell');
     };
-    this.tray.onToggle = (open) => {
-      if (!open) this.resurfaceQuestion();
-    };
+    // Radio + resurface wiring lives with the chart construction
+    // below (both sliders must exist first).
 
-    // Chart drawer: succinct Medical Chart, left side.
+    // Chart drawer: succinct Medical Chart, top rail tab. Radio
+    // rule: at most one slider open — opening one parks the other.
     this.chartDrawer = new ChartDrawer(this);
+    this.chartDrawer.onToggle = (open) => {
+      if (open) this.tray.setOpen(false);
+    };
+    this.tray.onToggle = (open) => {
+      if (open) this.chartDrawer.setOpen(false);
+      else this.resurfaceQuestion();
+    };
     this.refreshChart();
 
     // Living Chart: tap the nametag to open.

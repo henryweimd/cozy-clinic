@@ -2,24 +2,29 @@ import Phaser from 'phaser';
 import { THEME } from './chromeTheme';
 
 /**
- * Medical Chart drawer: the patient's SIGNOUT (name + tier-aware
- * signout lines from signout.ts — visit/who, complaint, history
- * + meds, observation) in a left drawer mirroring the exam tray.
- * Tap the handle to slide open/closed; the scene auto-opens it
- * on each patient's first appearance for the visit. Lines stack
- * by measured height (wrapping-safe), not fixed slots.
+ * Medical Chart drawer: the patient's SIGNOUT (tier-aware lines
+ * from signout.ts — visit/who, complaint, history + meds,
+ * observation; the name lives only on the nametag). Top tab of
+ * the right-edge rail. Tap the tab to slide open/closed; the
+ * scene auto-opens it on each patient's first appearance. Lines
+ * stack by measured height (wrapping-safe), not fixed slots.
  *
- * Geometry: the HANDLE is fixed at x0-24 (24px tab, y300-560,
- * depth 23); the PANEL slides from x-192 (fully off-screen,
- * closed) to x0 (open, 192 wide, depth 22). Visit-only chrome.
+ * Geometry: the TAB is 52x56 at x488 (slot y362, depth 23) and
+ * docks to x296 when open; the PANEL slides from x540 (closed)
+ * to x348 (open, 192 wide, y300-560, depth 22). Visit-only.
  */
 
-const HANDLE_W = 24;
+export const TAB_W = 52;
+export const TAB_H = 56;
+export const RAIL_X = 540 - TAB_W;
 const PANEL_W = 192;
-const PANEL_CLOSED_X = -PANEL_W;
-const PANEL_OPEN_X = 0;
+const PANEL_CLOSED_X = 540;
+const PANEL_OPEN_X = 540 - PANEL_W;
+const DOCK_X = PANEL_OPEN_X - TAB_W;
 const DRAWER_TOP = 300;
 const DRAWER_H = 260;
+/** Rail slot tops: chart, exam, notes (below the panel, 8px gaps). */
+export const RAIL_SLOTS = { chart: 362, exam: 426, notes: 490 } as const;
 
 export interface ChartContent {
   /** Signout lines (visit/who, complaint, history+meds, observation). */
@@ -28,26 +33,27 @@ export interface ChartContent {
 
 export class ChartDrawer {
   private panel: Phaser.GameObjects.Container;
-  private handle: Phaser.GameObjects.Container;
-  private handleGlyph: Phaser.GameObjects.Text;
+  private tab: Phaser.GameObjects.Container;
+  private tabIcon: Phaser.GameObjects.Graphics;
   private lineTexts: Phaser.GameObjects.Text[] = [];
   private open = false;
+  onToggle: (open: boolean) => void = () => {};
 
   constructor(private scene: Phaser.Scene) {
     const bg = this.scene.add.graphics();
     bg.fillStyle(THEME.cream, THEME.glassPanel);
     bg.lineStyle(3, THEME.outline, 1);
     bg.fillRoundedRect(0, DRAWER_TOP, PANEL_W, DRAWER_H, {
-      tl: 0,
-      tr: 20,
-      bl: 0,
-      br: 20,
+      tl: 20,
+      tr: 0,
+      bl: 20,
+      br: 0,
     });
     bg.strokeRoundedRect(0, DRAWER_TOP, PANEL_W, DRAWER_H, {
-      tl: 0,
-      tr: 20,
-      bl: 0,
-      br: 20,
+      tl: 20,
+      tr: 0,
+      bl: 20,
+      br: 0,
     });
     const mk = (
       y: number,
@@ -76,25 +82,41 @@ export class ChartDrawer {
     this.panel = this.scene.add.container(PANEL_CLOSED_X, 0, [bg, ...this.lineTexts]);
     this.panel.setDepth(22);
 
-    const tab = this.scene.add.graphics();
-    tab.fillStyle(THEME.cream, THEME.glassPanel);
-    tab.lineStyle(3, THEME.outline, 1);
-    tab.fillRoundedRect(0, DRAWER_TOP, HANDLE_W, DRAWER_H, { tl: 0, tr: 8, bl: 0, br: 8 });
-    tab.strokeRoundedRect(0, DRAWER_TOP, HANDLE_W, DRAWER_H, { tl: 0, tr: 8, bl: 0, br: 8 });
-    this.handleGlyph = this.scene.add
-      .text(HANDLE_W / 2, DRAWER_TOP + DRAWER_H / 2, '\u203a', {
-        fontFamily: THEME.font,
-        fontStyle: 'bold',
-        fontSize: '28px',
-        color: THEME.cocoa,
-      })
-      .setOrigin(0.5, 0.5);
+    const tabBg = this.scene.add.graphics();
+    tabBg.fillStyle(THEME.cream, THEME.glassPanel);
+    tabBg.lineStyle(3, THEME.outline, 1);
+    tabBg.fillRoundedRect(RAIL_X, RAIL_SLOTS.chart, TAB_W, TAB_H, {
+      tl: 14,
+      tr: 0,
+      bl: 14,
+      br: 0,
+    });
+    tabBg.strokeRoundedRect(RAIL_X, RAIL_SLOTS.chart, TAB_W, TAB_H, {
+      tl: 14,
+      tr: 0,
+      bl: 14,
+      br: 0,
+    });
+    // Clipboard icon: board + clip + two text lines.
+    this.tabIcon = this.scene.add.graphics();
+    const cx = RAIL_X + TAB_W / 2;
+    const cy = RAIL_SLOTS.chart + TAB_H / 2;
+    this.tabIcon.lineStyle(2.5, THEME.outline, 1);
+    this.tabIcon.fillStyle(THEME.cardFill, 1);
+    this.tabIcon.fillRoundedRect(cx - 9, cy - 11, 18, 24, 3);
+    this.tabIcon.strokeRoundedRect(cx - 9, cy - 11, 18, 24, 3);
+    this.tabIcon.fillStyle(THEME.sage, 1);
+    this.tabIcon.fillRoundedRect(cx - 5, cy - 14, 10, 6, 2);
+    this.tabIcon.strokeRoundedRect(cx - 5, cy - 14, 10, 6, 2);
+    this.tabIcon.lineStyle(2, THEME.outline, 1);
+    this.tabIcon.lineBetween(cx - 5, cy - 2, cx + 5, cy - 2);
+    this.tabIcon.lineBetween(cx - 5, cy + 4, cx + 5, cy + 4);
     const zone = this.scene.add
-      .zone(HANDLE_W / 2, DRAWER_TOP + DRAWER_H / 2, HANDLE_W, DRAWER_H)
+      .zone(cx, cy, TAB_W, TAB_H)
       .setInteractive({ useHandCursor: true });
     zone.on('pointerdown', () => this.toggle());
-    this.handle = this.scene.add.container(0, 0, [tab, this.handleGlyph, zone]);
-    this.handle.setDepth(23);
+    this.tab = this.scene.add.container(0, 0, [tabBg, this.tabIcon, zone]);
+    this.tab.setDepth(23);
   }
 
   setContent(content: ChartContent): void {
@@ -111,16 +133,26 @@ export class ChartDrawer {
   }
 
   setOpen(open: boolean, instant = false): void {
+    const changed = open !== this.open;
     this.open = open;
-    this.handleGlyph.setText(this.open ? '\u2039' : '\u203a');
-    this.scene.tweens.killTweensOf(this.panel);
+    if (changed) this.onToggle(open);
+    // The tab docks to the panel's leading edge when open.
+    const tabX = open ? DOCK_X - RAIL_X : 0;
+    this.scene.tweens.killTweensOf([this.panel, this.tab]);
     if (instant) {
-      this.panel.setX(this.open ? PANEL_OPEN_X : PANEL_CLOSED_X);
+      this.panel.setX(open ? PANEL_OPEN_X : PANEL_CLOSED_X);
+      this.tab.setX(tabX);
       return;
     }
     this.scene.tweens.add({
       targets: this.panel,
-      x: this.open ? PANEL_OPEN_X : PANEL_CLOSED_X,
+      x: open ? PANEL_OPEN_X : PANEL_CLOSED_X,
+      duration: 220,
+      ease: 'Sine.easeInOut',
+    });
+    this.scene.tweens.add({
+      targets: this.tab,
+      x: tabX,
       duration: 220,
       ease: 'Sine.easeInOut',
     });
@@ -132,6 +164,6 @@ export class ChartDrawer {
 
   setVisible(visible: boolean): void {
     this.panel.setVisible(visible);
-    this.handle.setVisible(visible);
+    this.tab.setVisible(visible);
   }
 }
