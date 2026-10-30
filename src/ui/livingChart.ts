@@ -34,7 +34,7 @@ export class LivingChart {
       .setInteractive({ useHandCursor: false });
     backdrop.on('pointerdown', () => this.hide());
     this.sheet = this.scene.add.graphics();
-    this.sheet.fillStyle(THEME.cream, 0.96);
+    this.sheet.fillStyle(THEME.cream, THEME.glassSheet);
     this.sheet.lineStyle(3, THEME.outline, 1);
     this.sheet.fillRoundedRect(24, 548, 492, 204, 24);
     this.sheet.strokeRoundedRect(24, 548, 492, 204, 24);

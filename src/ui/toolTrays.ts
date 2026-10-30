@@ -52,7 +52,7 @@ export class ToolTray {
   constructor(private scene: Phaser.Scene) {
     // Sliding panel: starts fully off-screen right.
     this.panelBg = this.scene.add.graphics();
-    this.panelBg.fillStyle(THEME.cream, 0.92);
+    this.panelBg.fillStyle(THEME.cream, THEME.glassPanel);
     this.panelBg.lineStyle(3, THEME.outline, 1);
     this.panelBg.fillRoundedRect(0, TRAY_TOP, PANEL_W, TRAY_H, {
       tl: 20,
@@ -73,7 +73,7 @@ export class ToolTray {
     // Fixed handle tab: always anchored at the right edge, above
     // the panel so it stays tappable open or closed.
     const tab = this.scene.add.graphics();
-    tab.fillStyle(THEME.cream, 0.92);
+    tab.fillStyle(THEME.cream, THEME.glassPanel);
     tab.lineStyle(3, THEME.outline, 1);
     tab.fillRoundedRect(0, TRAY_TOP, HANDLE_W, TRAY_H, { tl: 8, tr: 0, bl: 8, br: 0 });
     tab.strokeRoundedRect(0, TRAY_TOP, HANDLE_W, TRAY_H, { tl: 8, tr: 0, bl: 8, br: 0 });

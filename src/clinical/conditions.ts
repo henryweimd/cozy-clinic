@@ -11,12 +11,12 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   dehydration: {
     id: 'dehydration',
     name: 'Dehydration',
-    plainWords: 'Not enough water in the body — small sips of fluids perk patients right up.',
+    plainWords: 'Not enough water in the body. Everything feels dry and slow.',
     stages: [
-      { id: 'sipped', label: 'Sipped', blurb: 'Feeling good and bouncy.' },
-      { id: 'thirsty', label: 'Thirsty', blurb: 'A bit dry and slow.' },
-      { id: 'dried-out', label: 'Dried out', blurb: 'Droopy and very thirsty.' },
-      { id: 'parched', label: 'Parched', blurb: 'All drooped out, needs care.' },
+      { id: 'sipped', label: 'Sipped', blurb: 'Feeling good and bouncy.', says: "Just here for my check-in — I'm feeling good and bouncy!" },
+      { id: 'thirsty', label: 'Thirsty', blurb: 'A bit dry and slow.', says: "My mouth feels dry and I'm moving a little slow today." },
+      { id: 'dried-out', label: 'Dried out', blurb: 'Droopy and very thirsty.', says: 'I feel all droopy and SO thirsty. Can you help me perk up?' },
+      { id: 'parched', label: 'Parched', blurb: 'Drooped right out — needs care now.', says: 'I feel drooped out and shaky. I really need your help.' },
     ],
     presentsAt: 2,
     actions: [
@@ -42,7 +42,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
         gradeByStage: ['WRONG', 'WRONG', 'WRONG', 'WRONG'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { comfort: -1 },
-        hootLine: 'Fizzy drinks do not hydrate — water does.',
+        hootLine: "Fizzy drinks don't hydrate — water does.",
       },
       {
         id: 'salt-pouch',
@@ -58,12 +58,12 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   'viral-respiratory': {
     id: 'viral-respiratory',
     name: 'Sniffly Cold',
-    plainWords: 'A common cold — rest and fluids while the body fights it off.',
+    plainWords: 'A common cold: sniffles, sneezes, and a worn-out feeling.',
     stages: [
-      { id: 'breezy', label: 'Breezy', blurb: 'Nose clear, tail wagging.' },
-      { id: 'sniffly', label: 'Sniffly', blurb: 'Sniffles and sneezes.' },
-      { id: 'feverish', label: 'Feverish', blurb: 'Warm forehead, low pep.' },
-      { id: 'wiped-out', label: 'Wiped out', blurb: 'Needs blankets and rest.' },
+      { id: 'breezy', label: 'Breezy', blurb: 'Nose clear, feeling bouncy.', says: "Just here for my check-in — my nose is clear and I feel bouncy!" },
+      { id: 'sniffly', label: 'Sniffly', blurb: 'Sniffles and sneezes.', says: 'My nose is sniffly and I keep sneezing. Achoo!' },
+      { id: 'feverish', label: 'Feverish', blurb: 'Warm forehead, low pep.', says: 'My forehead feels warm and I have no pep at all.' },
+      { id: 'wiped-out', label: 'Wiped out', blurb: 'All worn out, wants blankets.', says: 'I feel all worn out. Can you help me get better?' },
     ],
     presentsAt: 1,
     actions: [
@@ -105,12 +105,12 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   asthma: {
     id: 'asthma',
     name: 'Asthma',
-    plainWords: 'Tight airways — calm air and the right puffer open them up.',
+    plainWords: 'Tight, twitchy airways that turn breaths whistly.',
     stages: [
-      { id: 'clear', label: 'Clear', blurb: 'Breathing easy.' },
-      { id: 'tight', label: 'Tight', blurb: 'Chest feels a bit tight.' },
-      { id: 'wheezy', label: 'Wheezy', blurb: 'Whistly breaths, worried eyes.' },
-      { id: 'struggling', label: 'Struggling', blurb: 'Hard to breathe, needs help now.' },
+      { id: 'clear', label: 'Clear', blurb: 'Breathing easy.', says: "Just here for my check-in — I'm breathing easy!" },
+      { id: 'tight', label: 'Tight', blurb: 'Chest feels a bit tight.', says: 'My chest feels a little tight today.' },
+      { id: 'wheezy', label: 'Wheezy', blurb: 'Whistly breaths, worried eyes.', says: 'My breaths sound whistly and my chest feels tight. Can you help me breathe easy?' },
+      { id: 'struggling', label: 'Struggling', blurb: 'Hard to breathe, needs help now.', says: "It's hard to breathe and I'm scared. Please help me!" },
     ],
     presentsAt: 2,
     actions: [
@@ -152,12 +152,12 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   hypertension: {
     id: 'hypertension',
     name: 'High Blood Pressure',
-    plainWords: 'Pressure running high — steady habits bring it down over visits.',
+    plainWords: 'Blood pressure running higher than it should be.',
     stages: [
-      { id: 'steady', label: 'Steady', blurb: 'Calm and even.' },
-      { id: 'creeping', label: 'Creeping up', blurb: 'A little tense lately.' },
-      { id: 'high', label: 'Running high', blurb: 'Needs a steadier routine.' },
-      { id: 'very-high', label: 'Very high', blurb: 'Needs care and a plan.' },
+      { id: 'steady', label: 'Steady', blurb: 'Calm and even.', says: "Just here for my check-in — I'm feeling steady!" },
+      { id: 'creeping', label: 'Creeping up', blurb: 'A little tense lately.', says: "I've been feeling a little tense lately. Are my numbers okay?" },
+      { id: 'high', label: 'Running high', blurb: 'Numbers running high.', says: 'My numbers are running high — what should I do?' },
+      { id: 'very-high', label: 'Very high', blurb: 'Needs care and a plan.', says: "My pressure is very high and I'm worried. I need a plan." },
     ],
     presentsAt: 2,
     actions: [

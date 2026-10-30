@@ -41,7 +41,7 @@ import type { UndoStack } from '../game/undo';
 
 /**
  * Milestone 1 clinic scene: a cozy clinic room and Mabel, the first
- * patient. Tap Mabel to see the complaint.
+ * patient. She greets you herself on arrival.
  *
  * ART-DIRECTION REBOOT (2026-10-29): the room shell is the
  * photorealistic minimal clinic plate
@@ -112,10 +112,11 @@ import type { UndoStack } from '../game/undo';
  * backend ticker (1 row, everywhere except Telemed), exam tool
  * tray (Visit only), Living Chart (nametag tap), Learning
  * List (strip book button, Waiting/Portal). The cast loads live
- * (Supabase, fallback offline): the opener reads Mabel's stored
- * root, and resolves read stored children — engine state stays
- * authoritative, words come from pre-computed futures, and
- * walking off the tree grows it in the background. Geometry:
+ * (Supabase, fallback offline): the opener is the patient's own
+ * first-person greeting, and resolves read stored children —
+ * engine state stays authoritative, words come from pre-computed
+ * futures, and walking off the tree grows it in the background.
+ * Geometry:
  * nametag 740, chips 758, cards y788 h74, toast to the freed
  * y368 band — all gaps re-audited (auditor: 0 findings).
  *
@@ -139,11 +140,11 @@ import type { UndoStack } from '../game/undo';
  * (name, visit type + #, condition + stage, one-line blurb),
  * auto-open on each patient's first appearance, handle toggles.
  * The Choose tab is replaced by a decision CORRAL: an outline
- * frame around the card row with a legend pill on its top edge
- * (also fixes the old tab's scale-about-origin jump). Nav bar
- * is Waiting Room + Visit only (Telemed/Portal parked, views
- * dormant but intact). Geometry: nametag 736, cards y772 h74,
- * corral y764-856, legend y753-775.
+ * frame around the card row with a fieldset label in a top-edge
+ * gap, left-aligned (also fixes the old tab's scale-about-origin
+ * jump). Nav bar is Waiting Room + Visit only (Telemed/Portal
+ * parked, views dormant but intact). Geometry: nametag 736,
+ * cards y772 h74, corral y764-856, label y756-772 from x44.
  *
  * Reboot landmark survey (re-measured from
  * art/contact-sheets/bg-reboot-contact-sheet.png + pixel scans
@@ -191,6 +192,11 @@ const COCOA = '#5c4633';
 const SECONDARY = '#8a6f52';
 // Chrome-2: bar-strip translucency only — pills + text stay opaque.
 const CHROME_ALPHA = 0.8;
+// Glass law: large surfaces go translucent, light-shaded so the
+// opaque text pops; small pills + glyphs stay solid.
+const GLASS_PANEL = 0.86;
+const GLASS_CARD = 0.9;
+const GLASS_ROW = 0.92;
 
 const GRADE_COLOR: Record<ChoiceGrade, number> = {
   BEST: SAGE,
@@ -609,14 +615,8 @@ export class ClinicScene extends Phaser.Scene {
       })
       .setOrigin(0.5)
       .setDepth(4);
-    this.add
-      .text(270, 100, 'Tap Mabel to say hello', {
-        fontFamily: FONT_FAMILY,
-        fontSize: '22px',
-        color: SECONDARY,
-      })
-      .setOrigin(0.5)
-      .setDepth(4);
+    // No tap-teaching lead-in: the patient's opener greets you on
+    // arrival (showView), so no hardcoded name ever ships here.
     // Secret admin trigger zone: x150–390, y28–84. No visible hint.
     const trigger = this.add.zone(270, 56, 240, 56).setDepth(4);
     trigger.setInteractive({ useHandCursor: false });
@@ -704,7 +704,7 @@ export class ClinicScene extends Phaser.Scene {
     // panel always talks about the patient on screen.
     this.panelBg.fillStyle(OUTLINE, 1);
     this.panelBg.fillTriangle(250, bottom - 2, 290, bottom - 2, 270, bottom + 14);
-    this.panelBg.fillStyle(CREAM, 1);
+    this.panelBg.fillStyle(CREAM, GLASS_PANEL);
     this.panelBg.lineStyle(3, OUTLINE, 1);
     this.panelBg.fillRoundedRect(x - w / 2, top, w, h, 24);
     this.panelBg.strokeRoundedRect(x - w / 2, top, w, h, 24);
@@ -777,20 +777,15 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   /**
-   * Live complaint: the stored root narrative when the cast has
-   * loaded (live or fallback), else the engine formula. Same
-   * opener either way — the stored flesh IS the formula, grown.
+   * Patient opener: the FIRST-PERSON 'say' line for the live
+   * condition+stage ("my breaths sound whistly…"). The patient
+   * greets YOU, the doctor — never "the doctor will see you
+   * now". Always local (voice-consistent); stored narratives stay
+   * third-person for consequence lines.
    */
-  private complaintText(): string {
-    if (this.cast && this.activePatientId) {
-      const root = rootNode(this.cast, this.activePatientId);
-      if (root) return `${root.narrative}\nThe doctor will see you now.`;
-    }
+  private openerText(): string {
     const def = CONDITIONS[this.patientState.conditionId];
-    const stage = def.stages[this.patientState.stageIndex];
-    const complaint =
-      `${this.activeName} feels ${stage.label.toLowerCase()}: ${stage.blurb} ${def.plainWords}`;
-    return `${complaint}\nThe doctor will see you now.`;
+    return def.stages[this.patientState.stageIndex]?.says ?? 'Hello!';
   }
 
   /** Wallet persistence (local; coin_ledger replaces it later). */
@@ -898,7 +893,7 @@ export class ClinicScene extends Phaser.Scene {
       const cx = 24 + i * 168 + 78;
       const cy = 772 + 37;
       const face = this.add.graphics();
-      face.fillStyle(CARD_FILL, 1);
+      face.fillStyle(CARD_FILL, GLASS_CARD);
       face.lineStyle(3, OUTLINE, 1);
       face.fillRoundedRect(-78, -37, 156, 74, 16);
       face.strokeRoundedRect(-78, -37, 156, 74, 16);
@@ -925,33 +920,50 @@ export class ClinicScene extends Phaser.Scene {
 
   /**
    * Decision corral: an outline frame around the card row (x16-524,
-   * y764-856) that reads "these are your choices", with a small
-   * tier-worded legend pill straddling its top edge (display-only,
-   * taps pass to the cards). Lives inside cardRow: fades + shifts
-   * with the row. The legend anchors at (270, 764) with RELATIVE
-   * children so the nudge swell grows about its own center (the
-   * old tab scaled about 0,0 and jumped — fixed here).
+   * y764-856) that reads "these are your choices". The top edge has
+   * a gap at the left holding a small tier-worded label IN the
+   * border (fieldset pattern, left-aligned — never centered, so it
+   * can't read as pointing at the middle card). The label sits on a
+   * frosted strip (card-fill 32%: part of the border, not a chip).
+   * Lives inside cardRow: fades + shifts with the row. The label
+   * container keeps RELATIVE children so the nudge swell grows
+   * about its own center (the old tab scaled about 0,0 and jumped
+   * — fixed here).
    */
   private drawCorral(): void {
-    const frame = this.add.graphics();
-    frame.lineStyle(3, OUTLINE, 1);
-    frame.strokeRoundedRect(16, 764, 508, 92, 18);
     const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
     const label = this.add
       .text(0, 0, CHOOSE_PROMPT_WORDING[tier], {
         fontFamily: FONT_FAMILY,
         fontStyle: 'bold',
-        fontSize: '14px',
+        fontSize: '12px',
         color: COCOA,
       })
       .setOrigin(0.5, 0.5);
-    const w = Math.max(110, label.width + 28);
-    const pill = this.add.graphics();
-    pill.fillStyle(CARD_FILL, 1);
-    pill.lineStyle(2, OUTLINE, 1);
-    pill.fillRoundedRect(-w / 2, -11, w, 22, 11);
-    pill.strokeRoundedRect(-w / 2, -11, w, 22, 11);
-    this.legend = this.add.container(270, 764, [pill, label]);
+    const strip = this.add.graphics();
+    strip.fillStyle(CARD_FILL, 0.32);
+    strip.fillRoundedRect(-label.width / 2 - 8, -8, label.width + 16, 16, 8);
+    // Left-aligned: label left edge at x44, clear of the corner arc.
+    this.legend = this.add.container(44 + label.width / 2, 764, [strip, label]);
+    const gapX1 = 44 + label.width + 8 + 2;
+    const frame = this.add.graphics();
+    frame.lineStyle(3, OUTLINE, 1);
+    frame.beginPath();
+    frame.arc(34, 782, 18, Math.PI, Math.PI * 1.5, false);
+    frame.strokePath();
+    frame.lineBetween(gapX1, 764, 506, 764);
+    frame.beginPath();
+    frame.arc(506, 782, 18, Math.PI * 1.5, Math.PI * 2, false);
+    frame.strokePath();
+    frame.lineBetween(524, 782, 524, 838);
+    frame.beginPath();
+    frame.arc(506, 838, 18, 0, Math.PI * 0.5, false);
+    frame.strokePath();
+    frame.lineBetween(506, 856, 34, 856);
+    frame.beginPath();
+    frame.arc(34, 838, 18, Math.PI * 0.5, Math.PI, false);
+    frame.strokePath();
+    frame.lineBetween(16, 838, 16, 782);
     this.cardRow.add([frame, this.legend]);
   }
 
@@ -1059,7 +1071,7 @@ export class ClinicScene extends Phaser.Scene {
         repeat: 3,
         ease: 'Sine.easeInOut',
       });
-      this.setConversation('DR. NORA', result.blockReason ?? action.hootLine, 'tell');
+      this.setConversation('DR. NORA', result.blockReason ?? action.hootLine, 'say');
       this.holdSteady();
       return;
     }
@@ -1230,7 +1242,7 @@ export class ClinicScene extends Phaser.Scene {
     if (this.adminOpen) return;
     if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
     if (!this.panelOpen) {
-      this.setConversation(speakerFor(this.activeName), this.complaintText(), 'tell');
+      this.setConversation(speakerFor(this.activeName), this.openerText(), 'say');
       // Happy tap-react: show the happy pose for the bounce, then
       // settle to steady. The token guards rapid re-taps so a stale
       // bounce never clears a newer flash.
@@ -1399,7 +1411,7 @@ export class ClinicScene extends Phaser.Scene {
       name: this.activeName,
       visit: `${VISIT_CONTEXT_WORDING[this.visitContext()][tier]} · #${PROTOTYPE_SEEDS.visitNo}`,
       cond: `${def.name} · ${stage.label}`,
-      blurb: stage.blurb,
+      blurb: `${stage.blurb} ${def.plainWords}`,
     });
   }
 
@@ -1413,7 +1425,7 @@ export class ClinicScene extends Phaser.Scene {
 
   private drawWaitingView(): void {
     const sheet = this.add.graphics();
-    sheet.fillStyle(CREAM, 1);
+    sheet.fillStyle(CREAM, GLASS_PANEL);
     sheet.lineStyle(3, OUTLINE, 1);
     sheet.fillRoundedRect(24, 136, 492, 740, 24);
     sheet.strokeRoundedRect(24, 136, 492, 740, 24);
@@ -1458,7 +1470,7 @@ export class ClinicScene extends Phaser.Scene {
     MOCK_ROSTER.forEach((entry, i) => {
       const yc = 196 + i * 132 + 60;
       const bg = this.add.graphics();
-      bg.fillStyle(CARD_FILL, 1);
+      bg.fillStyle(CARD_FILL, GLASS_ROW);
       bg.lineStyle(3, OUTLINE, 1);
       bg.fillRoundedRect(-230, -60, 460, 120, 16);
       bg.strokeRoundedRect(-230, -60, 460, 120, 16);
@@ -1530,7 +1542,7 @@ export class ClinicScene extends Phaser.Scene {
             this.switchPatient(entry.name);
           }
         } else {
-          this.showToast(`${entry.name} isn't playable yet (mock)`);
+          this.showToast(`${entry.name} isn't playable yet`);
         }
       });
       row.add(zone);
@@ -1916,7 +1928,7 @@ export class ClinicScene extends Phaser.Scene {
     // Learning List: book button in the strip (waiting/portal).
     this.learnList = new LearnList(this);
     this.learnList.onOpen = (r) => {
-      this.showToast(`${r.title} opens in the reader later (mock)`);
+      this.showToast(`${r.title} opens in the reader soon`);
     };
     this.drawBookButton();
 
@@ -1933,9 +1945,9 @@ export class ClinicScene extends Phaser.Scene {
         `${cast.source}: ${cast.patients.length} patients \u00b7 ${cast.nodes.length} nodes`,
         'trajectories: 2 turns ahead \u00b7 instant reads',
       ]);
-      // The opener complaint re-reads live on next tap.
+      // The opener re-reads live once the cast lands.
       if (this.panelOpen) {
-        this.setConversation(speakerFor(this.activeName), this.complaintText(), 'tell');
+        this.setConversation(speakerFor(this.activeName), this.openerText(), 'say');
       }
     });
   }
@@ -1990,6 +2002,11 @@ export class ClinicScene extends Phaser.Scene {
     this.fadeSwap(this.telemedView, next === 'telemed', instant);
     this.fadeSwap(this.cardRow, next === 'visit' || next === 'telemed', instant);
     this.fadeSwap(this.hud, next === 'visit', instant);
+    // The patient greets you on arrival — the opener is already
+    // showing, no tap-teaching needed. (Boot lands here too.)
+    if (next === 'visit' || next === 'telemed') {
+      this.setConversation(speakerFor(this.activeName), this.openerText(), 'say');
+    }
     // G4 module visibility: ticker everywhere except Telemed (call
     // buttons own that bottom band); tray + chart drawer Visit-only
     // (no hands through a video call); book where the strip sits

@@ -39,7 +39,7 @@ export class ChartDrawer {
 
   constructor(private scene: Phaser.Scene) {
     const bg = this.scene.add.graphics();
-    bg.fillStyle(THEME.cream, 0.94);
+    bg.fillStyle(THEME.cream, THEME.glassPanel);
     bg.lineStyle(3, THEME.outline, 1);
     bg.fillRoundedRect(0, DRAWER_TOP, PANEL_W, DRAWER_H, {
       tl: 0,
@@ -83,7 +83,7 @@ export class ChartDrawer {
     this.panel.setDepth(22);
 
     const tab = this.scene.add.graphics();
-    tab.fillStyle(THEME.cream, 0.94);
+    tab.fillStyle(THEME.cream, THEME.glassPanel);
     tab.lineStyle(3, THEME.outline, 1);
     tab.fillRoundedRect(0, DRAWER_TOP, HANDLE_W, DRAWER_H, { tl: 0, tr: 8, bl: 0, br: 8 });
     tab.strokeRoundedRect(0, DRAWER_TOP, HANDLE_W, DRAWER_H, { tl: 0, tr: 8, bl: 0, br: 8 });

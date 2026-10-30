@@ -94,7 +94,7 @@ export interface ConditionDef {
   name: string;
   plainWords: string;
   /** Ordered stages, index 0 = healthiest. */
-  stages: { id: StageId; label: string; blurb: string }[];
+  stages: { id: StageId; label: string; blurb: string; says: string }[];
   /** Stage index where a fresh case presents. */
   presentsAt: number;
   actions: ActionDef[];

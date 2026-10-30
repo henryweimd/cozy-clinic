@@ -10,9 +10,10 @@ MOCK/LOCAL and the demo path stays fully offline. Dev code below
 (`MABEL`) is a documented prototype convenience, NOT a real secret.
 
 Source geometry this spec builds on (`ClinicScene.ts` today): title
-"Cozy Clinic" centered (270,56), subtitle (270,100), Mabel 212px at
-(270,614) — sprite box x164–376, y508–720 — nametag y748, complaint
-bubble 492 wide docked at bottom 936. SIDE=24 margins, Baloo 2 face,
+"Cozy Clinic" centered (270,56), Mabel 212px at (270,614) —
+sprite box x164–376, y508–720 — nametag y736, conversation panel
+492 wide up top (the old subtitle lead-in + bottom complaint
+bubble are gone). SIDE=24 margins, Baloo 2 face,
 cream `#FFF3E2` panels + warm-brown `#8A5A3B` accents. Reboot
 landmarks: wall/floor ~696, rug top ~712, window glass only x490+
 y95–199 (title zone clear), bench left x0–160, plant/cabinet right
@@ -100,14 +101,16 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
 ### Conversation panel (Visit + Telemed)
 
 - Geometry: x24–516 (w492), top y136, height sizes to text UP TO
-  max-h 220 (y136–356), min-h 96. Never overlaps the subtitle
-  (ends ~y118) or Mabel (top y508): guaranteed clear band.
-- Style: cream panel r24 + 3px warm-brown outline + small tail
-  triangle pointing down toward Mabel (apex at (270, panel bottom
-  +14)), SOLID full-outline-color tucked under the panel
-  (chrome-2 operator direction; was an outlined cream tail).
-  Same tail both line kinds — the panel always talks about the
-  patient on screen.
+  max-h 220 (y136–356), min-h 96. Never overlaps the title
+  (ends ~y78) or Mabel (top y508): guaranteed clear band. (The
+  old "Tap Mabel" lead-in is gone — the opener greets you.)
+- Style: cream GLASS panel r24 (0.86, light-shaded so the opaque
+  text pops) + 3px warm-brown outline + small tail triangle
+  pointing down toward Mabel (apex at (270, panel bottom +14)),
+  SOLID full-outline-color tucked under the panel (chrome-2
+  operator direction; was an outlined cream tail). Same tail
+  both line kinds — the panel always talks about the patient
+  on screen.
 - SAY vs TELL (chrome-3 display law, replaces the chrome-2
   quote rule for the panel): every line declares a LineKind.
   'say' = direct speech in the speaker's own voice — quoted +
@@ -118,11 +121,14 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
   player knows who stepped in. Untagged narration starts at
   top+16 (tagged body stays top+48); panel height follows.
   Quoting applies at render time, BEFORE the "…" truncate pass.
-  All current engine copy (complaint, narrative, teaching,
-  blocked reasons) is narrator voice, so every panel caller
-  passes 'tell' — quotes return with first-person trajectory
-  dialogue. Portal rule unchanged: Nora's message bubbles quote,
-  player replies + Clinic system lines + snippets stay bare.
+  Voice split: the patient OPENER is first-person 'say' (quoted
+  + tagged, auto-shown on arrival — boot, nav, patient switch);
+  consequence + teaching lines stay third-person narrator
+  'tell'; Nora's veto intervention is her 'say' ("stepped in!").
+  The Medical Chart carries the condition note (blurb +
+  plainWords, spoiler-free: what it IS, never what fixes it).
+  Portal rule unchanged: Nora's message bubbles quote, player
+  replies + Clinic system lines + snippets stay bare.
 - Body: Baloo 2 20px cocoa, left-aligned, max 4 lines at 20px
   within max-h; longer copy truncates with "…" (prototype rule —
   flag it in feedback if real copy ever needs scroll).
@@ -135,12 +141,15 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
   cards: each w240, gap 12. Three cards: each w156, gaps 12. Tap
   target = full card (≥156x74 — generous).
 - Decision corral: an outline frame around the row (x16–524,
-  y764–856, r18) that reads "these are your choices", with a
-  tier-worded legend pill ("Choose care…" etc., 14px bold)
-  straddling its top edge (display-only). The old overlapping
-  Choose tab is retired (its scale-about-origin jump fixed by
-  the legend's centered anchor). Corral + legend ride inside
-  the card row container (fade + Telemed shift together).
+  y764–856, r18) that reads "these are your choices". The top
+  edge has a gap at the left holding a small tier-worded label
+  IN the border ("Choose care…" etc., 12px bold on a frosted
+  card-fill strip — part of the border, not a chip),
+  left-aligned so it never hints at the middle card. The old
+  overlapping Choose tab is retired (its scale-about-origin
+  jump fixed by the label's relative-children anchor). Corral
+  + label ride inside the card row container (fade + Telemed
+  shift together).
 - Style: white-cream `#FFF9EF` card r16, 3px outline; grade-tinted
   left spine 8px (BEST sage, NOT_GREAT sky, WRONG amber `#D9A441`,
   DANGEROUS rose — prototype shows the spine ONLY after tap, so
@@ -159,8 +168,8 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
 
 VIEW 1 — VISIT (default; today's Mabel scene):
 
-- Keeps the shipped scene visible: title, subtitle, Mabel,
-  nametag all as today.
+- Keeps the shipped scene visible: title, Mabel, nametag
+  all as today (no subtitle — the opener greets you).
 - Adds: conversation panel (y136+, replaces the old bottom bubble
   — the old bubble dock is RETIRED in this prototype; its content
   moves up so the card row + nav own the bottom), decision card

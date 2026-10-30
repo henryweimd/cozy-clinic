@@ -17,6 +17,9 @@ export const THEME = {
   secondary: '#8a6f52',
   /** Bar-strip translucency only — pills + text stay opaque. */
   chromeAlpha: 0.8,
+  /** Glass law: trays/drawers (narrow, more glass) + modal sheets. */
+  glassPanel: 0.8,
+  glassSheet: 0.85,
   /** Terminal surfaces (ticker, dev monitor): dark + muted green. */
   terminalBg: 0x1a1410,
   terminalBgAlpha: 0.72,

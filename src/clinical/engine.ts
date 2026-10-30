@@ -107,8 +107,10 @@ export class ClinicalEngine {
       mood: nextStage < state.stageIndex ? 'perky' : moodForStage(nextStage),
       memory: `${state.memory} Tried "${action.label}" → ${def.stages[nextStage].label.toLowerCase()}.`,
     };
+    const nextBlurb = def.stages[nextStage]?.blurb ?? '';
+    const nextBlurbLow = nextBlurb.charAt(0).toLowerCase() + nextBlurb.slice(1);
     const node = this.makeNode(next, {
-      narrative: `${def.stages[nextStage].label}: ${def.stages[nextStage].blurb}`,
+      narrative: `${def.stages[nextStage]?.label ?? ''} — ${nextBlurbLow}`,
       animationCue: cueForTransition(state.stageIndex, nextStage),
       teaching: action.hootLine,
     });
@@ -142,8 +144,8 @@ export class ClinicalEngine {
     };
     const node = this.makeNode(next, {
       narrative: cared
-        ? `A little time + steady care: ${def.stages[nextStage].label.toLowerCase()}.`
-        : `Some time passed: ${def.stages[nextStage].label.toLowerCase()}.`,
+        ? `Time and steady care — feeling ${def.stages[nextStage]?.label.toLowerCase() ?? ''}.`
+        : `Time passed without care — feeling ${def.stages[nextStage]?.label.toLowerCase() ?? ''}.`,
       animationCue: cueForTransition(state.stageIndex, nextStage),
       teaching: cared
         ? 'Steady care between visits is the quiet hero.'

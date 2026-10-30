@@ -139,13 +139,24 @@ describe('shipped copy', () => {
     for (const def of Object.values(CONDITIONS)) {
       const lines = [
         def.plainWords,
-        ...def.stages.flatMap((s) => [s.label, s.blurb]),
+        ...def.stages.flatMap((s) => [s.label, s.blurb, s.says]),
         ...def.actions.flatMap((a) => [a.label, a.hootLine]),
       ];
       for (const line of lines) {
         for (const name of PATIENT_NAMES) {
           expect(line).not.toMatch(new RegExp(`\\b${name}\\b`));
         }
+      }
+    }
+  });
+
+  it('gives every stage a short first-person opener + note', () => {
+    for (const def of Object.values(CONDITIONS)) {
+      expect(def.plainWords.length).toBeLessThanOrEqual(90);
+      for (const s of def.stages) {
+        expect(s.says.length).toBeGreaterThan(0);
+        expect(s.says.length).toBeLessThanOrEqual(140);
+        expect(s.says).toMatch(/\b(i|my|me)\b/i);
       }
     }
   });
