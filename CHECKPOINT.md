@@ -1,21 +1,22 @@
-# CHECKPOINT — M4a shared-care schema + identity (2026-10-29)
+# CHECKPOINT — M4b handoff compose + inbox + sync (2026-10-29)
 
-Phase: shared-care foundation. Migration `create_shared_care_tables`
-(`handoffs` + `encouragements` + `players.handle`/`team_tag`,
-RLS + anon SELECT, bounded anon INSERT); `sharedCare.ts`
-(preset handles, tier-worded handoff presets, cheers,
-live-else-fallback read path, send primitive); fallback
-handoff samples; Profile Doctor row tap-cycles the handle.
-Files: migration (Supabase), sharedCare.ts + tests (new),
-fallbackPack, scene (Profile row only), README/PROGRESS.
-Test result: auditor 0 findings; `npm test` 84/84; tsc clean;
-build green.
+Phase: two doctors can share a patient end to end. Notes
+handle (envelope tab + badge) opens the care-notes sheet
+(newest incoming + 6 tier-worded presets + Send);
+auto-written summaries; 20s polled inbox with new-note
+toasts; offline outbox with live flush; waiting-row flags;
+"(offline)" titling on fallback reads.
+Files: handoffSheet.ts (new), sharedCare.ts + tests, scene,
+auditor, README/PROGRESS.
+Test result: auditor 0 findings; `npm test` 86/86; tsc clean;
+build green. Live write path proven (anon INSERT 201 +
+read-back; probe cleaned).
 Deployment URL: `https://cozy-clinic.vercel.app/` (live-polled
 200 after push).
 Playtest result: NOT playtested (headless browsers SIGABRT in
-sandbox; operator playtesting live).
+sandbox; two-tab demo awaits the operator: different handles,
+leave a note, watch it land).
 Image spend this run: $0.00 (ledger ~$0.51 cumulative).
-Next: M4b handoff compose + inbox/continuity UI + polling sync
-(two-session demo-able); M4c teams/cheers; 60-second hook pass.
+Next: M4c team tags + cheers; then 60-second hook pass.
 
 STOP.

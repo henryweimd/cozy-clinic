@@ -134,6 +134,29 @@ export interface HandoffDraft {
   score: number;
 }
 
+/** Pure: outbox queue ops (unit-tested). */
+export function pushOutbox(
+  outbox: readonly HandoffDraft[],
+  draft: HandoffDraft,
+): HandoffDraft[] {
+  return [...outbox, draft];
+}
+
+/** Pure: drop the first n flushed drafts (unit-tested). */
+export function shiftOutbox(
+  outbox: readonly HandoffDraft[],
+  n: number,
+): HandoffDraft[] {
+  return outbox.slice(Math.max(0, n));
+}
+
+/** Pure: auto-written encounter summary (unit-tested). */
+export function handoffSummary(visitNo: number, score: number, ended: boolean): string {
+  return ended
+    ? `Visit #${visitNo} · ${score} of 3 right`
+    : `Visit #${visitNo} · ${score} of 3 so far`;
+}
+
 /**
  * Shares one handoff (throws offline/unauthorized — the caller
  * queues it in the local outbox and retries later).

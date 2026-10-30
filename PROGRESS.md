@@ -1598,3 +1598,24 @@ clearance — then a polish fix loop for real findings.
   allows; then 60-second hook pass.
 - Verification: auditor 0 findings; 84/84; tsc clean; build green.
 - Spend $0.00.
+
+## M4b handoff compose + inbox + sync (2026-10-29)
+
+- M4B OWNERSHIP: `src/ui/handoffSheet.ts` (new), `src/data/sharedCare.ts`
+  + tests (outbox/summary), `src/scenes/ClinicScene.ts` (notes
+  handle, inbox poll, compose, waiting flags), auditor,
+  README/PROGRESS/CHECKPOINT. Teams/cheers are M4c.
+- Notes handle (left tab under the drawer, envelope glyph, amber
+  badge) opens the care-notes sheet: newest 2 incoming notes +
+  6 tier-worded presets + Send. Summary auto-written (score +
+  visit no + ended/so-far); outcome from the round machine.
+- Sync: boot read + 20s poll + arrival/switch refresh, all
+  overlap-guarded; unseen other-doctor notes toast once;
+  offline sends queue in a persisted outbox and flush live.
+  Waiting rows flag "Note from Doctor X"; sheet titles
+  fallback reads "(offline)".
+- Proven: anon REST INSERT 201 + SELECT read-back on `handoffs`
+  (probe row created + deleted); live Milo id matches fallback
+  id so inbox matching works across sources.
+- Verification: auditor 0 findings; 86/86; tsc clean; build green.
+- Spend $0.00.

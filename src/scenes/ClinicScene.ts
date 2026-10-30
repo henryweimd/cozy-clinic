@@ -17,9 +17,18 @@ import type { VisitContext } from '../ui/mockData';
 import { BackendTicker } from '../ui/ticker';
 import { ToolTray } from '../ui/toolTrays';
 import { DOCTOR_HANDLES } from '../data/sharedCare';
+import {
+  handoffSummary,
+  loadHandoffs,
+  pushOutbox,
+  sendHandoff,
+  shiftOutbox,
+} from '../data/sharedCare';
+import type { HandoffDraft, HandoffNote } from '../data/sharedCare';
+import { HandoffSheet } from '../ui/handoffSheet';
 import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
-import { examQuestion, resultCopy, roundQuestion, visitOutcome } from '../game/visit';
+import { examQuestion, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
 import type { RoundScore, VisitOutcome } from '../game/visit';
 import { CONDITION_TIER_NAMES, EXAM_OTHER_FINDING } from '../clinical/conditions';
 import type { ConditionId } from '../clinical/types';
@@ -250,6 +259,7 @@ const SHOP_STORAGE_KEY = 'cozy-shop-v1';
 const LEARN_FILED_KEY = 'cozy-learn-filed-v1';
 const LEARN_OPENED_KEY = 'cozy-learn-opened-v1';
 const HANDLE_STORAGE_KEY = 'cozy-doctor-handle-v1';
+const OUTBOX_STORAGE_KEY = 'cozy-handoff-outbox-v1';
 /**
  * SAY vs TELL (chrome-3): 'say' = direct speech in the speaker's
  * own voice (quoted + tagged); 'tell' = third-person narration
@@ -386,6 +396,16 @@ export class ClinicScene extends Phaser.Scene {
   private tray!: ToolTray;
   private chart!: LivingChart;
   private learnList!: LearnList;
+  /** M4 shared care: inbox, compose state, offline outbox. */
+  private handoffSheet!: HandoffSheet;
+  private inbox: HandoffNote[] = [];
+  private inboxSource: 'live' | 'fallback' = 'fallback';
+  private refreshingInbox = false;
+  private selectedPreset: string | null = null;
+  private outbox: HandoffDraft[] = [];
+  private seenNoteIds = new Set<string>();
+  private notesHandle!: Phaser.GameObjects.Container;
+  private notesBadge!: Phaser.GameObjects.Graphics;
   /** Filed conditions (visit order — the list accumulates). */
   private filedConds: { id: string; name: string }[] = [];
   /** Opened resource ids (their +2 is spent). */
@@ -504,6 +524,7 @@ export class ClinicScene extends Phaser.Scene {
     this.drawTelemedChrome();
     this.drawPortalView();
     this.drawProfileView();
+    this.drawNotesHandle();
     this.drawNavBar();
     this.drawTopBar();
     this.wireModules();
@@ -879,6 +900,30 @@ export class ClinicScene extends Phaser.Scene {
 
   /** Doctor handle (preset identity until login ships). */
   private doctorHandle = DOCTOR_HANDLES[0] ?? 'Fox';
+
+  /** M4 outbox persistence (offline-written handoffs). */
+  private loadOutbox(): void {
+    try {
+      const raw = window.localStorage.getItem(OUTBOX_STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as HandoffDraft[];
+      if (Array.isArray(parsed)) {
+        this.outbox = parsed.filter(
+          (d) => typeof d?.patient_id === 'string' && typeof d?.preset_id === 'string',
+        );
+      }
+    } catch {
+      this.outbox = [];
+    }
+  }
+
+  private saveOutbox(): void {
+    try {
+      window.localStorage.setItem(OUTBOX_STORAGE_KEY, JSON.stringify(this.outbox));
+    } catch {
+      /* private-mode play keeps the session outbox */
+    }
+  }
 
   private loadHandle(): void {
     try {
@@ -1560,6 +1605,9 @@ export class ClinicScene extends Phaser.Scene {
     this.visitEnded = false;
     this.lastOutcome = null;
     this.hideResult();
+    this.selectedPreset = null;
+    this.handoffSheet.hide();
+    void this.refreshInbox('switch');
     this.visitStartCoins = this.wallet.balance;
     this.roundToken += 1;
     this.round = 'examine';
@@ -1948,6 +1996,19 @@ export class ClinicScene extends Phaser.Scene {
         })
         .setOrigin(0, 0);
       parts.push(who, what);
+      // Shared-care flag: another doctor left a note here.
+      const rowNotes = this.notesFor(entry.name);
+      const shared = rowNotes.find((n) => n.from_handle !== this.doctorHandle);
+      if (shared) {
+        const flag = this.add
+          .text(152, y + 72, `Note from Doctor ${shared.from_handle}`, {
+            fontFamily: FONT_FAMILY,
+            fontSize: '13px',
+            color: SECONDARY,
+          })
+          .setOrigin(0, 0);
+        parts.push(flag);
+      }
       if (i === 0) {
         const tag = this.add.graphics();
         tag.fillStyle(SAGE, 1);
@@ -2325,6 +2386,162 @@ export class ClinicScene extends Phaser.Scene {
     this.profileRows.add(swapZone);
   }
 
+  // -- M4 shared care (inbox, notes handle, compose) --
+
+  /** Live + fallback ids for one roster name (inbox matching). */
+  private patientIdsFor(name: string): string[] {
+    const ids: string[] = [];
+    const live = this.cast ? patientByName(this.cast, name) : null;
+    if (live) ids.push(live.id);
+    const fb = FALLBACK_PATIENTS.find((p) => p.name === name);
+    if (fb && !ids.includes(fb.id)) ids.push(fb.id);
+    return ids;
+  }
+
+  private patientNameFor(id: string): string | null {
+    const live = this.cast?.patients.find((p) => p.id === id);
+    if (live) return live.name;
+    return FALLBACK_PATIENTS.find((p) => p.id === id)?.name ?? null;
+  }
+
+  /** Newest-first inbox notes for one roster name. */
+  private notesFor(name: string): HandoffNote[] {
+    const ids = this.patientIdsFor(name);
+    return this.inbox
+      .filter((n) => ids.includes(n.patient_id))
+      .sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
+  }
+
+  /**
+   * Pulls the inbox (live, else fallback samples), toasts the
+   * first unseen note from another doctor, flushes the outbox
+   * on live reads, and re-syncs the badge + waiting rows.
+   * Overlap-guarded: polls never stack.
+   */
+  private async refreshInbox(reason: 'boot' | 'poll' | 'switch'): Promise<void> {
+    if (this.refreshingInbox) return;
+    this.refreshingInbox = true;
+    try {
+      const { notes, source } = await loadHandoffs();
+      this.inbox = notes;
+      this.inboxSource = source;
+      if (reason !== 'boot') {
+        const fresh = notes.find(
+          (n) => !this.seenNoteIds.has(n.id) && n.from_handle !== this.doctorHandle,
+        );
+        if (fresh) {
+          const who = this.patientNameFor(fresh.patient_id);
+          this.showToast(
+            `New note from Doctor ${fresh.from_handle}${who ? ` on ${who}` : ''}`,
+          );
+        }
+      }
+      for (const n of notes) this.seenNoteIds.add(n.id);
+      if (source === 'live') await this.flushOutbox();
+      this.syncNotesBadge();
+      if (this.currentView === 'waiting') this.refreshWaitingRows();
+      if (this.handoffSheet.open) this.showHandoffSheet();
+    } finally {
+      this.refreshingInbox = false;
+    }
+  }
+
+  /** Sends queued drafts in order; stops at the first failure. */
+  private async flushOutbox(): Promise<void> {
+    let sent = 0;
+    for (const draft of this.outbox) {
+      try {
+        await sendHandoff(draft);
+        sent += 1;
+      } catch {
+        break;
+      }
+    }
+    if (sent === 0) return;
+    this.outbox = shiftOutbox(this.outbox, sent);
+    this.saveOutbox();
+    this.showToast(sent === 1 ? 'Queued note sent' : `${sent} queued notes sent`);
+    const { notes } = await loadHandoffs();
+    this.inbox = notes;
+    for (const n of notes) this.seenNoteIds.add(n.id);
+    this.syncNotesBadge();
+  }
+
+  /** Badge dots the handle when another doctor wrote here. */
+  private syncNotesBadge(): void {
+    const notes = this.notesFor(this.activeName);
+    const shared = notes.some((n) => n.from_handle !== this.doctorHandle);
+    this.notesBadge.setVisible(shared);
+  }
+
+  private drawNotesHandle(): void {
+    // Second left tab under the chart drawer (y576-676): care
+    // notes. Same glass tab language, envelope glyph, amber
+    // badge dot when another doctor left a note.
+    const tab = this.add.graphics();
+    tab.fillStyle(CREAM, CHROME_ALPHA);
+    tab.lineStyle(3, OUTLINE, 1);
+    tab.fillRoundedRect(0, 576, 24, 100, { tl: 0, tr: 8, bl: 0, br: 8 });
+    tab.strokeRoundedRect(0, 576, 24, 100, { tl: 0, tr: 8, bl: 0, br: 8 });
+    const glyph = this.add.graphics();
+    glyph.lineStyle(2, OUTLINE, 1);
+    glyph.strokeRoundedRect(5, 618, 14, 10, 2);
+    glyph.lineBetween(5, 619, 12, 624);
+    glyph.lineBetween(19, 619, 12, 624);
+    this.notesBadge = this.add.graphics();
+    this.notesBadge.fillStyle(AMBER, 1);
+    this.notesBadge.lineStyle(2, OUTLINE, 1);
+    this.notesBadge.fillCircle(18, 586, 6);
+    this.notesBadge.strokeCircle(18, 586, 6);
+    this.notesBadge.setVisible(false);
+    const zone = this.add
+      .zone(12, 626, 24, 100)
+      .setInteractive({ useHandCursor: true });
+    zone.on('pointerdown', () => this.showHandoffSheet());
+    this.notesHandle = this.add.container(0, 0, [tab, glyph, this.notesBadge, zone]);
+    this.notesHandle.setDepth(23);
+  }
+
+  /** (Re)builds the sheet for the active patient + live tier. */
+  private showHandoffSheet(): void {
+    const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
+    this.handoffSheet.show({
+      patientName: this.activeName,
+      notes: this.notesFor(this.activeName),
+      tier,
+      selected: this.selectedPreset,
+      offline: this.inboxSource === 'fallback',
+    });
+  }
+
+  /** Sends the picked preset (or queues it offline). */
+  private async sendActiveNote(): Promise<void> {
+    const preset = this.selectedPreset;
+    const ids = this.patientIdsFor(this.activeName);
+    const patientId = ids[0] ?? null;
+    if (preset === null || patientId === null) return;
+    const score = scoreCount(this.roundScore);
+    const draft: HandoffDraft = {
+      patient_id: patientId,
+      from_handle: this.doctorHandle,
+      preset_id: preset,
+      encounter_summary: handoffSummary(this.visitNo(), score, this.visitEnded),
+      outcome: visitOutcome(this.roundScore),
+      score,
+    };
+    this.selectedPreset = null;
+    this.handoffSheet.hide();
+    try {
+      await sendHandoff(draft);
+      this.showToast('Note sent to the next doctor');
+    } catch {
+      this.outbox = pushOutbox(this.outbox, draft);
+      this.saveOutbox();
+      this.showToast('Saved — sends when online');
+    }
+    void this.refreshInbox('switch');
+  }
+
   // -- nav bar (persistent, all views) --
 
   private drawNavBar(): void {
@@ -2507,6 +2724,25 @@ export class ClinicScene extends Phaser.Scene {
     this.learnList = new LearnList(this);
     this.loadLearn();
     this.loadHandle();
+    this.loadOutbox();
+    // Care-notes sheet: incoming continuity + preset compose.
+    this.handoffSheet = new HandoffSheet(this);
+    this.handoffSheet.onSelect = (presetId) => {
+      this.selectedPreset = presetId;
+      this.showHandoffSheet();
+    };
+    this.handoffSheet.onSend = () => {
+      void this.sendActiveNote();
+    };
+    // Inbox: boot read + 20s poll (two doctors share a patient).
+    void this.refreshInbox('boot');
+    this.time.addEvent({
+      delay: 20000,
+      loop: true,
+      callback: () => {
+        void this.refreshInbox('poll');
+      },
+    });
     this.learnList.onOpen = (r) => {
       window.open(r.url, '_blank', 'noopener');
       if (this.openedRes.has(r.id)) {
@@ -2621,10 +2857,14 @@ export class ClinicScene extends Phaser.Scene {
     this.ticker.setVisible(next !== 'telemed');
     this.tray.setVisible(next === 'visit');
     this.chartDrawer.setVisible(next === 'visit');
+    this.notesHandle.setVisible(next === 'visit');
+    // Fresh arrivals re-check the shared inbox (cheap, guarded).
+    if (next === 'waiting' || next === 'visit') void this.refreshInbox('switch');
     // Overlays close on any view change (all no-op when shut) —
     // except Learn, which IS the Learning List full-screen.
     this.chart.hide();
     this.shop.hide();
+    this.handoffSheet.hide();
     if (next === 'learn') {
       this.learnList.show(this.filedConds, this.openedRes);
       this.clearLearnBadge();

@@ -3,10 +3,13 @@ import {
   CHEER_PRESETS,
   DOCTOR_HANDLES,
   HANDOFF_PRESETS,
+  handoffSummary,
   handoffText,
   latestHandoff,
+  pushOutbox,
+  shiftOutbox,
 } from './sharedCare';
-import type { HandoffNote } from './sharedCare';
+import type { HandoffDraft, HandoffNote } from './sharedCare';
 import { FALLBACK_HANDOFFS, FALLBACK_PATIENTS } from './fallbackPack';
 
 describe('handles + presets', () => {
@@ -51,6 +54,35 @@ describe('latestHandoff', () => {
     expect(latestHandoff(notes, 'p1')?.id).toBe('b');
     expect(latestHandoff(notes, 'p2')?.id).toBe('c');
     expect(latestHandoff(notes, 'nobody')).toBeNull();
+  });
+});
+
+describe('outbox', () => {
+  const draft: HandoffDraft = {
+    patient_id: 'p1',
+    from_handle: 'Fox',
+    preset_id: 'rest-up',
+    encounter_summary: 'Visit #2 · 1 of 3 so far',
+    outcome: 'struggling',
+    score: 1,
+  };
+
+  it('queues offline drafts and drops flushed ones', () => {
+    const q1 = pushOutbox([], draft);
+    expect(q1).toHaveLength(1);
+    const q2 = pushOutbox(q1, { ...draft, score: 2 });
+    expect(q2).toHaveLength(2);
+    expect(shiftOutbox(q2, 1)).toHaveLength(1);
+    expect(shiftOutbox(q2, 9)).toHaveLength(0);
+    // Inputs never mutate.
+    expect(q1).toHaveLength(1);
+  });
+});
+
+describe('handoffSummary', () => {
+  it('writes the encounter line for finished + live visits', () => {
+    expect(handoffSummary(2, 3, true)).toBe('Visit #2 · 3 of 3 right');
+    expect(handoffSummary(2, 1, false)).toBe('Visit #2 · 1 of 3 so far');
   });
 });
 
