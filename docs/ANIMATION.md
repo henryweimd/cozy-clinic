@@ -104,6 +104,8 @@ Blink:
 - Cadence: randomized 3000–5000 ms (`3000 + Math.random() * 2000`),
   rescheduled after every blink so a cast never blinks in unison.
 - Closed duration: exactly 120 ms (`delayedCall(120)`).
+- Theo exception (sleepy toddler): 220 ms closed, 2000–3500 ms
+  gap — heavier, drowsier blinks (`src/game/sprites.ts`).
 - Swap rule (simplest robust rule — no blink variants are ever
   ordered for sick/pained/relieved): the timer fires ONLY when
   the steady face is idle AND no flash is showing AND the

@@ -63,6 +63,7 @@ import type { Wallet } from '../game/economy';
 import { buyItem, learnBonus, nurseBonus, perfectBonus, toolBonus } from '../game/shop';
 import type { ShopItem } from '../game/shop';
 import { ShopSheet } from '../ui/shopSheet';
+import { blinkCloseMs, blinkGapMs, SPRITE_PREFIX } from '../game/sprites';
 import { clearUndo, emptyUndo, pushMove, undoDepth, undoMove } from '../game/undo';
 import type { UndoStack } from '../game/undo';
 
@@ -84,7 +85,8 @@ import type { UndoStack } from '../game/undo';
  * (files left on disk, manifest-flagged); old plush-room constants
  * are retired (see the reboot landmark survey below).
  * Motion implements docs/ANIMATION.md exactly (bob 3px @ 1.8
- * rad/s; blink 120ms per 3-5s randomized, idle-only; tap bounce
+ * rad/s; blink 120ms per 3-5s randomized, idle-only (Theo: 220ms
+ * per 2-3.5s, sleepy cadence); tap bounce
  * 110ms squash +-0.06 + 80ms overshoot +-0.03, Sine easings,
  * token-guarded). Expression state machine is LIVE: Mabel rests
  * on the steady face for the live stage/vitals (sick/pained/
@@ -228,22 +230,13 @@ const GRADE_COLOR: Record<ChoiceGrade, number> = {
 };
 
 type ViewName = 'waiting' | 'visit' | 'telemed' | 'portal' | 'learn' | 'profile';
-type Speaker = 'MABEL' | 'JUNE' | 'MILO' | 'YOU';
+type Speaker = 'MABEL' | 'JUNE' | 'MILO' | 'THEO' | 'YOU';
 
-/**
- * Playable cast (roster phase): display name -> sprite texture
- * prefix. Mabel keeps the `mabel-*` keys (files stay `mochi-*`
- * for stability); June/Milo use their own names.
- */
-const SPRITE_PREFIX: Record<string, string> = {
-  Mabel: 'mabel',
-  June: 'june',
-  Milo: 'milo',
-};
+
 
 function speakerFor(patientName: string): Speaker {
   const key = patientName.trim().toUpperCase();
-  if (key === 'JUNE' || key === 'MILO' || key === 'MABEL') return key;
+  if (key === 'JUNE' || key === 'MILO' || key === 'MABEL' || key === 'THEO') return key;
   return 'MABEL';
 }
 
@@ -508,8 +501,8 @@ export class ClinicScene extends Phaser.Scene {
     this.load.image('mabel-sick', 'assets/characters/mochi-reboot-sick.png');
     this.load.image('mabel-pained', 'assets/characters/mochi-reboot-pained.png');
     this.load.image('mabel-relieved', 'assets/characters/mochi-reboot-relieved.png');
-    // Roster phase: June + Milo full expression sets (own names).
-    for (const slug of ['june', 'milo']) {
+    // Roster phase: June + Milo + Theo full expression sets (own names).
+    for (const slug of ['june', 'milo', 'theo']) {
       for (const frame of ['idle', 'blink', 'happy', 'sick', 'pained', 'relieved']) {
         this.load.image(`${slug}-${frame}`, `assets/characters/${slug}-${frame}.png`);
       }
@@ -573,10 +566,12 @@ export class ClinicScene extends Phaser.Scene {
 
     // (Visit clock removed until the speed element returns.)
 
-    // Blink: ANIMATION.md — eyes closed 120ms every 3–5s, randomized.
+    // Blink: ANIMATION.md — eyes closed 120ms every 3–5s,
+    // randomized (Theo's sleepy cadence is slower + longer).
     // Fires ONLY when the steady face is idle AND no flash is showing
-    // AND the current texture is mabel-idle; otherwise reschedules
-    // without swapping, so a flash never fights the blink timer.
+    // AND the current texture is the idle frame; otherwise
+    // reschedules without swapping, so a flash never fights the
+    // blink timer.
     if (this.time.now >= this.blinkAt) {
       if (
         !this.showingFlash &&
@@ -584,8 +579,8 @@ export class ClinicScene extends Phaser.Scene {
         this.patient.texture.key === `${this.prefix()}-idle`
       ) {
         this.patient.setTexture(`${this.prefix()}-blink`);
-        this.time.delayedCall(120, () => {
-          // A tap/flash during the 120ms window wins; only restore
+        this.time.delayedCall(blinkCloseMs(this.activeName), () => {
+          // A tap/flash during the blink window wins; only restore
           // when blink still owns the texture.
           if (this.patient.texture.key === `${this.prefix()}-blink`) {
             this.settleToSteady();
@@ -3771,8 +3766,10 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   private scheduleBlink(): void {
-    // Randomized 3–5s so the cast never blinks in unison (art bible).
-    this.blinkAt = this.time.now + 3000 + Math.random() * 2000;
+    // Randomized gap so the cast never blinks in unison (art
+    // bible); Theo's sleepy cadence comes from the roster.
+    const [lo, hi] = blinkGapMs(this.activeName);
+    this.blinkAt = this.time.now + lo + Math.random() * (hi - lo);
   }
 
   private drawSneeze(): void {
