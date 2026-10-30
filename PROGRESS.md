@@ -1,5 +1,15 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 19 (2026-10-30): learn cards — art headers, inline quiz, coin pill
+
+- 4 Block-U-verbatim Meta Image headers ($0.04), cropped 824x320,
+  contact sheet reviewed; Block U locked in ART_BIBLE.
+- Card rewrite: art header, summary, quiz inline at the bottom;
+  prize pill = code-drawn coin disc + "+5", no "Quiz" wording;
+  passed stamp waits until the prize is answered.
+- Verdicts: 154/154 tests, tsc clean, auditor 0, build green,
+  live 200 + art 200. Ledger ~$0.85.
+
 ## Run 5 (2026-10-30): improvement loops 1-3 + hygiene
 
 - Loop 1 (critic hunt): fixed the 90ms double-resolve hole

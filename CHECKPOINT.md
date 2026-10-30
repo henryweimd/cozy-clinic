@@ -273,3 +273,24 @@ programmatic verification only.
 Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
 
 STOP.
+
+## Run 19 — learncard: art headers + inline quiz + coin pill (2026-10-30)
+
+Phase: learning-list card overhaul per operator — Meta Image art
+header per condition, quiz inline at card bottom, prize as coin
+icon +5 pill (no "Quiz" wording in rows).
+
+Files: learnList(+test), ClinicScene (art preload), 4 new
+public/assets/learn/*.png + contact sheet, ART_BIBLE (Block U
+locked), art/manifest.
+
+Test result: auditor 0 findings; `npm test` 154/154; tsc
+clean; build green; live 200 + art 200 (bundle D8uW9PZM).
+
+Playtest result: NOT operator-playtested — programmatic only.
+
+Image spend this run: $0.04 (ledger ~$0.85 cumulative — note:
+manifest ledger was $0.81, supersedes $0.74 in older CHECKPOINT
+notes; STOP at $120).
+
+STOP.
