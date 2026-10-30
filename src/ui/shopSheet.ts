@@ -1,5 +1,5 @@
 import { THEME } from './chromeTheme';
-import { drawCoin } from './coin';
+import { drawCoin } from './icons';
 import { itemsFor } from '../game/shop';
 import type { ShopCategory, ShopItem } from '../game/shop';
 

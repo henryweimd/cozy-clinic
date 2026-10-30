@@ -45,7 +45,7 @@ import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
 import { examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
 import { reword } from '../game/reword';
-import { drawCoin } from '../ui/coin';
+import { COIN_GOLD, drawBook, drawCoin } from '../ui/icons';
 import { EMPTY_STREAK, earnsDailyBonus, nextStreak, streakBonus } from '../game/streak';
 import type { StreakState } from '../game/streak';
 import { playSfx, setSfxMuted, unlockSfx } from '../game/sfx';
@@ -2726,14 +2726,15 @@ export class ClinicScene extends Phaser.Scene {
   // -- VIEW 5: player profile (placeholder; the players table waits) --
 
   private drawProfileView(): void {
-    // Same washed-sheet geometry as Waiting/Learn. The stats
-    // are LIVE (wallet + Learn progress); identity + login
-    // ship after the freeze on the `players` table.
+    // Compact sheet (136..636): identity cards + panels end at
+    // 604 — no dead rows below. Stats are LIVE (wallet + Learn
+    // progress); identity + login ship after the freeze on the
+    // `players` table.
     const sheet = this.add.graphics();
     sheet.fillStyle(CREAM, CHROME_ALPHA);
     sheet.lineStyle(3, OUTLINE, 1);
-    sheet.fillRoundedRect(24, 136, 492, 740, 24);
-    sheet.strokeRoundedRect(24, 136, 492, 740, 24);
+    sheet.fillRoundedRect(24, 136, 492, 500, 24);
+    sheet.strokeRoundedRect(24, 136, 492, 500, 24);
     const title = this.add
       .text(48, 172, 'Profile', {
         fontFamily: FONT_FAMILY,
@@ -2820,102 +2821,120 @@ export class ClinicScene extends Phaser.Scene {
     });
     this.levelSlider.add(zone);
     this.profileRows.removeAll(true);
-    // Tappable rows carry › (Coins opens the Shop; Doctor +
-    // Team open the identity editor; About opens its sheet).
-    const stats: [string, string][] = [
-      ['Care Coins', `${this.wallet.balance} ›`],
-      ['Topics filed', `${this.filedConds.length}`],
-      ['Topics read', `${this.openedRes.size}`],
-      ['Doctor', `Doctor ${this.doctorHandle} ›`],
-      ['Team', `Team ${this.teamTag} ›`],
-      ['Cheers', `${this.cheers.length}`],
-    ];
-    stats.forEach(([label, value], i) => {
-      const y = 232 + i * 84;
+    // Identity first, then panels — no padded rows. Doctor card,
+    // Team card, a 2-panel grid (Coins, Topics), the About link.
+    const card = (x: number, y: number, w: number, h: number): void => {
       const bg = this.add.graphics();
       bg.fillStyle(CARD_FILL, 1);
       bg.lineStyle(2, OUTLINE, 1);
-      bg.fillRoundedRect(48, y, 444, 72, 16);
-      bg.strokeRoundedRect(48, y, 444, 72, 16);
-      const left = this.add
-        .text(68, y + 36, label, {
-          fontFamily: FONT_FAMILY,
-          fontSize: '17px',
-          color: SECONDARY,
-        })
-        .setOrigin(0, 0.5);
-      const right = this.add
-        .text(472, y + 36, value, {
-          fontFamily: FONT_FAMILY,
-          fontStyle: 'bold',
-          fontSize: '19px',
-          color: COCOA,
-        })
-        .setOrigin(1, 0.5);
-      this.profileRows.add([bg, left, right]);
-      // The coin interface gets a real coin: metallic disc pinned
-      // left of the balance (measured, so big wallets still fit).
-      if (i === 0) {
-        const coin = this.add.graphics();
-        drawCoin(coin, 472 - right.width - 16, y + 36, 11);
-        this.profileRows.add(coin);
-      }
-    });
-    // The Care Coins row opens the Clinic Shop (the strip is
-    // gone — this row IS the coin interface now).
-    const coinZone = this.add
-      .zone(270, 232 + 0 * 84 + 36, 444, 72)
+      bg.fillRoundedRect(x, y, w, h, 16);
+      bg.strokeRoundedRect(x, y, w, h, 16);
+      this.profileRows.add(bg);
+    };
+    const label = (
+      x: number,
+      y: number,
+      text: string,
+      size: string,
+      color: string,
+      bold: boolean,
+      originX: number,
+    ): void => {
+      this.profileRows.add(
+        this.add
+          .text(x, y, text, {
+            fontFamily: FONT_FAMILY,
+            fontStyle: bold ? 'bold' : 'normal',
+            fontSize: size,
+            color,
+          })
+          .setOrigin(originX, 0.5),
+      );
+    };
+    // Doctor identity card (232..328): persona disc, handle, sub,
+    // cheers sticker badge. Taps open the identity editor.
+    const dy = 232;
+    card(48, dy, 444, 96);
+    const disc = this.add.graphics();
+    disc.fillStyle(SAGE, 1);
+    disc.lineStyle(2, OUTLINE, 1);
+    disc.fillCircle(108, dy + 48, 26);
+    disc.strokeCircle(108, dy + 48, 26);
+    this.profileRows.add(disc);
+    label(108, dy + 48, (this.doctorHandle[0] ?? 'D').toUpperCase(), '26px', '#ffffff', true, 0.5);
+    label(150, dy + 36, `Doctor ${this.doctorHandle.slice(0, 8)}`, '22px', COCOA, true, 0);
+    label(150, dy + 66, 'your doctor \u00b7 tap to change', '13px', SECONDARY, false, 0);
+    const badge = this.add.graphics();
+    badge.fillStyle(COIN_GOLD, 1);
+    badge.lineStyle(2, OUTLINE, 1);
+    badge.fillCircle(452, dy + 30, 15);
+    badge.strokeCircle(452, dy + 30, 15);
+    this.profileRows.add(badge);
+    label(452, dy + 30, `${this.cheers.length}`, '14px', COCOA, true, 0.5);
+    label(452, dy + 53, 'cheers', '11px', SECONDARY, false, 0.5);
+    const docZone = this.add
+      .zone(270, dy + 48, 444, 96)
       .setInteractive({ useHandCursor: true });
-    coinZone.on('pointerdown', () => {
-      if (!this.shop.open) this.shop.show(this.wallet.balance, this.ownedIds);
-    });
-    this.profileRows.add(coinZone);
-    // The Doctor row opens the identity editor (presets + typed).
-    const swapZone = this.add
-      .zone(270, 232 + 3 * 84 + 36, 444, 72)
-      .setInteractive({ useHandCursor: true });
-    swapZone.on('pointerdown', () => {
+    docZone.on('pointerdown', () => {
       this.editor.show('doctor', this.doctorHandle, DOCTOR_HANDLES);
     });
-    this.profileRows.add(swapZone);
-    // The Team row opens the practice editor (presets + typed).
+    this.profileRows.add(docZone);
+    // Team card (340..404).
+    const ty = 340;
+    card(48, ty, 444, 64);
+    label(68, ty + 32, 'Team', '17px', SECONDARY, false, 0);
+    label(472, ty + 32, `${this.teamTag.slice(0, 14)} \u203a`, '19px', COCOA, true, 1);
     const teamZone = this.add
-      .zone(270, 232 + 4 * 84 + 36, 444, 72)
+      .zone(270, ty + 32, 444, 64)
       .setInteractive({ useHandCursor: true });
     teamZone.on('pointerdown', () => {
       this.editor.show('team', this.teamTag, TEAM_TAGS);
     });
     this.profileRows.add(teamZone);
-    // The About row opens the project sheet (7th row, same card).
-    const aboutY = 232 + 6 * 84;
-    const aboutBg = this.add.graphics();
-    aboutBg.fillStyle(CARD_FILL, 1);
-    aboutBg.lineStyle(2, OUTLINE, 1);
-    aboutBg.fillRoundedRect(48, aboutY, 444, 72, 16);
-    aboutBg.strokeRoundedRect(48, aboutY, 444, 72, 16);
-    const aboutLeft = this.add
-      .text(68, aboutY + 36, 'About', {
-        fontFamily: FONT_FAMILY,
-        fontSize: '17px',
-        color: SECONDARY,
-      })
-      .setOrigin(0, 0.5);
-    const aboutRight = this.add
-      .text(472, aboutY + 36, 'Cozy Clinic ›', {
-        fontFamily: FONT_FAMILY,
-        fontStyle: 'bold',
-        fontSize: '19px',
-        color: COCOA,
-      })
-      .setOrigin(1, 0.5);
+    // Coins panel (48..258 x 416..536): metallic coin, big
+    // balance, Shop link. Taps open the Clinic Shop.
+    const py = 416;
+    card(48, py, 210, 120);
+    const coin = this.add.graphics();
+    drawCoin(coin, 96, py + 60, 16);
+    this.profileRows.add(coin);
+    label(242, py + 46, `${this.wallet.balance}`, '26px', COCOA, true, 1);
+    label(242, py + 74, 'care coins', '12px', SECONDARY, false, 1);
+    label(242, py + 98, 'Shop \u203a', '13px', COCOA, true, 1);
+    const coinZone = this.add
+      .zone(153, py + 60, 210, 120)
+      .setInteractive({ useHandCursor: true });
+    coinZone.on('pointerdown', () => {
+      if (!this.shop.open) this.shop.show(this.wallet.balance, this.ownedIds);
+    });
+    this.profileRows.add(coinZone);
+    // Topics panel (282..492 x 416..536): book, N-of-M read,
+    // Learn link. Taps open the Learning List.
+    card(282, py, 210, 120);
+    const book = this.add.graphics();
+    drawBook(book, 330, py + 60, 20);
+    this.profileRows.add(book);
+    label(476, py + 46, `${this.openedRes.size} of ${this.filedConds.length}`, '26px', COCOA, true, 1);
+    label(476, py + 74, 'topics read', '12px', SECONDARY, false, 1);
+    label(476, py + 98, 'Learn \u203a', '13px', COCOA, true, 1);
+    const topicsZone = this.add
+      .zone(387, py + 60, 210, 120)
+      .setInteractive({ useHandCursor: true });
+    topicsZone.on('pointerdown', () => this.showView('learn'));
+    this.profileRows.add(topicsZone);
+    // About link (548..604): full About page lives behind it.
+    const ay = 548;
+    card(48, ay, 444, 56);
+    label(68, ay + 28, 'About Cozy Clinic', '17px', SECONDARY, false, 0);
+    label(472, ay + 28, '\u203a', '19px', COCOA, true, 1);
     const aboutZone = this.add
-      .zone(270, aboutY + 36, 444, 72)
+      .zone(270, ay + 28, 444, 56)
       .setInteractive({ useHandCursor: true });
     aboutZone.on('pointerdown', () => {
       if (this.about.open) this.about.hide();
       else this.about.show(this.sfxMuted, this.tickerOn);
     });
-    this.profileRows.add([aboutBg, aboutLeft, aboutRight, aboutZone]);
+    this.profileRows.add(aboutZone);
   }
 
   // -- M4 shared care (inbox, notes handle, compose) --

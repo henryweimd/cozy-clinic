@@ -1,19 +1,21 @@
 import { THEME } from './chromeTheme';
 
 /**
- * About sheet: a small modal behind the Profile About row. Three
- * short paragraphs on what Cozy Clinic is — offline-safe (no
- * links out) — plus the sound toggle (the game's only setting
- * lives here, next to the project it belongs to). Modal over
- * Profile (depth 30); backdrop tap or the × closes it.
+ * About page: a full-page modal behind the Profile About link —
+ * the pitch, how to play, the hackathon context, credits, and
+ * the education-only disclaimer — offline-safe (no links out).
+ * The sound + terminal toggles live at the bottom, next to the
+ * project they belong to. Modal over Profile (depth 30);
+ * backdrop tap or the × closes it.
  */
 
 const TITLE = 'About Cozy Clinic';
 
 const BODY: readonly string[] = [
-  'A cozy clinic game where patients remember you. Your Living Chart follows every friend across visits and doctors.',
+  'Cozy Clinic is a cozy game about caring for patients who remember you. Meet Milo, Mabel, June, Theo, Priya, and Ellis — examine, diagnose, and treat them across visits while your Living Chart follows every friend.',
+  "How to play: clear each visit's three quiz rounds, earn Care Coins, read Learn topics to get sharper, and spend coins in the Shop. Slide the reading level from Gentle to Expert.",
+  'Made for the Meta AI Developer Hackathon, Indie track. Muse Spark pre-computes patient futures and paraphrases greetings; Muse Image drew the cast; Muse Code built the game.',
   'Educational simulation only — never medical advice, never real patient data.',
-  'Made for the Meta AI Developer Hackathon, Indie track.',
 ];
 
 export class AboutSheet {
@@ -36,18 +38,18 @@ export class AboutSheet {
     const card = this.scene.add.graphics();
     card.fillStyle(THEME.cardFill, THEME.glassSheet);
     card.lineStyle(3, THEME.outline, 1);
-    card.fillRoundedRect(48, 300, 444, 452, 24);
-    card.strokeRoundedRect(48, 300, 444, 452, 24);
+    card.fillRoundedRect(24, 136, 492, 712, 24);
+    card.strokeRoundedRect(24, 136, 492, 712, 24);
     const title = this.scene.add
-      .text(72, 340, TITLE, {
+      .text(56, 174, TITLE, {
         fontFamily: THEME.font,
         fontStyle: 'bold',
-        fontSize: '24px',
+        fontSize: '26px',
         color: THEME.cocoa,
       })
       .setOrigin(0, 0.5);
     const close = this.scene.add
-      .text(468, 340, '×', {
+      .text(484, 174, '×', {
         fontFamily: THEME.font,
         fontStyle: 'bold',
         fontSize: '28px',
@@ -55,20 +57,20 @@ export class AboutSheet {
       })
       .setOrigin(0.5, 0.5);
     const closeZone = this.scene.add
-      .zone(468, 340, 56, 56)
+      .zone(484, 174, 56, 56)
       .setInteractive({ useHandCursor: true });
     closeZone.on('pointerdown', () => this.hide());
     const body = this.scene.add
-      .text(72, 376, BODY.join('\n\n'), {
+      .text(56, 214, BODY.join('\n\n'), {
         fontFamily: THEME.font,
         fontSize: '16px',
         color: THEME.secondary,
-        wordWrap: { width: 396 },
+        wordWrap: { width: 428 },
         lineSpacing: 6,
       })
       .setOrigin(0, 0);
     const soundLabel = this.scene.add
-      .text(72, 666, 'Sound', {
+      .text(56, 756, 'Sound', {
         fontFamily: THEME.font,
         fontSize: '17px',
         color: THEME.secondary,
@@ -76,7 +78,7 @@ export class AboutSheet {
       .setOrigin(0, 0.5);
     this.soundBg = this.scene.add.graphics();
     this.soundText = this.scene.add
-      .text(420, 666, '', {
+      .text(420, 756, '', {
         fontFamily: THEME.font,
         fontStyle: 'bold',
         fontSize: '17px',
@@ -84,11 +86,11 @@ export class AboutSheet {
       })
       .setOrigin(0.5, 0.5);
     const soundZone = this.scene.add
-      .zone(420, 666, 110, 52)
+      .zone(420, 756, 110, 52)
       .setInteractive({ useHandCursor: true });
     soundZone.on('pointerdown', () => this.onSoundToggle(!this.muted));
     const terminalLabel = this.scene.add
-      .text(72, 722, 'Terminal', {
+      .text(56, 812, 'Terminal', {
         fontFamily: THEME.font,
         fontSize: '17px',
         color: THEME.secondary,
@@ -96,7 +98,7 @@ export class AboutSheet {
       .setOrigin(0, 0.5);
     this.terminalBg = this.scene.add.graphics();
     this.terminalText = this.scene.add
-      .text(420, 722, '', {
+      .text(420, 812, '', {
         fontFamily: THEME.font,
         fontStyle: 'bold',
         fontSize: '17px',
@@ -104,7 +106,7 @@ export class AboutSheet {
       })
       .setOrigin(0.5, 0.5);
     const terminalZone = this.scene.add
-      .zone(420, 722, 110, 52)
+      .zone(420, 812, 110, 52)
       .setInteractive({ useHandCursor: true });
     terminalZone.on('pointerdown', () => this.onTickerToggle(!this.tickerOn));
     this.paintToggles();
@@ -154,8 +156,8 @@ export class AboutSheet {
   }
 
   private paintToggles(): void {
-    this.paintToggle(this.soundBg, this.soundText, 644, !this.muted);
-    this.paintToggle(this.terminalBg, this.terminalText, 700, this.tickerOn);
+    this.paintToggle(this.soundBg, this.soundText, 734, !this.muted);
+    this.paintToggle(this.terminalBg, this.terminalText, 790, this.tickerOn);
   }
 
   show(muted: boolean, tickerOn: boolean): void {
