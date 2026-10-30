@@ -278,7 +278,7 @@ export const MOCK_PROFILE_LABEL = 'You';
 export function quoteIfSpoken(from: string, me: boolean, text: string): string {
   if (me) return text;
   const key = from.trim().toUpperCase();
-  if (key === 'MABEL' || key === 'JUNE' || key === 'MILO') {
+  if (MOCK_ROSTER.some((e) => e.name.toUpperCase() === key)) {
     return `"${text}"`;
   }
   return text;

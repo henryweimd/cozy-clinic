@@ -48,6 +48,7 @@ export class ToolTray {
   private handleGlyph: Phaser.GameObjects.Text;
   private open = false;
   onPick: (tool: ToolDef) => void = () => {};
+  onToggle: (open: boolean) => void = () => {};
 
   constructor(private scene: Phaser.Scene) {
     // Sliding panel: starts fully off-screen right.
@@ -125,6 +126,7 @@ export class ToolTray {
 
   toggle(): void {
     this.open = !this.open;
+    this.onToggle(this.open);
     this.handleGlyph.setText(this.open ? '\u203a' : '\u2039');
     this.scene.tweens.killTweensOf(this.panel);
     this.scene.tweens.add({

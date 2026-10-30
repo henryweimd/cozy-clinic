@@ -264,6 +264,7 @@ interface UndoSnapshot {
   nodeId: string | null;
   depth: number;
   coins: number;
+  visitEarned: number;
   reveals: (ChoiceGrade | null)[];
   round: VisitRound;
   score: RoundScore;
@@ -505,7 +506,10 @@ export class ClinicScene extends Phaser.Scene {
 
   // Visit-end result overlay + Learn badge.
   private visitEnded = false;
-  private visitStartCoins = 0;
+  /** Coins earned by THIS visit's rounds (never net-of-spend). */
+  private visitEarned = 0;
+  /** Last round quiz asked (tray close re-surfaces it). */
+  private lastQuestion: string | null = null;
   private resultRoot!: Phaser.GameObjects.Container;
   private resultTitle!: Phaser.GameObjects.Text;
   private resultLines!: Phaser.GameObjects.Text;
@@ -581,7 +585,7 @@ export class ClinicScene extends Phaser.Scene {
       callback: () => this.maybeNudge(),
     });
     this.loadWallet();
-    this.visitStartCoins = this.wallet.balance;
+    this.visitEarned = 0;
     this.showView('visit', true);
     // The chart defaults OPEN on the patient's first appearance.
     this.chartDrawer.setOpen(true);
@@ -1107,6 +1111,11 @@ export class ClinicScene extends Phaser.Scene {
     return n === 1 ? 'Care Coin' : 'Care Coins';
   }
 
+  /** Nurse Birch cheers correct taps aloud when she's on staff. */
+  private cheerSuffix(): string {
+    return nurseBonus(this.ownedIds) > 0 ? ' — Birch cheers!' : '';
+  }
+
   /**
    * Restore one undone move (dev monitor today, player submenu
    * later): engine state, trajectory cursor, coins, and card
@@ -1128,6 +1137,7 @@ export class ClinicScene extends Phaser.Scene {
     this.roundToken += 1;
     this.round = snap.round;
     this.roundScore = { ...snap.score };
+    this.visitEarned = snap.visitEarned;
     this.visitEnded = false;
     this.hideResult();
     this.cardRow.removeAll(true);
@@ -1400,6 +1410,11 @@ export class ClinicScene extends Phaser.Scene {
     if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
     const card = this.cards[i];
     if (!card) return;
+    // Single pick per round: any revealed card ends input. Kills
+    // two-finger double resolves (double payouts, double engine
+    // applies). Blocked vetoes don't set revealed, so the player
+    // can always pick again after one.
+    if (this.cards.some((c) => c.revealed !== null)) return;
     this.lastCardTapMs = this.time.now;
     this.tweens.add({
       targets: card.root,
@@ -1423,6 +1438,7 @@ export class ClinicScene extends Phaser.Scene {
       nodeId: this.currentNodeId,
       depth: this.currentDepth,
       coins: this.wallet.balance,
+      visitEarned: this.visitEarned,
       reveals: this.cards.map((c) => c.revealed),
       round: this.round,
       score: { ...this.roundScore },
@@ -1451,6 +1467,11 @@ export class ClinicScene extends Phaser.Scene {
    * game asking YOU). Examine's is per-condition; diagnose/treat
    * are tier templates. This is the explicit Choose cue.
    */
+  /** Visit + telemed: the only views with cards, tray, and quiz. */
+  private isQuizView(): boolean {
+    return this.currentView === 'visit' || this.currentView === 'telemed';
+  }
+
   private showQuestion(round: VisitRound): void {
     const def = CONDITIONS[this.patientState.conditionId];
     const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
@@ -1458,12 +1479,29 @@ export class ClinicScene extends Phaser.Scene {
       round === 'examine'
         ? examQuestion(def.examQuiz[tier], this.activeName, this.demoTag())
         : roundQuestion(round, tier, this.activeName);
+    this.lastQuestion = q;
     this.setConversation(speakerFor(this.activeName), q, 'tell');
     // First examine quiz ever: point at the tray once (the quiz
-    // options make more sense after the findings).
-    if (round === 'examine' && takeTrayHint(window.localStorage)) {
-      this.showToast('Stuck? The exam tray (right edge) holds clues');
+    // options make more sense after the findings). View-gated:
+    // resolve beats can land while the player is away, and the
+    // tray exists only here. Storage-guarded: blocked browsers
+    // stay quiet instead of throwing.
+    if (round === 'examine' && this.isQuizView()) {
+      try {
+        if (takeTrayHint(window.localStorage)) {
+          this.showToast('Stuck? The exam tray (right edge) holds clues');
+        }
+      } catch {
+        // Private-mode play skips the hint silently.
+      }
     }
+  }
+
+  /** Tray close re-asks the live round's quiz (findings cover it). */
+  private resurfaceQuestion(): void {
+    if (this.lastQuestion === null || this.visitEnded) return;
+    if (!this.isQuizView()) return;
+    this.setConversation(speakerFor(this.activeName), this.lastQuestion, 'tell');
   }
 
   /**
@@ -1513,8 +1551,9 @@ export class ClinicScene extends Phaser.Scene {
       this.roundScore.examBest = true;
       const examPay = this.correctPayout();
       this.wallet = earn(this.wallet, examPay, 'earn:best-exam');
+      this.visitEarned += examPay;
       this.saveWallet();
-      this.showToast(`Great exam! +${examPay} ${this.coinWord(examPay)}`);
+      this.showToast(`Great exam! +${examPay} ${this.coinWord(examPay)}${this.cheerSuffix()}`);
     } else {
       this.showToast('Hmm, nothing new');
     }
@@ -1525,11 +1564,15 @@ export class ClinicScene extends Phaser.Scene {
     const token = this.roundToken;
     this.time.delayedCall(900, () => {
       if (token !== this.roundToken) return;
-      this.setConversation(
-        speakerFor(this.activeName),
-        best ? def.bestFinding : EXAM_OTHER_FINDING,
-        'tell',
-      );
+      // Panel beats stay in the visit (the advance always runs —
+      // the return trip re-asks the live quiz).
+      if (this.isQuizView()) {
+        this.setConversation(
+          speakerFor(this.activeName),
+          best ? def.bestFinding : EXAM_OTHER_FINDING,
+          'tell',
+        );
+      }
       this.time.delayedCall(1800, () => {
         if (token !== this.roundToken) return;
         this.advanceRound('diagnose');
@@ -1559,8 +1602,9 @@ export class ClinicScene extends Phaser.Scene {
       this.roundScore.dxCorrect = true;
       const dxPay = this.correctPayout();
       this.wallet = earn(this.wallet, dxPay, 'earn:best-dx');
+      this.visitEarned += dxPay;
       this.saveWallet();
-      this.showToast(`Correct diagnosis! +${dxPay} ${this.coinWord(dxPay)}`);
+      this.showToast(`Correct diagnosis! +${dxPay} ${this.coinWord(dxPay)}${this.cheerSuffix()}`);
     } else {
       this.showToast("Hmm — that doesn't fit");
     }
@@ -1570,13 +1614,15 @@ export class ClinicScene extends Phaser.Scene {
     // 1.5s to read the stamp + confirmation, then the next quiz.
     this.time.delayedCall(1500, () => {
       if (token !== this.roundToken) return;
-      this.setConversation(
-        speakerFor(this.activeName),
-        correct
-          ? `${pickLabel} it is. Now choose the treatment.`
-          : `${pickLabel} doesn't fit — but the visit goes on. Treat what's in front of you.`,
-        'tell',
-      );
+      if (this.isQuizView()) {
+        this.setConversation(
+          speakerFor(this.activeName),
+          correct
+            ? `${pickLabel} it is. Now choose the treatment.`
+            : `${pickLabel} doesn't fit — but the visit goes on. Treat what's in front of you.`,
+          'tell',
+        );
+      }
       // The confirmation reads briefly, then the treat quiz lands.
       this.time.delayedCall(1600, () => {
         if (token !== this.roundToken) return;
@@ -1602,7 +1648,7 @@ export class ClinicScene extends Phaser.Scene {
     if (result.blocked) {
       // Engine veto: your training stops you. Dim + shake + the
       // hold-back line — no happy bounce on a blocked move.
-      card.revealed = grade;
+      // Revealed stays null (stamp only): the round stays open.
       this.drawSpine(card, grade);
       this.drawStamp(card, grade);
       card.root.setAlpha(0.55);
@@ -1630,7 +1676,9 @@ export class ClinicScene extends Phaser.Scene {
     this.drawStamp(card, grade);
     // Right/wrong reads three ways: stamp + face + toast.
     const txPay = this.correctPayout();
-    if (grade === 'BEST') this.showToast(`Great choice! +${txPay} ${this.coinWord(txPay)}`);
+    if (grade === 'BEST') {
+      this.showToast(`Great choice! +${txPay} ${this.coinWord(txPay)}${this.cheerSuffix()}`);
+    }
     else if (grade === 'NOT_GREAT') this.showToast('Okay — no harm done');
     else this.showToast('Oh no — that made things worse');
     this.refreshChart();
@@ -1640,6 +1688,7 @@ export class ClinicScene extends Phaser.Scene {
       // nothing. Persisted locally; the coin_ledger table
       // replaces local saves later.
       this.wallet = earn(this.wallet, txPay, 'earn:best-resolve');
+      this.visitEarned += txPay;
       this.saveWallet();
     }
     this.refreshHud();
@@ -1683,6 +1732,7 @@ export class ClinicScene extends Phaser.Scene {
       // ending modal so its coins-earned line includes it.
       const perfectPay = EARN_PERFECT + perfectBonus(this.ownedIds);
       this.wallet = earn(this.wallet, perfectPay, 'earn:perfect-visit');
+      this.visitEarned += perfectPay;
       this.saveWallet();
     }
     const outcome = visitOutcome(this.roundScore);
@@ -1730,12 +1780,16 @@ export class ClinicScene extends Phaser.Scene {
     this.selectedPreset = null;
     this.handoffSheet.hide();
     void this.refreshInbox('switch');
-    this.visitStartCoins = this.wallet.balance;
+    this.visitEarned = 0;
+    this.lastQuestion = null;
     this.roundToken += 1;
     this.round = 'examine';
     this.roundScore = { examBest: false, dxCorrect: false, txBest: false };
     const row = this.cast ? patientByName(this.cast, name) : null;
-    const cond = row?.condition_id;
+    // Live row first, fallback second (never the previous
+    // patient's disease when the cast is slow or missing).
+    const fb = FALLBACK_PATIENTS.find((p) => p.name === name);
+    const cond = row?.condition_id ?? fb?.condition_id;
     if (
       cond === 'asthma' || cond === 'viral-respiratory' ||
       cond === 'dehydration' || cond === 'hypertension'
@@ -1751,7 +1805,7 @@ export class ClinicScene extends Phaser.Scene {
     this.currentNodeId = root?.id ?? null;
     this.currentDepth = 0;
     this.patient.setTexture(this.steadyFace());
-    this.nametag.setText(`${name} · ${row?.persona ?? 'first patient'}`);
+    this.nametag.setText(`${name} · ${row?.persona ?? fb?.persona ?? 'first patient'}`);
     this.cardRow.removeAll(true);
     this.buildCards();
     this.drawCorral();
@@ -2929,6 +2983,9 @@ export class ClinicScene extends Phaser.Scene {
         ) ?? EXAM_OTHER_FINDING;
       this.setConversation(speakerFor(this.activeName), finding, 'tell');
     };
+    this.tray.onToggle = (open) => {
+      if (!open) this.resurfaceQuestion();
+    };
 
     // Chart drawer: succinct Medical Chart, left side.
     this.chartDrawer = new ChartDrawer(this);
@@ -3798,7 +3855,7 @@ export class ClinicScene extends Phaser.Scene {
     const copy = resultCopy({
       outcome,
       visitNo: this.visitNo(),
-      coinsEarned: this.wallet.balance - this.visitStartCoins,
+      coinsEarned: this.visitEarned,
       score: { ...this.roundScore },
       condition: def.name,
     });

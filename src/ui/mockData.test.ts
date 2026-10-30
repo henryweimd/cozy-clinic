@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { MOCK_ROSTER, moveWaiting, waitingNames } from './mockData';
+import { MOCK_ROSTER, moveWaiting, quoteIfSpoken, waitingNames } from './mockData';
 
 describe('waitingNames', () => {
   it('excludes whoever is in the exam room, keeping queue order', () => {
@@ -15,6 +15,16 @@ describe('waitingNames', () => {
       expect(e.visitKind.length).toBeGreaterThan(0);
       expect(e.welcomeBack.length).toBeGreaterThan(0);
     }
+  });
+});
+
+describe('quoteIfSpoken', () => {
+  it('quotes every rostered patient, bares narration + me', () => {
+    for (const e of MOCK_ROSTER) {
+      expect(quoteIfSpoken(e.name, false, 'hi')).toBe('"hi"');
+    }
+    expect(quoteIfSpoken('Clinic', false, 'hi')).toBe('hi');
+    expect(quoteIfSpoken('Milo', true, 'hi')).toBe('hi');
   });
 });
 
