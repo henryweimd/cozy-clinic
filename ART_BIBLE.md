@@ -219,7 +219,8 @@ generated and no scene code was touched this run.
 - Clear zones (540×960, SAME landmark contract as the shipped
   plate, so any plate works under any view): y0–136 title/chrome
   band = flat calm wall (window glass ONLY x490+ y95–199, clear
-  of the title zone x150–390 y28–84 and top bar y0–32);
+  of the title zone x150–390 y28–84; chrome-4: no top bar, only
+  the floating Rewind pill x446–534 y40–76 when rewindable);
   y136–356 panel band = flat calm wall; y376–412 HUD/LIVE band =
   calm wall, no high-contrast edges; mascot footprint x164–376
   y508–720 clear of furniture, GROUND=724 on rug/floor;

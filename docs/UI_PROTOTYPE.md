@@ -222,7 +222,7 @@ VIEW 1 — VISIT (default; today's Mabel scene):
   sick, else follow-up), re-derived per resolve. No clock (left
   until the speed element returns). Pills + text opaque;
   translucency stays on the strip.
-- Clinic Shop (behind the coin meter): tabbed Tools / Medicines
+- Clinic Shop (behind the Profile Care Coins row): tabbed Tools / Medicines
   / Practice sheet (x24–516, y136–876), 4 rows a tab — every
   row teaches one real-practice fact ("Saline Spray — salty
   water that rinses stuffy noses"). Buy buttons spend live

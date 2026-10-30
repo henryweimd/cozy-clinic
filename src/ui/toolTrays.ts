@@ -3,18 +3,18 @@ import { RAIL_SLOTS, RAIL_X, TAB_H, TAB_W } from './chartDrawer';
 import { THEME } from './chromeTheme';
 
 /**
- * T1 exam tool tray: a translucent tray sliding from the right
+ * T1 exam tool tray: a translucent tray sliding from the left
  * edge with the four real physical-exam maneuvers — inspection
  * (look, incl. ears/nose/throat), palpation (feel), percussion
  * (tap + listen), auscultation (listen with stethoscope). Middle
- * tab of the right-edge rail: tap the tab to slide open/closed;
+ * tab of the left-edge rail: tap the tab to slide open/closed;
  * tap a maneuver to reveal its disease-specific finding in the
  * panel (this module only reports the pick — the scene reads
  * exam_findings).
  *
- * Geometry: the TAB is 52x56 at x488 (slot y426, depth 23) and
- * docks to x296 when open; the PANEL slides from x540 (closed)
- * to x348 (open, 192 wide, y300-560, depth 22). Visit-only
+ * Geometry: the TAB is 52x56 at x0 (slot y426, depth 23) and
+ * docks to x192 when open; the PANEL slides from x-192 (closed)
+ * to x0 (open, 192 wide, y300-560, depth 22). Visit-only
  * chrome: exam tools make no sense through a video call.
  */
 
@@ -34,9 +34,9 @@ export const EXAM_TOOLS: readonly ToolDef[] = [
 ];
 
 const PANEL_W = 192;
-const PANEL_CLOSED_X = 540;
-const PANEL_OPEN_X = 540 - PANEL_W;
-const DOCK_X = PANEL_OPEN_X - TAB_W;
+const PANEL_CLOSED_X = -PANEL_W;
+const PANEL_OPEN_X = 0;
+const DOCK_X = PANEL_OPEN_X + PANEL_W;
 const TRAY_TOP = 300;
 const TRAY_H = 260;
 
@@ -49,21 +49,21 @@ export class ToolTray {
   onToggle: (open: boolean) => void = () => {};
 
   constructor(private scene: Phaser.Scene) {
-    // Sliding panel: starts fully off-screen right.
+    // Sliding panel: starts fully off-screen left.
     this.panelBg = this.scene.add.graphics();
     this.panelBg.fillStyle(THEME.cream, THEME.glassPanel);
     this.panelBg.lineStyle(3, THEME.outline, 1);
     this.panelBg.fillRoundedRect(0, TRAY_TOP, PANEL_W, TRAY_H, {
-      tl: 20,
-      tr: 0,
-      bl: 20,
-      br: 0,
+      tl: 0,
+      tr: 20,
+      bl: 0,
+      br: 20,
     });
     this.panelBg.strokeRoundedRect(0, TRAY_TOP, PANEL_W, TRAY_H, {
-      tl: 20,
-      tr: 0,
-      bl: 20,
-      br: 0,
+      tl: 0,
+      tr: 20,
+      bl: 0,
+      br: 20,
     });
     this.panel = this.scene.add.container(PANEL_CLOSED_X, 0, [this.panelBg]);
     this.panel.setDepth(22);
@@ -74,16 +74,16 @@ export class ToolTray {
     tabBg.fillStyle(THEME.cream, THEME.glassPanel);
     tabBg.lineStyle(3, THEME.outline, 1);
     tabBg.fillRoundedRect(RAIL_X, RAIL_SLOTS.exam, TAB_W, TAB_H, {
-      tl: 14,
-      tr: 0,
-      bl: 14,
-      br: 0,
+      tl: 0,
+      tr: 14,
+      bl: 0,
+      br: 14,
     });
     tabBg.strokeRoundedRect(RAIL_X, RAIL_SLOTS.exam, TAB_W, TAB_H, {
-      tl: 14,
-      tr: 0,
-      bl: 14,
-      br: 0,
+      tl: 0,
+      tr: 14,
+      bl: 0,
+      br: 14,
     });
     // Magnifier icon: lens + handle (look closer).
     const icon = this.scene.add.graphics();
@@ -104,7 +104,7 @@ export class ToolTray {
 
   private buildRow(tool: ToolDef, i: number): void {
     // Rows live in the panel's left 168px; the tab docks to the
-    // panel's leading (left) edge when open.
+    // panel's leading (right) edge when open.
     const cy = TRAY_TOP + 40 + i * 60;
     const icon = this.scene.add.graphics();
     drawToolIcon(icon, tool.id, 44, cy);

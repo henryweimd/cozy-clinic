@@ -418,8 +418,6 @@ export class ClinicScene extends Phaser.Scene {
   // Chrome-2 progress HUD (Visit only; coins + context are MOCK, the
   // timer is a display-only readout — nothing gameplay reads it).
   private hud!: Phaser.GameObjects.Container;
-  private coinsText!: Phaser.GameObjects.Text;
-  private contextText!: Phaser.GameObjects.Text;
   private undoPill!: Phaser.GameObjects.Container;
   private undoText!: Phaser.GameObjects.Text;
   private undoZone!: Phaser.GameObjects.Zone;
@@ -597,7 +595,6 @@ export class ClinicScene extends Phaser.Scene {
     this.drawProfileView();
     this.drawNotesHandle();
     this.drawNavBar();
-    this.drawTopBar();
     this.wireModules();
     this.drawCodePad();
     this.drawMonitor();
@@ -1638,7 +1635,7 @@ export class ClinicScene extends Phaser.Scene {
         ) {
           this.showToast('Changed your mind? Undo is top-right');
         } else if (round === 'examine' && takeTrayHint(window.localStorage)) {
-          this.showToast('Stuck? The exam tray (right edge) holds clues');
+          this.showToast('Stuck? The exam tray (left edge) holds clues');
         }
       } catch {
         // Private-mode play skips the hint silently.
@@ -2124,105 +2121,38 @@ export class ClinicScene extends Phaser.Scene {
     });
   }
 
-  // -- progress HUD (Visit only; chrome-3: lives IN the top strip) --
+  // -- progress HUD (Visit only; chrome-4: floating pill, no strip) --
 
   private drawHud(): void {
-    // Chrome-3: the mid-screen band (was y376-412) is RETIRED —
-    // the HUD now lives inside the slim top strip (y0-32, pill
-    // h24 at y4, centerline y16), above the title (top ~y40).
-    // Coin cluster left, bare context words center. Visit-only:
-    // fades with the visit view (showView),
-    // while the strip itself stays persistent. Icons are
-    // code-drawn ($0, crisp, offline-safe): coin+ and clock-hands.
-    // Pills + text stay opaque; translucency is the strip's only.
-    const coinsBg = this.add.graphics();
-    coinsBg.fillStyle(CARD_FILL, 1);
-    coinsBg.lineStyle(2, OUTLINE, 1);
-    coinsBg.fillRoundedRect(24, 4, 100, 24, 12);
-    coinsBg.strokeRoundedRect(24, 4, 100, 24, 12);
-    // Care Coin: metallic gold disc — dark rim, amber face,
-    // pale-gold inner ring, shine dot, embossed C.
-    const coin = this.add.graphics();
-    coin.fillStyle(AMBER, 1);
-    coin.lineStyle(2, OUTLINE, 1);
-    coin.fillCircle(44, 16, 9);
-    coin.strokeCircle(44, 16, 9);
-    coin.lineStyle(1, 0xf2c66d, 1);
-    coin.strokeCircle(44, 16, 6);
-    coin.fillStyle(0xfff3d6, 1);
-    coin.fillCircle(41, 13, 2);
-    const coinC = this.add
-      .text(44, 16, 'C', {
-        fontFamily: FONT_FAMILY,
-        fontStyle: 'bold',
-        fontSize: '11px',
-        color: COCOA,
-      })
-      .setOrigin(0.5, 0.5);
-    this.coinsText = this.add
-      .text(58, 16, '', {
-        fontFamily: FONT_FAMILY,
-        fontStyle: 'bold',
-        fontSize: '14px',
-        color: COCOA,
-      })
-      .setOrigin(0, 0.5);
-
-    // Context: bare bold words, no pill — the strip is the frame.
-    this.contextText = this.add
-      .text(270, 16, '', {
-        fontFamily: FONT_FAMILY,
-        fontStyle: 'bold',
-        fontSize: '14px',
-        color: COCOA,
-      })
-      .setOrigin(0.5, 0.5);
-
-    // No clock until the speed element returns (playtest: the
-    // timer reads as pressure without purpose). visitStartMs is
-    // kept for its comeback.
-
-    // Tapping the coin meter opens the Clinic Shop.
-    const coinZone = this.add
-      .zone(74, 16, 100, 24)
-      .setInteractive({ useHandCursor: true });
-    coinZone.on('pointerdown', () => {
-      if (this.shop.open) this.shop.hide();
-      else this.shop.show(this.wallet.balance, this.ownedIds);
-    });
-    // Rewind pill, right end of the strip: the player-facing
-    // face of the 10-move undo stack. Appears only once there
-    // is a move to rewind (refreshHud owns visibility), so the
-    // strip stays clean at first sight.
+    // Chrome-4: the top strip is RETIRED (operator: distracting;
+    // a translucent bar returns later). Coins moved to Profile
+    // (the Care Coins row opens the Shop); mid-visit, toasts +
+    // the result lines carry earnings feedback. The visit keeps
+    // exactly one floater: the Rewind pill, top-right, present
+    // only while a move can rewind (refreshHud owns it).
+    // (No clock until the speed element returns; visitStartMs is
+    // kept for its comeback.)
     const undoBg = this.add.graphics();
     undoBg.fillStyle(CARD_FILL, 1);
     undoBg.lineStyle(2, OUTLINE, 1);
-    undoBg.fillRoundedRect(428, 4, 88, 24, 12);
-    undoBg.strokeRoundedRect(428, 4, 88, 24, 12);
+    undoBg.fillRoundedRect(446, 40, 88, 36, 18);
+    undoBg.strokeRoundedRect(446, 40, 88, 36, 18);
     this.undoText = this.add
-      .text(472, 16, '', {
+      .text(490, 58, '', {
         fontFamily: FONT_FAMILY,
         fontStyle: 'bold',
         fontSize: '13px',
         color: COCOA,
       })
       .setOrigin(0.5, 0.5);
-    this.undoZone = this.add.zone(472, 16, 88, 24).setInteractive({ useHandCursor: true });
+    this.undoZone = this.add.zone(490, 58, 96, 44).setInteractive({ useHandCursor: true });
     this.undoZone.on('pointerdown', () => {
       if (undoDepth(this.undoStack) > 0) this.doUndo();
     });
     this.undoPill = this.add.container(0, 0, [undoBg, this.undoText, this.undoZone]);
-    this.hud = this.add.container(0, 0, [
-      coinsBg,
-      coin,
-      coinC,
-      this.coinsText,
-      this.contextText,
-      coinZone,
-      this.undoPill,
-    ]);
-    // Depth 20 = above the strip bg (19), level with the nav bar
-    // (a different band, so no conflict).
+    this.hud = this.add.container(0, 0, [this.undoPill]);
+    // Depth 20 = above the plate, level with the nav bar (a
+    // different band, so no conflict).
     this.hud.setDepth(20);
     this.refreshHud();
   }
@@ -2270,12 +2200,8 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   private refreshHud(): void {
-    this.coinsText.setText(`${this.wallet.balance}`);
-    // Center strip stays blank: reserved real estate for future
-    // real status messages (operator note 2026-10-29).
-    this.contextText.setText('');
-    // Rewind pill: present only while a move can rewind (the
-    // hud container already gates the visit view).
+    // Chrome-4: the floater is the whole HUD (coins live in
+    // Profile; the strip's reserved center went with it).
     const depth = undoDepth(this.undoStack);
     this.undoText.setText(undoLabel(depth));
     this.undoPill.setVisible(depth > 0);
@@ -2759,12 +2685,14 @@ export class ClinicScene extends Phaser.Scene {
       this.segRow.add([bg, label, zone]);
     });
     this.profileRows.removeAll(true);
+    // Tappable rows carry › (Coins opens the Shop; Doctor +
+    // Team open the identity editor; About opens its sheet).
     const stats: [string, string][] = [
-      ['Care Coins', `${this.wallet.balance}`],
+      ['Care Coins', `${this.wallet.balance} ›`],
       ['Topics filed', `${this.filedConds.length}`],
       ['Topics read', `${this.openedRes.size}`],
-      ['Doctor', `Doctor ${this.doctorHandle}`],
-      ['Team', `Team ${this.teamTag}`],
+      ['Doctor', `Doctor ${this.doctorHandle} ›`],
+      ['Team', `Team ${this.teamTag} ›`],
       ['Cheers', `${this.cheers.length}`],
     ];
     stats.forEach(([label, value], i) => {
@@ -2791,6 +2719,15 @@ export class ClinicScene extends Phaser.Scene {
         .setOrigin(1, 0.5);
       this.profileRows.add([bg, left, right]);
     });
+    // The Care Coins row opens the Clinic Shop (the strip is
+    // gone — this row IS the coin interface now).
+    const coinZone = this.add
+      .zone(270, 232 + 0 * 84 + 36, 444, 72)
+      .setInteractive({ useHandCursor: true });
+    coinZone.on('pointerdown', () => {
+      if (!this.shop.open) this.shop.show(this.wallet.balance, this.ownedIds);
+    });
+    this.profileRows.add(coinZone);
     // The Doctor row opens the identity editor (presets + typed).
     const swapZone = this.add
       .zone(270, 232 + 3 * 84 + 36, 444, 72)
@@ -2822,7 +2759,7 @@ export class ClinicScene extends Phaser.Scene {
       })
       .setOrigin(0, 0.5);
     const aboutRight = this.add
-      .text(472, aboutY + 36, 'Cozy Clinic', {
+      .text(472, aboutY + 36, 'Cozy Clinic ›', {
         fontFamily: FONT_FAMILY,
         fontStyle: 'bold',
         fontSize: '19px',
@@ -2984,37 +2921,45 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   private drawNotesHandle(): void {
-    // Bottom tab of the right-edge rail (slot y490): care notes.
-    // Same 52x56 glass tab language, envelope glyph, amber badge
-    // dot when another doctor left a note. Opens the note sheet
-    // (a modal, not a slider) and parks both drawers.
+    // Bottom tab of the left-edge rail (slot y490): care notes.
+    // Same 52x56 glass tab language, written-note glyph, amber
+    // badge dot (outer edge) when another doctor left a note.
+    // Opens the note sheet (a modal, not a slider) and parks
+    // both drawers.
     const cx = RAIL_X + TAB_W / 2;
     const cy = RAIL_SLOTS.notes + TAB_H / 2;
     const tab = this.add.graphics();
     tab.fillStyle(CREAM, CHROME_ALPHA);
     tab.lineStyle(3, OUTLINE, 1);
     tab.fillRoundedRect(RAIL_X, RAIL_SLOTS.notes, TAB_W, TAB_H, {
-      tl: 14,
-      tr: 0,
-      bl: 14,
-      br: 0,
+      tl: 0,
+      tr: 14,
+      bl: 0,
+      br: 14,
     });
     tab.strokeRoundedRect(RAIL_X, RAIL_SLOTS.notes, TAB_W, TAB_H, {
-      tl: 14,
-      tr: 0,
-      bl: 14,
-      br: 0,
+      tl: 0,
+      tr: 14,
+      bl: 0,
+      br: 14,
     });
+    // Written note: little sheet, folded corner, 3 ink lines.
     const glyph = this.add.graphics();
+    glyph.fillStyle(CARD_FILL, 1);
+    glyph.fillRoundedRect(cx - 11, cy - 12, 22, 24, 3);
     glyph.lineStyle(2.5, OUTLINE, 1);
-    glyph.strokeRoundedRect(cx - 11, cy - 8, 22, 16, 3);
-    glyph.lineBetween(cx - 11, cy - 7, cx, cy + 1);
-    glyph.lineBetween(cx + 11, cy - 7, cx, cy + 1);
+    glyph.strokeRoundedRect(cx - 11, cy - 12, 22, 24, 3);
+    glyph.lineBetween(cx + 5, cy - 12, cx + 5, cy - 6);
+    glyph.lineBetween(cx + 5, cy - 6, cx + 11, cy - 6);
+    glyph.lineStyle(2, OUTLINE, 1);
+    glyph.lineBetween(cx - 7, cy - 1, cx + 7, cy - 1);
+    glyph.lineBetween(cx - 7, cy + 4, cx + 7, cy + 4);
+    glyph.lineBetween(cx - 7, cy + 9, cx + 1, cy + 9);
     this.notesBadge = this.add.graphics();
     this.notesBadge.fillStyle(AMBER, 1);
     this.notesBadge.lineStyle(2, OUTLINE, 1);
-    this.notesBadge.fillCircle(RAIL_X + TAB_W - 8, RAIL_SLOTS.notes + 10, 7);
-    this.notesBadge.strokeCircle(RAIL_X + TAB_W - 8, RAIL_SLOTS.notes + 10, 7);
+    this.notesBadge.fillCircle(RAIL_X + 8, RAIL_SLOTS.notes + 10, 7);
+    this.notesBadge.strokeCircle(RAIL_X + 8, RAIL_SLOTS.notes + 10, 7);
     this.notesBadge.setVisible(false);
     const zone = this.add
       .zone(cx, cy, TAB_W, TAB_H)
@@ -3190,23 +3135,6 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   // -- top bar (persistent strip; chrome-3: HUD owns the contents) --
-
-  private drawTopBar(): void {
-    // Slim strip y0–32: translucent fill + whisper divider, depth
-    // 19 so the HUD contents (depth 20) sit on it. Chrome-3: the
-    // profile chip + difficulty pill LEFT the main screen for a
-    // future submenu (operator direction) — the strip now frames
-    // the Visit HUD (drawHud), and rests empty on other views.
-    // Display-only: no zones, so title taps pass through.
-    const bg = this.add.graphics();
-    bg.fillStyle(CREAM, CHROME_ALPHA);
-    bg.fillRect(0, 0, 540, 32);
-    bg.fillStyle(OUTLINE, 0.25);
-    bg.fillRect(0, 32, 540, 2);
-
-    const bar = this.add.container(0, 0, [bg]);
-    bar.setDepth(19);
-  }
 
   // -- G4 module wiring (ticker, tray, chart, learn list, live cast) --
 
@@ -3386,6 +3314,10 @@ export class ClinicScene extends Phaser.Scene {
       this.showToast(
         item.id === 'nurse-birch' ? 'Nurse Birch joined your clinic!' : `${item.name} is yours!`,
       );
+    };
+    // Purchases spend coins: the Profile row re-reads on close.
+    this.shop.onClose = () => {
+      if (this.currentView === 'profile') this.refreshProfileRows();
     };
 
     // Live exam findings ride alongside the cast (same rules).
