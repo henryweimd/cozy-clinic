@@ -27,6 +27,8 @@ export class LearnList {
   private body: Phaser.GameObjects.Container;
   private isOpen = false;
   onOpen: (resource: FallbackResource) => void = () => {};
+  /** Fired only by the × button (programmatic hide() stays silent). */
+  onClose: () => void = () => {};
 
   constructor(private scene: Phaser.Scene) {
     this.sheet = this.scene.add.graphics();
@@ -53,7 +55,10 @@ export class LearnList {
     const closeZone = this.scene.add
       .zone(492, 172, 56, 56)
       .setInteractive({ useHandCursor: true });
-    closeZone.on('pointerdown', () => this.hide());
+    closeZone.on('pointerdown', () => {
+      this.hide();
+      this.onClose();
+    });
     this.body = this.scene.add.container(0, 0, []);
     this.root = this.scene.add.container(0, 0, [
       this.sheet,

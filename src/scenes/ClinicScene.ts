@@ -16,6 +16,8 @@ import { BackendTicker } from '../ui/ticker';
 import { ToolTray } from '../ui/toolTrays';
 import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
+import { resultCopy, visitOutcome } from '../game/visit';
+import type { VisitOutcome } from '../game/visit';
 import { LearnList } from '../ui/learnList';
 import { AssetBrowser } from '../ui/assetBrowser';
 import { ChartDrawer } from '../ui/chartDrawer';
@@ -207,7 +209,7 @@ const GRADE_COLOR: Record<ChoiceGrade, number> = {
   DANGEROUS: ROSE,
 };
 
-type ViewName = 'waiting' | 'visit' | 'telemed' | 'portal';
+type ViewName = 'waiting' | 'visit' | 'telemed' | 'portal' | 'learn';
 type Speaker = 'MABEL' | 'JUNE' | 'MILO' | 'DR. NORA' | 'YOU';
 
 /**
@@ -246,10 +248,11 @@ const WALLET_STORAGE_KEY = 'cozy-wallet-v1';
 type LineKind = 'say' | 'tell';
 
 const TAB_X: Record<ViewName, number> = {
-  waiting: 135,
-  visit: 405,
+  waiting: 90,
+  visit: 270,
+  learn: 450,
   // Telemed + Portal tabs are parked (views kept dormant, code
-  // intact) — the bar is Waiting + Visit until they earn fun.
+  // intact) — the bar is Waiting + Visit + Learn.
   telemed: 337,
   portal: 472,
 };
@@ -273,6 +276,7 @@ const PLATE_SETTING: Record<ViewName, string> = {
   visit: 'exam',
   telemed: 'telemed',
   portal: 'portal',
+  learn: 'exam',
 };
 // One-line pin: pin any view to any plate slug (e.g. { visit:
 // 'exam-b' }); empty = parity rule below. Unpinned views keep
@@ -294,6 +298,7 @@ interface CardWidgets {
   root: Phaser.GameObjects.Container;
   face: Phaser.GameObjects.Graphics;
   spine: Phaser.GameObjects.Graphics;
+  stamp: Phaser.GameObjects.Graphics;
   actionId: string;
   revealed: ChoiceGrade | null;
 }
@@ -362,8 +367,6 @@ export class ClinicScene extends Phaser.Scene {
   private currentNodeId: string | null = null;
   private currentDepth = 0;
   private extending = false;
-  private bookBtn!: Phaser.GameObjects.Container;
-
   // Views + nav.
   private currentView: ViewName = 'visit';
   private waitingView!: Phaser.GameObjects.Container;
@@ -377,12 +380,14 @@ export class ClinicScene extends Phaser.Scene {
     visit: [],
     telemed: [],
     portal: [],
+    learn: [],
   };
   private tabIcons: Record<ViewName, Phaser.GameObjects.Graphics | null> = {
     waiting: null,
     visit: null,
     telemed: null,
     portal: null,
+    learn: null,
   };
   private muteOn = true;
   private camOn = true;
@@ -404,6 +409,20 @@ export class ClinicScene extends Phaser.Scene {
   private toastBg!: Phaser.GameObjects.Graphics;
   private toastText!: Phaser.GameObjects.Text;
   private toastTimer?: Phaser.Time.TimerEvent;
+
+  // Visit-end result overlay + Learn badge.
+  private visitEnded = false;
+  private visitStartCoins = 0;
+  private resultRoot!: Phaser.GameObjects.Container;
+  private resultTitle!: Phaser.GameObjects.Text;
+  private resultLines!: Phaser.GameObjects.Text;
+  private resultPrimary!: Phaser.GameObjects.Container;
+  private resultPrimaryBg!: Phaser.GameObjects.Graphics;
+  private resultPrimaryText!: Phaser.GameObjects.Text;
+  private resultSecondary!: Phaser.GameObjects.Container;
+  private resultSecondaryText!: Phaser.GameObjects.Text;
+  private learnBadge!: Phaser.GameObjects.Container;
+  private resultOutcome: VisitOutcome | null = null;
 
   constructor() {
     super('clinic');
@@ -454,6 +473,7 @@ export class ClinicScene extends Phaser.Scene {
     this.drawCodePad();
     this.drawMonitor();
     this.drawToast();
+    this.drawResultCard();
     this.scheduleBlink();
     this.lastCardTapMs = this.time.now;
     this.time.addEvent({
@@ -462,6 +482,7 @@ export class ClinicScene extends Phaser.Scene {
       callback: () => this.maybeNudge(),
     });
     this.loadWallet();
+    this.visitStartCoins = this.wallet.balance;
     this.showView('visit', true);
     // The chart defaults OPEN on the patient's first appearance.
     this.chartDrawer.setOpen(true);
@@ -473,13 +494,17 @@ export class ClinicScene extends Phaser.Scene {
     this.patient.y = this.patientBaseY + Math.sin(t * 1.8) * 3;
 
     // Visit timer: display-only mm:ss readout, urgency feel only —
-    // no rewards or penalties read it. Text updates once per second.
-    const elapsedS = Math.floor((this.time.now - this.visitStartMs) / 1000);
-    if (elapsedS !== this.lastTimerSecond) {
-      this.lastTimerSecond = elapsedS;
-      const mm = String(Math.floor(elapsedS / 60)).padStart(2, '0');
-      const ss = String(elapsedS % 60).padStart(2, '0');
-      this.timerText.setText(`${mm}:${ss}`);
+    // no rewards or penalties read it. Text updates once per second,
+    // frozen once the visit ends (the clock stops with the case;
+    // bob + blink keep running).
+    if (!this.visitEnded) {
+      const elapsedS = Math.floor((this.time.now - this.visitStartMs) / 1000);
+      if (elapsedS !== this.lastTimerSecond) {
+        this.lastTimerSecond = elapsedS;
+        const mm = String(Math.floor(elapsedS / 60)).padStart(2, '0');
+        const ss = String(elapsedS % 60).padStart(2, '0');
+        this.timerText.setText(`${mm}:${ss}`);
+      }
     }
 
     // Blink: ANIMATION.md — eyes closed 120ms every 3–5s, randomized.
@@ -896,6 +921,7 @@ export class ClinicScene extends Phaser.Scene {
       const cy = 772 + 37;
       const face = this.add.graphics();
       face.fillStyle(CARD_FILL, GLASS_CARD);
+      const stamp = this.add.graphics();
       face.lineStyle(3, OUTLINE, 1);
       face.fillRoundedRect(-78, -37, 156, 74, 16);
       face.strokeRoundedRect(-78, -37, 156, 74, 16);
@@ -911,12 +937,12 @@ export class ClinicScene extends Phaser.Scene {
         })
         .setOrigin(0.5, 0.5);
       this.truncateToHeight(labelText, 44);
-      const root = this.add.container(cx, cy, [face, spine, labelText]);
+      const root = this.add.container(cx, cy, [face, spine, labelText, stamp]);
       const zone = this.add.zone(0, 0, 156, 74).setInteractive({ useHandCursor: true });
       zone.on('pointerdown', () => this.onCardTap(i));
       root.add(zone);
       this.cardRow.add(root);
-      this.cards.push({ root, face, spine, actionId, revealed: null });
+      this.cards.push({ root, face, spine, stamp, actionId, revealed: null });
     });
   }
 
@@ -1019,11 +1045,40 @@ export class ClinicScene extends Phaser.Scene {
       card.revealed = null;
       card.root.setAlpha(1);
       this.drawSpine(card, null);
+      this.drawStamp(card, null);
+    }
+  }
+
+  /**
+   * Grade stamp: a sticker on the tapped card's top-right corner
+   * (relative 58,-19, r13) so right/wrong reads instantly —
+   * BEST check, NOT_GREAT dash, WRONG/DANGEROUS cross, all in
+   * the grade color with a cream glyph. Cleared with reveals.
+   */
+  private drawStamp(card: CardWidgets, grade: ChoiceGrade | null): void {
+    card.stamp.clear();
+    if (!grade) return;
+    const cx = 58;
+    const cy = -19;
+    card.stamp.fillStyle(GRADE_COLOR[grade], 1);
+    card.stamp.lineStyle(2, OUTLINE, 1);
+    card.stamp.fillCircle(cx, cy, 13);
+    card.stamp.strokeCircle(cx, cy, 13);
+    card.stamp.lineStyle(3, 0xfff9ef, 1);
+    if (grade === 'BEST') {
+      card.stamp.lineBetween(cx - 6, cy, cx - 1, cy + 5);
+      card.stamp.lineBetween(cx - 1, cy + 5, cx + 6, cy - 5);
+    } else if (grade === 'NOT_GREAT') {
+      card.stamp.lineBetween(cx - 5, cy, cx + 5, cy);
+    } else {
+      card.stamp.lineBetween(cx - 4, cy - 4, cx + 4, cy + 4);
+      card.stamp.lineBetween(cx - 4, cy + 4, cx + 4, cy - 4);
     }
   }
 
   private onCardTap(i: number): void {
     if (this.adminOpen) return;
+    if (this.visitEnded) return;
     if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
     const card = this.cards[i];
     if (!card) return;
@@ -1064,6 +1119,7 @@ export class ClinicScene extends Phaser.Scene {
       // no happy bounce on a blocked move.
       card.revealed = grade;
       this.drawSpine(card, grade);
+      this.drawStamp(card, grade);
       card.root.setAlpha(0.55);
       this.tweens.add({
         targets: card.root,
@@ -1086,6 +1142,11 @@ export class ClinicScene extends Phaser.Scene {
     }
     card.revealed = grade;
     this.drawSpine(card, grade);
+    this.drawStamp(card, grade);
+    // Right/wrong reads three ways: stamp + face + toast.
+    if (grade === 'BEST') this.showToast('Great choice! +1 Care Coin');
+    else if (grade === 'NOT_GREAT') this.showToast('Okay — no harm done');
+    else this.showToast('Oh no — that made things worse');
     this.refreshChart();
     if (grade === 'BEST') {
       // Care Coins wallet: +1 per correct (BEST) resolve. Blocked
@@ -1121,6 +1182,17 @@ export class ClinicScene extends Phaser.Scene {
       void this.growTree();
     }
     this.playResolveFlash(result.node.animationCue);
+    this.maybeEndVisit();
+  }
+
+  /** Ladder tips end the visit: stage 0 recovered, last struggling. */
+  private maybeEndVisit(): void {
+    if (this.visitEnded) return;
+    const def = CONDITIONS[this.patientState.conditionId];
+    const outcome = visitOutcome(this.patientState.stageIndex, def.stages.length);
+    if (!outcome) return;
+    this.visitEnded = true;
+    this.showResult(outcome);
   }
 
   /**
@@ -1156,6 +1228,12 @@ export class ClinicScene extends Phaser.Scene {
   private switchPatient(name: string): void {
     if (SPRITE_PREFIX[name] === undefined) return;
     this.activeName = name;
+    // Fresh visit: clock + coins baseline restart, result clears.
+    this.visitEnded = false;
+    this.hideResult();
+    this.visitStartMs = this.time.now;
+    this.lastTimerSecond = -1;
+    this.visitStartCoins = this.wallet.balance;
     const row = this.cast ? patientByName(this.cast, name) : null;
     const cond = row?.condition_id;
     if (
@@ -1822,8 +1900,9 @@ export class ClinicScene extends Phaser.Scene {
     nav.setDepth(20);
 
     const tabs: { view: ViewName; label: string }[] = [
-      { view: 'waiting', label: 'Waiting Room' },
+      { view: 'waiting', label: 'Waiting' },
       { view: 'visit', label: 'Visit' },
+      { view: 'learn', label: 'Learn' },
     ];
     for (const tab of tabs) {
       const cx = TAB_X[tab.view];
@@ -1840,18 +1919,29 @@ export class ClinicScene extends Phaser.Scene {
         .setOrigin(0.5, 0.5);
       this.tabTexts[tab.view] = [label];
       const zone = this.add
-        .zone(cx, 924, 270, 72)
+        .zone(cx, 924, 180, 72)
         .setInteractive({ useHandCursor: true });
       zone.on('pointerdown', () => this.showView(tab.view));
       nav.add([icon, label, zone]);
     }
+    // Learn badge: amber dot that pulses until a struggling visit
+    // sends the player to Learn. Hidden until earned.
+    const badge = this.add.graphics();
+    badge.fillStyle(AMBER, 1);
+    badge.lineStyle(2, OUTLINE, 1);
+    badge.fillCircle(0, 0, 8);
+    badge.strokeCircle(0, 0, 8);
+    this.learnBadge = this.add.container(TAB_X.learn + 22, 900, [badge]);
+    this.learnBadge.setVisible(false);
+    nav.add(this.learnBadge);
   }
 
   /**
    * Chrome-3 tab icon set, code-drawn ($0, crisp at any DPI,
    * offline-safe): waiting = queue dots, visit = care cross,
-   * telemed = video play, portal = envelope. Palette-only fills
-   * (ART_BIBLE taste law: no gradients, no glow).
+   * learn = book, telemed = video play, portal = envelope.
+   * Palette-only fills (ART_BIBLE taste law: no gradients, no
+   * glow).
    */
   private drawTabIcon(view: ViewName, cx: number, cy: number): Phaser.GameObjects.Graphics {
     const g = this.add.graphics();
@@ -1873,6 +1963,12 @@ export class ClinicScene extends Phaser.Scene {
       g.strokeRoundedRect(cx - 16, cy - 11, 32, 22, 4);
       g.fillStyle(OUTLINE, 1);
       g.fillTriangle(cx - 4, cy - 6, cx - 4, cy + 6, cx + 7, cy);
+    } else if (view === 'learn') {
+      g.fillStyle(CARD_FILL, 1);
+      g.lineStyle(2, OUTLINE, 1);
+      g.fillRoundedRect(cx - 10, cy - 12, 20, 24, 3);
+      g.strokeRoundedRect(cx - 10, cy - 12, 20, 24, 3);
+      g.lineBetween(cx - 5, cy - 12, cx - 5, cy + 12);
     } else {
       g.lineStyle(2, OUTLINE, 1);
       g.strokeRoundedRect(cx - 15, cy - 10, 30, 20, 3);
@@ -1919,7 +2015,7 @@ export class ClinicScene extends Phaser.Scene {
     // Tray: Visit-only exam chrome.
     this.tray = new ToolTray(this);
     this.tray.onPick = (tool) => {
-      this.showToast(`${tool.label} (${tool.hint}) — exam loops later (mock)`);
+      this.showToast(`${tool.label} (${tool.hint}) — exam loops soon`);
     };
 
     // Chart drawer: succinct Medical Chart, left side.
@@ -1938,12 +2034,15 @@ export class ClinicScene extends Phaser.Scene {
       else this.chart.show(this.activeName, this.patientState.memory);
     });
 
-    // Learning List: book button in the strip (waiting/portal).
+    // Learning List: full-screen behind the Learn tab (the old
+    // strip book button is gone — the tab owns learning now).
     this.learnList = new LearnList(this);
     this.learnList.onOpen = (r) => {
       this.showToast(`${r.title} opens in the reader soon`);
     };
-    this.drawBookButton();
+    this.learnList.onClose = () => {
+      if (this.currentView === 'learn') this.showView('visit');
+    };
 
     // Live cast: Supabase first, fallback offline. Resolves read
     // the loaded trees instantly — never mid-tap network.
@@ -1963,28 +2062,6 @@ export class ClinicScene extends Phaser.Scene {
         this.setConversation(speakerFor(this.activeName), this.openerText(), 'say');
       }
     });
-  }
-
-  private drawBookButton(): void {
-    const bg = this.add.graphics();
-    bg.fillStyle(CARD_FILL, 1);
-    bg.lineStyle(2, OUTLINE, 1);
-    bg.fillRoundedRect(476, 4, 40, 24, 12);
-    bg.strokeRoundedRect(476, 4, 40, 24, 12);
-    const book = this.add.graphics();
-    book.lineStyle(2, OUTLINE, 1);
-    book.strokeRoundedRect(490, 9, 12, 14, 2);
-    book.lineBetween(493, 9, 493, 23);
-    const zone = this.add
-      .zone(496, 16, 40, 24)
-      .setInteractive({ useHandCursor: true });
-    zone.on('pointerdown', () => {
-      if (this.adminOpen) return;
-      const def = CONDITIONS[this.patientState.conditionId];
-      this.learnList.show(def.id, def.name);
-    });
-    this.bookBtn = this.add.container(0, 0, [bg, book, zone]);
-    this.bookBtn.setDepth(20);
   }
 
   private showView(next: ViewName, instant = false): void {
@@ -2022,15 +2099,20 @@ export class ClinicScene extends Phaser.Scene {
     }
     // G4 module visibility: ticker everywhere except Telemed (call
     // buttons own that bottom band); tray + chart drawer Visit-only
-    // (no hands through a video call); book where the strip sits
-    // empty (Waiting — Portal is parked).
+    // (no hands through a video call).
     this.ticker.setVisible(next !== 'telemed');
     this.tray.setVisible(next === 'visit');
     this.chartDrawer.setVisible(next === 'visit');
-    this.bookBtn.setVisible(next === 'waiting');
-    // Overlays close on any view change (both no-op when shut).
+    // Overlays close on any view change (both no-op when shut) —
+    // except Learn, which IS the Learning List full-screen.
     this.chart.hide();
-    this.learnList.hide();
+    if (next === 'learn') {
+      const def = CONDITIONS[this.patientState.conditionId];
+      this.learnList.show(def.id, def.name);
+      this.clearLearnBadge();
+    } else {
+      this.learnList.hide();
+    }
     this.nametag.setVisible(next === 'visit');
     this.syncPanelVisibility();
     const cardY = next === 'telemed' ? -60 : 0;
@@ -2480,6 +2562,177 @@ export class ClinicScene extends Phaser.Scene {
         onComplete: () => this.toast.setVisible(false),
       });
     });
+  }
+
+  // -- visit-end result overlay (depth 44, topmost) --
+
+  private drawResultCard(): void {
+    // Fullscreen dim zone FIRST (bottom): swallows every tap
+    // outside the two buttons — the visit is over, choose.
+    const dim = this.add.zone(270, 480, 540, 960).setInteractive({ useHandCursor: false });
+    const shade = this.add.graphics();
+    shade.fillStyle(0x000000, 0.45);
+    shade.fillRect(0, 0, 540, 960);
+    const card = this.add.graphics();
+    card.fillStyle(CREAM, GLASS_PANEL);
+    card.lineStyle(3, OUTLINE, 1);
+    card.fillRoundedRect(48, 340, 444, 280, 24);
+    card.strokeRoundedRect(48, 340, 444, 280, 24);
+    this.resultTitle = this.add
+      .text(270, 380, '', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '26px',
+        color: COCOA,
+        align: 'center',
+      })
+      .setOrigin(0.5, 0.5);
+    this.resultLines = this.add
+      .text(270, 412, '', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '17px',
+        color: COCOA,
+        align: 'center',
+        lineSpacing: 6,
+      })
+      .setOrigin(0.5, 0);
+    // Buttons carry RELATIVE children so the struggling pulse
+    // scales about the button center (never 0,0).
+    this.resultPrimaryBg = this.add.graphics();
+    this.resultPrimaryText = this.add
+      .text(0, 0, '', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '19px',
+        color: COCOA,
+      })
+      .setOrigin(0.5, 0.5);
+    const primaryZone = this.add
+      .zone(0, 0, 380, 52)
+      .setInteractive({ useHandCursor: true });
+    primaryZone.on('pointerdown', () => this.onResultPrimary());
+    this.resultPrimary = this.add.container(270, 512, [
+      this.resultPrimaryBg,
+      this.resultPrimaryText,
+      primaryZone,
+    ]);
+    const secondaryBg = this.add.graphics();
+    secondaryBg.lineStyle(2, OUTLINE, 1);
+    secondaryBg.strokeRoundedRect(-190, -22, 380, 44, 22);
+    this.resultSecondaryText = this.add
+      .text(0, 0, '', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '17px',
+        color: COCOA,
+      })
+      .setOrigin(0.5, 0.5);
+    const secondaryZone = this.add
+      .zone(0, 0, 380, 44)
+      .setInteractive({ useHandCursor: true });
+    secondaryZone.on('pointerdown', () => this.onResultSecondary());
+    this.resultSecondary = this.add.container(270, 566, [
+      secondaryBg,
+      this.resultSecondaryText,
+      secondaryZone,
+    ]);
+    this.resultRoot = this.add.container(0, 0, [
+      dim,
+      shade,
+      card,
+      this.resultTitle,
+      this.resultLines,
+      this.resultPrimary,
+      this.resultSecondary,
+    ]);
+    this.resultRoot.setDepth(44).setVisible(false).setAlpha(0);
+  }
+
+  private showResult(outcome: VisitOutcome): void {
+    this.resultOutcome = outcome;
+    const def = CONDITIONS[this.patientState.conditionId];
+    const copy = resultCopy({
+      outcome,
+      name: this.activeName,
+      condition: def.name,
+      visitNo: PROTOTYPE_SEEDS.visitNo,
+      coinsEarned: this.wallet.balance - this.visitStartCoins,
+    });
+    this.resultTitle.setText(copy.title);
+    this.resultLines.setText(copy.lines.join('\n'));
+    this.resultPrimaryText.setText(copy.primary);
+    this.resultSecondaryText.setText(copy.secondary);
+    this.resultPrimaryBg.clear();
+    this.resultPrimaryBg.fillStyle(outcome === 'recovered' ? SAGE : AMBER, 1);
+    this.resultPrimaryBg.fillRoundedRect(-190, -26, 380, 52, 26);
+    this.resultRoot.setVisible(true).setAlpha(0);
+    this.tweens.killTweensOf([this.resultRoot, this.resultPrimary]);
+    this.resultPrimary.setScale(1);
+    this.tweens.add({
+      targets: this.resultRoot,
+      alpha: 1,
+      duration: 200,
+      ease: 'Sine.easeOut',
+    });
+    if (outcome === 'struggling') {
+      // Struggling routes to learning: badge + pulsing primary.
+      this.learnBadge.setVisible(true);
+      this.tweens.killTweensOf(this.learnBadge);
+      this.tweens.add({
+        targets: this.learnBadge,
+        scaleX: 1.3,
+        scaleY: 1.3,
+        duration: 450,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
+      });
+      this.tweens.add({
+        targets: this.resultPrimary,
+        scaleX: 1.03,
+        scaleY: 1.03,
+        duration: 500,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
+      });
+    }
+  }
+
+  private hideResult(): void {
+    this.tweens.killTweensOf([this.resultRoot, this.resultPrimary]);
+    this.resultPrimary.setScale(1);
+    this.resultRoot.setVisible(false).setAlpha(0);
+    this.resultOutcome = null;
+  }
+
+  private onResultPrimary(): void {
+    if (this.resultOutcome === 'recovered') {
+      this.hideResult();
+      this.showView('waiting');
+    } else {
+      this.hideResult();
+      this.showView('learn');
+    }
+  }
+
+  private onResultSecondary(): void {
+    if (this.resultOutcome === 'recovered') {
+      this.hideResult();
+      this.showView('learn');
+    } else {
+      this.retryVisit();
+    }
+  }
+
+  private retryVisit(): void {
+    this.hideResult();
+    this.switchPatient(this.activeName);
+  }
+
+  private clearLearnBadge(): void {
+    this.tweens.killTweensOf(this.learnBadge);
+    this.learnBadge.setScale(1).setVisible(false);
   }
 
   private scheduleBlink(): void {

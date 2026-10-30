@@ -90,11 +90,12 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
 - Each tab: code-drawn icon (chrome-3, $0 — waiting = queue
   dots, visit = care cross on sage) + Baloo 2 15px semibold
   labels stacked; icon + label dim together (inactive 60%,
-  active 100% on a sage pill w118 h60). Two tabs only
-  (unclutter): Waiting Room (cx135) + Visit (cx405), 270px
+  active 100% on a sage pill w118 h60). Three tabs: Waiting
+  (cx90) + Visit (cx270) + Learn (cx450, book icon), 180px
   cells. Telemed + Portal tabs are PARKED (views dormant but
   intact) until they earn fun — their icons stay in the icon
-  set for the return.
+  set for the return. A struggling visit lights an amber badge
+  on Learn (pulsing until visited).
 - Behavior: tap = fade current view out 150ms, fade new view in
   180ms; tab pill slides 200ms `Sine.easeInOut`. Default view: Visit.
 
@@ -150,6 +151,24 @@ scale 0.97 90ms yoyo + the existing tap-resolve path (happy bounce
   jump fixed by the label's relative-children anchor). Corral
   + label ride inside the card row container (fade + Telemed
   shift together).
+- Grade stamps: the tapped card earns a sticker (r13, grade
+  color, cream glyph — check / dash / cross) on its top-right
+  corner plus a reinforcing toast ("Great choice! +1 Care
+  Coin" / "Okay — no harm done" / "Oh no — that made things
+  worse"), so right/wrong reads three ways (stamp + face +
+  toast). Stamps clear with reveals on stage moves.
+- Visit end: ladder tips end the visit — stage 0 = recovered,
+  last stage = struggling (pure rules in `src/game/visit.ts`).
+  A dim + result card (x48–492, y340–620) names it plainly
+  ("Mabel is all better!" / "Milo still needs help"), shows
+  visit # + coins earned, and offers two buttons: recovered →
+  Next patient / Learn; struggling → Learn (amber, pulsing) /
+  Try again. The clock freezes; the card blocks all other taps.
+  Retry resets clock, coins baseline, undo, and state.
+- VIEW 5 — LEARN (full-screen): the Learning List sheet behind
+  the Learn tab (condition-linked authoritative resources; the
+  old strip book button is gone). × returns to Visit; switching
+  tabs hides it. A struggling result routes here first.
 - Style: white-cream `#FFF9EF` card r16, 3px outline; grade-tinted
   left spine 8px (BEST sage, NOT_GREAT sky, WRONG amber `#D9A441`,
   DANGEROUS rose — prototype shows the spine ONLY after tap, so
