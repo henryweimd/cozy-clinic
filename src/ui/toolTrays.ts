@@ -44,6 +44,7 @@ export class ToolTray {
   private panel: Phaser.GameObjects.Container;
   private panelBg: Phaser.GameObjects.Graphics;
   private tab: Phaser.GameObjects.Container;
+  private tabZone!: Phaser.GameObjects.Zone;
   private open = false;
   onPick: (tool: ToolDef) => void = () => {};
   onToggle: (open: boolean) => void = () => {};
@@ -94,11 +95,11 @@ export class ToolTray {
     icon.fillCircle(cx - 3, cy - 3, 10);
     icon.strokeCircle(cx - 3, cy - 3, 10);
     icon.lineBetween(cx + 4, cy + 4, cx + 12, cy + 12);
-    const zone = this.scene.add
+    this.tabZone = this.scene.add
       .zone(cx, cy, TAB_W, TAB_H)
       .setInteractive({ useHandCursor: true });
-    zone.on('pointerdown', () => this.toggle());
-    this.tab = this.scene.add.container(0, 0, [tabBg, icon, zone]);
+    this.tabZone.on('pointerdown', () => this.toggle());
+    this.tab = this.scene.add.container(0, 0, [tabBg, icon, this.tabZone]);
     this.tab.setDepth(23);
   }
 
@@ -168,6 +169,18 @@ export class ToolTray {
   setVisible(visible: boolean): void {
     this.panel.setVisible(visible);
     this.tab.setVisible(visible);
+  }
+
+  /**
+   * Hides the tab while another rail tab owns the screen (tabs
+   * sit ABOVE the sliders, so a parked tab would print over the
+   * open panel's content). Zone disables with it. The scene
+   * re-applies this after every setVisible (view change) via
+   * refreshRailTabs.
+   */
+  setTabVisible(v: boolean): void {
+    this.tab.setVisible(v);
+    if (this.tabZone.input) this.tabZone.input.enabled = v;
   }
 }
 

@@ -454,6 +454,7 @@ export class ClinicScene extends Phaser.Scene {
   private cheering = false;
   private notesHandle!: Phaser.GameObjects.Container;
   private notesBadge!: Phaser.GameObjects.Graphics;
+  private notesZone!: Phaser.GameObjects.Zone;
   /** Filed conditions (visit order — the list accumulates). */
   private filedConds: { id: string; name: string }[] = [];
   /** Opened resource ids (their +2 is spent). */
@@ -3029,12 +3030,32 @@ export class ClinicScene extends Phaser.Scene {
     this.notesBadge.fillCircle(RAIL_X + 8, RAIL_SLOTS.notes + 10, 7);
     this.notesBadge.strokeCircle(RAIL_X + 8, RAIL_SLOTS.notes + 10, 7);
     this.notesBadge.setVisible(false);
-    const zone = this.add
+    this.notesZone = this.add
       .zone(cx, cy, TAB_W, TAB_H)
       .setInteractive({ useHandCursor: true });
-    zone.on('pointerdown', () => this.showHandoffSheet());
-    this.notesHandle = this.add.container(0, 0, [tab, glyph, this.notesBadge, zone]);
+    this.notesZone.on('pointerdown', () => this.showHandoffSheet());
+    this.notesHandle = this.add.container(0, 0, [tab, glyph, this.notesBadge, this.notesZone]);
     this.notesHandle.setDepth(23);
+  }
+
+  /**
+   * Rail-tab traffic rule (extends the slider radio): at most
+   * one rail tab owns the screen. A slider's panel slides UNDER
+   * its siblings' tabs (depth 22 vs 23), so parked tabs hide —
+   * with their zones — while chart, tray, or the notes modal is
+   * open. Called on every toggle, modal open/close, and view
+   * arrival (module setVisible runs first and would clobber).
+   */
+  private refreshRailTabs(): void {
+    const inVisit = this.currentView === 'visit';
+    const chartOpen = this.chartDrawer.isOpen;
+    const trayOpen = this.tray.isOpen;
+    const notesOpen = this.handoffSheet.open;
+    const busy = chartOpen || trayOpen || notesOpen;
+    this.chartDrawer.setTabVisible(inVisit && !trayOpen && !notesOpen);
+    this.tray.setTabVisible(inVisit && !chartOpen && !notesOpen);
+    this.notesHandle.setVisible(inVisit && !busy);
+    if (this.notesZone.input) this.notesZone.input.enabled = inVisit && !busy;
   }
 
   /** (Re)builds the sheet for the active patient + live tier. */
@@ -3050,6 +3071,7 @@ export class ClinicScene extends Phaser.Scene {
       selected: this.selectedPreset,
       offline: this.inboxSource === 'fallback',
     });
+    this.refreshRailTabs();
   }
 
   /** Sends the picked preset (or queues it offline). */
@@ -3243,10 +3265,12 @@ export class ClinicScene extends Phaser.Scene {
     this.chartDrawer = new ChartDrawer(this);
     this.chartDrawer.onToggle = (open) => {
       if (open) this.tray.setOpen(false);
+      this.refreshRailTabs();
     };
     this.tray.onToggle = (open) => {
       if (open) this.chartDrawer.setOpen(false);
       else this.resurfaceQuestion();
+      this.refreshRailTabs();
     };
     this.refreshChart();
 
@@ -3281,6 +3305,9 @@ export class ClinicScene extends Phaser.Scene {
     };
     this.handoffSheet.onCheer = (toHandle) => {
       void this.sendCheerTo(toHandle);
+    };
+    this.handoffSheet.onClose = () => {
+      this.refreshRailTabs();
     };
     // Inbox: boot read + 20s poll (two doctors share a patient).
     void this.refreshInbox('boot');
@@ -3498,7 +3525,8 @@ export class ClinicScene extends Phaser.Scene {
     this.ticker.setVisible(tickerVisible(next, this.tickerOn));
     this.tray.setVisible(next === 'visit');
     this.chartDrawer.setVisible(next === 'visit');
-    this.notesHandle.setVisible(next === 'visit');
+    // (notesHandle visibility is owned by refreshRailTabs below —
+    // module setVisible first, tab traffic rule last.)
     // Fresh arrivals re-check the shared inbox (cheap, guarded).
     if (next === 'waiting' || next === 'visit') void this.refreshInbox('switch');
     // Overlays close on any view change (all no-op when shut) —
@@ -3535,6 +3563,10 @@ export class ClinicScene extends Phaser.Scene {
       });
     }
     this.syncPatientInput();
+    // Last writer wins: module visibility above would clobber
+    // parked-tab hiding, so the traffic rule runs at the end
+    // (overlays already closed, currentView already set).
+    this.refreshRailTabs();
   }
 
   private fadeSwap(

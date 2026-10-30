@@ -35,6 +35,7 @@ export interface ChartContent {
 export class ChartDrawer {
   private panel: Phaser.GameObjects.Container;
   private tab: Phaser.GameObjects.Container;
+  private tabZone!: Phaser.GameObjects.Zone;
   private tabIcon: Phaser.GameObjects.Graphics;
   private lineTexts: Phaser.GameObjects.Text[] = [];
   private open = false;
@@ -112,11 +113,11 @@ export class ChartDrawer {
     this.tabIcon.lineStyle(2, THEME.outline, 1);
     this.tabIcon.lineBetween(cx - 5, cy - 2, cx + 5, cy - 2);
     this.tabIcon.lineBetween(cx - 5, cy + 4, cx + 5, cy + 4);
-    const zone = this.scene.add
+    this.tabZone = this.scene.add
       .zone(cx, cy, TAB_W, TAB_H)
       .setInteractive({ useHandCursor: true });
-    zone.on('pointerdown', () => this.toggle());
-    this.tab = this.scene.add.container(0, 0, [tabBg, this.tabIcon, zone]);
+    this.tabZone.on('pointerdown', () => this.toggle());
+    this.tab = this.scene.add.container(0, 0, [tabBg, this.tabIcon, this.tabZone]);
     this.tab.setDepth(23);
   }
 
@@ -166,5 +167,17 @@ export class ChartDrawer {
   setVisible(visible: boolean): void {
     this.panel.setVisible(visible);
     this.tab.setVisible(visible);
+  }
+
+  /**
+   * Hides the tab while another rail tab owns the screen (tabs
+   * sit ABOVE the sliders, so a parked tab would print over the
+   * open panel's content). Zone disables with it — invisible
+   * tabs must not eat taps. The scene re-applies this after
+   * every setVisible (view change) via refreshRailTabs.
+   */
+  setTabVisible(v: boolean): void {
+    this.tab.setVisible(v);
+    if (this.tabZone.input) this.tabZone.input.enabled = v;
   }
 }
