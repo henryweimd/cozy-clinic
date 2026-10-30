@@ -1,5 +1,28 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 5 (2026-10-30): improvement loops 1-3 + hygiene
+
+- Loop 1 (critic hunt): fixed the 90ms double-resolve hole
+  (tapping flag, cleared on all 6 turnover paths); flawless 3/3
+  earns its own headline. Rest of hunt came back clean (shop
+  flags, undo/streak interplay, tap guards, zones).
+- Loop 2 (sound): WebAudio synth cues (correct/wrong/coin/
+  fanfare), $0 assets, gesture-unlocked, try/caught; mute
+  persists via the About sheet (first settings row).
+- Loop 3 (promised toggle): terminal ticker off-switch as the
+  About sheet's second row (persisted, live-applies); pure
+  visibility rule + tests.
+- Hygiene: advisors API lacks permission (token); verified RLS
+  directly instead — anon SELECT everywhere, INSERT only on
+  handoffs/encouragements, matching the client's three POST
+  targets exactly. No changes.
+- Verdicts every chunk: tsc, 135/135 tests (18 files), auditor
+  0, build green, live 200. Image spend: $0 (ledger ~$0.74).
+
+Parked: muse-reword proxy (needs the Supabase secret NAME);
+ticker 2-row expand (untouched); speed clock (parked by
+operator); demo video + README firsthand (near-finish).
+
 ## Run 4 (2026-10-30): chrome-4 (strip out, rail left, note glyph)
 
 - Top strip + coin cluster removed (operator: distracting); a
