@@ -12,6 +12,7 @@ export interface HintStore {
 
 export const TRAY_HINT_KEY = 'cozy-tray-hint-v1';
 export const FIRST_QUIZ_HINT_KEY = 'cozy-first-quiz-hint-v1';
+export const UNDO_HINT_KEY = 'cozy-undo-hint-v1';
 
 /** True exactly once: the exam tray holds per-disease clues. */
 export function takeTrayHint(store: HintStore): boolean {
@@ -21,6 +22,11 @@ export function takeTrayHint(store: HintStore): boolean {
 /** True exactly once: the first quiz ever coaches the tap. */
 export function takeFirstQuizHint(store: HintStore): boolean {
   return takeHint(store, FIRST_QUIZ_HINT_KEY);
+}
+
+/** True exactly once: the Undo pill appears after a first move. */
+export function takeUndoHint(store: HintStore): boolean {
+  return takeHint(store, UNDO_HINT_KEY);
 }
 
 function takeHint(store: HintStore, key: string): boolean {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { takeFirstQuizHint, takeTrayHint, FIRST_QUIZ_HINT_KEY, TRAY_HINT_KEY } from './hints';
+import { takeFirstQuizHint, takeTrayHint, takeUndoHint, FIRST_QUIZ_HINT_KEY, TRAY_HINT_KEY, UNDO_HINT_KEY } from './hints';
 import type { HintStore } from './hints';
 
 function fakeStore(broken = false): HintStore & { data: Record<string, string> } {
@@ -42,5 +42,18 @@ describe('takeFirstQuizHint', () => {
 
   it('stays silent when storage is broken', () => {
     expect(takeFirstQuizHint(fakeStore(true))).toBe(false);
+  });
+});
+
+describe('takeUndoHint', () => {
+  it('fires exactly once per store', () => {
+    const store = fakeStore();
+    expect(takeUndoHint(store)).toBe(true);
+    expect(store.data[UNDO_HINT_KEY]).toBe('1');
+    expect(takeUndoHint(store)).toBe(false);
+  });
+
+  it('stays silent when storage is broken', () => {
+    expect(takeUndoHint(fakeStore(true))).toBe(false);
   });
 });

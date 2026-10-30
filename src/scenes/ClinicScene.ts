@@ -77,8 +77,8 @@ import { ProfileEditor } from '../ui/profileEditor';
 import type { ProfileKind } from '../ui/profileEditor';
 import { ShopSheet } from '../ui/shopSheet';
 import { blinkCloseMs, blinkGapMs, bobRate, SPRITE_PREFIX } from '../game/sprites';
-import { takeFirstQuizHint, takeTrayHint } from '../game/hints';
-import { clearUndo, emptyUndo, pushMove, undoDepth, undoMove } from '../game/undo';
+import { takeFirstQuizHint, takeTrayHint, takeUndoHint } from '../game/hints';
+import { clearUndo, emptyUndo, pushMove, undoDepth, undoLabel, undoMove } from '../game/undo';
 import type { UndoStack } from '../game/undo';
 
 /**
@@ -411,6 +411,9 @@ export class ClinicScene extends Phaser.Scene {
   private hud!: Phaser.GameObjects.Container;
   private coinsText!: Phaser.GameObjects.Text;
   private contextText!: Phaser.GameObjects.Text;
+  private undoPill!: Phaser.GameObjects.Container;
+  private undoText!: Phaser.GameObjects.Text;
+  private undoZone!: Phaser.GameObjects.Zone;
   private wallet: Wallet = emptyWallet();
   private shop!: ShopSheet;
   private about!: AboutSheet;
@@ -1117,9 +1120,9 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   /**
-   * Restore one undone move (dev monitor today, player submenu
-   * later): engine state, trajectory cursor, coins, and card
-   * spines all rewind together.
+   * Restore one undone move (HUD Rewind pill + dev monitor):
+   * engine state, trajectory cursor, coins, and card spines all
+   * rewind together.
    */
   private doUndo(): void {
     const undone = undoMove(this.undoStack);
@@ -1483,16 +1486,22 @@ export class ClinicScene extends Phaser.Scene {
     this.setConversation(speakerFor(this.activeName), q, 'tell');
     // One-shot coaches, at most one toast per question (the
     // toast replaces, so ordering is the priority). First quiz
-    // ever: teach the tap. First examine quiz after that (second
-    // visit): point at the tray (options make more sense after
-    // the findings). View-gated:
-    // resolve beats can land while the player is away, and the
-    // tray exists only here. Storage-guarded: blocked browsers
-    // stay quiet instead of throwing.
+    // ever: teach the tap. First question with a rewindable
+    // move: point at the Undo pill. First examine quiz after
+    // that (second visit): point at the tray (options make more
+    // sense after the findings). View-gated: resolve beats can
+    // land while the player is away, and the tray exists only
+    // here. Storage-guarded: blocked browsers stay quiet
+    // instead of throwing.
     if (this.isQuizView()) {
       try {
         if (takeFirstQuizHint(window.localStorage)) {
           this.showToast('Tap the best answer below');
+        } else if (
+          undoDepth(this.undoStack) > 0 &&
+          takeUndoHint(window.localStorage)
+        ) {
+          this.showToast('Changed your mind? Undo is top-right');
         } else if (round === 'examine' && takeTrayHint(window.localStorage)) {
           this.showToast('Stuck? The exam tray (right edge) holds clues');
         }
@@ -2020,6 +2029,28 @@ export class ClinicScene extends Phaser.Scene {
       if (this.shop.open) this.shop.hide();
       else this.shop.show(this.wallet.balance, this.ownedIds);
     });
+    // Rewind pill, right end of the strip: the player-facing
+    // face of the 10-move undo stack. Appears only once there
+    // is a move to rewind (refreshHud owns visibility), so the
+    // strip stays clean at first sight.
+    const undoBg = this.add.graphics();
+    undoBg.fillStyle(CARD_FILL, 1);
+    undoBg.lineStyle(2, OUTLINE, 1);
+    undoBg.fillRoundedRect(428, 4, 88, 24, 12);
+    undoBg.strokeRoundedRect(428, 4, 88, 24, 12);
+    this.undoText = this.add
+      .text(472, 16, '', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '13px',
+        color: COCOA,
+      })
+      .setOrigin(0.5, 0.5);
+    this.undoZone = this.add.zone(472, 16, 88, 24).setInteractive({ useHandCursor: true });
+    this.undoZone.on('pointerdown', () => {
+      if (undoDepth(this.undoStack) > 0) this.doUndo();
+    });
+    this.undoPill = this.add.container(0, 0, [undoBg, this.undoText, this.undoZone]);
     this.hud = this.add.container(0, 0, [
       coinsBg,
       coin,
@@ -2027,6 +2058,7 @@ export class ClinicScene extends Phaser.Scene {
       this.coinsText,
       this.contextText,
       coinZone,
+      this.undoPill,
     ]);
     // Depth 20 = above the strip bg (19), level with the nav bar
     // (a different band, so no conflict).
@@ -2081,6 +2113,13 @@ export class ClinicScene extends Phaser.Scene {
     // Center strip stays blank: reserved real estate for future
     // real status messages (operator note 2026-10-29).
     this.contextText.setText('');
+    // Rewind pill: present only while a move can rewind (the
+    // hud container already gates the visit view).
+    const depth = undoDepth(this.undoStack);
+    this.undoText.setText(undoLabel(depth));
+    this.undoPill.setVisible(depth > 0);
+    // Visibility alone doesn't release taps: disable the zone too.
+    if (this.undoZone.input) this.undoZone.input.enabled = depth > 0;
   }
 
   // -- VIEW 2: waiting room (a list, not a room) --

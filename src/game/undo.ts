@@ -40,6 +40,12 @@ export function undoDepth<T>(stack: UndoStack<T>): number {
   return stack.past.length;
 }
 
+/** HUD pill label ('Undo 3'), clamped to the 0..10 range. */
+export function undoLabel(depth: number): string {
+  const d = Math.max(0, Math.min(UNDO_CAP, Math.floor(depth)));
+  return `Undo ${d}`;
+}
+
 export function canUndo<T>(stack: UndoStack<T>): boolean {
   return stack.past.length > 0;
 }

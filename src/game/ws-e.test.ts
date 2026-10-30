@@ -15,6 +15,7 @@ import {
   emptyUndo,
   pushMove,
   undoDepth,
+  undoLabel,
   undoMove,
 } from './undo';
 
@@ -106,5 +107,13 @@ describe('WS-E undo stack', () => {
     const u2 = undoMove(u1?.stack ?? s);
     expect(u2?.snapshot).toEqual(a);
     expect(canUndo(u2?.stack ?? s)).toBe(false);
+  });
+
+  it('labels the HUD pill, clamped to the 0..10 range', () => {
+    expect(undoLabel(0)).toBe('Undo 0');
+    expect(undoLabel(3)).toBe('Undo 3');
+    expect(undoLabel(10)).toBe('Undo 10');
+    expect(undoLabel(99)).toBe('Undo 10');
+    expect(undoLabel(-2)).toBe('Undo 0');
   });
 });
