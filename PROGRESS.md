@@ -1948,3 +1948,23 @@ clearance — then a polish fix loop for real findings.
 - Verification: auditor 0 findings (panels + E2 rewritten);
   146/146 (20 files); tsc clean; build green; live 200.
 - Spend $0.00 (ledger ~$0.74 cumulative).
+
+## Harden: pre-freeze verification (2026-10-30)
+
+- OWNERSHIP: verification only — no product files touched.
+- Fresh gates: 146/146 (20 files), tsc clean, auditor 0
+  findings, build green, tree clean (maneuvers.* still the
+  other stream's untracked work).
+- RLS re-verified: anon SELECT on all 11 tables, INSERT only
+  on handoffs + encouragements — matches the client's POSTs,
+  no UPDATE/DELETE anywhere.
+- Links + assets: MedlinePlus 4/4 return 200; room plates 7/7
+  on disk; Baloo 2 vendored; learning_resources 4/4 with url
+  + quiz; no console/TODO noise in shipped code.
+- Runtime re-proof: muse-reword returns a fresh paraphrase
+  (fallback:false); live bundle carries Supabase env + both
+  function paths — production is fully wired.
+- Dormant (not fixed, out of scope): mv-*.png illustrations
+  missing (paused maneuver stream, no UI consumer); the 4
+  exam-*.png are unreferenced spares.
+- Spend $0.00 (ledger ~$0.74 cumulative).

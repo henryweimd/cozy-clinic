@@ -132,3 +132,23 @@ programmatic verification only.
 Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
 
 STOP.
+
+## Run 11 — harden (2026-10-30)
+
+Phase: pre-freeze verification pass (no product changes).
+
+Files changed: docs only (PROGRESS + CHECKPOINT).
+
+Test result: auditor 0 findings; `npm test` 146/146 (20
+files); tsc clean; build green. RLS, links (4/4), plates
+(7/7), proxy (live), and bundle wiring all re-proven.
+
+Deployment URL: `https://cozy-clinic.vercel.app/` (live-polled
+200; bundle hash `B5Iv8z7Y` carries Supabase + functions).
+
+Playtest result: operator playtest still pending — this run is
+programmatic verification only.
+
+Image spend this run: $0 (ledger ~$0.74 cumulative, STOP at $120).
+
+STOP.
