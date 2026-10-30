@@ -1,7 +1,9 @@
 import Phaser from 'phaser';
 import { FALLBACK_RESOURCES } from '../data/fallbackPack';
 import type { FallbackResource } from '../data/fallbackPack';
+import { EARN_QUIZ_PASS } from '../game/economy';
 import { THEME } from './chromeTheme';
+import { drawCoin } from './icons';
 
 /**
  * E1 Learning List: the formal-education submenu (submenu ONLY —
@@ -13,9 +15,15 @@ import { THEME } from './chromeTheme';
  * "read"; their card carries a Collected stamp.
  *
  * Geometry: full sheet x24-516, y136-876 like Waiting/Portal.
- * Card x48-492 y216-600; buttons placed by measured text.
+ * Card x48-492 y208-870 (fixed): art header, summary, then the
+ * prize quiz inline at the bottom — answer, read more, or back.
  * Depth 24.
  */
+
+/** Pure: the card's art key from its condition (preload contract). */
+export function learnArtKey(conditionId: string): string {
+  return `learn-${conditionId}`;
+}
 
 /** Pure: resources for one condition (unit-tested). */
 export function resourcesFor(conditionId: string): FallbackResource[] {
@@ -168,23 +176,27 @@ export class LearnList {
       if (quiz === 'open') {
         // Prize pill: sits above the row zone (topOnly gives it
         // the tap) and opens the quiz, not the card.
+        // Prize pill: a coin +5, never the word "quiz" (work
+        // words stay out of the list). Opens the card — the
+        // quiz lives at the card's bottom.
         const pillBg = this.scene.add.graphics();
         pillBg.fillStyle(THEME.sage, 1);
         pillBg.lineStyle(2, THEME.outline, 1);
         pillBg.fillRoundedRect(376, y + 24, 100, 48, 24);
         pillBg.strokeRoundedRect(376, y + 24, 100, 48, 24);
+        drawCoin(pillBg, 400, y + 48, 9);
         const pillText = this.scene.add
-          .text(426, y + 48, 'Quiz +5', {
+          .text(440, y + 48, `+${EARN_QUIZ_PASS}`, {
             fontFamily: THEME.font,
             fontStyle: 'bold',
-            fontSize: '15px',
+            fontSize: '16px',
             color: '#ffffff',
           })
           .setOrigin(0.5, 0.5);
         const pillZone = this.scene.add
           .zone(426, y + 48, 100, 48)
           .setInteractive({ useHandCursor: true });
-        pillZone.on('pointerdown', () => this.showQuiz(r));
+        pillZone.on('pointerdown', () => this.showCard(r));
         row.add([pillBg, pillText, pillZone]);
       } else if (quiz === 'passed') {
         const stamp = this.scene.add
@@ -220,193 +232,165 @@ export class LearnList {
     });
   }
 
-  /** Collector card: the cached summary + tucked-in web link. */
+  /**
+   * Collector card: art header, cached summary, then the prize
+   * quiz INLINE at the bottom — answer it, read more, or back.
+   * Fixed geometry (the auditor budgets every string): art
+   * 224..384, summary 444..570, quiz head 582, stem 604, picks
+   * 662/706/750, pearl slot 772, buttons 826..862.
+   */
   showCard(r: FallbackResource): void {
     this.body.removeAll(true);
-    this.title.setText('Learning List');
     const bg = this.scene.add.graphics();
     bg.fillStyle(THEME.cardFill, 1);
-    bg.lineStyle(2, THEME.outline, 1);
-    bg.fillRoundedRect(48, 216, 444, 384, 16);
-    bg.strokeRoundedRect(48, 216, 444, 384, 16);
-    const name = this.scene.add
-      .text(72, 236, r.title, {
+    bg.lineStyle(3, THEME.outline, 1);
+    bg.fillRoundedRect(48, 208, 444, 662, 24);
+    bg.strokeRoundedRect(48, 208, 444, 662, 24);
+    this.body.add(bg);
+    // Art header (missing texture degrades to a sage panel —
+    // the card never shows a broken image).
+    const artKey = learnArtKey(r.condition_id);
+    if (this.scene.textures.exists(artKey)) {
+      const art = this.scene.add.image(270, 304, artKey).setDisplaySize(412, 160);
+      const frame = this.scene.add.graphics();
+      frame.lineStyle(2, THEME.outline, 1);
+      frame.strokeRect(64, 224, 412, 160);
+      this.body.add([art, frame]);
+    } else {
+      const panel = this.scene.add.graphics();
+      panel.fillStyle(THEME.sage, 1);
+      panel.fillRect(64, 224, 412, 160);
+      this.body.add(panel);
+    }
+    const title = this.scene.add
+      .text(72, 400, r.title, {
         fontFamily: THEME.font,
         fontStyle: 'bold',
         fontSize: '21px',
         color: THEME.cocoa,
       })
-      .setOrigin(0, 0);
-    const collected = this.lastOpened.has(r.id);
-    if (collected) {
+      .setOrigin(0, 0.5);
+    this.body.add(title);
+    if (this.lastOpened.has(r.id)) {
       const stamp = this.scene.add
-        .text(468, 240, 'Collected', {
+        .text(468, 400, 'Collected', {
           fontFamily: THEME.font,
           fontStyle: 'bold',
           fontSize: '15px',
           color: THEME.leaf,
         })
-        .setOrigin(1, 0);
+        .setOrigin(1, 0.5);
       this.body.add(stamp);
     }
     const src = this.scene.add
-      .text(72, 268, `${r.source} · pre-read summary`, {
+      .text(72, 430, `${r.source} · pre-read summary`, {
         fontFamily: THEME.font,
         fontSize: '14px',
         color: THEME.secondary,
       })
-      .setOrigin(0, 0);
-    const summary = this.scene.add
-      .text(72, 296, r.summary, {
+      .setOrigin(0, 0.5);
+    this.body.add(src);
+    const body = this.scene.add
+      .text(72, 444, r.summary, {
         fontFamily: THEME.font,
-        fontSize: '16px',
-        color: THEME.cocoa,
+        fontSize: '14px',
+        color: THEME.secondary,
         wordWrap: { width: 396 },
-        lineSpacing: 4,
+        lineSpacing: 2,
       })
       .setOrigin(0, 0);
-    // Buttons ride below the measured summary (summaries vary).
-    const by = 296 + summary.height + 20;
-    const backBg = this.scene.add.graphics();
-    backBg.fillStyle(THEME.cardFill, 1);
-    backBg.lineStyle(2, THEME.outline, 1);
-    backBg.fillRoundedRect(72, by, 188, 48, 24);
-    backBg.strokeRoundedRect(72, by, 188, 48, 24);
-    const backText = this.scene.add
-      .text(166, by + 24, 'Back', {
+    this.body.add(body);
+    // Quiz head: coin + prize, then the stem — no "quiz" word.
+    const head = this.scene.add.graphics();
+    drawCoin(head, 82, 582, 8);
+    this.body.add(head);
+    const prize = this.scene.add
+      .text(96, 582, `+${EARN_QUIZ_PASS}`, {
         fontFamily: THEME.font,
         fontStyle: 'bold',
-        fontSize: '17px',
-        color: THEME.cocoa,
+        fontSize: '14px',
+        color: THEME.leaf,
       })
-      .setOrigin(0.5, 0.5);
-    const backZone = this.scene.add
-      .zone(166, by + 24, 188, 48)
-      .setInteractive({ useHandCursor: true });
-    backZone.on('pointerdown', () => this.show(this.lastFiled, this.lastOpened, this.localPassed));
-    const moreBg = this.scene.add.graphics();
-    moreBg.fillStyle(THEME.sage, 1);
-    moreBg.lineStyle(2, THEME.outline, 1);
-    moreBg.fillRoundedRect(276, by, 192, 48, 24);
-    moreBg.strokeRoundedRect(276, by, 192, 48, 24);
-    const moreText = this.scene.add
-      .text(372, by + 24, 'Read more', {
-        fontFamily: THEME.font,
-        fontStyle: 'bold',
-        fontSize: '17px',
-        color: '#ffffff',
-      })
-      .setOrigin(0.5, 0.5);
-    const moreZone = this.scene.add
-      .zone(372, by + 24, 192, 48)
-      .setInteractive({ useHandCursor: true });
-    moreZone.on('pointerdown', () => this.onExternal(r));
-    this.body.add([bg, name, src, summary, backBg, backText, backZone, moreBg, moreText, moreZone]);
-  }
-
-  /** Prize quiz: the stem + three picks (same card shell). */
-  showQuiz(r: FallbackResource): void {
-    this.body.removeAll(true);
-    this.title.setText('Learning List');
-    const bg = this.scene.add.graphics();
-    bg.fillStyle(THEME.cardFill, 1);
-    bg.lineStyle(2, THEME.outline, 1);
-    bg.fillRoundedRect(48, 216, 444, 384, 16);
-    bg.strokeRoundedRect(48, 216, 444, 384, 16);
-    const name = this.scene.add
-      .text(72, 236, `${r.title} Quiz`, {
-        fontFamily: THEME.font,
-        fontStyle: 'bold',
-        fontSize: '21px',
-        color: THEME.cocoa,
-      })
-      .setOrigin(0, 0);
+      .setOrigin(0, 0.5);
+    this.body.add(prize);
     const stem = this.scene.add
-      .text(72, 276, r.quiz.stem, {
+      .text(72, 604, r.quiz.stem, {
         fontFamily: THEME.font,
-        fontSize: '16px',
+        fontStyle: 'bold',
+        fontSize: '15px',
         color: THEME.cocoa,
         wordWrap: { width: 396 },
-        lineSpacing: 4,
       })
       .setOrigin(0, 0);
-    this.body.add([bg, name, stem]);
-    // Fixed slots (stem budget ends at y418): picks never drift.
+    this.body.add(stem);
+    // Picks + pearl slot. Wrong taps mark and invite retry;
+    // the right one pays (scene-guarded, once) and teaches.
+    const pickBgs: Phaser.GameObjects.Graphics[] = [];
+    let done = this.localPassed.has(r.id);
+    const slot = this.scene.add
+      .text(72, 772, '', {
+        fontFamily: THEME.font,
+        fontSize: '14px',
+        color: THEME.secondary,
+        wordWrap: { width: 396 },
+      })
+      .setOrigin(0, 0);
+    const mark = (i: number, good: boolean): void => {
+      const g = pickBgs[i];
+      const cy = 662 + i * 44;
+      g.clear();
+      g.fillStyle(good ? THEME.sage : 0xe8a0a0, 1);
+      g.lineStyle(2, THEME.outline, 1);
+      g.fillRoundedRect(72, cy - 20, 396, 40, 20);
+      g.strokeRoundedRect(72, cy - 20, 396, 40, 20);
+    };
     r.quiz.choices.forEach((choice, i) => {
-      const cy = 430 + i * 52;
-      const choiceBg = this.scene.add.graphics();
-      choiceBg.fillStyle(THEME.cream, 1);
-      choiceBg.lineStyle(2, THEME.outline, 1);
-      choiceBg.fillRoundedRect(72, cy, 396, 44, 22);
-      choiceBg.strokeRoundedRect(72, cy, 396, 44, 22);
-      const choiceText = this.scene.add
-        .text(270, cy + 22, choice, {
+      const cy = 662 + i * 44;
+      const cbg = this.scene.add.graphics();
+      const correct = i === r.quiz.answer;
+      cbg.fillStyle(correct && done ? THEME.sage : THEME.cardFill, 1);
+      cbg.lineStyle(2, THEME.outline, 1);
+      cbg.fillRoundedRect(72, cy - 20, 396, 40, 20);
+      cbg.strokeRoundedRect(72, cy - 20, 396, 40, 20);
+      pickBgs.push(cbg);
+      const clabel = this.scene.add
+        .text(92, cy, choice, {
           fontFamily: THEME.font,
           fontStyle: 'bold',
           fontSize: '16px',
-          color: THEME.cocoa,
+          color: correct && done ? '#ffffff' : THEME.cocoa,
         })
-        .setOrigin(0.5, 0.5);
-      const choiceZone = this.scene.add
-        .zone(270, cy + 22, 396, 44)
+        .setOrigin(0, 0.5);
+      const czone = this.scene.add
+        .zone(270, cy, 396, 40)
         .setInteractive({ useHandCursor: true });
-      choiceZone.on('pointerdown', () => {
-        const correct = i === r.quiz.answer;
-        let prize = 0;
+      czone.on('pointerdown', () => {
+        if (done) return;
         if (correct) {
+          done = true;
           this.localPassed.add(r.id);
-          prize = this.onQuizPass(r);
+          mark(i, true);
+          clabel.setColor('#ffffff');
+          slot.setText(r.quiz.pearl);
+          this.onQuizPass(r);
+        } else {
+          mark(i, false);
+          slot.setText('Not quite — try again.');
         }
-        this.showQuizResult(r, correct, prize);
       });
-      this.body.add([choiceBg, choiceText, choiceZone]);
+      this.body.add([cbg, clabel, czone]);
     });
-  }
-
-  /** Quiz result: the pearl teaches either way; Back re-lists. */
-  showQuizResult(r: FallbackResource, correct: boolean, prize: number): void {
-    this.body.removeAll(true);
-    this.title.setText('Learning List');
-    const bg = this.scene.add.graphics();
-    bg.fillStyle(THEME.cardFill, 1);
-    bg.lineStyle(2, THEME.outline, 1);
-    bg.fillRoundedRect(48, 216, 444, 384, 16);
-    bg.strokeRoundedRect(48, 216, 444, 384, 16);
-    const title = this.scene.add
-      .text(72, 236, correct ? `Correct! +${prize}` : 'Not quite', {
-        fontFamily: THEME.font,
-        fontStyle: 'bold',
-        fontSize: '21px',
-        color: correct ? THEME.leaf : THEME.cocoa,
-      })
-      .setOrigin(0, 0);
-    const pearl = this.scene.add
-      .text(72, 276, r.quiz.pearl, {
-        fontFamily: THEME.font,
-        fontSize: '16px',
-        color: THEME.cocoa,
-        wordWrap: { width: 396 },
-        lineSpacing: 4,
-      })
-      .setOrigin(0, 0);
-    // Wrong picks can retry from the row (the pill stays open).
-    const hint = correct
-      ? null
-      : this.scene.add
-          .text(72, 480, 'Re-read the card and try again — the prize waits.', {
-            fontFamily: THEME.font,
-            fontSize: '15px',
-            color: THEME.secondary,
-            wordWrap: { width: 396 },
-          })
-          .setOrigin(0, 0);
+    if (done) slot.setText(r.quiz.pearl);
+    else slot.setText(`Answer above to earn +${EARN_QUIZ_PASS} coins`);
+    this.body.add(slot);
+    // Back + Read more ride the card's bottom edge.
     const backBg = this.scene.add.graphics();
     backBg.fillStyle(THEME.cardFill, 1);
     backBg.lineStyle(2, THEME.outline, 1);
-    backBg.fillRoundedRect(72, 524, 188, 48, 24);
-    backBg.strokeRoundedRect(72, 524, 188, 48, 24);
-    const backText = this.scene.add
-      .text(166, 548, 'Back', {
+    backBg.fillRoundedRect(72, 826, 188, 36, 18);
+    backBg.strokeRoundedRect(72, 826, 188, 36, 18);
+    const back = this.scene.add
+      .text(166, 844, 'Back', {
         fontFamily: THEME.font,
         fontStyle: 'bold',
         fontSize: '17px',
@@ -414,12 +398,29 @@ export class LearnList {
       })
       .setOrigin(0.5, 0.5);
     const backZone = this.scene.add
-      .zone(166, 548, 188, 48)
+      .zone(166, 844, 188, 36)
       .setInteractive({ useHandCursor: true });
-    backZone.on('pointerdown', () => this.show(this.lastFiled, this.lastOpened, this.localPassed));
-    const parts: Phaser.GameObjects.GameObject[] = [bg, title, pearl, backBg, backText, backZone];
-    if (hint) parts.push(hint);
-    this.body.add(parts);
+    backZone.on('pointerdown', () => {
+      this.show(this.lastFiled, this.lastOpened, this.localPassed);
+    });
+    const moreBg = this.scene.add.graphics();
+    moreBg.fillStyle(THEME.cardFill, 1);
+    moreBg.lineStyle(2, THEME.outline, 1);
+    moreBg.fillRoundedRect(276, 826, 192, 36, 18);
+    moreBg.strokeRoundedRect(276, 826, 192, 36, 18);
+    const more = this.scene.add
+      .text(372, 844, 'Read more', {
+        fontFamily: THEME.font,
+        fontStyle: 'bold',
+        fontSize: '17px',
+        color: THEME.cocoa,
+      })
+      .setOrigin(0.5, 0.5);
+    const moreZone = this.scene.add
+      .zone(372, 844, 192, 36)
+      .setInteractive({ useHandCursor: true });
+    moreZone.on('pointerdown', () => this.onExternal(r));
+    this.body.add([backBg, back, backZone, moreBg, more, moreZone]);
   }
 
   hide(): void {
@@ -434,6 +435,7 @@ export class LearnList {
       onComplete: () => this.root.setVisible(false),
     });
   }
+
 
   get open(): boolean {
     return this.isOpen;

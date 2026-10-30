@@ -60,8 +60,8 @@ block B verbatim. Never mix them; never drop the negative clauses.
 > vertical 9:16 composition, no characters, no plush or fuzzy
 > surfaces anywhere, no outline or line art, no text, no clutter.
 
-> BLOCK U — UI ILLUSTRATION (verbatim, proposed 2026-10-29, operator
-> to lock): Soft flat cozy illustration, rounded shapes, matte
+> BLOCK U — UI ILLUSTRATION (verbatim, locked 2026-10-30 for Learn
+> card headers): Soft flat cozy illustration, rounded shapes, matte
 > texture, warm cream background, restrained pastel palette, gentle
 > daylight, thin warm-brown outlines only, centered, generous
 > negative space. No text, no words, no letters, no numbers, no

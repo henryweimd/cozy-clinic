@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { filedTopics, quizState, resourcesFor } from './learnList';
+import { filedTopics, learnArtKey, quizState, resourcesFor } from './learnList';
 
 describe('resourcesFor', () => {
   it('finds each condition\'s authoritative rows', () => {
@@ -53,5 +53,13 @@ describe('filedTopics', () => {
 
   it('files nothing for an empty visit history', () => {
     expect(filedTopics([])).toEqual([]);
+  });
+});
+
+describe('learnArtKey', () => {
+  it('names the preloaded header for each shipped condition', () => {
+    for (const id of ['asthma', 'viral-respiratory', 'dehydration', 'hypertension']) {
+      expect(learnArtKey(id)).toBe(`learn-${id}`);
+    }
   });
 });

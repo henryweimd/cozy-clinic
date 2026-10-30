@@ -610,6 +610,11 @@ export class ClinicScene extends Phaser.Scene {
     for (const [slug, file] of Object.entries(PLATE_FILE)) {
       this.load.image(`plate-${slug}`, file);
     }
+    // Learn-card headers: one cozy banner per condition
+    // (offline-safe); keys `learn-<condition_id>`.
+    for (const id of ['asthma', 'viral-respiratory', 'dehydration', 'hypertension']) {
+      this.load.image(`learn-${id}`, `assets/learn/learn-${id}.png`);
+    }
     // No prop preloads: the plush P2 props clash with the photoreal
     // plate (which paints its own bench/plant/cabinet) — removed,
     // not re-pointed. See drawRoom.

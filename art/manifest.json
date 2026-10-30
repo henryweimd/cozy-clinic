@@ -1218,5 +1218,7 @@
   "ellis_spend_usd": 0.06,
   "ellis_note": "Ellis SHIPS 2026-10-30: stone-taupe elder sailor, white cap + navy collar (fixed outfit); 6-frame set via 0.88 rescale + cap-white restore + shelf cleanup + paste_x=22; calm bob 1.4, lids 160ms",
   "ellis_contact_sheet": "art/contact-sheets/plate-ellis.png",
-  "population_spend_note": "12 images x $0.01; ledger ~$0.81 cumulative; at >= $120 STOP - not reached"
+  "population_spend_note": "12 images x $0.01; ledger ~$0.81 cumulative; at >= $120 STOP - not reached",
+  "learn_headers_spend_note": "4 images (asthma/cold/dehydration/hypertension card banners, Block U verbatim) x $0.01, center-cropped to 824x320; ledger ~$0.85 cumulative; at >= $120 STOP - not reached",
+  "learn_headers_contact_sheet": "art/contact-sheets/learn-headers-2026-10-30.png"
 }
