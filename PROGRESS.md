@@ -2003,3 +2003,22 @@ clearance — then a polish fix loop for real findings.
 - Verification: auditor 0 findings; 148/148 (20 files); tsc
   clean; build green; live 200.
 - Spend $0.00 (ledger ~$0.74 cumulative).
+
+## Webapp: centered + installable + calm (2026-10-30)
+
+- OWNERSHIP: `index.html`, `public/manifest.webmanifest`,
+  `public/icons/*`, `public/apple-touch-icon.png`,
+  `src/scenes/ClinicScene.ts` (motion gate), auditor F2.
+- Centered at last: flexbox + Phaser autoCenter margins were
+  double-applying and shoving the canvas sideways on wide
+  screens. One authority now (Phaser margins); shell just
+  hosts the root.
+- Installable: manifest (standalone, portrait, cream theme),
+  iOS standalone + touch-icon tags, Milo icons at 192/512/180
+  derived from shipped art ($0).
+- Reduced motion: the two infinite pulses render as static
+  emphasis and the idle bob stills when the OS asks; normal
+  one-shot transitions untouched.
+- Verification: auditor 0 findings (new F2 PWA parity);
+  148/148; tsc clean; build green; live 200 + manifest 200.
+- Spend $0.00 (ledger ~$0.74 cumulative).
