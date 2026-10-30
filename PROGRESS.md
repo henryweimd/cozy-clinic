@@ -1,5 +1,40 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 3 (2026-10-30): hook, rewind, quiz prizes, tiers, pearls, loops
+
+- 60s hook: audited boot (in-visit, +2s quiz, pulse, 6-10s
+  sneeze, one-tap next all present); added the one missing
+  piece — a one-shot first-quiz tap coach.
+- Rewind: HUD pill (Undo N) appears only while rewindable;
+  one-shot coach; doUndo untouched; zone disables with
+  visibility.
+- Prize quizzes: one pre-cached quiz per Learn topic, read-gated
+  pill, flat +5 (earn:quiz-pass), Passed stamps, retry loop;
+  Supabase learning_resources.quiz seeded 4/4.
+- Tiers (Muse loop 1): 16 actions x gentle/steady/expert display
+  labels, Muse-drafted in-session, engine-vetoed (steady ===
+  canonical, 34-char budgets, grades key on ids so the answer
+  can't move); Profile header segmented control, persisted;
+  all 7 tier surfaces live; visit rewords on return.
+- Pearls (Muse loop 2): dx right/wrong whys in the confirmation
+  beat; result modal grows a 4th line (visit takeaway).
+- Loops (Muse loop 3): visit combo (+1/+2, undo-aware), daily
+  streak (+1..+5 capped, persisted); returning-patient
+  recognition verified already shipping.
+- Verdicts every chunk: tsc, 131/131 tests (17 files), auditor
+  0, build green, live 200. Image spend run 3: $0 (ledger
+  ~$0.74). No Meta API key in .env — wording was drafted by
+  Muse Spark in-session (pre-cached data, $0 runtime); no live
+  model calls are claimed.
+
+Not done: operator phone playtest of runs 1-3; speed clock
+re-introduction (parked); patient says/findings tiering (cut
+for freeze); login, undo-submenu-beyond-pill (pill IS the
+submenu); demo video + README firsthand paragraph (near-finish).
+
+Next: operator playtest notes; otherwise judging-polish loop
+within the Nov 3 noon ET freeze.
+
 ## Run 2 (2026-10-30): medical fix, profile identity, critic sweep, rail, learn cards
 
 - MEDICAL FIX (shipped alone, first): the viral case rewarded a
