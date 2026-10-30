@@ -62,8 +62,9 @@ Playable today on the live build; every step works, nothing staged:
    Ellis); reorder the Waiting queue. The right-edge exam tray
    holds Look / Feel / Tap / Listen with per-disease findings.
 4. Leave a care note (open a 2nd tab as another doctor to see it land).
-5. Read a Learn topic (+2 coins), spend coins in the Shop (every item
-   boosts payouts), check Profile + the About sheet.
+5. Read a Learn topic (+2 coins), pass its prize quiz (+5), spend
+   coins in the Shop (every item boosts payouts), check Profile +
+   the About sheet.
 6. Cheer a colleague from any care note.
 
 Judges' overlay: tap the painted COZY CLINIC wall sign 5 times, enter
@@ -130,7 +131,8 @@ the core of the game — are only possible because generation is this cheap.
 - **4 conditions** as tested state transitions: asthma, sniffly cold (viral
   respiratory), dehydration, hypertension.
 - **Living Chart** memory beads, **Learning List** (accumulating,
-  MedlinePlus-backed, +2 coins per first read), **Clinic Shop** (Care Coins
+  MedlinePlus-backed, +2 coins per first read, +5 prize quiz each),
+  **Clinic Shop** (Care Coins
   wallet, Tools/Medicines/Practice), **10-move undo**, exam tool trays,
   chart drawer, signout handoff, dev asset browser, **Profile** tab
   (preset doctor handle over the `players` table; shared-care

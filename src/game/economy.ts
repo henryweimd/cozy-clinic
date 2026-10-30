@@ -28,6 +28,8 @@ export const EARN_BEST = 1;
 export const EARN_LEARN_FIRST = 2;
 /** Base perfect-visit bonus (3/3 rounds right), before shop boosts. */
 export const EARN_PERFECT = 2;
+/** Base Learn-quiz prize (one per topic), before the medicine boost. */
+export const EARN_QUIZ_PASS = 5;
 
 export function emptyWallet(start = WALLET_START): Wallet {
   return { balance: start, entries: [] };

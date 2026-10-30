@@ -61,4 +61,22 @@ describe('fallback pack (H2 seed snapshot)', () => {
       expect(r.url).toMatch(/^https:\/\/medlineplus\.gov\//);
     }
   });
+
+  it('pre-caches a valid prize quiz on every resource', () => {
+    const answers = new Set<number>();
+    for (const r of FALLBACK_RESOURCES) {
+      expect(r.quiz.stem.length).toBeGreaterThan(10);
+      expect(r.quiz.choices).toHaveLength(3);
+      for (const c of r.quiz.choices) {
+        expect(c.length).toBeGreaterThan(0);
+      }
+      expect(Number.isInteger(r.quiz.answer)).toBe(true);
+      expect(r.quiz.answer).toBeGreaterThanOrEqual(0);
+      expect(r.quiz.answer).toBeLessThanOrEqual(2);
+      expect(r.quiz.pearl.length).toBeGreaterThan(10);
+      answers.add(r.quiz.answer);
+    }
+    // Answer positions vary — the prize is never guessable.
+    expect(answers.size).toBeGreaterThan(1);
+  });
 });

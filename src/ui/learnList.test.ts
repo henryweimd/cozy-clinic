@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { filedTopics, resourcesFor } from './learnList';
+import { filedTopics, quizState, resourcesFor } from './learnList';
 
 describe('resourcesFor', () => {
   it('finds each condition\'s authoritative rows', () => {
@@ -23,6 +23,16 @@ describe('card summaries', () => {
         expect(r.summary.length).toBeLessThanOrEqual(600);
       }
     }
+  });
+});
+
+describe('quizState', () => {
+  it('locks until read, opens until passed', () => {
+    expect(quizState(false, false)).toBe('locked');
+    expect(quizState(true, false)).toBe('open');
+    expect(quizState(true, true)).toBe('passed');
+    // A pass without a read still counts (stale sets stay safe).
+    expect(quizState(false, true)).toBe('passed');
   });
 });
 

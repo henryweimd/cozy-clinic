@@ -51,6 +51,16 @@ export interface FallbackTreatment {
   conditions: string[];
 }
 
+/** Prize-linked quiz: one question per topic, answered in-app. */
+export interface FallbackQuiz {
+  stem: string;
+  choices: [string, string, string];
+  /** Index into choices (varied per topic — never guessable). */
+  answer: number;
+  /** One-line teaching pearl shown after the pick. */
+  pearl: string;
+}
+
 export interface FallbackResource {
   id: string;
   condition_id: string;
@@ -60,6 +70,8 @@ export interface FallbackResource {
   audience: string;
   /** Pre-cached plain-language summary (the in-app card). */
   summary: string;
+  /** Pre-cached quiz (learning_resources.quiz in Supabase). */
+  quiz: FallbackQuiz;
 }
 
 export interface FallbackHandoff {
@@ -5314,7 +5326,13 @@ export const FALLBACK_RESOURCES: FallbackResource[] = [
     "url": "https://medlineplus.gov/asthma.html",
     "source": "NIH MedlinePlus",
     "audience": "layperson",
-    "summary": "Asthma makes the airways twitchy and narrow, so breathing out gets whistly and hard — especially with colds, dust, or exercise. Quick-relief puffers open airways fast; daily controller medicines keep them calm. A spacer helps every puff count."
+    "summary": "Asthma makes the airways twitchy and narrow, so breathing out gets whistly and hard — especially with colds, dust, or exercise. Quick-relief puffers open airways fast; daily controller medicines keep them calm. A spacer helps every puff count.",
+    "quiz": {
+      "stem": "Asthma makes breaths whistly because the airways…",
+      "choices": ["Tighten and narrow", "Stretch wide open", "Fill with water"],
+      "answer": 0,
+      "pearl": "Twitchy, narrow airways whistle — puffers open them fast."
+    }
   },
   {
     "id": "243353a2-7af8-455d-ab9f-28d99316e517",
@@ -5323,7 +5341,13 @@ export const FALLBACK_RESOURCES: FallbackResource[] = [
     "url": "https://medlineplus.gov/dehydration.html",
     "source": "NIH MedlinePlus",
     "audience": "layperson",
-    "summary": "When the body loses more water than it takes in — vomiting, diarrhea, sweat — it dries out: great thirst, dry lips, sunken eyes, dark pee. Small frequent sips of water or oral rehydration salts fix most cases; sleepiness or no pee needs urgent care."
+    "summary": "When the body loses more water than it takes in — vomiting, diarrhea, sweat — it dries out: great thirst, dry lips, sunken eyes, dark pee. Small frequent sips of water or oral rehydration salts fix most cases; sleepiness or no pee needs urgent care.",
+    "quiz": {
+      "stem": "A dried-out friend needs what first?",
+      "choices": ["Fizzy soda", "A whole salt pouch", "Small sips of water"],
+      "answer": 2,
+      "pearl": "Small frequent sips fix most cases — soda waits."
+    }
   },
   {
     "id": "522bc126-66de-49e9-bcff-8d47739bcb1c",
@@ -5332,7 +5356,13 @@ export const FALLBACK_RESOURCES: FallbackResource[] = [
     "url": "https://medlineplus.gov/commoncold.html",
     "source": "NIH MedlinePlus",
     "audience": "layperson",
-    "summary": "Colds come from viruses, not cold air — that is why antibiotics cannot fix them. Runny nose, sneezing, and a scratchy throat usually clear in about a week. Rest, fluids, and honey (age 1 and up) soothe; trouble breathing or no pee needs a doctor."
+    "summary": "Colds come from viruses, not cold air — that is why antibiotics cannot fix them. Runny nose, sneezing, and a scratchy throat usually clear in about a week. Rest, fluids, and honey (age 1 and up) soothe; trouble breathing or no pee needs a doctor.",
+    "quiz": {
+      "stem": "A cold with cough and runny nose is usually…",
+      "choices": ["Strep — needs antibiotics", "A virus — rest and fluids", "A blanket allergy"],
+      "answer": 1,
+      "pearl": "Colds are viruses; antibiotics cannot fix them."
+    }
   },
   {
     "id": "6ad0d399-7c13-4174-95fa-959031ad84a0",
@@ -5341,7 +5371,13 @@ export const FALLBACK_RESOURCES: FallbackResource[] = [
     "url": "https://medlineplus.gov/highbloodpressure.html",
     "source": "NIH MedlinePlus",
     "audience": "layperson",
-    "summary": "Blood pressure is how hard blood pushes on artery walls — high pressure usually has no symptoms, which is why cuffs check it. Less salt, daily walks, healthy weight, and prescribed medicines bring it down. Never stop pressure medicines suddenly."
+    "summary": "Blood pressure is how hard blood pushes on artery walls — high pressure usually has no symptoms, which is why cuffs check it. Less salt, daily walks, healthy weight, and prescribed medicines bring it down. Never stop pressure medicines suddenly.",
+    "quiz": {
+      "stem": "High blood pressure usually…",
+      "choices": ["Always brings headaches", "Only visits grown-ups", "Has no symptoms"],
+      "answer": 2,
+      "pearl": "No symptoms — that is why cuffs check it."
+    }
   }
 ];
 

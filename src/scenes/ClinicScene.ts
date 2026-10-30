@@ -63,6 +63,7 @@ import {
   EARN_BEST,
   EARN_LEARN_FIRST,
   EARN_PERFECT,
+  EARN_QUIZ_PASS,
   deserializeWallet,
   earn,
   emptyWallet,
@@ -274,6 +275,7 @@ const WALLET_STORAGE_KEY = 'cozy-wallet-v1';
 const SHOP_STORAGE_KEY = 'cozy-shop-v1';
 const LEARN_FILED_KEY = 'cozy-learn-filed-v1';
 const LEARN_OPENED_KEY = 'cozy-learn-opened-v1';
+const LEARN_PASSED_KEY = 'cozy-learn-passed-v1';
 const HANDLE_STORAGE_KEY = 'cozy-doctor-handle-v1';
 const TEAM_STORAGE_KEY = 'cozy-team-tag-v1';
 const OUTBOX_STORAGE_KEY = 'cozy-handoff-outbox-v1';
@@ -448,6 +450,7 @@ export class ClinicScene extends Phaser.Scene {
   private filedConds: { id: string; name: string }[] = [];
   /** Opened resource ids (their +2 is spent). */
   private openedRes = new Set<string>();
+  private passedQuiz = new Set<string>();
   private cast: CastData | null = null;
   /** Exam findings: fallback until the live rows land (boot-only). */
   private examFindings: FallbackExamFinding[] = FALLBACK_EXAM_FINDINGS;
@@ -1053,9 +1056,15 @@ export class ClinicScene extends Phaser.Scene {
         const parsed = JSON.parse(opened) as string[];
         if (Array.isArray(parsed)) this.openedRes = new Set(parsed);
       }
+      const passed = window.localStorage.getItem(LEARN_PASSED_KEY);
+      if (passed) {
+        const parsed = JSON.parse(passed) as string[];
+        if (Array.isArray(parsed)) this.passedQuiz = new Set(parsed);
+      }
     } catch {
       this.filedConds = [];
       this.openedRes = new Set();
+      this.passedQuiz = new Set();
     }
   }
 
@@ -1063,6 +1072,7 @@ export class ClinicScene extends Phaser.Scene {
     try {
       window.localStorage.setItem(LEARN_FILED_KEY, JSON.stringify(this.filedConds));
       window.localStorage.setItem(LEARN_OPENED_KEY, JSON.stringify([...this.openedRes]));
+      window.localStorage.setItem(LEARN_PASSED_KEY, JSON.stringify([...this.passedQuiz]));
     } catch {
       /* private-mode play: the session list still accumulates */
     }
@@ -3117,6 +3127,17 @@ export class ClinicScene extends Phaser.Scene {
     this.learnList.onExternal = (r) => {
       window.open(r.url, '_blank', 'noopener');
     };
+    this.learnList.onQuizPass = (r) => {
+      // One prize per topic: a stale double-tap reaps nothing.
+      if (this.passedQuiz.has(r.id)) return EARN_QUIZ_PASS;
+      this.passedQuiz.add(r.id);
+      this.saveLearn();
+      this.wallet = earn(this.wallet, EARN_QUIZ_PASS, 'earn:quiz-pass');
+      this.saveWallet();
+      this.refreshHud();
+      this.showToast(`Quiz whiz! +${EARN_QUIZ_PASS} ${this.coinWord(EARN_QUIZ_PASS)}`);
+      return EARN_QUIZ_PASS;
+    };
     this.learnList.onClose = () => {
       if (this.currentView === 'learn') this.showView('visit');
     };
@@ -3273,7 +3294,7 @@ export class ClinicScene extends Phaser.Scene {
     this.editor.hide();
     this.handoffSheet.hide();
     if (next === 'learn') {
-      this.learnList.show(this.filedConds, this.openedRes);
+      this.learnList.show(this.filedConds, this.openedRes, this.passedQuiz);
       this.clearLearnBadge();
     } else {
       this.learnList.hide();
