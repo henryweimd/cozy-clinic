@@ -45,6 +45,7 @@ import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
 import { examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
 import { reword } from '../game/reword';
+import { drawCoin } from '../ui/coin';
 import { EMPTY_STREAK, earnsDailyBonus, nextStreak, streakBonus } from '../game/streak';
 import type { StreakState } from '../game/streak';
 import { playSfx, setSfxMuted, unlockSfx } from '../game/sfx';
@@ -553,6 +554,8 @@ export class ClinicScene extends Phaser.Scene {
   private resultRoot!: Phaser.GameObjects.Container;
   private resultTitle!: Phaser.GameObjects.Text;
   private resultLines!: Phaser.GameObjects.Text;
+  private resultCoin!: Phaser.GameObjects.Graphics;
+  private resultMeasurer!: Phaser.GameObjects.Text;
   private resultPrimary!: Phaser.GameObjects.Container;
   private resultPrimaryBg!: Phaser.GameObjects.Graphics;
   private resultPrimaryText!: Phaser.GameObjects.Text;
@@ -2850,6 +2853,13 @@ export class ClinicScene extends Phaser.Scene {
         })
         .setOrigin(1, 0.5);
       this.profileRows.add([bg, left, right]);
+      // The coin interface gets a real coin: metallic disc pinned
+      // left of the balance (measured, so big wallets still fit).
+      if (i === 0) {
+        const coin = this.add.graphics();
+        drawCoin(coin, 472 - right.width - 16, y + 36, 11);
+        this.profileRows.add(coin);
+      }
     });
     // The Care Coins row opens the Clinic Shop (the strip is
     // gone — this row IS the coin interface now).
@@ -4239,12 +4249,23 @@ export class ClinicScene extends Phaser.Scene {
       this.resultSecondaryText,
       secondaryZone,
     ]);
+    // Coin for the earnings line + an offscreen measurer in the
+    // same style (per-line widths aren't exposed otherwise).
+    this.resultCoin = this.add.graphics();
+    this.resultMeasurer = this.add
+      .text(-200, -200, '', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '17px',
+      })
+      .setOrigin(0, 0)
+      .setVisible(false);
     this.resultRoot = this.add.container(0, 0, [
       dim,
       shade,
       card,
       this.resultTitle,
       this.resultLines,
+      this.resultCoin,
       this.resultPrimary,
       this.resultSecondary,
     ]);
@@ -4270,6 +4291,19 @@ export class ClinicScene extends Phaser.Scene {
     });
     this.resultTitle.setText(copy.title);
     this.resultLines.setText(copy.lines.join('\n'));
+    // Earnings line (recovered only): coin pinned left of the
+    // measured 4th line — same 24.4px row pitch as the auditor.
+    this.resultCoin.clear();
+    const earnLine = outcome === 'recovered' ? copy.lines[3] : undefined;
+    if (earnLine !== undefined) {
+      this.resultMeasurer.setText(earnLine);
+      drawCoin(
+        this.resultCoin,
+        270 - this.resultMeasurer.width / 2 - 16,
+        392 + 3 * (17 * 1.2 + 4) + 10,
+        10,
+      );
+    }
     this.resultPrimaryText.setText(copy.primary);
     this.resultSecondaryText.setText(copy.secondary);
     this.resultPrimaryBg.clear();

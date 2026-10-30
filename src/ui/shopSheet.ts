@@ -1,4 +1,5 @@
 import { THEME } from './chromeTheme';
+import { drawCoin } from './coin';
 import { itemsFor } from '../game/shop';
 import type { ShopCategory, ShopItem } from '../game/shop';
 
@@ -161,6 +162,10 @@ export class ShopSheet {
     this.balanceText.setText(`${this.balance} coins`);
     // (balance nudges left of the ×.)
     this.balanceText.setX(452);
+    // Coin pinned left of the measured balance.
+    const coin = this.scene.add.graphics();
+    drawCoin(coin, 452 - this.balanceText.width - 14, 172, 10);
+    this.rows.add(coin);
     itemsFor(this.tab).forEach((item, i) => {
       const y = 272 + i * 112;
       const owned = this.owned.includes(item.id);
