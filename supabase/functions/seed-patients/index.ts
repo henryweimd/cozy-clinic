@@ -62,6 +62,8 @@ interface RosterEntry {
   name: string;
   conditionId: string;
   ageBand: string;
+  ageYears?: number;
+  sex?: string;
   persona: string;
   furShade: string;
   facialFeatures?: string;
@@ -115,6 +117,8 @@ async function modelFlesh(
               name: patient.name,
               conditionId: patient.conditionId,
               ageBand: patient.ageBand,
+              ageYears: patient.ageYears ?? null,
+              sex: patient.sex ?? null,
               persona: patient.persona,
             },
             nodes: slim,
@@ -212,6 +216,8 @@ Deno.serve(async (req: Request) => {
           name: p.name,
           condition_id: p.conditionId,
           age_band: p.ageBand,
+          age_years: p.ageYears ?? null,
+          sex: p.sex ?? null,
           persona: p.persona,
           fur_shade: p.furShade,
           facial_features: p.facialFeatures ?? null,

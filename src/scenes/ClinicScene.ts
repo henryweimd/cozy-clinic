@@ -15,6 +15,7 @@ import type { VisitContext } from '../ui/mockData';
 import { BackendTicker } from '../ui/ticker';
 import { ToolTray } from '../ui/toolTrays';
 import { LivingChart } from '../ui/livingChart';
+import { signoutLines } from '../ui/signout';
 import { LearnList } from '../ui/learnList';
 import { AssetBrowser } from '../ui/assetBrowser';
 import { ChartDrawer } from '../ui/chartDrawer';
@@ -28,6 +29,7 @@ import {
   rootNode,
 } from '../data/patients';
 import type { CastData } from '../data/patients';
+import { FALLBACK_PATIENTS } from '../data/fallbackPack';
 import {
   EARN_BEST,
   deserializeWallet,
@@ -1402,17 +1404,28 @@ export class ClinicScene extends Phaser.Scene {
     return 'follow-up';
   }
 
-  /** Medical Chart contents: name, visit type + #, condition, blurb. */
+  /** Medical Chart contents: the tier-aware signout. */
   private refreshChart(): void {
     const def = CONDITIONS[this.patientState.conditionId];
     const stage = def.stages[this.patientState.stageIndex];
     const tier = CHROME_TIER_BY_DIFFICULTY[PROTOTYPE_SEEDS.difficulty];
-    this.chartDrawer.setContent({
-      name: this.activeName,
-      visit: `${VISIT_CONTEXT_WORDING[this.visitContext()][tier]} · #${PROTOTYPE_SEEDS.visitNo}`,
-      cond: `${def.name} · ${stage.label}`,
-      blurb: `${stage.blurb} ${def.plainWords}`,
-    });
+    const row = this.cast ? patientByName(this.cast, this.activeName) : null;
+    const fb = row ?? FALLBACK_PATIENTS.find((p) => p.name === this.activeName);
+    const lines = signoutLines(
+      {
+        visitNo: PROTOTYPE_SEEDS.visitNo,
+        visitKind: this.visitContext(),
+        name: this.activeName,
+        ageYears: fb?.age_years ?? 8,
+        sex: fb?.sex ?? 'F',
+        complaint: stage.label,
+        condition: def.name,
+        observation: `${stage.blurb} ${def.plainWords}`,
+        meds: [],
+      },
+      tier,
+    );
+    this.chartDrawer.setContent({ name: this.activeName, lines });
   }
 
   private refreshHud(): void {

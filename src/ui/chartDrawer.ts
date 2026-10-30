@@ -2,11 +2,12 @@ import Phaser from 'phaser';
 import { THEME } from './chromeTheme';
 
 /**
- * Medical Chart drawer: a succinct patient summary (name, visit
- * type + number, condition + stage, one-line blurb) in a left
- * drawer mirroring the exam tray. Tap the handle to slide
- * open/closed; the scene auto-opens it on each patient's first
- * appearance for the visit.
+ * Medical Chart drawer: the patient's SIGNOUT (name + tier-aware
+ * signout lines from signout.ts — visit/who, complaint, history
+ * + meds, observation) in a left drawer mirroring the exam tray.
+ * Tap the handle to slide open/closed; the scene auto-opens it
+ * on each patient's first appearance for the visit. Lines stack
+ * by measured height (wrapping-safe), not fixed slots.
  *
  * Geometry: the HANDLE is fixed at x0-24 (24px tab, y300-560,
  * depth 23); the PANEL slides from x-192 (fully off-screen,
@@ -22,9 +23,8 @@ const DRAWER_H = 260;
 
 export interface ChartContent {
   name: string;
-  visit: string;
-  cond: string;
-  blurb: string;
+  /** Signout lines (visit/who, complaint, history+meds, observation). */
+  lines: string[];
 }
 
 export class ChartDrawer {
@@ -32,9 +32,7 @@ export class ChartDrawer {
   private handle: Phaser.GameObjects.Container;
   private handleGlyph: Phaser.GameObjects.Text;
   private nameText: Phaser.GameObjects.Text;
-  private visitText: Phaser.GameObjects.Text;
-  private condText: Phaser.GameObjects.Text;
-  private blurbText: Phaser.GameObjects.Text;
+  private lineTexts: Phaser.GameObjects.Text[] = [];
   private open = false;
 
   constructor(private scene: Phaser.Scene) {
@@ -70,15 +68,17 @@ export class ChartDrawer {
         })
         .setOrigin(0, 0);
     this.nameText = mk(DRAWER_TOP + 24, '20px', true, THEME.cocoa);
-    this.visitText = mk(DRAWER_TOP + 58, '14px', true, THEME.secondary);
-    this.condText = mk(DRAWER_TOP + 84, '14px', true, THEME.secondary);
-    this.blurbText = mk(DRAWER_TOP + 112, '14px', false, THEME.cocoa);
+    // Four signout lines, positioned by measured height in
+    // setContent (visit line bold, the rest regular).
+    for (let i = 0; i < 4; i += 1) {
+      this.lineTexts.push(
+        mk(DRAWER_TOP + 60, '14px', i === 0, i === 0 ? THEME.secondary : THEME.cocoa),
+      );
+    }
     this.panel = this.scene.add.container(PANEL_CLOSED_X, 0, [
       bg,
       this.nameText,
-      this.visitText,
-      this.condText,
-      this.blurbText,
+      ...this.lineTexts,
     ]);
     this.panel.setDepth(22);
 
@@ -105,9 +105,12 @@ export class ChartDrawer {
 
   setContent(content: ChartContent): void {
     this.nameText.setText(content.name);
-    this.visitText.setText(content.visit);
-    this.condText.setText(content.cond);
-    this.blurbText.setText(content.blurb);
+    let y = DRAWER_TOP + 24 + this.nameText.height + 10;
+    this.lineTexts.forEach((text, i) => {
+      text.setText(content.lines[i] ?? '');
+      text.setY(y);
+      y += text.height + 6;
+    });
   }
 
   toggle(): void {

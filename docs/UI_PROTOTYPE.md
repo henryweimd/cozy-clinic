@@ -179,9 +179,12 @@ VIEW 1 — VISIT (default; today's Mabel scene):
   (unclutter: dev-facing values) — its content moves into the
   Medical Chart drawer: a left drawer mirroring the exam tray
   (handle x0–24, panel x0–192, y300–560), auto-open on each
-  patient's first appearance, handle toggles. Contents: name,
-  visit type + # ("Sick Visit · #4", tier-worded), condition +
-  stage ("Asthma · Wheezy"), one-line blurb (stage blurb).
+  patient's first appearance, handle toggles. Contents: the
+  patient's SIGNOUT (signout.ts, tier-aware): expert reads like
+  a real signout ("Acute visit #4 · 8yF" / 'c/o "wheezy"' /
+  "PMH Asthma · Meds: none"), steady expands the abbreviations,
+  gentle stays plain sentences; the complaint label is always
+  quoted, never conjugated. Lines stack by measured height.
   Visit-only; refreshes on resolve/switch.
 - Progress HUD (chrome-3: moved OFF the mid-screen band INTO the
   top strip; Visit-faded, strip persistent). Coin cluster left
