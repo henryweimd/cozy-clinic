@@ -416,6 +416,7 @@ export class ClinicScene extends Phaser.Scene {
   private cheerOutbox: CheerDraft[] = [];
   private seenCheerIds = new Set<string>();
   private cheerCursor = 0;
+  private cheering = false;
   private notesHandle!: Phaser.GameObjects.Container;
   private notesBadge!: Phaser.GameObjects.Graphics;
   /** Filed conditions (visit order — the list accumulates). */
@@ -2583,20 +2584,27 @@ export class ClinicScene extends Phaser.Scene {
       this.showToast('Cheer a colleague, not yourself!');
       return;
     }
-    const { cheer, next } = nextCheer(this.cheerCursor);
-    this.cheerCursor = next;
-    const draft: CheerDraft = {
-      from_handle: this.doctorHandle,
-      to_handle: toHandle,
-      preset_id: cheer,
-    };
+    // One flight at a time: rapid re-taps don't double-send.
+    if (this.cheering) return;
+    this.cheering = true;
     try {
-      await sendCheer(draft);
-      this.showToast(`Sent "${cheer}" to Doctor ${toHandle}`);
-    } catch {
-      this.cheerOutbox = pushOutbox(this.cheerOutbox, draft);
-      this.saveCheerOutbox();
-      this.showToast('Cheer saved — sends when online');
+      const { cheer, next } = nextCheer(this.cheerCursor);
+      this.cheerCursor = next;
+      const draft: CheerDraft = {
+        from_handle: this.doctorHandle,
+        to_handle: toHandle,
+        preset_id: cheer,
+      };
+      try {
+        await sendCheer(draft);
+        this.showToast(`Sent "${cheer}" to Doctor ${toHandle}`);
+      } catch {
+        this.cheerOutbox = pushOutbox(this.cheerOutbox, draft);
+        this.saveCheerOutbox();
+        this.showToast('Cheer saved — sends when online');
+      }
+    } finally {
+      this.cheering = false;
     }
   }
 
@@ -3534,7 +3542,9 @@ export class ClinicScene extends Phaser.Scene {
       })
       .setOrigin(0.5, 0.5);
     this.toast = this.add.container(0, 0, [this.toastBg, this.toastText]);
-    this.toast.setDepth(40).setVisible(false).setAlpha(0);
+    // Display-only (no zone), so topmost-above-all is safe —
+    // result modal (44) included.
+    this.toast.setDepth(46).setVisible(false).setAlpha(0);
   }
 
   private showToast(message: string): void {

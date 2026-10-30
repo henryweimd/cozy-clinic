@@ -1660,3 +1660,15 @@ clearance — then a polish fix loop for real findings.
   math, not by playing. Operator/judge live play still pending.
 - Verification: auditor 0 findings; 90/90; tsc clean; build green.
 - Spend $0.00.
+
+## Sweep fixes (2026-10-29, static defect pass)
+
+- OWNERSHIP: `src/scenes/ClinicScene.ts` only + PROGRESS/CHECKPOINT.
+- Cheer sends are one-flight (rapid re-taps can't double-send;
+  handoff sends were already guarded via preset clearing).
+  Toasts move above the result modal (46 > 44) so poll/flush
+  toasts stay visible — display-only, input-safe.
+- Phaser input topOnly default (true) confirmed by config
+  absence: sheets already block lower zones, no bug.
+- Verification: auditor 0 findings; 90/90; tsc clean; build green.
+- Spend $0.00.
