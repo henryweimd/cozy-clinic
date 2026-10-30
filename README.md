@@ -100,7 +100,7 @@ this script plus the tooling table in-game.
 
 | Model / tool | What it does in this game | What breaks without it |
 |---|---|---|
-| Muse Spark (`muse-spark-1.3`) via Edge Functions | Generates trajectory nodes/edges ahead of time (`seed-patients`, `extend-trajectory`) | No new stored futures; game still runs on the fallback pack |
+| Muse Spark (`muse-spark-1.3`) via Edge Functions | Pre-computes trajectory futures (`seed-patients`, `extend-trajectory`) + tiered greeting paraphrases at runtime (`muse-reword`, vetoed) | No new stored futures, local greetings; game still runs on the fallback pack |
 | Muse Image (community `muse-image-mcp`, not Meta-official) | All character mascots, clinic backdrops, exam illustrations | No Jolly-style art; placeholders instead of the finished look |
 | Built with Muse Code (Contributor tier) | The agentic build itself: game code, clinical modeling, art pipeline, tests | The documented craft story in `PROGRESS.md` |
 
@@ -126,7 +126,7 @@ the core of the game — are only possible because generation is this cheap.
 
 ## Current build
 
-- **3 playable patients** (Mabel, June, Milo — each with a 6-expression set,
+- **6 playable patients** (Mabel, June, Milo, Theo, Priya, Ellis — each with a 6-expression set,
   per-patient visits and quotes) plus a waiting-room list with queue reorder;
   Milo opens onboarding as an existing-patient sick visit.
 - **3-round quiz visits:** examine → diagnose → treat, each round asking its
