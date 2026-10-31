@@ -1,3 +1,30 @@
+# CHECKPOINT — Run 26: content pack 3 (2026-10-31)
+
+Phase: 4 reverse-mimicker conditions (swimmer's ear, mono,
+nose-bead, gastroenteritis) + Otto/Cleo/Remy/Willa via
+SCENARIO_PLAYBOOK pipeline, MSD-grounded, per operator
+pack-3 go-ahead.
+
+Files changed: 47 (types, conditions, fallbackPack+tests,
+mockData, sprites, ClinicScene Speaker/guard/preload,
+aboutSheet cast, CHARACTER_BIBLE, playbook §1, manifest,
+process_character, contact sheets x5, 24 sprites, 4 headers,
+README/docs counts, PROGRESS). Commit `1af42b8` on main.
+
+Test result: auditor 0 findings (pins 12→16); `npm test`
+278/278; tsc clean; build green. Supabase: 24/408/384,
+resources 16, findings 64, treatments 16, 0 dangling.
+
+Deployment URL: `https://cozy-clinic.vercel.app/` (live-polled
+200 + new assets 200 after push).
+
+Playtest result: NOT operator-playtested this run —
+programmatic verification only.
+
+Image spend this run: $0.29 (ledger ~$1.71 cumulative, STOP at $120).
+
+STOP.
+
 # CHECKPOINT — Run 3: hook, rewind, prizes, tiers, pearls, loops (2026-10-30)
 
 Phase: plan list (hook, undo UI, prize quizzes) + autonomous

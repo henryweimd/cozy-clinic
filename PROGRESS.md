@@ -1,6 +1,6 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
-## Run 26 (in progress): content pack 3 — swimmers-ear, mono, nose-bead, gastro + Otto/Cleo/Remy/Willa
+## Run 26 (2026-10-31): content pack 3 — swimmers-ear, mono, nose-bead, gastro + Otto/Cleo/Remy/Willa
 
 File ownership (main agent, this run): same content-pack set
 as run 25 (types, conditions, fallbackPack+tests, mockData,
@@ -8,6 +8,26 @@ sprites, ClinicScene Speaker/guard/preload, aboutSheet cast,
 CHARACTER_BIBLE, playbook §1, manifest, process_character,
 README/docs counts, PROGRESS, CHECKPOINT).
 Hands off: src/data/maneuvers.* (other stream).
+
+- Conditions (DRAFT, pending operator medical review):
+  swimmer's ear ↔ ear-infection reverse-mimicker (tug test),
+  mono ↔ strep (amox rash + spleen), nose-bead ↔ cold
+  (one-sided stink), gastroenteritis ↔ appendicitis/dehydration
+  (diffuse vs focal pain, sip therapy). MSD-grounded, 4 rounds
+  x 4 tiers, examiner quizzes keyed on condition-specific
+  moves (tug test, node feel, one-side sniff, belly press).
+- Pack: 24 patients / 16 conditions / 408 nodes / 384 edges /
+  16 resources; Supabase mirrors exactly (20→24 patients,
+  340→408 nodes, 320→384 edges, resources 12→16, findings
+  48→64, treatments 12→16, 0 dangling); CHECK widened to 16.
+- Art: Otto (Kai-base, goggles), Cleo (Ada-base, star
+  barrette), Remy v2 (Milo-base, overalls — v1 rejected:
+  beanie is Mabel-only + floor shadow), Willa (Nina-base,
+  mint bow); 24 sprites + 4 Block-U headers (824x320), all
+  contact sheets reviewed, zero re-asks beyond Remy v1.
+- Verify: auditor 0 findings (pins 12→16); npm test 278/278;
+  tsc clean; build green; live 200 + new assets 200.
+- Spend: $0.29 (ledger ~$1.71 cumulative).
 
 ## Run 25 (2026-10-31): content pack 2 — croup, HFM, Lyme, appendicitis + Hugo/Ivy/Leo/Ruby
 
