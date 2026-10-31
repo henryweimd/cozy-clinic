@@ -1,5 +1,7 @@
 import { FALLBACK_CHEERS, FALLBACK_HANDOFFS } from './fallbackPack';
 import type { FallbackHandoff } from './fallbackPack';
+import { getJson, postJson } from './net';
+import type { NetOpts } from './net';
 
 /**
  * M4 shared care: handoff notes + preset encouragements between
@@ -149,7 +151,10 @@ export interface CheerInbox {
 }
 
 /** Cheers addressed to one handle (live, else fallback samples). */
-export async function loadCheers(toHandle: string): Promise<CheerInbox> {
+export async function loadCheers(
+  toHandle: string,
+  opts: NetOpts = {},
+): Promise<CheerInbox> {
   const fallback = (): CheerInbox => ({
     cheers: FALLBACK_CHEERS.filter((c) => c.to_handle === toHandle).map((c) => ({
       id: c.id,
@@ -160,21 +165,18 @@ export async function loadCheers(toHandle: string): Promise<CheerInbox> {
     })),
     source: 'fallback',
   });
-  if (SUPABASE_URL === undefined || SUPABASE_ANON_KEY === undefined) {
+  const url = opts.url ?? SUPABASE_URL;
+  const key = opts.key ?? SUPABASE_ANON_KEY;
+  if (url === undefined || key === undefined) {
     return fallback();
   }
   try {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/encouragements?select=*&to_handle=eq.${encodeURIComponent(toHandle)}&order=created_at.desc&limit=10`,
-      {
-        headers: {
-          apikey: SUPABASE_ANON_KEY,
-          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-        },
-      },
+    const rows = await getJson<Cheer[]>(
+      `/rest/v1/encouragements?select=*&to_handle=eq.${encodeURIComponent(toHandle)}&order=created_at.desc&limit=10`,
+      key,
+      url,
+      opts.timeoutMs ?? 10000,
     );
-    if (!res.ok) throw new Error(`encouragements: ${res.status}`);
-    const rows = (await res.json()) as Cheer[];
     return { cheers: rows, source: 'live' };
   } catch {
     return fallback();
@@ -185,20 +187,22 @@ export async function loadCheers(toHandle: string): Promise<CheerInbox> {
  * Sends one cheer (throws offline/unauthorized — the caller
  * queues it and retries later).
  */
-export async function sendCheer(draft: CheerDraft): Promise<void> {
-  if (SUPABASE_URL === undefined || SUPABASE_ANON_KEY === undefined) {
+export async function sendCheer(
+  draft: CheerDraft,
+  opts: NetOpts = {},
+): Promise<void> {
+  const url = opts.url ?? SUPABASE_URL;
+  const key = opts.key ?? SUPABASE_ANON_KEY;
+  if (url === undefined || key === undefined) {
     throw new Error('offline');
   }
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/encouragements`, {
-    method: 'POST',
-    headers: {
-      apikey: SUPABASE_ANON_KEY,
-      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(draft),
-  });
-  if (!res.ok) throw new Error(`encouragements: ${res.status}`);
+  await postJson<unknown>(
+    '/rest/v1/encouragements',
+    draft,
+    key,
+    url,
+    opts.timeoutMs ?? 10000,
+  );
 }
 
 export interface HandoffInbox {
@@ -207,26 +211,25 @@ export interface HandoffInbox {
 }
 
 /** Newest-first handoffs (live, else the fallback pack's samples). */
-export async function loadHandoffs(): Promise<HandoffInbox> {
+export async function loadHandoffs(
+  opts: NetOpts = {},
+): Promise<HandoffInbox> {
   const fallback = (): HandoffInbox => ({
     notes: FALLBACK_HANDOFFS.map(toNote),
     source: 'fallback',
   });
-  if (SUPABASE_URL === undefined || SUPABASE_ANON_KEY === undefined) {
+  const url = opts.url ?? SUPABASE_URL;
+  const key = opts.key ?? SUPABASE_ANON_KEY;
+  if (url === undefined || key === undefined) {
     return fallback();
   }
   try {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/handoffs?select=*&order=created_at.desc&limit=50`,
-      {
-        headers: {
-          apikey: SUPABASE_ANON_KEY,
-          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-        },
-      },
+    const rows = await getJson<FallbackHandoff[]>(
+      '/rest/v1/handoffs?select=*&order=created_at.desc&limit=50',
+      key,
+      url,
+      opts.timeoutMs ?? 10000,
     );
-    if (!res.ok) throw new Error(`handoffs: ${res.status}`);
-    const rows = (await res.json()) as FallbackHandoff[];
     return { notes: rows.map(toNote), source: 'live' };
   } catch {
     return fallback();
@@ -287,18 +290,20 @@ export function handoffSummary(visitNo: number, score: number, ended: boolean): 
  * Shares one handoff (throws offline/unauthorized — the caller
  * queues it in the local outbox and retries later).
  */
-export async function sendHandoff(draft: HandoffDraft): Promise<void> {
-  if (SUPABASE_URL === undefined || SUPABASE_ANON_KEY === undefined) {
+export async function sendHandoff(
+  draft: HandoffDraft,
+  opts: NetOpts = {},
+): Promise<void> {
+  const url = opts.url ?? SUPABASE_URL;
+  const key = opts.key ?? SUPABASE_ANON_KEY;
+  if (url === undefined || key === undefined) {
     throw new Error('offline');
   }
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/handoffs`, {
-    method: 'POST',
-    headers: {
-      apikey: SUPABASE_ANON_KEY,
-      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(draft),
-  });
-  if (!res.ok) throw new Error(`handoffs: ${res.status}`);
+  await postJson<unknown>(
+    '/rest/v1/handoffs',
+    draft,
+    key,
+    url,
+    opts.timeoutMs ?? 10000,
+  );
 }

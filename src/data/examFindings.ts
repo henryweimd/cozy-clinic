@@ -1,5 +1,7 @@
 import { FALLBACK_EXAM_FINDINGS } from './fallbackPack';
 import type { ExamModality, FallbackExamFinding } from './fallbackPack';
+import { getJson } from './net';
+import type { NetOpts } from './net';
 
 /**
  * Exam-findings live-read layer: Supabase first, fallback offline.
@@ -19,19 +21,21 @@ export interface ExamFindingsData {
 
 export const MODALITIES: readonly ExamModality[] = ['look', 'feel', 'tap', 'listen'];
 
-export async function loadExamFindings(): Promise<ExamFindingsData> {
-  if (SUPABASE_URL === undefined || SUPABASE_ANON_KEY === undefined) {
+export async function loadExamFindings(
+  opts: NetOpts = {},
+): Promise<ExamFindingsData> {
+  const url = opts.url ?? SUPABASE_URL;
+  const key = opts.key ?? SUPABASE_ANON_KEY;
+  if (url === undefined || key === undefined) {
     return { findings: FALLBACK_EXAM_FINDINGS, source: 'fallback' };
   }
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/exam_findings?select=*`, {
-      headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      },
-    });
-    if (!res.ok) throw new Error(`exam_findings: ${res.status}`);
-    const rows = (await res.json()) as Record<string, unknown>[];
+    const rows = await getJson<Record<string, unknown>[]>(
+      '/rest/v1/exam_findings?select=*',
+      key,
+      url,
+      opts.timeoutMs ?? 10000,
+    );
     if (rows.length === 0) throw new Error('empty');
     // The table stores finding_* columns — map to the tier keys
     // (a past direct cast read row[tier] as undefined, so live

@@ -9,6 +9,7 @@ import type {
   FallbackPatient,
 } from './fallbackPack';
 import type { ChoiceGrade, ClinicalEngine, PatientState } from '../clinical';
+import { getJson } from './net';
 
 /**
  * G4 live-read layer: Supabase first, fallback pack offline.
@@ -37,26 +38,33 @@ const FALLBACK_CAST: CastData = {
   source: 'fallback',
 };
 
-async function rest<T>(table: string): Promise<T[]> {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*`, {
-    headers: {
-      apikey: SUPABASE_ANON_KEY ?? '',
-      Authorization: `Bearer ${SUPABASE_ANON_KEY ?? ''}`,
-    },
-  });
-  if (!res.ok) throw new Error(`${table}: ${res.status}`);
-  return (await res.json()) as T[];
+export interface FetchOpts {
+  url?: string;
+  key?: string;
+  timeoutMs?: number;
 }
 
-export async function loadCast(): Promise<CastData> {
-  if (SUPABASE_URL === undefined || SUPABASE_ANON_KEY === undefined) {
+async function rest<T>(
+  table: string,
+  url: string,
+  key: string,
+  timeoutMs: number,
+): Promise<T[]> {
+  return getJson<T[]>(`/rest/v1/${table}?select=*`, key, url, timeoutMs);
+}
+
+export async function loadCast(opts: FetchOpts = {}): Promise<CastData> {
+  const url = opts.url ?? SUPABASE_URL;
+  const key = opts.key ?? SUPABASE_ANON_KEY;
+  if (url === undefined || key === undefined) {
     return FALLBACK_CAST;
   }
   try {
+    const timeoutMs = opts.timeoutMs ?? 10000;
     const [patients, nodes, edges] = await Promise.all([
-      rest<FallbackPatient>('patients'),
-      rest<FallbackNode>('trajectory_nodes'),
-      rest<FallbackEdge>('trajectory_edges'),
+      rest<FallbackPatient>('patients', url, key, timeoutMs),
+      rest<FallbackNode>('trajectory_nodes', url, key, timeoutMs),
+      rest<FallbackEdge>('trajectory_edges', url, key, timeoutMs),
     ]);
     if (patients.length === 0 || nodes.length === 0) throw new Error('empty');
     return { patients, nodes, edges, source: 'live' };
@@ -157,17 +165,24 @@ export async function extendTree(
   patientId: string,
   fromNodeId: string,
   children: ChildSpec[],
+  opts: FetchOpts = {},
 ): Promise<{ nodes: FallbackNode[]; edges: FallbackEdge[] } | null> {
-  if (SUPABASE_URL === undefined || SUPABASE_ANON_KEY === undefined) return null;
+  const url = opts.url ?? SUPABASE_URL;
+  const key = opts.key ?? SUPABASE_ANON_KEY;
+  if (url === undefined || key === undefined) return null;
+  const timeoutMs = opts.timeoutMs ?? 15000;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/extend-trajectory`, {
+    const res = await fetch(`${url}/functions/v1/extend-trajectory`, {
       method: 'POST',
       headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        apikey: key,
+        Authorization: `Bearer ${key}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ patientId, fromNodeId, children }),
+      signal: ctrl.signal,
     });
     if (!res.ok) return null;
     const data = (await res.json()) as { nodeIds?: string[] };
@@ -175,34 +190,36 @@ export async function extendTree(
     // Read the fresh rows back over REST (ids -> rows).
     const fresh = await Promise.all(
       data.nodeIds.map(async (id) => {
-        const r = await fetch(
-          `${SUPABASE_URL}/rest/v1/trajectory_nodes?id=eq.${id}&select=*`,
-          {
-            headers: {
-              apikey: SUPABASE_ANON_KEY ?? '',
-              Authorization: `Bearer ${SUPABASE_ANON_KEY ?? ''}`,
-            },
-          },
-        );
-        if (!r.ok) return null;
-        const rows = (await r.json()) as FallbackNode[];
-        return rows[0] ?? null;
+        try {
+          const rows = await getJson<FallbackNode[]>(
+            `/rest/v1/trajectory_nodes?id=eq.${id}&select=*`,
+            key,
+            url,
+            timeoutMs,
+          );
+          return rows[0] ?? null;
+        } catch {
+          return null;
+        }
       }),
     );
     const nodes = fresh.filter((n): n is FallbackNode => n !== null);
     if (nodes.length === 0) return null;
-    const eRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/trajectory_edges?from_node_id=eq.${fromNodeId}&select=*`,
-      {
-        headers: {
-          apikey: SUPABASE_ANON_KEY ?? '',
-          Authorization: `Bearer ${SUPABASE_ANON_KEY ?? ''}`,
-        },
-      },
-    );
-    const edges = eRes.ok ? ((await eRes.json()) as FallbackEdge[]) : [];
+    let edges: FallbackEdge[] = [];
+    try {
+      edges = await getJson<FallbackEdge[]>(
+        `/rest/v1/trajectory_edges?from_node_id=eq.${fromNodeId}&select=*`,
+        key,
+        url,
+        timeoutMs,
+      );
+    } catch {
+      edges = [];
+    }
     return { nodes, edges };
   } catch {
     return null;
+  } finally {
+    clearTimeout(timer);
   }
 }

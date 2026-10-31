@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ClinicalEngine } from '../clinical';
 import {
   FALLBACK_EDGES,
@@ -8,6 +8,8 @@ import {
 import {
   childFor,
   childSpecs,
+  extendTree,
+  loadCast,
   mergeExtension,
   patientByName,
   rootNode,
@@ -61,5 +63,66 @@ describe('patients live-read layer', () => {
       expect(s.stageIndex).toBeLessThanOrEqual(3);
       expect(s.engineNarrative.length).toBeGreaterThan(0);
     }
+  });
+});
+
+describe('patients network hardening', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('loadCast falls back when the backend hangs', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((_url: string, init?: { signal?: AbortSignal }) => {
+        // Hangs until aborted, like a dead backend.
+        return new Promise((_resolve, reject) => {
+          init?.signal?.addEventListener('abort', () =>
+            reject(new Error('aborted')),
+          );
+        });
+      }),
+    );
+    const cast = await loadCast({
+      url: 'https://down.example',
+      key: 'k',
+      timeoutMs: 20,
+    });
+    expect(cast.source).toBe('fallback');
+    expect(cast.patients.length).toBeGreaterThan(0);
+  });
+
+  it('loadCast falls back on HTTP errors', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({ ok: false, status: 500 }) as Response),
+    );
+    const cast = await loadCast({
+      url: 'https://down.example',
+      key: 'k',
+      timeoutMs: 50,
+    });
+    expect(cast.source).toBe('fallback');
+  });
+
+  it('extendTree returns null when the function hangs', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((_url: string, init?: { signal?: AbortSignal }) => {
+        return new Promise((_resolve, reject) => {
+          init?.signal?.addEventListener('abort', () =>
+            reject(new Error('aborted')),
+          );
+        });
+      }),
+    );
+    const engine = new ClinicalEngine();
+    const specs = childSpecs(engine, engine.initialState('asthma'), 3);
+    const out = await extendTree('p', 'n', specs, {
+      url: 'https://down.example',
+      key: 'k',
+      timeoutMs: 20,
+    });
+    expect(out).toBeNull();
   });
 });

@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { FALLBACK_EXAM_FINDINGS } from './fallbackPack';
-import { findingFor, MODALITIES } from './examFindings';
+import { findingFor, loadExamFindings, MODALITIES } from './examFindings';
 
 const CONDITIONS = ['asthma', 'viral-respiratory', 'dehydration', 'hypertension'];
 
@@ -29,5 +29,31 @@ describe('exam findings', () => {
   it('returns null for unknown rows (scene guards)', () => {
     expect(findingFor(FALLBACK_EXAM_FINDINGS, 'nope', 'look', 'gentle')).toBeNull();
     expect(findingFor([], 'asthma', 'look', 'gentle')).toBeNull();
+  });
+});
+
+describe('exam-findings network hardening', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('loadExamFindings falls back when the backend hangs', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((_url: string, init?: { signal?: AbortSignal }) => {
+        return new Promise<never>((_resolve, reject) => {
+          init?.signal?.addEventListener('abort', () =>
+            reject(new Error('aborted')),
+          );
+        });
+      }),
+    );
+    const data = await loadExamFindings({
+      url: 'https://down.example',
+      key: 'k',
+      timeoutMs: 20,
+    });
+    expect(data.source).toBe('fallback');
+    expect(data.findings.length).toBeGreaterThan(0);
   });
 });

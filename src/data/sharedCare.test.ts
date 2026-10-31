@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   CHEER_PRESETS,
   DOCTOR_HANDLES,
@@ -10,8 +10,12 @@ import {
   handoffSummary,
   handoffText,
   latestHandoff,
+  loadCheers,
+  loadHandoffs,
   nextCheer,
   pushOutbox,
+  sendCheer,
+  sendHandoff,
   shiftOutbox,
   teammatesFirst,
 } from './sharedCare';
@@ -183,5 +187,53 @@ describe('fallback handoffs', () => {
       expect(DOCTOR_HANDLES).toContain(h.from_handle);
       expect(h.encounter_summary.length).toBeLessThanOrEqual(280);
     }
+  });
+});
+
+describe('shared-care network hardening', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  function hangOnAbort() {
+    return vi.fn((_url: string, init?: { signal?: AbortSignal }) => {
+      return new Promise<never>((_resolve, reject) => {
+        init?.signal?.addEventListener('abort', () =>
+          reject(new Error('aborted')),
+        );
+      });
+    });
+  }
+
+  const OPTS = { url: 'https://down.example', key: 'k', timeoutMs: 20 };
+
+  it('loadCheers/loadHandoffs fall back when the backend hangs', async () => {
+    vi.stubGlobal('fetch', hangOnAbort());
+    const cheers = await loadCheers('Fox', OPTS);
+    expect(cheers.source).toBe('fallback');
+    const handoffs = await loadHandoffs(OPTS);
+    expect(handoffs.source).toBe('fallback');
+    expect(handoffs.notes.length).toBeGreaterThan(0);
+  });
+
+  it('sendCheer/sendHandoff throw (to outbox) when the backend hangs', async () => {
+    vi.stubGlobal('fetch', hangOnAbort());
+    await expect(
+      sendCheer({ from_handle: 'Fox', to_handle: 'Owl', preset_id: 'p' }, OPTS),
+    ).rejects.toThrow();
+    await expect(
+      sendHandoff(
+        {
+          patient_id: 'p',
+          from_handle: 'Fox',
+          team_tag: null,
+          preset_id: 'p',
+          encounter_summary: 's',
+          outcome: 'recovered',
+          score: 4,
+        },
+        OPTS,
+      ),
+    ).rejects.toThrow();
   });
 });
