@@ -1825,6 +1825,11 @@ export class ClinicScene extends Phaser.Scene {
       next === 'treat' &&
       labTabAvailable(this.patientState.conditionId, next, this.visitEnded)
     ) {
+      // The new tab must be SEEN: park any open sliders first
+      // (their panels cover the rail). Modals stay — the toast
+      // + badge announce the lab until they're dismissed.
+      if (this.chartDrawer.isOpen) this.chartDrawer.setOpen(false);
+      if (this.tray.isOpen) this.tray.setOpen(false);
       this.labBadge.setVisible(true);
       if (!this.reducedMotion) {
         this.tweens.killTweensOf(this.labHandle);

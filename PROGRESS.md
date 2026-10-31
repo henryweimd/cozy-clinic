@@ -1,5 +1,22 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 45 (2026-11-01): trays park when the lab tab arrives
+
+Branch: `feat/knottin-lab`. Operator playtesting in parallel.
+File ownership (main agent, this run): advanceRound
+parking, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- Operator note: open drawer panels cover the rail, so the
+  new lab tab would arrive hidden. Treat arrival now parks
+  open sliders (chart + exam tray) before the badge/blink/
+  toast emphasis. Modals stay put — toast + badge announce
+  until dismissed.
+- No new test: 2-line wiring on the tested
+  `labTabAvailable` condition; no new pure surface.
+- Verify: 429/429, tsc clean, build green, auditor 0.
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 44 (2026-11-01): answered rounds look locked
 
 Branch: `feat/knottin-lab`. Operator playtesting in parallel.
