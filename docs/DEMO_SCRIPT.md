@@ -8,26 +8,27 @@
 
 ## Beat 1 — the hook (0:00–0:20)
 
-Open the URL. Milo is already mid-visit ("visit #2") and
+Open the URL. Bram is already mid-visit ("visit #2") and
 recognizes the player in the opening seconds. Say:
 
-> "This is Cozy Clinic — patients remember you. Milo's back,
+> "This is Cozy Clinic — patients remember you. Bram's back,
 > and the game knows what happened last time."
 
-Tap Milo to say hello if the onboard prompt is showing (it is
+Tap Bram to say hello if the onboard prompt is showing (it is
 skippable — skip on a second take).
 
 ## Beat 2 — the 4-round visit (0:20–1:10)
 
-Play Milo's cold straight through, narrating the accumulation:
+Play Bram's tummy case straight through, narrating the accumulation:
 
-1. **Ask** — pick the onset question ("How did it start —
-   sniffles first?"). The panel reads the clue back.
-2. **Examine** — pick the neck-glands check. Centor 0 lands:
-   "no white spots — zero Centor points."
-3. **Diagnose** — pick Sniffly Cold over the mimickers.
-4. **Treat** — rest + fluids. Result modal praises the *player*
-   ("Great work, Doctor! 4 of 4 right").
+1. **Ask** — pick the antibiotics-then-runs question. The
+   panel reads the clue back.
+2. **Examine** — pick the crampy-belly press. Diffuse
+   cramping with fever lands: post-antibiotic, not focal.
+3. **Diagnose** — pick C. Diff Colitis over the mimickers
+   (plain tummy bug, appendix).
+4. **Treat** — targeted antibiotics + fluids. Result modal
+   praises the *player* ("Great work, Doctor! 4 of 4 right").
 
 Say:
 

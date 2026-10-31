@@ -1,3 +1,26 @@
+# CHECKPOINT — Run 33: gut-first reorder (2026-11-01)
+
+Phase: onboarding reorder for gut-pack testing on
+`feat/knottin-lab`. `main` untouched (still run 31).
+
+Files changed: 6 (mockData + test, ClinicScene refs,
+DEMO_SCRIPT, README, CHECKLIST, PROGRESS, CHECKPOINT —
+docs only beyond the reorder). No content, art, or DB.
+
+Test result: auditor 0 findings; `npm test` 410/410; tsc
+clean; build green.
+
+Deployment URL: branch preview (SSO-gated; operator
+opens logged in); prod unchanged on main.
+
+Playtest result: NOT operator-playtested — programmatic
+verification only. The reorder exists so the operator
+can playtest Bram → Pearl → Lena → Cole first.
+
+Image spend this run: $0 (ledger ~$2.62 cumulative).
+
+STOP.
+
 # CHECKPOINT — Run 32: knottin-lab content pack (2026-11-01)
 
 Phase: gut content pack + trial scaffolding on

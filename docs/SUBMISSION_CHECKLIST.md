@@ -30,7 +30,7 @@
 - [ ] **Firsthand README paragraph**: the operator's
   domain paragraph (placeholder in README) — needs approval.
 - [ ] **Demo video** (2 min): record [DEMO_SCRIPT.md](./DEMO_SCRIPT.md)
-  on a phone at the live URL; capture Milo visit + Nina
+  on a phone at the live URL; capture Bram visit + Nina
   contrast + Learn card + arch page.
 - [ ] **Screenshots**: visit round, Learn card, Profile, waiting —
   from the live build, phone size.

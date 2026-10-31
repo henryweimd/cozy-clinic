@@ -397,8 +397,8 @@ export class ClinicScene extends Phaser.Scene {
   private patient!: Phaser.GameObjects.Image;
   private patientShadow!: Phaser.GameObjects.Ellipse;
   private patientBaseY = 0;
-  /** Active playable patient (Milo leads the onboarding). */
-  private activeName = 'Milo';
+  /** Active playable patient (Bram leads the gut-first test). */
+  private activeName = 'Bram';
   private blinkAt = 0;
   private sneezeAt = 0;
   private sneezeText!: Phaser.GameObjects.Text;
@@ -709,7 +709,7 @@ export class ClinicScene extends Phaser.Scene {
 
     // Sneeze: sniffly colds sneeze — a quick wiggle + a rising
     // "Achoo!" every 9–16s while a viral case sits at stage 1+
-    // in the visit, flashes and endings excepted. Milo's charm.
+    // in the visit, flashes and endings excepted. Bram's charm.
     if (this.time.now >= this.sneezeAt) {
       this.sneezeAt = this.time.now + 9000 + Math.random() * 7000;
       if (
@@ -2397,7 +2397,7 @@ export class ClinicScene extends Phaser.Scene {
 
   /**
    * Per-patient visit numbers (mock until the backend owns
-   * visits): Milo is an existing patient here sick (2), Mabel a
+   * visits): Bram is an existing patient here sick (2), Mabel a
    * returning follow-up (4), June a true first-timer (1).
    */
   private visitNo(): number {
@@ -4250,7 +4250,7 @@ export class ClinicScene extends Phaser.Scene {
     // Every step below works on the deployed build today —
     // nothing aspirational ships in this list.
     const steps = [
-      '1 Meet Milo — visit #2, he remembers you',
+      '1 Meet Bram — visit #2, he remembers you',
       '2 Ask/exam/dx/treat — clues accumulate',
       `3 Next patient (${this.waitingOrder.length} waiting); tray = exam`,
       '4 Leave a care note (2nd tab = doctor 2)',

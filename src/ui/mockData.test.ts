@@ -2,12 +2,25 @@ import { describe, expect, it } from 'vitest';
 import {
   LEVEL_STOP_X,
   MOCK_ROSTER,
+  PROTOTYPE_SEEDS,
   introNames,
   moveWaiting,
   nearestLevelStop,
   quoteIfSpoken,
   waitingNames,
 } from './mockData';
+
+describe('roster lead', () => {
+  it('opens with the gut pack for testing: Bram, Pearl, Lena, Cole', () => {
+    const names = MOCK_ROSTER.map((e) => e.name);
+    expect(names.slice(0, 4)).toEqual(['Bram', 'Pearl', 'Lena', 'Cole']);
+  });
+
+  it('boots Bram on the c-diff case', () => {
+    expect(PROTOTYPE_SEEDS.patientName).toBe('Bram');
+    expect(PROTOTYPE_SEEDS.conditionId).toBe('c-diff-colitis');
+  });
+});
 
 describe('waitingNames', () => {
   it('excludes whoever is in the exam room, keeping queue order', () => {

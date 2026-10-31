@@ -56,7 +56,7 @@ so the demo path completes with zero network.
 
 Playable today on the live build; every step works, nothing staged:
 
-1. Meet Milo — visit #2, he recognizes you in the opening seconds.
+1. Meet Bram — visit #2, he recognizes you in the opening seconds.
 2. Clear the 4-round visit: ask a history question, examine,
    diagnose, then treat — clues accumulate across rounds.
 3. Tap Next patient into a 10-strong roster (sleepy Theo to elder
@@ -128,22 +128,24 @@ the core of the game — are only possible because generation is this cheap.
 
 ## Current build
 
-- **26 playable patients** (Mabel, June, Milo, Theo, Priya, Ellis, Nina,
+- **30 playable patients** (Bram, Pearl, Lena, Cole, Mabel, June, Milo, Theo, Priya, Ellis, Nina,
   Kai, Ada, Felix, Hugo, Ivy, Leo, Ruby, Otto, Cleo, Remy, Willa, Willow, Jasper, Hazel, Finn, Poppy, Maya, Eli, Max — each with a 6-expression set,
   per-patient visits and quotes) plus a waiting-room list with queue
-  reorder; Milo opens onboarding as an existing-patient sick visit.
+  reorder; Bram opens onboarding as an existing-patient sick visit.
 - **4-round quiz visits:** ask → examine → diagnose → treat, each round
   asking its question first (tier-worded Gentle/Steady/Clinical/Expert);
   endings praise the player with an N-of-4 score line, never claiming
   the patient better/worse.
-- **24 conditions** as tested state transitions, sourced from the MSD
-  Manual Professional Edition: asthma, sniffly cold (viral
+- **28 conditions** as tested state transitions, sourced from the MSD
+  Manual Professional Edition (run-32 gut pack MedlinePlus-grounded,
+  MSD cross-check pending review): asthma, sniffly cold (viral
   respiratory), dehydration, hypertension, strep throat, ear
   infection, eczema, pneumonia, croup, hand-foot-mouth disease,
   Lyme disease, appendicitis, swimmer's ear, mono,
   nose foreign body, gastroenteritis, hay fever, ringworm,
   pink eye, sprained ankle, chickenpox, bladder infection
-  (UTI), stye, nosebleed.
+  (UTI), stye, nosebleed, C. diff colitis, traveler's diarrhea,
+  lactose intolerance, constipation.
 - **Living Chart** memory beads, **Learning List** (accumulating
   art-header cards, MedlinePlus-backed, +2 coins per first read, +5
   inline prize quiz each), **Clinic Shop** (Care Coins

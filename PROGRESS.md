@@ -1,5 +1,26 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 33 (2026-11-01): gut-first reorder for testing
+
+Branch: `feat/knottin-lab`. Renumber: proxy+client moves to
+run 34, lab screen to run 35, merge/docs to run 36.
+File ownership (main agent, this run): mockData + test,
+ClinicScene onboarding refs, auditor ticker sample,
+DEMO_SCRIPT, README onboarding lines, SUBMISSION_CHECKLIST
+capture line, PROGRESS, CHECKPOINT. No content, no art,
+no Supabase writes.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- Roster now opens Bram, Pearl, Lena, Cole (was Milo);
+  Bram boots visit #2 on c-diff; Milo rejoins the queue.
+- Greeting/visit-number logic is name-generic — no engine
+  change; Milo's returning-patient slot transfers to Bram.
+- Regression: roster-lead test (order + boot seeds).
+- Docs: demo script beats, README (30 patients / 28
+  conditions), checklist capture line follow the reorder.
+- Verify: 410/410, tsc clean, build green, auditor 0.
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 32 (2026-11-01): knottin-lab content pack — gut conditions + trial scaffolding
 
 Branch: `feat/knottin-lab` from tag `pre-knottin-20261101`
