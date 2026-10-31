@@ -1,12 +1,20 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
-## Run 29 (in progress): judging-rubric loop (Indie: creativity, technical ambition, whether-it-works)
+## Run 29 (2026-11-01): judging-rubric loop (Indie: creativity, technical ambition, whether-it-works)
 
-File ownership (main agent, this run): ClinicScene arch/DEMO
-readout, aboutSheet copy, README Meta-AI-tooling section,
-PROGRESS, CHECKPOINT. No content-pack files, no Supabase
-writes, no image spend.
+File ownership (main agent, this run): ClinicScene DEMO
+readout, auditor E10/E11, PROGRESS, CHECKPOINT. No
+content-pack files, no Supabase writes, no image spend.
 Hands off: src/data/maneuvers.* (other stream).
+
+- DEMO script step 3 now reads the live waiting count
+  (`(N waiting)`) instead of the stale "(10 now)".
+- Auditor: retired E11 (pinned the removed guided tour);
+  E10 cast sample widened to 32 patients / 544 nodes.
+- About page + README tooling table verified current.
+- Verify: auditor 0 findings; npm test 358/358; tsc clean;
+  build green; live 200.
+- Spend: $0 (ledger ~$2.27 cumulative).
 
 ## Run 28 (2026-11-01): content pack 5 — chickenpox, UTI, stye, nosebleed + Poppy/Maya/Eli/Max
 

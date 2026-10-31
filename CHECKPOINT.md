@@ -1,3 +1,24 @@
+# CHECKPOINT — Run 29: judging-rubric loop (2026-11-01)
+
+Phase: judging-surface honesty (Indie rubric). Second of
+operator's 4-phase batch.
+
+Files changed: 2 (ClinicScene DEMO step, PROGRESS).
+Commit `159578d` on main. Auditor E10/E11 cleaned (scratch).
+
+Test result: auditor 0 findings; `npm test` 358/358; tsc
+clean; build green.
+
+Deployment URL: `https://cozy-clinic.vercel.app/` (live-polled
+200 after push).
+
+Playtest result: NOT operator-playtested this run —
+programmatic verification only.
+
+Image spend this run: $0 (ledger ~$2.27 cumulative, STOP at $120).
+
+STOP.
+
 # CHECKPOINT — Run 28: content pack 5 (2026-11-01)
 
 Phase: 4 MSD-grounded conditions (chickenpox, UTI, stye,
