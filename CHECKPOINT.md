@@ -316,3 +316,24 @@ Image spend this run: $0.29 (ledger ~$1.14 cumulative, cap $10;
 STOP at $120).
 
 STOP.
+
+## Run 21 — 4-round visits + history content (2026-10-30)
+
+Phase: operator revision — scenarios were single-choice; now a
+4-round arc (ask/examine/diagnose/treat) with progressive
+disclosure + self-reviewed medical accuracy (still DRAFT
+pending operator pen).
+
+Files: types, conditions(+test), visit(+test), memory(+test),
+economy, sharedCare(+test), ClinicScene, aboutSheet,
+fallbackPack seeds. Supabase: handoffs_score_check 0-4.
+
+Test result: auditor 0 findings; `npm test` 198/198; tsc
+clean; build green; live 200 (bundle BObUrrx2).
+
+Playtest result: NOT operator-playtested — programmatic only.
+
+Image spend this run: $0 (ledger ~$1.14 cumulative, cap $10;
+STOP at $120).
+
+STOP.

@@ -1,10 +1,18 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
-> Run 21 ownership (main agent): types.ts, conditions.ts,
-> conditions.test.ts, visit.ts, visit.test.ts, sharedCare.ts,
-> sharedCare.test.ts, memory.ts, economy.ts, ClinicScene.ts
-> (round flow), fallbackPack.ts (2 handoff seeds), Supabase
-> handoffs.score check. No other stream may touch these files.
+## Run 21 (2026-10-30): 4-round visits — history ask round
+
+- Visits are now ask -> examine -> diagnose -> treat. New opening
+  history round with case-specific trios + tiered clues for all 8
+  conditions (self-reviewed for accuracy; still DRAFT pending
+  operator pen). Info now unfolds progressively for real deduction.
+- Scoring to 4: flawless 4/4, memory perfect>=4, handoffs 'of 4'
+  (CHECK widened 0-3 -> 0-4 via migration), seeds updated.
+- Scene: '1 Ask' legend, hx cards, resolveHx, undo flows through.
+  About copy updated (4 rounds, 10-name cast).
+- Verdicts: 198/198 tests, tsc clean, auditor 0, build green,
+  live 200. Spend $0 (ledger ~$1.14).
+
 
 ## Run 20 (2026-10-30): content pack — 4 conditions + 4 patients + art
 
