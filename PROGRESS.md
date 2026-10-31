@@ -1,5 +1,24 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 36 (2026-11-01): reading-level clarity in Profile
+
+Branch: `feat/knottin-lab`. Queued next: About repo link
+(run 37); proxy+client moves to run 38, lab screen to run
+39, merge/docs to run 40.
+File ownership (main agent, this run): mockData tier
+descriptors + stops + test, ClinicScene level card + Undo
+shift, auditor slider section, PROGRESS, CHECKPOINT.
+Display-only.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- Reading level leaves the header corner for its own
+  titled card (title + live descriptor + full-width
+  track); Undo shifts down, still last.
+- Live descriptor names the meaning: Gentle = easiest
+  words … Expert = highly technical verbiage.
+- Verify: 413/413, tsc clean, build green, auditor 0.
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 35 (2026-11-01): wordmark vertical positioning
 
 Branch: `feat/knottin-lab`. Renumber: proxy+client moves to

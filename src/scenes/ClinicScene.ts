@@ -11,6 +11,7 @@ import {
   MOCK_ROSTER,
   MOCK_THREADS,
   PROTOTYPE_SEEDS,
+  TIER_DESCRIBE,
   introNames,
   moveWaiting,
   nearestLevelStop,
@@ -2894,9 +2895,11 @@ export class ClinicScene extends Phaser.Scene {
         color: SECONDARY,
       })
       .setOrigin(0, 0.5);
-    // Reading-level slider (header right — the sheet's 7 row
-    // slots are full). Four labeled stops; tap a stop or drag
-    // the knob. The toast names the level on every change.
+    // Reading-level card (its own titled space below About —
+    // it used to squeeze into the header's upper right).
+    // Title + live descriptor, full-width track, four labeled
+    // stops; tap a stop or drag the knob. The toast names the
+    // level on every change.
     this.levelSlider = this.add.container(0, 0, []);
     this.profileRows = this.add.container(0, 0, []);
     this.profileView = this.add.container(0, 0, [sheet, title, hint, this.levelSlider, this.profileRows]);
@@ -2907,12 +2910,34 @@ export class ClinicScene extends Phaser.Scene {
   private refreshProfileRows(): void {
     this.levelSlider.removeAll(true);
     const stops: (1 | 2 | 3 | 4)[] = [1, 2, 3, 4];
+    // Card + title row: the level names what it MEANS now.
+    const lvBg = this.add.graphics();
+    lvBg.fillStyle(CARD_FILL, 1);
+    lvBg.lineStyle(2, OUTLINE, 1);
+    lvBg.fillRoundedRect(48, 616, 444, 120, 16);
+    lvBg.strokeRoundedRect(48, 616, 444, 120, 16);
+    const lvTitle = this.add
+      .text(68, 638, 'Reading level', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '17px',
+        color: COCOA,
+      })
+      .setOrigin(0, 0.5);
+    const lvDesc = this.add
+      .text(472, 638, TIER_DESCRIBE[this.tier()], {
+        fontFamily: FONT_FAMILY,
+        fontSize: '14px',
+        color: SECONDARY,
+      })
+      .setOrigin(1, 0.5);
+    this.levelSlider.add([lvBg, lvTitle, lvDesc]);
     // Track + stop dots.
     const track = this.add.graphics();
     track.fillStyle(CARD_FILL, 1);
     track.lineStyle(2, OUTLINE, 1);
-    track.fillRoundedRect(316, LEVEL_STOP_Y - 3, 182, 6, 3);
-    track.strokeRoundedRect(316, LEVEL_STOP_Y - 3, 182, 6, 3);
+    track.fillRoundedRect(80, LEVEL_STOP_Y - 3, 382, 6, 3);
+    track.strokeRoundedRect(80, LEVEL_STOP_Y - 3, 382, 6, 3);
     this.levelSlider.add(track);
     stops.forEach((d) => {
       const x = LEVEL_STOP_X[d - 1];
@@ -2922,10 +2947,10 @@ export class ClinicScene extends Phaser.Scene {
       dot.fillCircle(x, LEVEL_STOP_Y, 5);
       dot.strokeCircle(x, LEVEL_STOP_Y, 5);
       const label = this.add
-        .text(x, LEVEL_STOP_Y + 21, CHROME_TIER_LABEL[CHROME_TIER_BY_DIFFICULTY[d]], {
+        .text(x, LEVEL_STOP_Y + 23, CHROME_TIER_LABEL[CHROME_TIER_BY_DIFFICULTY[d]], {
           fontFamily: FONT_FAMILY,
           fontStyle: 'bold',
-          fontSize: '11px',
+          fontSize: '12px',
           color: d === this.difficulty ? COCOA : SECONDARY,
         })
         .setOrigin(0.5, 0.5);
@@ -2942,7 +2967,7 @@ export class ClinicScene extends Phaser.Scene {
     knob.fillCircle(knobX, LEVEL_STOP_Y, 3);
     this.levelSlider.add(knob);
     const zone = this.add
-      .zone(407, 186, 200, 52)
+      .zone(270, 688, 444, 64)
       .setInteractive({ useHandCursor: true, draggable: true });
     let downX: number | null = null;
     zone.on('pointerdown', (p: Phaser.Input.Pointer) => {
@@ -3083,10 +3108,10 @@ export class ClinicScene extends Phaser.Scene {
       else this.about.show(this.sfxMuted, this.tickerOn);
     });
     this.profileRows.add(aboutZone);
-    // Undo card (640..728): the visit's rewind control lives at
+    // Undo card (748..836): the visit's rewind control lives at
     // the bottom of Profile, never on the visit screen. Taps
     // rewind one move in place; the count refreshes with it.
-    const uy = 640;
+    const uy = 748;
     card(48, uy, 444, 88);
     const depth = undoDepth(this.undoStack);
     label(68, uy + 30, 'Undo last move', '19px', COCOA, true, 0);

@@ -1,3 +1,25 @@
+# CHECKPOINT — Run 36: reading-level clarity (2026-11-01)
+
+Phase: dedicated Reading-level card in Profile on
+`feat/knottin-lab`. `main` untouched (still run 31).
+
+Files changed: 5 (mockData descriptors + stops + test,
+ClinicScene level card + Undo shift, auditor slider
+section, PROGRESS, CHECKPOINT). Display-only.
+
+Test result: auditor 0 findings; `npm test` 413/413; tsc
+clean; build green.
+
+Deployment URL: branch preview (SSO-gated); prod
+unchanged on main.
+
+Playtest result: NOT operator-playtested — programmatic
+verification only.
+
+Image spend this run: $0 (ledger ~$2.62 cumulative).
+
+STOP.
+
 # CHECKPOINT — Run 35: wordmark positioning (2026-11-01)
 
 Phase: visit wordmark y90 → y56 on `feat/knottin-lab`.

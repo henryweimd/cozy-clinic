@@ -3,6 +3,7 @@ import {
   LEVEL_STOP_X,
   MOCK_ROSTER,
   PROTOTYPE_SEEDS,
+  TIER_DESCRIBE,
   introNames,
   moveWaiting,
   nearestLevelStop,
@@ -66,6 +67,16 @@ describe('moveWaiting', () => {
   it('never mutates the input', () => {
     moveWaiting(order, 'June', -1);
     expect(order).toEqual(['Milo', 'Mabel', 'June', 'Theo']);
+  });
+});
+
+describe('TIER_DESCRIBE', () => {
+  it('says what each level means, easiest to most technical', () => {
+    expect(TIER_DESCRIBE.gentle).toContain('easiest');
+    expect(TIER_DESCRIBE.expert).toContain('technical');
+    for (const tier of ['gentle', 'steady', 'clinical', 'expert'] as const) {
+      expect(TIER_DESCRIBE[tier].length).toBeGreaterThan(0);
+    }
   });
 });
 

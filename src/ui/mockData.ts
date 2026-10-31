@@ -499,12 +499,23 @@ export const CHROME_TIER_LABEL: Record<ChromeTier, string> = {
 };
 
 /**
- * Profile level-slider stops (screen x, y=180): 4 reading
- * levels, right-aligned to the stat rows (x492). The auditor
- * mirrors these numbers.
+ * Live reading-level descriptor (Profile card title row):
+ * names what each level MEANS, since the bare words confuse.
  */
-export const LEVEL_STOP_X: readonly [number, number, number, number] = [322, 379, 435, 492];
-export const LEVEL_STOP_Y = 180;
+export const TIER_DESCRIBE: Record<ChromeTier, string> = {
+  gentle: 'Gentle — easiest words',
+  steady: 'Steady — everyday words',
+  clinical: 'Clinical — caregiver words',
+  expert: 'Expert — highly technical verbiage',
+};
+
+/**
+ * Profile level-slider stops (screen x, y=680): 4 reading
+ * levels on the dedicated card's full-width track (x80-462,
+ * even 126px steps). The auditor mirrors these numbers.
+ */
+export const LEVEL_STOP_X: readonly [number, number, number, number] = [84, 210, 336, 462];
+export const LEVEL_STOP_Y = 680;
 
 /** Pure: nearest slider stop (1-4) for a screen x (unit-tested). */
 export function nearestLevelStop(x: number): 1 | 2 | 3 | 4 {
