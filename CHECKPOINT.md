@@ -1,3 +1,24 @@
+# CHECKPOINT — Run 30: hardening (2026-11-01)
+
+Phase: network hardening — abort timeouts everywhere.
+Third of operator's 4-phase batch.
+
+Files changed: 8 (net+test new; patients, sharedCare,
+examFindings + tests). Commit `68b5838` on main.
+
+Test result: auditor 0 findings; `npm test` 368/368; tsc
+clean; build green.
+
+Deployment URL: `https://cozy-clinic.vercel.app/` (live-polled
+200 after push).
+
+Playtest result: NOT operator-playtested this run —
+programmatic verification only.
+
+Image spend this run: $0 (ledger ~$2.27 cumulative, STOP at $120).
+
+STOP.
+
 # CHECKPOINT — Run 29: judging-rubric loop (2026-11-01)
 
 Phase: judging-surface honesty (Indie rubric). Second of

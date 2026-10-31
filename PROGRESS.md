@@ -1,5 +1,28 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 30 (2026-11-01): hardening (offline paths, error states, edge cases)
+
+File ownership (main agent, this run): net helper + cast,
+exam-findings, shared-care loaders/senders + their tests,
+PROGRESS, CHECKPOINT. No content changes, no Supabase
+writes, no image spend.
+Hands off: src/data/maneuvers.* (other stream).
+
+- New `src/data/net.ts`: getJson/postJson with abort
+  timeouts; every Supabase call site (loadCast, extendTree,
+  loadExamFindings, loadCheers/Handoffs, sendCheer/Handoff)
+  now takes NetOpts and can never hang boot, loads, or
+  outbox flushes. Silent-fallback / throw-to-outbox
+  contracts preserved.
+- 10 new tests: net (4), patients hang/HTTP (3),
+  shared-care hang (2), exam-findings hang (1).
+- Supabase advisors unavailable (no advisors_read
+  permission) — operator may want to check security/
+  performance advisors in the dashboard before judging.
+- Verify: auditor 0 findings; npm test 368/368; tsc clean;
+  build green; live 200.
+- Spend: $0 (ledger ~$2.27 cumulative).
+
 ## Run 29 (2026-11-01): judging-rubric loop (Indie: creativity, technical ambition, whether-it-works)
 
 File ownership (main agent, this run): ClinicScene DEMO
