@@ -1,5 +1,9 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+> Run 24 ownership (main agent): README.md, docs/DEMO_SCRIPT.md
+> (new), docs/SUBMISSION_CHECKLIST.md (new), ClinicScene.ts demo
+> steps (2 lines). No other stream may touch these files.
+
 ## Run 23 (2026-10-30): MSD-sourced history + playbook
 
 - All 8 history rounds re-grounded in MSD Manual Professional

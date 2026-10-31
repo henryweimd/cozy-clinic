@@ -4247,8 +4247,8 @@ export class ClinicScene extends Phaser.Scene {
     // nothing aspirational ships in this list.
     const steps = [
       '1 Meet Milo — visit #2, he remembers you',
-      '2 Examine quiz, then dx/treat rounds',
-      '3 Next patient (6 now); tray = exam',
+      '2 Ask/exam/dx/treat — clues accumulate',
+      '3 Next patient (10 now); tray = exam',
       '4 Leave a care note (2nd tab = doctor 2)',
       '5 Learn (+2), Shop boosts, Profile, About',
       '6 Cheer a colleague from any care note',

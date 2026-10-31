@@ -33,8 +33,8 @@ too.
 An **educational simulation with fictional patients** and a deterministic
 clinical engine. It is **not** a medical advice tool, **not** a diagnostic
 tool for real people, and **not** a chatbot: there is no free-text clinical
-input, ever — every decision is a graduated choice set (2–3 early, up to 4–5
-in harder encounters). Real conditions are taught through gentle consequences
+input, ever — every decision is a small tap-only choice set (3 options per
+round). Real conditions are taught through gentle consequences
 with cozy bounds; patients never die and setbacks always carry a recovery
 path. Never real patient data.
 
@@ -42,7 +42,7 @@ path. Never real patient data.
 
 ```bash
 npm install
-npm test        # full suite — must pass (91 tests, green at last update)
+npm test        # full suite — must pass (198 tests, green at last update)
 npm run dev     # serves at http://localhost:5173 — open in a browser
 npm run build   # production build into dist/
 ```
@@ -57,14 +57,16 @@ so the demo path completes with zero network.
 Playable today on the live build; every step works, nothing staged:
 
 1. Meet Milo — visit #2, he recognizes you in the opening seconds.
-2. Answer the examine quiz, then diagnose → treat.
-3. Tap Next patient into a 6-strong roster (sleepy Theo to elder
-   Ellis); reorder the Waiting queue. The left-edge exam tray
-   holds Look / Feel / Tap / Listen with per-disease findings.
+2. Clear the 4-round visit: ask a history question, examine,
+   diagnose, then treat — clues accumulate across rounds.
+3. Tap Next patient into a 10-strong roster (sleepy Theo to elder
+   Ellis to new Nina, Kai, Ada, Felix); reorder the Waiting queue.
+   The left-edge exam tray holds Look / Feel / Tap / Listen with
+   per-disease findings.
 4. Leave a care note (open a 2nd tab as another doctor to see it land).
-5. Read a Learn topic (+2 coins), pass its prize quiz (+5), spend
-   coins in the Shop (every item boosts payouts), check Profile +
-   the About sheet.
+5. Open a Learn card (art header, pre-read summary, inline prize
+   quiz): +2 coins per first read, +5 per quiz pass. Spend coins
+   in the Shop (every item boosts payouts); check Profile + About.
 6. Slide Reading level (Gentle/Steady/Clinical/Expert) in Profile — the live
    visit rewords on return, same right answers.
 7. Cheer a colleague from any care note.
@@ -92,16 +94,16 @@ this script plus the tooling table in-game.
   gone wrong and why) and returns the choice to the player.
 - **Runtime AI path:** browser game → Supabase Edge Function → Meta Model API.
   The browser NEVER calls Meta directly and NEVER holds a model key.
-- **Offline by design.** A fallback snapshot (12 patients, 204 nodes,
-  16 tiered exam findings) ships in `src/data/fallbackPack.ts`; live
-  reads fall back to it seamlessly.
+- **Offline by design.** A fallback snapshot (16 patients, 272 nodes,
+  32 tiered exam findings, 8 Learn topics) ships in
+  `src/data/fallbackPack.ts`; live reads fall back to it seamlessly.
 
 ## Meta AI tooling
 
 | Model / tool | What it does in this game | What breaks without it |
 |---|---|---|
-| Muse Spark (`muse-spark-1.3`) via Edge Functions | Pre-computes trajectory futures (`seed-patients`, `extend-trajectory`) + tiered greeting paraphrases at runtime (`muse-reword`, vetoed) | No new stored futures, local greetings; game still runs on the fallback pack |
-| Muse Image (community `muse-image-mcp`, not Meta-official) | All character mascots, clinic backdrops, exam illustrations | No Jolly-style art; placeholders instead of the finished look |
+| Muse Spark (`muse-spark-1.3`) via Edge Functions | Trajectory seed/extend functions in `supabase/functions/` + live tiered greeting paraphrases at runtime (`muse-reword`, deployed, vetoed) | Stored futures + local greetings; the game runs fully on them with zero network |
+| Muse Image (community `muse-image-mcp`, not Meta-official) | All character mascots, clinic backdrops, Learn-card headers | No finished look; placeholders instead |
 | Built with Muse Code (Contributor tier) | The agentic build itself: game code, clinical modeling, art pipeline, tests | The documented craft story in `PROGRESS.md` |
 
 No other Meta models are claimed: SAM segmentation was evaluated and
@@ -119,29 +121,33 @@ sponsor's models; this one was raised by them: the agentic build log is a
 second demonstration of the model family, not just process documentation.
 
 Simulation at this scale is only sustainable because of Contributor-tier
-economics. Seeding a 12-patient persistent world with 204 pre-reviewed futures
+economics. Seeding a 16-patient persistent world with 272 pre-reviewed futures
 costs cents, and gameplay traverses stored nodes instead of billing per
 decision in the hot loop. Persistent patients with real branching futures —
 the core of the game — are only possible because generation is this cheap.
 
 ## Current build
 
-- **6 playable patients** (Mabel, June, Milo, Theo, Priya, Ellis — each with a 6-expression set,
-  per-patient visits and quotes) plus a waiting-room list with queue reorder;
-  Milo opens onboarding as an existing-patient sick visit.
-- **3-round quiz visits:** examine → diagnose → treat, each round asking its
-  question first (tier-worded Gentle/Steady/Clinical/Expert); endings praise
-  the player with an N-of-3 score line, never claiming the patient better/worse.
-- **4 conditions** as tested state transitions: asthma, sniffly cold (viral
-  respiratory), dehydration, hypertension.
-- **Living Chart** memory beads, **Learning List** (accumulating,
-  MedlinePlus-backed, +2 coins per first read, +5 prize quiz each),
-  **Clinic Shop** (Care Coins
+- **10 playable patients** (Mabel, June, Milo, Theo, Priya, Ellis, Nina,
+  Kai, Ada, Felix — each with a 6-expression set, per-patient visits and
+  quotes) plus a waiting-room list with queue reorder; Milo opens
+  onboarding as an existing-patient sick visit.
+- **4-round quiz visits:** ask → examine → diagnose → treat, each round
+  asking its question first (tier-worded Gentle/Steady/Clinical/Expert);
+  endings praise the player with an N-of-4 score line, never claiming
+  the patient better/worse.
+- **8 conditions** as tested state transitions, sourced from the MSD
+  Manual Professional Edition: asthma, sniffly cold (viral
+  respiratory), dehydration, hypertension, strep throat, ear
+  infection, eczema, pneumonia.
+- **Living Chart** memory beads, **Learning List** (accumulating
+  art-header cards, MedlinePlus-backed, +2 coins per first read, +5
+  inline prize quiz each), **Clinic Shop** (Care Coins
   wallet, Tools/Medicines/Practice), **10-move undo**, exam tool trays,
   chart drawer, signout handoff, dev asset browser, **Profile** tab
   (preset doctor handle over the `players` table; shared-care
-  live both ways — handoffs, team tags, preset cheers, 20s
-  sync, offline outboxes).
+  live both ways — handoffs, team tags, preset cheers, loads live
+  on open, offline outboxes).
 - **Art:** Jolly-style 3D mascots on clean photorealistic clinic plates
   (8 backdrops, painted wall signs in waiting, UI wordmark in visit), Baloo 2 vendored offline;
   art law in [`ART_BIBLE.md`](./ART_BIBLE.md).
@@ -153,8 +159,10 @@ Docs map: [`docs/UI_PROTOTYPE.md`](./docs/UI_PROTOTYPE.md) (interface spec),
 [`docs/ANIMATION.md`](./docs/ANIMATION.md),
 [`docs/AI_PROXY.md`](./docs/AI_PROXY.md) (Edge Function contract),
 [`docs/PROGRESSION.md`](./docs/PROGRESSION.md) (economy),
+[`docs/SCENARIO_PLAYBOOK.md`](./docs/SCENARIO_PLAYBOOK.md) (case authoring),
+[`docs/DEMO_SCRIPT.md`](./docs/DEMO_SCRIPT.md) (judge demo path),
 [`PROGRESS.md`](./PROGRESS.md) (build log).
 
 ---
-*Last verified 2026-10-29 against `main` @ `56d00fa` (91/91 tests, build green,
+*Last verified 2026-10-30 against `main` @ `88af2cf` (198/198 tests, build green,
 live URL up).*
