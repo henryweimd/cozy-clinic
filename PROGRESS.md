@@ -1,15 +1,32 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
-## Run 25 (in progress): content pack 2 — croup, HFM, Lyme, appendicitis + Hugo/Ivy/Leo/Ruby
+## Run 25 (2026-10-31): content pack 2 — croup, HFM, Lyme, appendicitis + Hugo/Ivy/Leo/Ruby
 
-File ownership (main agent, this run): src/clinical/types.ts,
-src/clinical/conditions.ts, src/data/fallbackPack.ts (+tests),
-src/data/examFindings.ts, src/ui/mockData.ts, src/game/sprites.ts
-(+test), src/scenes/ClinicScene.ts (Speaker only),
-src/ui/aboutSheet.ts (cast line), src/ui/learnList.ts (if needed),
-docs/CHARACTER_BIBLE.md, docs/SCENARIO_PLAYBOOK.md (§1 list),
-art/manifest.json, README.md (counts), PROGRESS.md, CHECKPOINT.md.
-Hands off: src/data/maneuvers.* (other stream).
+- Conditions (DRAFT, pending operator medical review): croup
+  (stridor-vs-wheeze vs asthma; swallowed-toy distractor),
+  hand-foot-mouth (palm/sole/mouth trio vs cold/eczema), Lyme
+  (bullseye + tick bite vs eczema; ringworm contrast in
+  history), appendicitis (periumbilical→RLQ migration,
+  McBurney exam, laxative DANGEROUS). Full defs ×4 tiers.
+- Patients Hugo(2M)/Ivy(4F)/Leo(9M)/Ruby(14F) with
+  engine-generated 17-node trees (68 nodes, 64 edges, 0 veto
+  fails; /tmp/h2/gen-trees25.ts recipe).
+- Supabase mirrors: patients 20, nodes 340, edges 256→320,
+  resources 12 (MedlinePlus 4/4 200, HFM via ency article),
+  findings 48, treatments 12; widened the
+  patients.condition_id CHECK via migration.
+- Art: 4 sprites x6 frames via identity-edit pipeline (Hugo←
+  Theo direct; Ivy←Milo, Leo←Kai, Ruby←Ada + 0.88 Ellis
+  rescale; all validate PASS, contact sheets reviewed, zero
+  re-asks) + 4 Block-U headers (cropped 824x320, sheet
+  reviewed).
+- Wiring: roster/sprites/Speaker/learn-preload/About cast,
+  cond-guard in switch-visit extended (else new patients would
+  strand on the previous disease), auditor pins 8→12,
+  playbook §1 + README/docs counts to 12/14/20/340.
+- Verdicts: 238/238 tests, tsc clean, auditor 0, build green,
+  live 200 + new assets 200.
+- Spend: $0.28 (ledger ~$1.42; operator cap $10).
 
 ## Run 24 (2026-10-30): demo packaging
 

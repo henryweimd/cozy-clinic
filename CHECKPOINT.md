@@ -394,3 +394,31 @@ Image spend this run: $0 (ledger ~$1.14 cumulative, cap $10;
 STOP at $120).
 
 STOP.
+
+## Run 25 — content pack 2 (2026-10-31)
+
+Phase: operator "do add more content" — 4 MSD-sourced
+conditions + 4 patients + full art via the SCENARIO_PLAYBOOK
+pipeline (croup/Hugo, hand-foot-mouth/Ivy, Lyme/Leo,
+appendicitis/Ruby).
+
+Files: types, conditions(+test auto-covers ×4), fallbackPack
+(+test), mockData, sprites, ClinicScene (Speaker + guard +
+learn preload), aboutSheet, CHARACTER_BIBLE, playbook §1,
+manifest, process_character (4 CHARACTERS rows), README, demo
+script, checklist, 24 sprites + 4 headers + 5 contact sheets.
+
+Test result: auditor 0 findings (pins bumped 8→12); `npm
+test` 238/238; tsc clean; build green. Supabase: 20/340/320,
+resources 12, findings 48, treatments 12, CHECK widened, 0
+dangling edges.
+
+Deployment URL: `https://cozy-clinic.vercel.app/` (live 200;
+new sprites + headers 200).
+
+Playtest result: NOT operator-playtested — programmatic only.
+
+Image spend this run: $0.28 (ledger ~$1.42 cumulative, cap
+$10; STOP at $120).
+
+STOP.
