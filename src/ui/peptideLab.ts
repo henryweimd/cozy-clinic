@@ -5,7 +5,7 @@ import { THEME } from './chromeTheme';
 
 /**
  * Peptide Lab: the full-screen trial screen behind the
- * "Custom Knottin Probiotic" treatment arm (opensLab). A
+ * trial conditions' left-rail tab (never a choice card). A
  * SCREEN, not an overlay: consent first (experimental,
  * trial-ruled, proven-care-first, fictional future), then
  * the four-stage design pipeline (live via the proxy or the
@@ -101,12 +101,27 @@ export class PeptideLab {
     this.runId += 1;
     this.isOpen = true;
     this.render('consent');
+    // Pulled-out-tray entrance: slides in from the left edge
+    // (instant under reduced motion).
     this.root.setVisible(true).setAlpha(1);
+    if (this.reducedMotion) {
+      this.root.setX(0);
+      return;
+    }
+    this.root.setX(-540);
+    this.scene.tweens.add({
+      targets: this.root,
+      x: 0,
+      duration: 250,
+      ease: 'Sine.easeOut',
+    });
   }
 
   hide(): void {
     this.runId += 1;
     this.isOpen = false;
+    this.scene.tweens.killTweensOf(this.root);
+    this.root.setX(0);
     this.body.removeAll(true);
     this.root.setVisible(false).setAlpha(0);
   }

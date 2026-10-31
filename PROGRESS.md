@@ -1,5 +1,36 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 42 (2026-11-01): lab leaves choices, joins the rail
+
+Branch: `feat/knottin-lab`. Operator playtesting in parallel.
+File ownership (main agent, this run): rail lab tab +
+scene wiring, trial-arm deletion, lab slide-in, tests,
+auditor rail geometry, docs, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- Operator direction: the lab is never a choice card. The
+  2 `knottin-trial` tx arms are deleted; `opensLab` + the
+  defer-result machinery are fully removed. Travelers lost
+  its only WRONG, so it gains a classic-error replacement
+  ("Anti-poop pills, skip the fluids" — masking without
+  rehydration); c-diff stays a valid 3-card set
+  (BEST/WRONG/DANGEROUS).
+- New 4th rail tab (flask glyph, slot y554): shows only on
+  live treat rounds for trial conditions
+  (`labTabAvailable`, pure + tested), same traffic rule as
+  chart/exam/notes. Treat arrival brings badge + soft
+  double-blink (badge only reduced-motion) + one toast +
+  ticker line per visit.
+- Tapping pulls the lab out with a slide-from-left
+  entrance; return continues the quiz mid-round (no defer,
+  no skipped endings — the lab is grade-neutral).
+- Rail syncs on round advance, undo rewind, visit end, and
+  patient switch.
+- Docs: README/demo/in-game/playbook retold (tray model).
+- Verify: 423/423 (+1 rail test), tsc clean, build green,
+  auditor 0 (tier labels 448→444, 6 new rail checks).
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 41 (2026-11-01): Gentle dx names teach real medicine
 
 Branch: `feat/knottin-lab`. Queued next: lab tray (run 42).

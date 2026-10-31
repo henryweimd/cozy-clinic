@@ -42,7 +42,7 @@ path. Never real patient data.
 
 ```bash
 npm install
-npm test        # full suite — must pass (422 tests, green at last update)
+npm test        # full suite — must pass (423 tests, green at last update)
 npm run dev     # serves at http://localhost:5173 — open in a browser
 npm run build   # production build into dist/
 ```
@@ -58,9 +58,9 @@ Playable today on the live build; every step works, nothing staged:
 
 1. Meet Bram — visit #2, he recognizes you in the opening seconds.
 2. Clear the 4-round visit: ask a history question, examine,
-   diagnose, then treat — clues accumulate across rounds. On a
-   second take, pick the trial arm at Treat to open the Peptide
-   Lab (consent → live/cached design → back to visit).
+   diagnose, then treat — clues accumulate across rounds. At the
+   Treat round, tap the trial flask tab on the left rail to pull
+   out the Peptide Lab (consent → live/cached design → back).
 3. Tap Next patient into a 30-strong roster; reorder the Waiting queue.
    The left-edge exam tray holds Look / Feel / Tap / Listen with
    per-disease findings.
@@ -95,11 +95,12 @@ this script plus the tooling table in-game.
   gone wrong and why) and returns the choice to the player.
 - **Runtime AI path:** browser game → Supabase Edge Function → Meta Model API.
   The browser NEVER calls Meta directly and NEVER holds a model key.
-- **Clinical-trial path + Peptide Lab.** Two gut conditions carry an
-  experimental Custom Knottin Probiotic arm: it grades below proven
-  care (never BEST), then opens a full-screen lab — consent, a 4-stage
-  design pipeline (live via the `knottin-design` proxy, cached demo
-  offline), and a window onto the real operator-run Cozy Peptide site.
+- **Clinical-trial path + Peptide Lab.** Two gut conditions offer a
+  trial flask tab on the left rail during the treat round (never a
+  choice card, grade-neutral exploration): it pulls out a full-screen
+  lab — consent, a 4-stage design pipeline (live via the
+  `knottin-design` proxy, cached demo offline), and a window onto
+  the real operator-run Cozy Peptide site.
 - **Offline by design.** A fallback snapshot (36 patients, 612 nodes,
   576 edges, 112 exam findings × 4 tiers, 31 Learn topics) ships in
   `src/data/fallbackPack.ts`; live reads fall back to it seamlessly.
@@ -143,10 +144,11 @@ the core of the game — are only possible because generation is this cheap.
   asking its question first (tier-worded Gentle/Steady/Clinical/Expert);
   endings praise the player with an N-of-4 score line, never claiming
   the patient better/worse.
-- **Peptide Lab:** the knottin trial arm opens a full-screen lab
-  (consent → live/cached 4-stage pipeline → result → back to visit),
-  with ticker provenance and an external window onto the real
-  Cozy Peptide site; the ending modal re-offers on return.
+- **Peptide Lab:** a left-rail flask tab (live treat rounds, trial
+  conditions) pulls out a full-screen lab (consent → live/cached
+  4-stage pipeline → result → back to visit), with ticker
+  provenance and an external window onto the real Cozy Peptide
+  site; the visit continues mid-round on return.
 - **28 conditions** as tested state transitions, sourced from the MSD
   Manual Professional Edition (run-32 gut pack MedlinePlus-grounded,
   MSD cross-check pending review): asthma, sniffly cold (viral

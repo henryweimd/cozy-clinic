@@ -24,8 +24,8 @@ const PANEL_OPEN_X = 0;
 const DOCK_X = PANEL_OPEN_X + PANEL_W;
 const DRAWER_TOP = 300;
 const DRAWER_H = 260;
-/** Rail slot tops: chart, exam, notes (below the panel, 8px gaps). */
-export const RAIL_SLOTS = { chart: 362, exam: 426, notes: 490 } as const;
+/** Rail slot tops: chart, exam, notes, lab (below the panel, 8px gaps). */
+export const RAIL_SLOTS = { chart: 362, exam: 426, notes: 490, lab: 554 } as const;
 
 export interface ChartContent {
   /** Signout lines (visit/who, complaint, history+meds, observation). */

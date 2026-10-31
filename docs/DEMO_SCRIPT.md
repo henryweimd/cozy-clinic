@@ -61,14 +61,13 @@ cast counts, pre-computed futures, engine veto. Close:
 > "Built by Muse, running on Muse — Spark simulates the
 > futures, the engine owns the truth, and it all plays offline."
 
-## Beat 6 — the Peptide Lab (second take, +0:40)
+## Beat 6 — the Peptide Lab (+0:40, same take)
 
-Replay Bram to Treat and pick the Custom Knottin Probiotic arm
-instead of the cure: it grades below proven care (an adjunct,
-never BEST), then opens the full-screen lab — consent, the
-live 4-stage design pipeline (or the cached demo offline),
-result, Back to visit; the ending modal still praises the
-player. Say:
+At Bram's Treat round, a flask tab lights up on the left rail
+(never a choice card — trials don't compete with the cure).
+Tap it: the full-screen lab pulls out — consent, the live
+4-stage design pipeline (or the cached demo offline), result,
+Back to visit; the quiz continues mid-round. Say:
 
 > "Experimental care lives in trials — with consent, and
 > proven care first. The design runs live through our own

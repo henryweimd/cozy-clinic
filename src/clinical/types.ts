@@ -127,12 +127,9 @@ export interface ActionDef {
   vitalsDelta: Partial<Vitals>;
   /** Follow-up line shown after the consequence lands. */
   hootLine: string;
-  /**
-   * Trial-arm actions: run 34 opens the full-screen Peptide
-   * Lab when picked (consent, pipeline, result, back).
-   * Grading is unaffected — the grade rides gradeByStage.
-   */
-  opensLab?: boolean;
+  // (Run-42 law: trials are NEVER choice cards — the lab is
+  // a left-rail tab on live treat rounds for trial
+  // conditions, grade-neutral exploration.)
 }
 
 /** Static definition of one condition's stage ladder + actions. */

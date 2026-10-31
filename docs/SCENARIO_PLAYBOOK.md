@@ -45,10 +45,10 @@
    - travelers-diarrhea → Traveler's Diarrhea Diet
    - lactose-intolerance → Lactose Intolerance
    - constipation → Constipation
-   Trial-arm rule (knottin): experimental options carry
-   `opensLab`, grade NOT_GREAT where plausible (never BEST
-   over proven care) and WRONG where not indicated; the
-   trial choice always preserves standard-care-first.
+   Trial rule (knottin, run 42): trials are NEVER choice
+   cards — the lab is a left-rail flask tab on live treat
+   rounds for trial conditions (`labTabAvailable`),
+   grade-neutral exploration that returns mid-round.
 2. **NIH MedlinePlus** — patient-facing links for Learn cards only.
 3. **Operator (physician) pen** — final review; new content ships
    as DRAFT until reviewed.

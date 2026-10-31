@@ -58,7 +58,7 @@ import { actionLabel, CONDITION_TIER_NAMES, EXAM_OTHER_FINDING, HX_OTHER_FINDING
 import type { ConditionId } from '../clinical/types';
 import { LearnList } from '../ui/learnList';
 import { PeptideLab } from '../ui/peptideLab';
-import { trialTargetFor } from '../game/knottin';
+import { labTabAvailable, trialTargetFor } from '../game/knottin';
 import { AssetBrowser } from '../ui/assetBrowser';
 import { RAIL_SLOTS, RAIL_X, TAB_H, TAB_W, ChartDrawer } from '../ui/chartDrawer';
 import {
@@ -459,8 +459,6 @@ export class ClinicScene extends Phaser.Scene {
   private peptideLab!: PeptideLab;
   /** Trial referral behind the lab view (null = lab unreachable). */
   private pendingLab: { target: string; name: string } | null = null;
-  /** Trial referral: the ending modal waits for the lab return. */
-  private deferResultForLab = false;
   /** M4 shared care: inbox, compose state, offline outbox. */
   private handoffSheet!: HandoffSheet;
   private inbox: HandoffNote[] = [];
@@ -479,6 +477,11 @@ export class ClinicScene extends Phaser.Scene {
   private notesHandle!: Phaser.GameObjects.Container;
   private notesBadge!: Phaser.GameObjects.Graphics;
   private notesZone!: Phaser.GameObjects.Zone;
+  private labHandle!: Phaser.GameObjects.Container;
+  private labBadge!: Phaser.GameObjects.Graphics;
+  private labZone!: Phaser.GameObjects.Zone;
+  /** Visit key that already got the trial-lab toast (once each). */
+  private labToastedFor = '';
   /** Filed conditions (visit order — the list accumulates). */
   private filedConds: { id: string; name: string }[] = [];
   /** Opened resource ids (their +2 is spent). */
@@ -659,6 +662,7 @@ export class ClinicScene extends Phaser.Scene {
     this.drawPortalView();
     this.drawProfileView();
     this.drawNotesHandle();
+    this.drawLabHandle();
     this.drawNavBar();
     this.wireModules();
     this.drawCodePad();
@@ -1426,6 +1430,8 @@ export class ClinicScene extends Phaser.Scene {
       'tell',
     );
     this.showToast(`Undone (${undoDepth(this.undoStack)} left).`);
+    // A rewind can leave the treat round (the lab tab with it).
+    this.refreshRailTabs();
   }
 
   /** Chop words until the text fits maxH (prototype rule: …). */
@@ -1739,6 +1745,36 @@ export class ClinicScene extends Phaser.Scene {
     this.buildCards();
     this.drawCorral();
     this.showQuestion(next);
+    this.refreshRailTabs();
+    // Trial emphasis: the lab tab arrives with the treat
+    // round — badge + a soft double-blink (badge only under
+    // reduced motion), one toast + ticker line per visit.
+    if (
+      next === 'treat' &&
+      labTabAvailable(this.patientState.conditionId, next, this.visitEnded)
+    ) {
+      this.labBadge.setVisible(true);
+      if (!this.reducedMotion) {
+        this.tweens.killTweensOf(this.labHandle);
+        this.labHandle.setAlpha(1);
+        this.tweens.add({
+          targets: this.labHandle,
+          alpha: 0.35,
+          duration: 350,
+          yoyo: true,
+          repeat: 3,
+          ease: 'Sine.easeInOut',
+        });
+      }
+      const key = `${this.activeName}#${this.visitNo()}`;
+      if (this.labToastedFor !== key) {
+        this.labToastedFor = key;
+        this.showToast('A trial lab opened on the left rail');
+        if (tickerVisible(this.currentView, this.tickerOn)) {
+          this.ticker.pushLive(`trial lab open for ${this.activeName} (left rail)`);
+        }
+      }
+    }
   }
 
   /** Demo tag for expert wording (8yF-style), live or fallback. */
@@ -2085,20 +2121,6 @@ export class ClinicScene extends Phaser.Scene {
       playSfx('wrong');
       this.showToast('Oh no — that made things worse');
     }
-    if (action.opensLab) {
-      // The trial arm grades normally (stamp + face +
-      // conversation read the grade like any answer); the
-      // referral files here, the ending modal defers, and the
-      // lab itself opens at the end of this handler — after
-      // the chart, conversation, and visit-end bookkeeping.
-      this.pendingLab = null;
-      const target = trialTargetFor(this.patientState.conditionId);
-      if (target !== null) {
-        this.pendingLab = { target, name: this.activeName };
-        this.deferResultForLab = true;
-        this.ticker.pushLive(`trial referral filed for ${this.activeName}`);
-      }
-    }
     this.refreshChart();
     if (grade === 'BEST') {
       // Care Coins wallet: correct (BEST) resolves pay the shop-
@@ -2136,9 +2158,6 @@ export class ClinicScene extends Phaser.Scene {
     }
     this.playResolveFlash(result.node.animationCue);
     this.maybeEndVisit(grade === 'BEST');
-    // Trial referral: the visit already ended (silently) above;
-    // the lab runs, and the ending modal re-offers on return.
-    if (action.opensLab && this.pendingLab !== null) this.showView('lab');
   }
 
   /**
@@ -2177,14 +2196,9 @@ export class ClinicScene extends Phaser.Scene {
     }
     const outcome = visitOutcome(this.roundScore);
     this.visitEnded = true;
-    // Trial referral: book the ending silently — the lab runs
-    // first, and showView re-offers the modal on return.
-    if (this.deferResultForLab) {
-      this.deferResultForLab = false;
-      this.showResult(outcome, true);
-    } else {
-      this.showResult(outcome);
-    }
+    // The visit's over — the trial tab leaves with the round.
+    this.refreshRailTabs();
+    this.showResult(outcome);
   }
 
   /**
@@ -2229,6 +2243,7 @@ export class ClinicScene extends Phaser.Scene {
     ]);
     // Fresh visit: clock + coins baseline restart, result clears.
     this.visitEnded = false;
+    this.labToastedFor = '';
     this.lastOutcome = null;
     this.hideResult();
     this.selectedPreset = null;
@@ -3354,6 +3369,70 @@ export class ClinicScene extends Phaser.Scene {
     this.notesHandle.setDepth(23);
   }
 
+  private drawLabHandle(): void {
+    // Fourth tab of the left-edge rail (slot y554): the trial
+    // lab. Same 52x56 glass tab language, flask glyph, amber
+    // badge dot while unvisited this visit. Shows ONLY on live
+    // treat rounds for trial conditions (labTabAvailable);
+    // tapping pulls out the full-screen lab, grade-neutral.
+    const cx = RAIL_X + TAB_W / 2;
+    const cy = RAIL_SLOTS.lab + TAB_H / 2;
+    const tab = this.add.graphics();
+    tab.fillStyle(CREAM, CHROME_ALPHA);
+    tab.lineStyle(3, OUTLINE, 1);
+    tab.fillRoundedRect(RAIL_X, RAIL_SLOTS.lab, TAB_W, TAB_H, {
+      tl: 0,
+      tr: 14,
+      bl: 0,
+      br: 14,
+    });
+    tab.strokeRoundedRect(RAIL_X, RAIL_SLOTS.lab, TAB_W, TAB_H, {
+      tl: 0,
+      tr: 14,
+      bl: 0,
+      br: 14,
+    });
+    // Flask: neck, triangle body, sage brew line, one bubble.
+    const glyph = this.add.graphics();
+    glyph.fillStyle(CARD_FILL, 1);
+    glyph.lineStyle(2.5, OUTLINE, 1);
+    glyph.strokeRoundedRect(cx - 4, cy - 14, 8, 11, 2);
+    glyph.fillTriangle(cx - 4, cy - 4, cx + 4, cy - 4, cx + 12, cy + 12);
+    glyph.fillTriangle(cx - 4, cy - 4, cx - 12, cy + 12, cx + 12, cy + 12);
+    glyph.lineBetween(cx - 4, cy - 3, cx - 12, cy + 12);
+    glyph.lineBetween(cx + 4, cy - 3, cx + 12, cy + 12);
+    glyph.lineBetween(cx - 12, cy + 12, cx + 12, cy + 12);
+    glyph.lineStyle(3, SAGE, 1);
+    glyph.lineBetween(cx - 8, cy + 5, cx + 8, cy + 5);
+    glyph.lineStyle(2, OUTLINE, 1);
+    glyph.strokeCircle(cx + 3, cy + 8, 1.5);
+    this.labBadge = this.add.graphics();
+    this.labBadge.fillStyle(AMBER, 1);
+    this.labBadge.lineStyle(2, OUTLINE, 1);
+    this.labBadge.fillCircle(RAIL_X + 8, RAIL_SLOTS.lab + 10, 7);
+    this.labBadge.strokeCircle(RAIL_X + 8, RAIL_SLOTS.lab + 10, 7);
+    this.labBadge.setVisible(false);
+    this.labZone = this.add
+      .zone(cx, cy, TAB_W, TAB_H)
+      .setInteractive({ useHandCursor: true });
+    this.labZone.on('pointerdown', () => this.openLab());
+    this.labHandle = this.add.container(0, 0, [tab, glyph, this.labBadge, this.labZone]);
+    this.labHandle.setDepth(23);
+    this.labHandle.setVisible(false);
+  }
+
+  /** Trial lab from the rail tab: files the referral, pulls out the screen. */
+  private openLab(): void {
+    const target = trialTargetFor(this.patientState.conditionId);
+    if (target === null) return;
+    this.pendingLab = { target, name: this.activeName };
+    this.labBadge.setVisible(false);
+    if (tickerVisible(this.currentView, this.tickerOn)) {
+      this.ticker.pushLive(`trial lab opened for ${this.activeName}`);
+    }
+    this.showView('lab');
+  }
+
   /**
    * Rail-tab traffic rule (extends the slider radio): at most
    * one rail tab owns the screen. A slider's panel slides UNDER
@@ -3372,6 +3451,14 @@ export class ClinicScene extends Phaser.Scene {
     this.tray.setTabVisible(inVisit && !chartOpen && !notesOpen);
     this.notesHandle.setVisible(inVisit && !busy);
     if (this.notesZone.input) this.notesZone.input.enabled = inVisit && !busy;
+    // Trial lab: fourth tab, same traffic rule, plus its own
+    // availability (live treat round, trial condition).
+    const labLive =
+      inVisit &&
+      !busy &&
+      labTabAvailable(this.patientState.conditionId, this.round, this.visitEnded);
+    this.labHandle.setVisible(labLive);
+    if (this.labZone.input) this.labZone.input.enabled = labLive;
   }
 
   /** (Re)builds the sheet for the active patient + live tier. */
@@ -3670,7 +3757,7 @@ export class ClinicScene extends Phaser.Scene {
     };
 
     // Peptide Lab: the full-screen trial screen behind the
-    // knottin treatment arm (a visit sub-screen, no tab).
+    // left-rail lab tab (grade-neutral exploration).
     this.peptideLab = new PeptideLab(this);
     this.peptideLab.onClose = () => {
       if (this.currentView === 'lab') this.showView('visit');
@@ -4341,7 +4428,7 @@ export class ClinicScene extends Phaser.Scene {
       '4 Leave a care note (2nd tab = doctor 2)',
       '5 Learn (+2), Shop boosts, Profile, About',
       '6 Cheer a colleague from any care note',
-      '7 Trial arm -> Peptide Lab (design, back)',
+      '7 Trial flask tab -> Peptide Lab',
     ];
     for (const step of steps) {
       line(64, y, step, '#eaf5e9');
@@ -4681,7 +4768,7 @@ export class ClinicScene extends Phaser.Scene {
     this.resultRoot.setDepth(44).setVisible(false).setAlpha(0);
   }
 
-  private showResult(outcome: VisitOutcome, silent = false): void {
+  private showResult(outcome: VisitOutcome): void {
     this.resultOutcome = outcome;
     this.lastOutcome = outcome;
     const def = CONDITIONS[this.patientState.conditionId];
@@ -4722,10 +4809,6 @@ export class ClinicScene extends Phaser.Scene {
     this.resultPrimaryBg.clear();
     this.resultPrimaryBg.fillStyle(outcome === 'recovered' ? SAGE : AMBER, 1);
     this.resultPrimaryBg.fillRoundedRect(-190, -26, 380, 52, 26);
-    // Silent (trial referral): the books balance (topics,
-    // memory, lastOutcome) but the modal waits for the lab
-    // return — nothing shows, nothing pulses.
-    if (silent) return;
     this.resultRoot.setVisible(true).setAlpha(0);
     this.tweens.killTweensOf([this.resultRoot, this.resultPrimary]);
     this.resultPrimary.setScale(1);

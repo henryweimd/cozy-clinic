@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { CACHED_DESIGN, designPeptide, isKnottinResponse, trialTargetFor } from './knottin';
+import { CACHED_DESIGN, designPeptide, isKnottinResponse, labTabAvailable, trialTargetFor } from './knottin';
 
 describe('trialTargetFor', () => {
   it('maps the two trial conditions and nothing else', () => {
@@ -11,6 +11,17 @@ describe('trialTargetFor', () => {
     );
     expect(trialTargetFor('asthma')).toBeNull();
     expect(trialTargetFor('nope')).toBeNull();
+  });
+});
+
+describe('labTabAvailable', () => {
+  it('shows only on live treat rounds for trial conditions', () => {
+    expect(labTabAvailable('c-diff-colitis', 'treat', false)).toBe(true);
+    expect(labTabAvailable('travelers-diarrhea', 'treat', false)).toBe(true);
+    expect(labTabAvailable('c-diff-colitis', 'diagnose', false)).toBe(false);
+    expect(labTabAvailable('c-diff-colitis', 'history', false)).toBe(false);
+    expect(labTabAvailable('c-diff-colitis', 'treat', true)).toBe(false);
+    expect(labTabAvailable('asthma', 'treat', false)).toBe(false);
   });
 });
 

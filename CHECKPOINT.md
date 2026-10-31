@@ -1,3 +1,25 @@
+# CHECKPOINT — Run 42: lab rail tab (2026-11-01)
+
+Phase: trial-tray rework on `feat/knottin-lab`. `main`
+untouched (still run 31).
+
+Files changed: 11 (rail slot, lab handle + wiring,
+knottin helper + tests, trial-arm deletion, types,
+lab slide-in, auditor, docs, PROGRESS, CHECKPOINT).
+
+Test result: `npm test` 423/423; tsc clean; build green;
+auditor 0 findings (6 new rail checks).
+
+Deployment URL: branch preview (SSO-gated); prod
+unchanged on main.
+
+Playtest result: operator playtesting in parallel (this
+run answers their tray note).
+
+Image spend this run: $0 (ledger ~$2.62 cumulative).
+
+STOP.
+
 # CHECKPOINT — Run 41: Gentle naming (2026-11-01)
 
 Phase: wording accuracy on `feat/knottin-lab`. `main`

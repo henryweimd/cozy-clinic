@@ -60,7 +60,7 @@ const SEQ_RE = /^[ACDEFGHIKLMNPQRSTVWY]{10,100}$/;
 
 /**
  * Trial targets by condition: the ONLY conditions whose
- * treatment set carries the knottin trial arm (opensLab).
+ * treat round offers the left-rail trial lab tab.
  * Pure + unit-tested; unknown conditions get no lab.
  */
 const TRIAL_TARGETS: Record<string, string> = {
@@ -71,6 +71,19 @@ const TRIAL_TARGETS: Record<string, string> = {
 /** Pure: the trial target for a condition, or null (unit-tested). */
 export function trialTargetFor(conditionId: string): string | null {
   return TRIAL_TARGETS[conditionId] ?? null;
+}
+
+/**
+ * Pure: the trial lab tab shows iff the visit is live, the
+ * treat round is up, and the condition runs a trial
+ * (unit-tested). The lab is exploration — grade-neutral.
+ */
+export function labTabAvailable(
+  conditionId: string,
+  round: 'history' | 'examine' | 'diagnose' | 'treat',
+  visitEnded: boolean,
+): boolean {
+  return !visitEnded && round === 'treat' && trialTargetFor(conditionId) !== null;
 }
 
 /** Shape guard for the proxy response (unit-tested). */
