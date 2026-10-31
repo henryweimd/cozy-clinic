@@ -112,7 +112,7 @@ export async function designPeptide(
   const key = opts.key ?? SUPABASE_ANON_KEY;
   if (url === undefined || key === undefined) return cached('offline', 0);
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), opts.timeoutMs ?? 55000);
+  const timer = setTimeout(() => ctrl.abort(), opts.timeoutMs ?? 110000);
   const started = Date.now();
   try {
     const res = await fetch(`${url}/functions/v1/knottin-design`, {

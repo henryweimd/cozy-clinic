@@ -25,6 +25,11 @@ Hands off: src/data/maneuvers.* (other stream); `main`.
 - Supabase re-verified: 36/612/576/29/28/112, 0
   dangling. No secrets in repo (keys in Supabase
   secrets only).
+- Postscript (same session): proxy deployed by agent via
+  CLI (MCP token lacked the permission); Vault secret
+  promoted to function secret; live timing (51s) forced
+  timeouts 50/55s → 100/110s; fresh design verified
+  end-to-end (novel ICK sequence, TI 94.75, SI 92.06).
 - Verify: 419/419, tsc clean, build green, auditor 0.
 - Spend: $0 (ledger ~$2.62 cumulative).
 

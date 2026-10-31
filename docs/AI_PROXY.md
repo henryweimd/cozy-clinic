@@ -92,9 +92,9 @@ model `muse-spark-1.3`, `response_format: { type: 'json_object' }`.
 
 ## KNOTTIN RUN (2026-11-01): knottin-design
 
-- `knottin-design` (in repo, NOT yet deployed — the MCP token
-  lacks `edge_functions_write`; operator deploys with
-  `supabase functions deploy knottin-design`, verify_jwt on).
+- `knottin-design` (DEPLOYED via CLI, verify_jwt on —
+  the MCP token lacks `edge_functions_write`, so the agent
+  deployed with the operator's `.env` access token).
   Source of truth:
   `supabase/functions/knottin-design/index.ts`.
 - Proxies the operator-run Cozy Peptide API (`POST
@@ -102,14 +102,17 @@ model `muse-spark-1.3`, `response_format: { type: 'json_object' }`.
   Bearer `COZY_PEPTIDE_KEY`, server-side only). Request:
   `{ target (≤200), mechanism? (≤200), charge_target? (1–4),
   modality? (knottin-6c default, disulfide-4c, disulfide-2c,
-  linear) }` — validated, 50s upstream timeout.
+  linear) }` — validated, 100s upstream timeout (the live
+  pipeline takes ~51s; the first 50s build timed out).
 - Veto: `success` flag, sequence regex
   (`^[ACDEFGHIKLMNPQRSTVWY]{10,100}$`), `audit.passed`,
   topology + chassis strings — else `{ fallback: true,
   reason }`. Returns a slim design subset (sequence,
   topology, charge, indices, chassis, proposer model).
-- Client: `src/game/knottin.ts` (shape guard + 55s timeout;
+- Client: `src/game/knottin.ts` (shape guard + 110s timeout;
   any failure resolves the cached C. diff demo design with
   `live: false` — the lab runs fully offline). Trial targets:
   `trialTargetFor` maps c-diff-colitis + travelers-diarrhea
   only; unknown conditions get no lab.
+- Live-verified 2026-11-01: fresh C. diff design in 51s
+  (novel sequence, ICK, charge 4, TI 94.75, SI 92.06).

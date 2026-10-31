@@ -79,7 +79,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
         ...(charge !== undefined ? { charge_target: charge } : {}),
         modality,
       }),
-      signal: AbortSignal.timeout(50000),
+      signal: AbortSignal.timeout(100000),
     });
     if (!res.ok) return json({ ...echo, reason: `peptide ${res.status}` });
     const data = (await res.json()) as Record<string, unknown>;
@@ -114,7 +114,9 @@ Deno.serve(async (req: Request): Promise<Response> => {
         proposer_model: provenance?.proposer_model ?? null,
       },
     });
-  } catch {
-    return json({ ...echo, reason: "error" });
+  } catch (e) {
+    const reason =
+      e instanceof DOMException && e.name === "TimeoutError" ? "timeout" : "error";
+    return json({ ...echo, reason });
   }
 });

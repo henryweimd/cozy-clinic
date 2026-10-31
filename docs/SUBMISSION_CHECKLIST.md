@@ -18,9 +18,9 @@
   Learn cards with prize quizzes, Shop economy, 10-move undo,
   4 reading tiers, streaks/combos, About repo link + date
 - [x] Trial path + Peptide Lab: consent → live/cached 4-stage
-  pipeline → result → back; `knottin-design` proxy in repo
-  (deploy pending — MCP token lacks `edge_functions_write`;
-  operator runs `supabase functions deploy knottin-design`)
+  pipeline → result → back; `knottin-design` proxy DEPLOYED
+  and live-verified (fresh design in 51s; secret promoted
+  Vault → function secret by agent)
 - [x] Runtime Muse path: `muse-reword` Edge Function (server-side
   key, engine veto); seed/extend functions in repo
 - [x] README current (419 tests, 36/612 fallback, lab + tooling
@@ -36,9 +36,8 @@
 - [ ] **Merge call**: run-40 decision is HOLD — playtest the
   branch preview, then merge (fast-forward, one command) or
   say the word and the agent merges.
-- [ ] **Proxy deploy**: `supabase functions deploy
-  knottin-design` (key already saved; lights up live lab
-  designs with zero code change).
+- [x] **Proxy deploy**: done by agent (CLI + secret
+  promotion + live verify) — no operator action needed.
 - [ ] **Medical review pen**: runs 20–32 content is DRAFT —
   all 28 conditions' history/exam/dx/treat + Learn summaries
   (24 MSD + 4 MedlinePlus gut) + trial grades. Nothing ships
