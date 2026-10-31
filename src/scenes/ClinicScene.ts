@@ -258,7 +258,7 @@ const GRADE_COLOR: Record<ChoiceGrade, number> = {
 };
 
 type ViewName = 'waiting' | 'visit' | 'telemed' | 'portal' | 'learn' | 'profile';
-type Speaker = 'MABEL' | 'JUNE' | 'MILO' | 'THEO' | 'PRIYA' | 'ELLIS' | 'YOU';
+type Speaker = 'MABEL' | 'JUNE' | 'MILO' | 'THEO' | 'PRIYA' | 'ELLIS' | 'NINA' | 'KAI' | 'ADA' | 'FELIX' | 'YOU';
 
 
 
@@ -266,7 +266,8 @@ function speakerFor(patientName: string): Speaker {
   const key = patientName.trim().toUpperCase();
   if (
     key === 'JUNE' || key === 'MILO' || key === 'MABEL' || key === 'THEO' ||
-    key === 'PRIYA' || key === 'ELLIS'
+    key === 'PRIYA' || key === 'ELLIS' || key === 'NINA' || key === 'KAI' ||
+    key === 'ADA' || key === 'FELIX'
   )
     return key;
   return 'MABEL';
@@ -612,7 +613,7 @@ export class ClinicScene extends Phaser.Scene {
     }
     // Learn-card headers: one cozy banner per condition
     // (offline-safe); keys `learn-<condition_id>`.
-    for (const id of ['asthma', 'viral-respiratory', 'dehydration', 'hypertension']) {
+    for (const id of ['asthma', 'viral-respiratory', 'dehydration', 'hypertension', 'strep-throat', 'ear-infection', 'eczema', 'pneumonia']) {
       this.load.image(`learn-${id}`, `assets/learn/learn-${id}.png`);
     }
     // No prop preloads: the plush P2 props clash with the photoreal
@@ -2153,7 +2154,9 @@ export class ClinicScene extends Phaser.Scene {
     const cond = row?.condition_id ?? fb?.condition_id;
     if (
       cond === 'asthma' || cond === 'viral-respiratory' ||
-      cond === 'dehydration' || cond === 'hypertension'
+      cond === 'dehydration' || cond === 'hypertension' ||
+      cond === 'strep-throat' || cond === 'ear-infection' ||
+      cond === 'eczema' || cond === 'pneumonia'
     ) {
       this.patientState = this.engine.initialState(cond);
     } else {

@@ -8,12 +8,20 @@
  * shapes already match that storage contract, so no redesign is needed.
  */
 
-/** The four launch conditions (brief Section 6). */
+/**
+ * Launch four (brief Section 6) + run-20 pack (strep-throat,
+ * ear-infection, eczema, pneumonia — DRAFT, pending operator
+ * medical review).
+ */
 export type ConditionId =
   | 'asthma'
   | 'viral-respiratory'
   | 'dehydration'
-  | 'hypertension';
+  | 'hypertension'
+  | 'strep-throat'
+  | 'ear-infection'
+  | 'eczema'
+  | 'pneumonia';
 
 /** Ordered stage within a condition. Lower index = healthier. */
 export type StageId = string;

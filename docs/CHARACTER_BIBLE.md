@@ -148,6 +148,10 @@ body plan, no new species without a bible amendment.
 | Theo (SHIPS) | Sleepy toddler, slow blinks | Cocoa-taupe `#8F7364` | Sleepier blink cadence (motion: 220ms/2–3.5s) | Butter-yellow knit cap (fixed; never touches face) |
 | Priya (SHIPS) | Eager teen team captain | Golden-taupe `#C2A878` | Faster eager bob (motion: 2.3 rad/s) | Coral sport headband (fixed; above face plate) |
 | Ellis (SHIPS) | Gentle elder retired sailor | Stone-taupe `#8E8A80` | Slow calm bob (1.4 rad/s) + slow lids (160ms close) | White sailor cap + navy collar (fixed outfit) |
+| Nina (SHIPS 2026-10-30) | Chapter-book devourer, strep-throat case | Dusty-rose taupe `#B08D8A` | Bright curious beads (motion default) | Cornflower-blue neckerchief, side-tied (fixed; below face plate) |
+| Kai (SHIPS 2026-10-30) | Junior drummer, ear-infection case | Sage-taupe `#9AA08C` | Eager bounce (motion: 2.2 rad/s) | Tangerine knit headband (fixed; above face plate) |
+| Ada (SHIPS 2026-10-30) | Garden sketch artist, eczema case | Lilac-grey taupe `#A79BAC` | Calm ease (motion: 1.6 rad/s) | Seafoam sun visor (fixed; above face plate) |
+| Felix (SHIPS 2026-10-30) | Night-shift baker, pneumonia case | Slate-taupe `#7E8A99` | Tired sway (motion: 1.5 rad/s); idle eyes heavy-lidded | White baker kerchief (fixed; cap-restore recipe) |
 | Dr. Nora (reserved) | Reassuring AI colleague doctor | Rose-taupe `#A2766B` | Reassuring half-smile | White coat + sage scrubs (outfit, same silhouette) |
 
 ## Population mixing system (normative 2026-10-30)

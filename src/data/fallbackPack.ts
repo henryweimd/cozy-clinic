@@ -1,6 +1,7 @@
 /**
  * FALLBACK PACK — offline snapshot of the H2 Supabase seed
- * (exported 2026-10-29; 12 patients, 204 nodes).
+ * (exported 2026-10-29; 12 patients, 204 nodes; run-20 adds
+ * Nina/Kai/Ada/Felix + 68 nodes, 64 edges → 16 patients, 272 nodes).
  * The game reads Supabase first and falls back to this pack with
  * zero network, so the demo path completes fully offline.
  * Regenerate: H2 seed driver + exporter (see PROGRESS.md H2).
@@ -260,6 +261,58 @@ export const FALLBACK_PATIENTS: FallbackPatient[] = [
     "fur_shade": "#8E8A80",
     "facial_features": "slow heavy lids, calm smile",
     "accessories_clothing": "white sailor cap, navy collar",
+    "start_stage": 2
+  },
+  {
+    "id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "name": "Nina",
+    "condition_id": "strep-throat",
+    "age_band": "child",
+    "age_years": 7,
+    "sex": "F",
+    "persona": "chapter-book devourer",
+    "fur_shade": "#B08D8A",
+    "facial_features": "bright curious bead eyes, small thoughtful smile",
+    "accessories_clothing": "cornflower-blue neckerchief",
+    "start_stage": 2
+  },
+  {
+    "id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "name": "Kai",
+    "condition_id": "ear-infection",
+    "age_band": "child",
+    "age_years": 6,
+    "sex": "M",
+    "persona": "junior drummer",
+    "fur_shade": "#9AA08C",
+    "facial_features": "wide eager bead eyes, wide cheerful smile",
+    "accessories_clothing": "tangerine knit headband",
+    "start_stage": 2
+  },
+  {
+    "id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "name": "Ada",
+    "condition_id": "eczema",
+    "age_band": "teen",
+    "age_years": 14,
+    "sex": "F",
+    "persona": "garden sketch artist",
+    "fur_shade": "#A79BAC",
+    "facial_features": "calm gentle bead eyes, soft smile",
+    "accessories_clothing": "seafoam sun visor",
+    "start_stage": 2
+  },
+  {
+    "id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "name": "Felix",
+    "condition_id": "pneumonia",
+    "age_band": "adult",
+    "age_years": 34,
+    "sex": "M",
+    "persona": "night-shift baker",
+    "fur_shade": "#7E8A99",
+    "facial_features": "tired kind bead eyes, warm crooked smile",
+    "accessories_clothing": "white baker kerchief",
     "start_stage": 2
   }
 ];
@@ -3528,6 +3581,1094 @@ export const FALLBACK_NODES: FallbackNode[] = [
     "teaching": "Taking more than prescribed can make pressure drop too low and cause falls.",
     "animation_cue": "worried",
     "memory": "First visit: running high. Tried \"Skip meds — feeling fine!\" → very high. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "a499bff2-433b-48c6-b013-279928d97d51",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Nina sits with her book closed. Swallowing hurts and her throat looks very red. The cozy clinic feels calm around her.",
+    "teaching": "Sore throats without a cough get a closer look — strep hides there.",
+    "animation_cue": "idle",
+    "memory": "First visit: strep-sore."
+  },
+  {
+    "id": "b485ed54-15a8-43c3-9523-4c881995b22b",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Nina finishes every dose of the throat medicine. Her throat feels a little scratchy. She looks perky and rests softly in the cozy room.",
+    "teaching": "Finishing every antibiotic dose clears the strep germ for good.",
+    "animation_cue": "recovery",
+    "memory": "First visit: strep-sore. Tried \"Finish all the throat medicine\" → scratchy."
+  },
+  {
+    "id": "56aa12ea-ec52-4312-bb4a-f89f9f39d549",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Nina rests with warm drinks. Her throat is very sore and swallowing hurts. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Warm drinks soothe pain while medicine fights the germ.",
+    "animation_cue": "worried",
+    "memory": "First visit: strep-sore. Tried \"Rest with warm drinks\" → strep-sore."
+  },
+  {
+    "id": "33e7242c-35ec-4fbe-9af8-d92bdff10b58",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Nina stops the medicine early. Her throat burns and she feels feverish. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Leftover germs bounce back when doses stop early.",
+    "animation_cue": "sick",
+    "memory": "First visit: strep-sore. Tried \"Stop medicine once feeling better\" → miserable."
+  },
+  {
+    "id": "ac8cf751-881f-44e5-b4b7-92aa6dd8dbab",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Nina starts to gargle the burning hot sauce, but a helper gently stops her. Her throat is very sore and swallowing hurts. She does not get worse.",
+    "teaching": "Scalding drinks burn sore throats instead of healing them.",
+    "animation_cue": "worried",
+    "memory": "First visit: strep-sore. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "0a88baeb-e51b-492c-9eda-c84f8d41c64a",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Nina keeps finishing every dose of throat medicine. Her throat feels comfy and swallowing is easy. She looks perky and cozy.",
+    "teaching": "Finishing every antibiotic dose clears the strep germ for good.",
+    "animation_cue": "happy",
+    "memory": "First visit: strep-sore. Tried \"Finish all the throat medicine\" → scratchy. Tried \"Finish all the throat medicine\" → comfy."
+  },
+  {
+    "id": "4c394f29-70fb-4a01-b6f0-dd0f336f9eef",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Nina keeps resting with warm drinks. Her throat feels a little scratchy. She looks comfortable and cozy.",
+    "teaching": "Warm drinks soothe pain while medicine fights the germ.",
+    "animation_cue": "worried",
+    "memory": "First visit: strep-sore. Tried \"Finish all the throat medicine\" → scratchy. Tried \"Rest with warm drinks\" → scratchy."
+  },
+  {
+    "id": "ab4f2b6d-5d15-4fb9-8772-62c74e3f5ca9",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Nina keeps skipping the rest of the medicine. Her throat is very sore and swallowing hurts. She looks droopy and cozy.",
+    "teaching": "Leftover germs bounce back when doses stop early.",
+    "animation_cue": "sick",
+    "memory": "First visit: strep-sore. Tried \"Finish all the throat medicine\" → scratchy. Tried \"Stop medicine once feeling better\" → strep-sore."
+  },
+  {
+    "id": "2ecfba54-7a25-4e3f-b576-01d93907e147",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Nina starts to gargle the burning hot sauce, but a helper gently stops her. Her throat feels a little scratchy. She does not get worse.",
+    "teaching": "Scalding drinks burn sore throats instead of healing them.",
+    "animation_cue": "worried",
+    "memory": "First visit: strep-sore. Tried \"Finish all the throat medicine\" → scratchy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "04204f25-9a94-4f35-aea4-be744b5489b4",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Nina keeps finishing every dose of throat medicine. Her throat feels a little scratchy. She looks perky and cozy.",
+    "teaching": "Finishing every antibiotic dose clears the strep germ for good.",
+    "animation_cue": "recovery",
+    "memory": "First visit: strep-sore. Tried \"Rest with warm drinks\" → strep-sore. Tried \"Finish all the throat medicine\" → scratchy."
+  },
+  {
+    "id": "4109b7fa-5c39-4508-9ac9-c533a1c338fd",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Nina keeps resting with warm drinks. Her throat is very sore and swallowing hurts. She looks droopy and cozy.",
+    "teaching": "Warm drinks soothe pain while medicine fights the germ.",
+    "animation_cue": "worried",
+    "memory": "First visit: strep-sore. Tried \"Rest with warm drinks\" → strep-sore. Tried \"Rest with warm drinks\" → strep-sore."
+  },
+  {
+    "id": "9a08487b-761c-4986-91cd-16385202eabd",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Nina keeps skipping the rest of the medicine. Her throat burns and she feels feverish. She looks droopy and cozy.",
+    "teaching": "Leftover germs bounce back when doses stop early.",
+    "animation_cue": "sick",
+    "memory": "First visit: strep-sore. Tried \"Rest with warm drinks\" → strep-sore. Tried \"Stop medicine once feeling better\" → miserable."
+  },
+  {
+    "id": "df7438fa-ddb5-496d-a6d2-5ae9dddd28c5",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Nina starts to gargle the burning hot sauce, but a helper gently stops her. Her throat is very sore and swallowing hurts. She does not get worse.",
+    "teaching": "Scalding drinks burn sore throats instead of healing them.",
+    "animation_cue": "worried",
+    "memory": "First visit: strep-sore. Tried \"Rest with warm drinks\" → strep-sore. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "615f642c-8208-46b6-8c6b-bf11bd301a86",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Nina keeps finishing every dose of throat medicine. Her throat is very sore and swallowing hurts. She looks perky and cozy.",
+    "teaching": "Finishing every antibiotic dose clears the strep germ for good.",
+    "animation_cue": "recovery",
+    "memory": "First visit: strep-sore. Tried \"Stop medicine once feeling better\" → miserable. Tried \"Finish all the throat medicine\" → strep-sore."
+  },
+  {
+    "id": "f5d76a5f-4138-4454-a2e1-fc5565a99554",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Nina keeps resting with warm drinks. Her throat burns and she feels feverish. She looks droopy and cozy.",
+    "teaching": "Warm drinks soothe pain while medicine fights the germ.",
+    "animation_cue": "worried",
+    "memory": "First visit: strep-sore. Tried \"Stop medicine once feeling better\" → miserable. Tried \"Rest with warm drinks\" → miserable."
+  },
+  {
+    "id": "9458d4d7-467f-4396-9ff1-47013d2feeaf",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Nina keeps skipping the rest of the medicine. Her throat burns and she feels feverish. She looks droopy and cozy.",
+    "teaching": "Leftover germs bounce back when doses stop early.",
+    "animation_cue": "worried",
+    "memory": "First visit: strep-sore. Tried \"Stop medicine once feeling better\" → miserable. Tried \"Stop medicine once feeling better\" → miserable."
+  },
+  {
+    "id": "433c0b9a-7e28-4ec4-bcde-368085f0e847",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Nina starts to gargle the burning hot sauce, but a helper gently stops her. Her throat burns and she feels feverish. She does not get worse.",
+    "teaching": "Scalding drinks burn sore throats instead of healing them.",
+    "animation_cue": "worried",
+    "memory": "First visit: strep-sore. Tried \"Stop medicine once feeling better\" → miserable. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "994c2111-9945-47f4-866a-8b01fce75628",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Kai holds his toy drum but will not play it. One ear throbs and everything sounds fuzzy. The cozy clinic feels calm around him.",
+    "teaching": "Ear tugging plus fever means the scope comes out.",
+    "animation_cue": "idle",
+    "memory": "First visit: throbby."
+  },
+  {
+    "id": "a3f9b322-93b3-4ca6-94ec-49cb6186f730",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Kai takes every dose of the ear medicine. One ear aches a little. He looks perky and rests softly in the cozy room.",
+    "teaching": "Every finished dose drives the ear germ out.",
+    "animation_cue": "recovery",
+    "memory": "First visit: throbby. Tried \"Give the ear medicine as directed\" → achy."
+  },
+  {
+    "id": "52148058-ddb9-49ea-bad2-5554a0dac313",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Kai rests with a warm cloth on the sore ear. His ear throbs and feels full of cotton. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Gentle warmth eases ear pain between doses.",
+    "animation_cue": "worried",
+    "memory": "First visit: throbby. Tried \"Warm cloth + quiet rest\" → throbby."
+  },
+  {
+    "id": "371b9bc3-6886-4743-adb3-9e54e2a48b76",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Kai pokes the sore ear with a swab. His ear pounds and he feels feverish. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Swabs push wax and germs deeper — scopes look, swabs never poke.",
+    "animation_cue": "sick",
+    "memory": "First visit: throbby. Tried \"Poke inside with a cotton swab\" → miserable."
+  },
+  {
+    "id": "eb62fb5d-2538-43ae-b647-a44ec0b8fcce",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Kai starts to shout into the sore ear, but a helper gently stops him. His ear throbs and feels full of cotton. He does not get worse.",
+    "teaching": "Loud blasts hurt sore ears instead of clearing them.",
+    "animation_cue": "worried",
+    "memory": "First visit: throbby. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "f223aadc-3481-428c-8b95-91829dacaaab",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Kai keeps taking every dose of ear medicine. His ears feel clear and every giggle comes through. He looks perky and cozy.",
+    "teaching": "Every finished dose drives the ear germ out.",
+    "animation_cue": "happy",
+    "memory": "First visit: throbby. Tried \"Give the ear medicine as directed\" → achy. Tried \"Give the ear medicine as directed\" → clear."
+  },
+  {
+    "id": "788bec82-17a5-4079-a9e0-29d16e5664dd",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Kai keeps resting with the warm cloth. One ear aches a little. He looks comfortable and cozy.",
+    "teaching": "Gentle warmth eases ear pain between doses.",
+    "animation_cue": "worried",
+    "memory": "First visit: throbby. Tried \"Give the ear medicine as directed\" → achy. Tried \"Warm cloth + quiet rest\" → achy."
+  },
+  {
+    "id": "be56e1af-fc3e-4f10-9840-bfbd9022866b",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Kai keeps poking the sore ear. His ear throbs and feels full of cotton. He looks droopy and cozy.",
+    "teaching": "Swabs push wax and germs deeper — scopes look, swabs never poke.",
+    "animation_cue": "sick",
+    "memory": "First visit: throbby. Tried \"Give the ear medicine as directed\" → achy. Tried \"Poke inside with a cotton swab\" → throbby."
+  },
+  {
+    "id": "9e25628a-75e3-4609-9e4a-3faeef7ff02b",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Kai starts to shout into the sore ear, but a helper gently stops him. One ear aches a little. He does not get worse.",
+    "teaching": "Loud blasts hurt sore ears instead of clearing them.",
+    "animation_cue": "worried",
+    "memory": "First visit: throbby. Tried \"Give the ear medicine as directed\" → achy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "5103b307-4d70-453a-b111-3fd01a9fa64d",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Kai keeps taking every dose of ear medicine. One ear aches a little. He looks perky and cozy.",
+    "teaching": "Every finished dose drives the ear germ out.",
+    "animation_cue": "recovery",
+    "memory": "First visit: throbby. Tried \"Warm cloth + quiet rest\" → throbby. Tried \"Give the ear medicine as directed\" → achy."
+  },
+  {
+    "id": "7f48768a-88aa-473b-8223-98a7d2546731",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Kai keeps resting with the warm cloth. His ear throbs and feels full of cotton. He looks droopy and cozy.",
+    "teaching": "Gentle warmth eases ear pain between doses.",
+    "animation_cue": "worried",
+    "memory": "First visit: throbby. Tried \"Warm cloth + quiet rest\" → throbby. Tried \"Warm cloth + quiet rest\" → throbby."
+  },
+  {
+    "id": "de5e08b3-6c61-430e-955c-a423b81ba04c",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Kai keeps poking the sore ear. His ear pounds and he feels feverish. He looks droopy and cozy.",
+    "teaching": "Swabs push wax and germs deeper — scopes look, swabs never poke.",
+    "animation_cue": "sick",
+    "memory": "First visit: throbby. Tried \"Warm cloth + quiet rest\" → throbby. Tried \"Poke inside with a cotton swab\" → miserable."
+  },
+  {
+    "id": "d1092396-0d39-4045-bafe-061bad58bc79",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Kai starts to shout into the sore ear, but a helper gently stops him. His ear throbs and feels full of cotton. He does not get worse.",
+    "teaching": "Loud blasts hurt sore ears instead of clearing them.",
+    "animation_cue": "worried",
+    "memory": "First visit: throbby. Tried \"Warm cloth + quiet rest\" → throbby. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "a2df70b0-dc1c-4f37-b9d5-358834c309b0",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Kai keeps taking every dose of ear medicine. His ear throbs and feels full of cotton. He looks perky and cozy.",
+    "teaching": "Every finished dose drives the ear germ out.",
+    "animation_cue": "recovery",
+    "memory": "First visit: throbby. Tried \"Poke inside with a cotton swab\" → miserable. Tried \"Give the ear medicine as directed\" → throbby."
+  },
+  {
+    "id": "24030b60-7389-4f42-be00-5e970f6fbb0b",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Kai keeps resting with the warm cloth. His ear pounds and he feels feverish. He looks droopy and cozy.",
+    "teaching": "Gentle warmth eases ear pain between doses.",
+    "animation_cue": "worried",
+    "memory": "First visit: throbby. Tried \"Poke inside with a cotton swab\" → miserable. Tried \"Warm cloth + quiet rest\" → miserable."
+  },
+  {
+    "id": "502f44de-ca6f-4fed-8602-c9c8ee80414e",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Kai keeps poking the sore ear. His ear pounds and he feels feverish. He looks droopy and cozy.",
+    "teaching": "Swabs push wax and germs deeper — scopes look, swabs never poke.",
+    "animation_cue": "worried",
+    "memory": "First visit: throbby. Tried \"Poke inside with a cotton swab\" → miserable. Tried \"Poke inside with a cotton swab\" → miserable."
+  },
+  {
+    "id": "f5a23b75-a38e-4ee0-8ca9-e0c157c860a6",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Kai starts to shout into the sore ear, but a helper gently stops him. His ear pounds and he feels feverish. He does not get worse.",
+    "teaching": "Loud blasts hurt sore ears instead of clearing them.",
+    "animation_cue": "worried",
+    "memory": "First visit: throbby. Tried \"Poke inside with a cotton swab\" → miserable. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "aa39343c-2cc3-4d80-bc80-b1773146f557",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ada sets down her sketchbook. Red itchy patches flare in her elbow bends. The cozy clinic feels calm around her.",
+    "teaching": "Itchy crease patches that come and go spell eczema.",
+    "animation_cue": "idle",
+    "memory": "First visit: flare-up."
+  },
+  {
+    "id": "3000aadf-838d-4b37-affc-ba74af69b130",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 7,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Ada smooths on the gentle moisturizer. Her skin feels dry and a little tickly. She looks perky and rests softly in the cozy room.",
+    "teaching": "Daily cream rebuilds the skin wall that keeps itch out.",
+    "animation_cue": "recovery",
+    "memory": "First visit: flare-up. Tried \"Daily gentle moisturizer\" → tickly."
+  },
+  {
+    "id": "67abd77f-5c10-4a5e-b94f-61148c94af53",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ada keeps her nails short and cool. Red itchy patches are flaring in her bends. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Short nails turn scratching from harm into a tickle.",
+    "animation_cue": "worried",
+    "memory": "First visit: flare-up. Tried \"Keep nails short + cool\" → flare-up."
+  },
+  {
+    "id": "3b8ab05d-0a82-46ec-85ab-5573b8100fe5",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ada scratches the itchy spots hard. Her skin is very sore and scratchy. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Scratching breaks skin and lets germs march in.",
+    "animation_cue": "sick",
+    "memory": "First visit: flare-up. Tried \"Scratch the itchy spots\" → very sore."
+  },
+  {
+    "id": "73d63a9a-2719-4031-af9b-f2c44763ac0b",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ada starts to scrub the patches with the rough brush, but a helper gently stops her. Red itchy patches are flaring in her bends. She does not get worse.",
+    "teaching": "Rough scrubbing tears sore skin instead of calming it.",
+    "animation_cue": "worried",
+    "memory": "First visit: flare-up. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "bf269132-e782-4be1-ac68-9b9a869edf4d",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 8,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Ada keeps smoothing on moisturizer every day. Her skin feels smooth and calm. She looks perky and cozy.",
+    "teaching": "Daily cream rebuilds the skin wall that keeps itch out.",
+    "animation_cue": "happy",
+    "memory": "First visit: flare-up. Tried \"Daily gentle moisturizer\" → tickly. Tried \"Daily gentle moisturizer\" → smooth."
+  },
+  {
+    "id": "dbabfa19-f735-4d81-b622-32de7af31966",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 7,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Ada keeps tending her short nails. Her skin feels dry and a little tickly. She looks comfortable and cozy.",
+    "teaching": "Short nails turn scratching from harm into a tickle.",
+    "animation_cue": "worried",
+    "memory": "First visit: flare-up. Tried \"Daily gentle moisturizer\" → tickly. Tried \"Keep nails short + cool\" → tickly."
+  },
+  {
+    "id": "9f5340fe-5129-46b4-b115-e9e425d747bd",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 7,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ada keeps scratching the itchy spots. Red itchy patches are flaring in her bends. She looks droopy and cozy.",
+    "teaching": "Scratching breaks skin and lets germs march in.",
+    "animation_cue": "sick",
+    "memory": "First visit: flare-up. Tried \"Daily gentle moisturizer\" → tickly. Tried \"Scratch the itchy spots\" → flare-up."
+  },
+  {
+    "id": "1a115c62-6c82-4d6c-9085-53aa5d4213a7",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 7,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Ada starts to scrub the patches with the rough brush, but a helper gently stops her. Her skin feels dry and a little tickly. She does not get worse.",
+    "teaching": "Rough scrubbing tears sore skin instead of calming it.",
+    "animation_cue": "worried",
+    "memory": "First visit: flare-up. Tried \"Daily gentle moisturizer\" → tickly. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "17bafe3d-6a52-4a11-878b-3c9777400b52",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 7,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Ada keeps smoothing on moisturizer every day. Her skin feels dry and a little tickly. She looks perky and cozy.",
+    "teaching": "Daily cream rebuilds the skin wall that keeps itch out.",
+    "animation_cue": "recovery",
+    "memory": "First visit: flare-up. Tried \"Keep nails short + cool\" → flare-up. Tried \"Daily gentle moisturizer\" → tickly."
+  },
+  {
+    "id": "002b9ab0-e612-44b8-a48f-27cf5b453aff",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ada keeps tending her short nails. Red itchy patches are flaring in her bends. She looks droopy and cozy.",
+    "teaching": "Short nails turn scratching from harm into a tickle.",
+    "animation_cue": "worried",
+    "memory": "First visit: flare-up. Tried \"Keep nails short + cool\" → flare-up. Tried \"Keep nails short + cool\" → flare-up."
+  },
+  {
+    "id": "93b92e9f-b9d3-4153-9aa5-e09556c1865f",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ada keeps scratching the itchy spots. Her skin is very sore and scratchy. She looks droopy and cozy.",
+    "teaching": "Scratching breaks skin and lets germs march in.",
+    "animation_cue": "sick",
+    "memory": "First visit: flare-up. Tried \"Keep nails short + cool\" → flare-up. Tried \"Scratch the itchy spots\" → very sore."
+  },
+  {
+    "id": "d87d1f3f-2c1a-4588-8c2c-3165a80858d7",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ada starts to scrub the patches with the rough brush, but a helper gently stops her. Red itchy patches are flaring in her bends. She does not get worse.",
+    "teaching": "Rough scrubbing tears sore skin instead of calming it.",
+    "animation_cue": "worried",
+    "memory": "First visit: flare-up. Tried \"Keep nails short + cool\" → flare-up. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "dd71e30e-67ce-412b-bf5b-9d3f2b3f1461",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 7,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Ada keeps smoothing on moisturizer every day. Red itchy patches are flaring in her bends. She looks perky and cozy.",
+    "teaching": "Daily cream rebuilds the skin wall that keeps itch out.",
+    "animation_cue": "recovery",
+    "memory": "First visit: flare-up. Tried \"Scratch the itchy spots\" → very sore. Tried \"Daily gentle moisturizer\" → flare-up."
+  },
+  {
+    "id": "24640e6b-ad3f-44ec-818e-276dab05aaac",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ada keeps tending her short nails. Her skin is very sore and scratchy. She looks droopy and cozy.",
+    "teaching": "Short nails turn scratching from harm into a tickle.",
+    "animation_cue": "worried",
+    "memory": "First visit: flare-up. Tried \"Scratch the itchy spots\" → very sore. Tried \"Keep nails short + cool\" → very sore."
+  },
+  {
+    "id": "bb206606-0b8f-4b7b-809d-baa4caf1fcc5",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ada keeps scratching the itchy spots. Her skin is very sore and scratchy. She looks droopy and cozy.",
+    "teaching": "Scratching breaks skin and lets germs march in.",
+    "animation_cue": "worried",
+    "memory": "First visit: flare-up. Tried \"Scratch the itchy spots\" → very sore. Tried \"Scratch the itchy spots\" → very sore."
+  },
+  {
+    "id": "1b513994-a8d3-4571-986c-c968d288bff9",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ada starts to scrub the patches with the rough brush, but a helper gently stops her. Her skin is very sore and scratchy. She does not get worse.",
+    "teaching": "Rough scrubbing tears sore skin instead of calming it.",
+    "animation_cue": "worried",
+    "memory": "First visit: flare-up. Tried \"Scratch the itchy spots\" → very sore. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "7c29b7e4-c297-4169-b0b8-6492f2ba648d",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Felix leans on the exam bench, flour on his sleeve. A deep cough shakes him and his breathing runs fast. The cozy clinic feels calm around him.",
+    "teaching": "Fever plus a deep chesty cough means the lungs get listened to first.",
+    "animation_cue": "idle",
+    "memory": "First visit: feverish."
+  },
+  {
+    "id": "705ad02b-abac-44d3-ab2b-0399c37ea4ac",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 7
+    },
+    "mood": "perky",
+    "narrative": "Felix starts the lung medicine right away. A deep cough rattles now and then. He looks perky and rests softly in the cozy room.",
+    "teaching": "Early antibiotics stop lung infections before they spread.",
+    "animation_cue": "recovery",
+    "memory": "First visit: feverish. Tried \"Start the lung medicine fast\" → coughy."
+  },
+  {
+    "id": "b4658e30-6d6b-4003-abef-29f2308bfffa",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Felix rests with warm fluids. Fever grips him and the deep cough keeps coming. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Rest and fluids support healing while medicine works.",
+    "animation_cue": "worried",
+    "memory": "First visit: feverish. Tried \"Rest with warm fluids\" → feverish."
+  },
+  {
+    "id": "06b8b04f-8770-449a-9e82-efa80208b32e",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Felix hides the cough and waits alone. He breathes fast and hard, and it costs him. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Hidden lung infections only dig in deeper.",
+    "animation_cue": "sick",
+    "memory": "First visit: feverish. Tried \"Hide it and wait alone\" → breathless."
+  },
+  {
+    "id": "c5d2fc89-043b-4e97-974f-bb7172571bca",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Felix starts to sprint the race to clear his lungs, but a helper gently stops him. Fever grips him and the deep cough keeps coming. He does not get worse.",
+    "teaching": "Sprinting on sick lungs steals air instead of clearing it.",
+    "animation_cue": "worried",
+    "memory": "First visit: feverish. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "bc4cbed6-8027-43df-a7c9-e49010a6b8b7",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 8,
+      "breathing": 8
+    },
+    "mood": "perky",
+    "narrative": "Felix keeps taking the lung medicine on schedule. His breathing feels clear and easy. He looks perky and cozy.",
+    "teaching": "Early antibiotics stop lung infections before they spread.",
+    "animation_cue": "happy",
+    "memory": "First visit: feverish. Tried \"Start the lung medicine fast\" → coughy. Tried \"Start the lung medicine fast\" → clear."
+  },
+  {
+    "id": "0db3a3e2-5efa-488c-9b67-fdc246d51234",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 9,
+      "comfort": 9,
+      "breathing": 7
+    },
+    "mood": "perky",
+    "narrative": "Felix keeps resting with warm fluids. His breathing feels clear and easy. He looks perky and cozy.",
+    "teaching": "Rest and fluids support healing while medicine works.",
+    "animation_cue": "happy",
+    "memory": "First visit: feverish. Tried \"Start the lung medicine fast\" → coughy. Tried \"Rest with warm fluids\" → clear."
+  },
+  {
+    "id": "89060b3d-b3f5-4fff-9906-b237e75bb151",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 6,
+      "breathing": 7
+    },
+    "mood": "droopy",
+    "narrative": "Felix keeps hiding the cough and waiting. Fever grips him and the deep cough keeps coming. He looks droopy and cozy.",
+    "teaching": "Hidden lung infections only dig in deeper.",
+    "animation_cue": "sick",
+    "memory": "First visit: feverish. Tried \"Start the lung medicine fast\" → coughy. Tried \"Hide it and wait alone\" → feverish."
+  },
+  {
+    "id": "5a4a8f50-6870-4c8d-b750-fa72c0c0e1c4",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 7
+    },
+    "mood": "perky",
+    "narrative": "Felix starts to sprint the race to clear his lungs, but a helper gently stops him. A deep cough rattles now and then. He does not get worse.",
+    "teaching": "Sprinting on sick lungs steals air instead of clearing it.",
+    "animation_cue": "worried",
+    "memory": "First visit: feverish. Tried \"Start the lung medicine fast\" → coughy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "c8a9bad4-a289-46a1-b083-e79d76e5430d",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 7
+    },
+    "mood": "perky",
+    "narrative": "Felix keeps taking the lung medicine on schedule. A deep cough rattles now and then. He looks perky and cozy.",
+    "teaching": "Early antibiotics stop lung infections before they spread.",
+    "animation_cue": "recovery",
+    "memory": "First visit: feverish. Tried \"Rest with warm fluids\" → feverish. Tried \"Start the lung medicine fast\" → coughy."
+  },
+  {
+    "id": "7eaf029a-057a-4d5b-8213-08c8d563e322",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Felix keeps resting with warm fluids. Fever grips him and the deep cough keeps coming. He looks droopy and cozy.",
+    "teaching": "Rest and fluids support healing while medicine works.",
+    "animation_cue": "worried",
+    "memory": "First visit: feverish. Tried \"Rest with warm fluids\" → feverish. Tried \"Rest with warm fluids\" → feverish."
+  },
+  {
+    "id": "aa20ff3b-71c6-4860-9227-bc1e7acc045b",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Felix keeps hiding the cough and waiting. He breathes fast and hard, and it costs him. He looks droopy and cozy.",
+    "teaching": "Hidden lung infections only dig in deeper.",
+    "animation_cue": "sick",
+    "memory": "First visit: feverish. Tried \"Rest with warm fluids\" → feverish. Tried \"Hide it and wait alone\" → breathless."
+  },
+  {
+    "id": "bfce545f-114e-422d-b485-8e299bc34a47",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Felix starts to sprint the race to clear his lungs, but a helper gently stops him. Fever grips him and the deep cough keeps coming. He does not get worse.",
+    "teaching": "Sprinting on sick lungs steals air instead of clearing it.",
+    "animation_cue": "worried",
+    "memory": "First visit: feverish. Tried \"Rest with warm fluids\" → feverish. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "67f00b3e-734e-40b2-8fd4-229118200f22",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 6,
+      "breathing": 7
+    },
+    "mood": "perky",
+    "narrative": "Felix keeps taking the lung medicine on schedule. Fever grips him and the deep cough keeps coming. He looks perky and cozy.",
+    "teaching": "Early antibiotics stop lung infections before they spread.",
+    "animation_cue": "recovery",
+    "memory": "First visit: feverish. Tried \"Hide it and wait alone\" → breathless. Tried \"Start the lung medicine fast\" → feverish."
+  },
+  {
+    "id": "2387ef0d-d334-463f-884b-6f969fe9c64d",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Felix keeps resting with warm fluids. He breathes fast and hard, and it costs him. He looks droopy and cozy.",
+    "teaching": "Rest and fluids support healing while medicine works.",
+    "animation_cue": "worried",
+    "memory": "First visit: feverish. Tried \"Hide it and wait alone\" → breathless. Tried \"Rest with warm fluids\" → breathless."
+  },
+  {
+    "id": "31d1ec1d-0d5a-4940-9c19-282e34434f63",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Felix keeps hiding the cough and waiting. He breathes fast and hard, and it costs him. He looks droopy and cozy.",
+    "teaching": "Hidden lung infections only dig in deeper.",
+    "animation_cue": "worried",
+    "memory": "First visit: feverish. Tried \"Hide it and wait alone\" → breathless. Tried \"Hide it and wait alone\" → breathless."
+  },
+  {
+    "id": "c44fd32d-2e81-4eb4-bd2c-a268e0a637c6",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Felix starts to sprint the race to clear his lungs, but a helper gently stops him. He breathes fast and hard, and it costs him. He does not get worse.",
+    "teaching": "Sprinting on sick lungs steals air instead of clearing it.",
+    "animation_cue": "worried",
+    "memory": "First visit: feverish. Tried \"Hide it and wait alone\" → breathless. A risky idea came up; we steered clear."
   }
 ];
 
@@ -5259,6 +6400,582 @@ export const FALLBACK_EDGES: FallbackEdge[] = [
     "kind": "decision",
     "choice_label": "Double the dose to fix it faster",
     "grade": "DANGEROUS"
+  },
+  {
+    "id": "429b8162-cbc1-4ca1-ba78-befa9798d504",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "from_node_id": "a499bff2-433b-48c6-b013-279928d97d51",
+    "to_node_id": "b485ed54-15a8-43c3-9523-4c881995b22b",
+    "kind": "decision",
+    "choice_label": "Finish all the throat medicine",
+    "grade": "BEST"
+  },
+  {
+    "id": "a8187e58-2ce1-4082-981b-696d7ee0b18f",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "from_node_id": "a499bff2-433b-48c6-b013-279928d97d51",
+    "to_node_id": "56aa12ea-ec52-4312-bb4a-f89f9f39d549",
+    "kind": "decision",
+    "choice_label": "Rest with warm drinks",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "b271074b-8f94-411b-960c-2a3b41ecbc5f",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "from_node_id": "a499bff2-433b-48c6-b013-279928d97d51",
+    "to_node_id": "33e7242c-35ec-4fbe-9af8-d92bdff10b58",
+    "kind": "decision",
+    "choice_label": "Stop medicine once feeling better",
+    "grade": "WRONG"
+  },
+  {
+    "id": "70c968fa-423f-40fb-9c93-7d12f23884d2",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "from_node_id": "a499bff2-433b-48c6-b013-279928d97d51",
+    "to_node_id": "ac8cf751-881f-44e5-b4b7-92aa6dd8dbab",
+    "kind": "decision",
+    "choice_label": "Gargle burning hot sauce",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "bf886a74-14d4-4670-8bfd-7176f540b420",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "from_node_id": "b485ed54-15a8-43c3-9523-4c881995b22b",
+    "to_node_id": "0a88baeb-e51b-492c-9eda-c84f8d41c64a",
+    "kind": "decision",
+    "choice_label": "Finish all the throat medicine",
+    "grade": "BEST"
+  },
+  {
+    "id": "8431c91d-f2ad-49c6-971a-92048170c17a",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "from_node_id": "b485ed54-15a8-43c3-9523-4c881995b22b",
+    "to_node_id": "4c394f29-70fb-4a01-b6f0-dd0f336f9eef",
+    "kind": "decision",
+    "choice_label": "Rest with warm drinks",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "eff8edb6-0ae2-412a-92df-ee7c202c507e",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "from_node_id": "b485ed54-15a8-43c3-9523-4c881995b22b",
+    "to_node_id": "ab4f2b6d-5d15-4fb9-8772-62c74e3f5ca9",
+    "kind": "decision",
+    "choice_label": "Stop medicine once feeling better",
+    "grade": "WRONG"
+  },
+  {
+    "id": "cafd0b7e-e13b-437b-8f59-0d0480aad550",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "from_node_id": "b485ed54-15a8-43c3-9523-4c881995b22b",
+    "to_node_id": "2ecfba54-7a25-4e3f-b576-01d93907e147",
+    "kind": "decision",
+    "choice_label": "Gargle burning hot sauce",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "55aa52d9-b883-41bd-915a-c334e2fb40ba",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "from_node_id": "56aa12ea-ec52-4312-bb4a-f89f9f39d549",
+    "to_node_id": "04204f25-9a94-4f35-aea4-be744b5489b4",
+    "kind": "decision",
+    "choice_label": "Finish all the throat medicine",
+    "grade": "BEST"
+  },
+  {
+    "id": "beab17f4-07b2-47d7-8379-c3afd196af78",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "from_node_id": "56aa12ea-ec52-4312-bb4a-f89f9f39d549",
+    "to_node_id": "4109b7fa-5c39-4508-9ac9-c533a1c338fd",
+    "kind": "decision",
+    "choice_label": "Rest with warm drinks",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "6dd37527-73e6-4844-82f9-e6df240a0849",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "from_node_id": "56aa12ea-ec52-4312-bb4a-f89f9f39d549",
+    "to_node_id": "9a08487b-761c-4986-91cd-16385202eabd",
+    "kind": "decision",
+    "choice_label": "Stop medicine once feeling better",
+    "grade": "WRONG"
+  },
+  {
+    "id": "c09d42c5-7ad7-4e94-8c42-887dea7d85ac",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "from_node_id": "56aa12ea-ec52-4312-bb4a-f89f9f39d549",
+    "to_node_id": "df7438fa-ddb5-496d-a6d2-5ae9dddd28c5",
+    "kind": "decision",
+    "choice_label": "Gargle burning hot sauce",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "3cdc602e-d6d9-449f-84f7-4431eefe1c8b",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "from_node_id": "33e7242c-35ec-4fbe-9af8-d92bdff10b58",
+    "to_node_id": "615f642c-8208-46b6-8c6b-bf11bd301a86",
+    "kind": "decision",
+    "choice_label": "Finish all the throat medicine",
+    "grade": "BEST"
+  },
+  {
+    "id": "29175697-9231-4381-a271-49abcb3e0ba7",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "from_node_id": "33e7242c-35ec-4fbe-9af8-d92bdff10b58",
+    "to_node_id": "f5d76a5f-4138-4454-a2e1-fc5565a99554",
+    "kind": "decision",
+    "choice_label": "Rest with warm drinks",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "ccaa91ef-d300-4875-8c65-a5304e05966b",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "from_node_id": "33e7242c-35ec-4fbe-9af8-d92bdff10b58",
+    "to_node_id": "9458d4d7-467f-4396-9ff1-47013d2feeaf",
+    "kind": "decision",
+    "choice_label": "Stop medicine once feeling better",
+    "grade": "WRONG"
+  },
+  {
+    "id": "954580d2-3c28-43fd-9773-c90a5fe33a8e",
+    "patient_id": "1c89a34a-8ae5-444d-ba9d-3105f6484113",
+    "from_node_id": "33e7242c-35ec-4fbe-9af8-d92bdff10b58",
+    "to_node_id": "433c0b9a-7e28-4ec4-bcde-368085f0e847",
+    "kind": "decision",
+    "choice_label": "Gargle burning hot sauce",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "635b0e3f-6bea-4ed7-bb0e-141bb530b26c",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "from_node_id": "994c2111-9945-47f4-866a-8b01fce75628",
+    "to_node_id": "a3f9b322-93b3-4ca6-94ec-49cb6186f730",
+    "kind": "decision",
+    "choice_label": "Give the ear medicine as directed",
+    "grade": "BEST"
+  },
+  {
+    "id": "f132e6f9-c831-438e-824a-908246d00a91",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "from_node_id": "994c2111-9945-47f4-866a-8b01fce75628",
+    "to_node_id": "52148058-ddb9-49ea-bad2-5554a0dac313",
+    "kind": "decision",
+    "choice_label": "Warm cloth + quiet rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "21c1fa6f-6449-4bbe-8b9a-094d4948905c",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "from_node_id": "994c2111-9945-47f4-866a-8b01fce75628",
+    "to_node_id": "371b9bc3-6886-4743-adb3-9e54e2a48b76",
+    "kind": "decision",
+    "choice_label": "Poke inside with a cotton swab",
+    "grade": "WRONG"
+  },
+  {
+    "id": "e9f443f8-b221-4a7e-a962-052f0fb0d9cc",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "from_node_id": "994c2111-9945-47f4-866a-8b01fce75628",
+    "to_node_id": "eb62fb5d-2538-43ae-b647-a44ec0b8fcce",
+    "kind": "decision",
+    "choice_label": "Shout into the sore ear",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "ef06e67a-69f8-406e-95af-96a0a45f886a",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "from_node_id": "a3f9b322-93b3-4ca6-94ec-49cb6186f730",
+    "to_node_id": "f223aadc-3481-428c-8b95-91829dacaaab",
+    "kind": "decision",
+    "choice_label": "Give the ear medicine as directed",
+    "grade": "BEST"
+  },
+  {
+    "id": "9a22377a-0d83-45f0-a1d3-9b85d998f51d",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "from_node_id": "a3f9b322-93b3-4ca6-94ec-49cb6186f730",
+    "to_node_id": "788bec82-17a5-4079-a9e0-29d16e5664dd",
+    "kind": "decision",
+    "choice_label": "Warm cloth + quiet rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "f136c159-4b20-4e94-a995-ad816a23652e",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "from_node_id": "a3f9b322-93b3-4ca6-94ec-49cb6186f730",
+    "to_node_id": "be56e1af-fc3e-4f10-9840-bfbd9022866b",
+    "kind": "decision",
+    "choice_label": "Poke inside with a cotton swab",
+    "grade": "WRONG"
+  },
+  {
+    "id": "ee568ae4-3923-45e4-8acd-74a1b4021d3d",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "from_node_id": "a3f9b322-93b3-4ca6-94ec-49cb6186f730",
+    "to_node_id": "9e25628a-75e3-4609-9e4a-3faeef7ff02b",
+    "kind": "decision",
+    "choice_label": "Shout into the sore ear",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "ea7547a9-15a3-4243-9d71-2230392773b5",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "from_node_id": "52148058-ddb9-49ea-bad2-5554a0dac313",
+    "to_node_id": "5103b307-4d70-453a-b111-3fd01a9fa64d",
+    "kind": "decision",
+    "choice_label": "Give the ear medicine as directed",
+    "grade": "BEST"
+  },
+  {
+    "id": "b1069f76-19e3-474e-918f-435ef35d77a9",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "from_node_id": "52148058-ddb9-49ea-bad2-5554a0dac313",
+    "to_node_id": "7f48768a-88aa-473b-8223-98a7d2546731",
+    "kind": "decision",
+    "choice_label": "Warm cloth + quiet rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "2366bc86-e1ed-4462-ab7d-bf151ee7e8af",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "from_node_id": "52148058-ddb9-49ea-bad2-5554a0dac313",
+    "to_node_id": "de5e08b3-6c61-430e-955c-a423b81ba04c",
+    "kind": "decision",
+    "choice_label": "Poke inside with a cotton swab",
+    "grade": "WRONG"
+  },
+  {
+    "id": "d95631a5-7896-4adf-828d-cf7e4ef790e4",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "from_node_id": "52148058-ddb9-49ea-bad2-5554a0dac313",
+    "to_node_id": "d1092396-0d39-4045-bafe-061bad58bc79",
+    "kind": "decision",
+    "choice_label": "Shout into the sore ear",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "c96f7c54-96fc-4f69-b8bc-9927a3bcca73",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "from_node_id": "371b9bc3-6886-4743-adb3-9e54e2a48b76",
+    "to_node_id": "a2df70b0-dc1c-4f37-b9d5-358834c309b0",
+    "kind": "decision",
+    "choice_label": "Give the ear medicine as directed",
+    "grade": "BEST"
+  },
+  {
+    "id": "0d16b87a-9b83-4323-bde5-611941813534",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "from_node_id": "371b9bc3-6886-4743-adb3-9e54e2a48b76",
+    "to_node_id": "24030b60-7389-4f42-be00-5e970f6fbb0b",
+    "kind": "decision",
+    "choice_label": "Warm cloth + quiet rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "df7266c7-0068-44cc-be85-d6a7fe4befac",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "from_node_id": "371b9bc3-6886-4743-adb3-9e54e2a48b76",
+    "to_node_id": "502f44de-ca6f-4fed-8602-c9c8ee80414e",
+    "kind": "decision",
+    "choice_label": "Poke inside with a cotton swab",
+    "grade": "WRONG"
+  },
+  {
+    "id": "7d700571-24b8-4c22-b497-d0a537e0de78",
+    "patient_id": "189ed712-243f-421f-930c-c4e2a6c0919c",
+    "from_node_id": "371b9bc3-6886-4743-adb3-9e54e2a48b76",
+    "to_node_id": "f5a23b75-a38e-4ee0-8ca9-e0c157c860a6",
+    "kind": "decision",
+    "choice_label": "Shout into the sore ear",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "e888121e-f3f1-4b57-a98a-5873bd94a770",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "from_node_id": "aa39343c-2cc3-4d80-bc80-b1773146f557",
+    "to_node_id": "3000aadf-838d-4b37-affc-ba74af69b130",
+    "kind": "decision",
+    "choice_label": "Daily gentle moisturizer",
+    "grade": "BEST"
+  },
+  {
+    "id": "ba3788f7-ea4f-4f3a-bec8-02806075a082",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "from_node_id": "aa39343c-2cc3-4d80-bc80-b1773146f557",
+    "to_node_id": "67abd77f-5c10-4a5e-b94f-61148c94af53",
+    "kind": "decision",
+    "choice_label": "Keep nails short + cool",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "01d66523-c097-411d-9027-084988cf8ee7",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "from_node_id": "aa39343c-2cc3-4d80-bc80-b1773146f557",
+    "to_node_id": "3b8ab05d-0a82-46ec-85ab-5573b8100fe5",
+    "kind": "decision",
+    "choice_label": "Scratch the itchy spots",
+    "grade": "WRONG"
+  },
+  {
+    "id": "c0aaefad-552e-44e3-ad46-3a261a55ec80",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "from_node_id": "aa39343c-2cc3-4d80-bc80-b1773146f557",
+    "to_node_id": "73d63a9a-2719-4031-af9b-f2c44763ac0b",
+    "kind": "decision",
+    "choice_label": "Scrub with a rough brush",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "0832ee85-78f9-423b-96ab-51ae10e6be37",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "from_node_id": "3000aadf-838d-4b37-affc-ba74af69b130",
+    "to_node_id": "bf269132-e782-4be1-ac68-9b9a869edf4d",
+    "kind": "decision",
+    "choice_label": "Daily gentle moisturizer",
+    "grade": "BEST"
+  },
+  {
+    "id": "64c541a6-c64f-49f4-abc2-b35a61b96f32",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "from_node_id": "3000aadf-838d-4b37-affc-ba74af69b130",
+    "to_node_id": "dbabfa19-f735-4d81-b622-32de7af31966",
+    "kind": "decision",
+    "choice_label": "Keep nails short + cool",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "218b6778-da73-4b4e-8f70-863864810635",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "from_node_id": "3000aadf-838d-4b37-affc-ba74af69b130",
+    "to_node_id": "9f5340fe-5129-46b4-b115-e9e425d747bd",
+    "kind": "decision",
+    "choice_label": "Scratch the itchy spots",
+    "grade": "WRONG"
+  },
+  {
+    "id": "8aef2425-a8a3-4858-b44b-1499fa3ebc2c",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "from_node_id": "3000aadf-838d-4b37-affc-ba74af69b130",
+    "to_node_id": "1a115c62-6c82-4d6c-9085-53aa5d4213a7",
+    "kind": "decision",
+    "choice_label": "Scrub with a rough brush",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "0018211b-7928-4891-997c-3ee7fa5bc1f8",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "from_node_id": "67abd77f-5c10-4a5e-b94f-61148c94af53",
+    "to_node_id": "17bafe3d-6a52-4a11-878b-3c9777400b52",
+    "kind": "decision",
+    "choice_label": "Daily gentle moisturizer",
+    "grade": "BEST"
+  },
+  {
+    "id": "a76921c1-2149-450e-bc21-b4e7d7155ed9",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "from_node_id": "67abd77f-5c10-4a5e-b94f-61148c94af53",
+    "to_node_id": "002b9ab0-e612-44b8-a48f-27cf5b453aff",
+    "kind": "decision",
+    "choice_label": "Keep nails short + cool",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "5142b8dc-db9e-43e7-85ff-e90e2f7d75c2",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "from_node_id": "67abd77f-5c10-4a5e-b94f-61148c94af53",
+    "to_node_id": "93b92e9f-b9d3-4153-9aa5-e09556c1865f",
+    "kind": "decision",
+    "choice_label": "Scratch the itchy spots",
+    "grade": "WRONG"
+  },
+  {
+    "id": "6aef538b-d5cb-41af-861a-c02425b3fabc",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "from_node_id": "67abd77f-5c10-4a5e-b94f-61148c94af53",
+    "to_node_id": "d87d1f3f-2c1a-4588-8c2c-3165a80858d7",
+    "kind": "decision",
+    "choice_label": "Scrub with a rough brush",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "6e70d28e-d47a-459c-8154-5d1e09bf2490",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "from_node_id": "3b8ab05d-0a82-46ec-85ab-5573b8100fe5",
+    "to_node_id": "dd71e30e-67ce-412b-bf5b-9d3f2b3f1461",
+    "kind": "decision",
+    "choice_label": "Daily gentle moisturizer",
+    "grade": "BEST"
+  },
+  {
+    "id": "0cf3429f-220b-48f5-832b-52001c570fb5",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "from_node_id": "3b8ab05d-0a82-46ec-85ab-5573b8100fe5",
+    "to_node_id": "24640e6b-ad3f-44ec-818e-276dab05aaac",
+    "kind": "decision",
+    "choice_label": "Keep nails short + cool",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "3655debe-1134-47e0-9630-c35c6d3bc159",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "from_node_id": "3b8ab05d-0a82-46ec-85ab-5573b8100fe5",
+    "to_node_id": "bb206606-0b8f-4b7b-809d-baa4caf1fcc5",
+    "kind": "decision",
+    "choice_label": "Scratch the itchy spots",
+    "grade": "WRONG"
+  },
+  {
+    "id": "5d270cd0-b2be-46f4-b91e-ff63801a6da0",
+    "patient_id": "e8c1a7f5-ccd4-47b0-9cd0-804b1058b686",
+    "from_node_id": "3b8ab05d-0a82-46ec-85ab-5573b8100fe5",
+    "to_node_id": "1b513994-a8d3-4571-986c-c968d288bff9",
+    "kind": "decision",
+    "choice_label": "Scrub with a rough brush",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "0c303a84-96ac-4ccf-8988-1d39972e1bf1",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "from_node_id": "7c29b7e4-c297-4169-b0b8-6492f2ba648d",
+    "to_node_id": "705ad02b-abac-44d3-ab2b-0399c37ea4ac",
+    "kind": "decision",
+    "choice_label": "Start the lung medicine fast",
+    "grade": "BEST"
+  },
+  {
+    "id": "f04dee07-7b03-4954-8d5c-14c60c547b0c",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "from_node_id": "7c29b7e4-c297-4169-b0b8-6492f2ba648d",
+    "to_node_id": "b4658e30-6d6b-4003-abef-29f2308bfffa",
+    "kind": "decision",
+    "choice_label": "Rest with warm fluids",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "f7090225-9b64-4887-8ce2-36fa2286078e",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "from_node_id": "7c29b7e4-c297-4169-b0b8-6492f2ba648d",
+    "to_node_id": "06b8b04f-8770-449a-9e82-efa80208b32e",
+    "kind": "decision",
+    "choice_label": "Hide it and wait alone",
+    "grade": "WRONG"
+  },
+  {
+    "id": "004b72a2-f590-4218-85cb-bfadf2e240d2",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "from_node_id": "7c29b7e4-c297-4169-b0b8-6492f2ba648d",
+    "to_node_id": "c5d2fc89-043b-4e97-974f-bb7172571bca",
+    "kind": "decision",
+    "choice_label": "Sprint a race to clear lungs",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "30aff7bf-6c3c-47e7-ade3-f9d6d8ed2432",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "from_node_id": "705ad02b-abac-44d3-ab2b-0399c37ea4ac",
+    "to_node_id": "bc4cbed6-8027-43df-a7c9-e49010a6b8b7",
+    "kind": "decision",
+    "choice_label": "Start the lung medicine fast",
+    "grade": "BEST"
+  },
+  {
+    "id": "bdb4c742-d2e9-41a6-aa02-5bb6165bb7b4",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "from_node_id": "705ad02b-abac-44d3-ab2b-0399c37ea4ac",
+    "to_node_id": "0db3a3e2-5efa-488c-9b67-fdc246d51234",
+    "kind": "decision",
+    "choice_label": "Rest with warm fluids",
+    "grade": "BEST"
+  },
+  {
+    "id": "f023c4ac-7671-4fb6-ae64-670e7e610912",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "from_node_id": "705ad02b-abac-44d3-ab2b-0399c37ea4ac",
+    "to_node_id": "89060b3d-b3f5-4fff-9906-b237e75bb151",
+    "kind": "decision",
+    "choice_label": "Hide it and wait alone",
+    "grade": "WRONG"
+  },
+  {
+    "id": "420523a9-c12e-469b-95b4-d99b37218d4d",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "from_node_id": "705ad02b-abac-44d3-ab2b-0399c37ea4ac",
+    "to_node_id": "5a4a8f50-6870-4c8d-b750-fa72c0c0e1c4",
+    "kind": "decision",
+    "choice_label": "Sprint a race to clear lungs",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "f634c988-b67f-445b-92be-518d992dbe02",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "from_node_id": "b4658e30-6d6b-4003-abef-29f2308bfffa",
+    "to_node_id": "c8a9bad4-a289-46a1-b083-e79d76e5430d",
+    "kind": "decision",
+    "choice_label": "Start the lung medicine fast",
+    "grade": "BEST"
+  },
+  {
+    "id": "751607c2-4ce0-4872-baea-bade54af5333",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "from_node_id": "b4658e30-6d6b-4003-abef-29f2308bfffa",
+    "to_node_id": "7eaf029a-057a-4d5b-8213-08c8d563e322",
+    "kind": "decision",
+    "choice_label": "Rest with warm fluids",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "fd708b6e-15b8-485d-82a0-ad76efb0579b",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "from_node_id": "b4658e30-6d6b-4003-abef-29f2308bfffa",
+    "to_node_id": "aa20ff3b-71c6-4860-9227-bc1e7acc045b",
+    "kind": "decision",
+    "choice_label": "Hide it and wait alone",
+    "grade": "WRONG"
+  },
+  {
+    "id": "de9675b7-34d9-41df-a264-b7c9697a546c",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "from_node_id": "b4658e30-6d6b-4003-abef-29f2308bfffa",
+    "to_node_id": "bfce545f-114e-422d-b485-8e299bc34a47",
+    "kind": "decision",
+    "choice_label": "Sprint a race to clear lungs",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "1567585d-5bb5-42e5-b515-ab3d9f3e61ef",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "from_node_id": "06b8b04f-8770-449a-9e82-efa80208b32e",
+    "to_node_id": "67f00b3e-734e-40b2-8fd4-229118200f22",
+    "kind": "decision",
+    "choice_label": "Start the lung medicine fast",
+    "grade": "BEST"
+  },
+  {
+    "id": "37f05260-cd7e-4bed-b28b-9f41d9e393ef",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "from_node_id": "06b8b04f-8770-449a-9e82-efa80208b32e",
+    "to_node_id": "2387ef0d-d334-463f-884b-6f969fe9c64d",
+    "kind": "decision",
+    "choice_label": "Rest with warm fluids",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "c6971692-4ce8-4c6b-a79e-1a218bb26213",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "from_node_id": "06b8b04f-8770-449a-9e82-efa80208b32e",
+    "to_node_id": "31d1ec1d-0d5a-4940-9c19-282e34434f63",
+    "kind": "decision",
+    "choice_label": "Hide it and wait alone",
+    "grade": "WRONG"
+  },
+  {
+    "id": "5fb4c4ea-bba9-45f3-8339-f668ee746525",
+    "patient_id": "0803d835-aaa8-47db-84f2-7308feba3541",
+    "from_node_id": "06b8b04f-8770-449a-9e82-efa80208b32e",
+    "to_node_id": "c44fd32d-2e81-4eb4-bd2c-a268e0a637c6",
+    "kind": "decision",
+    "choice_label": "Sprint a race to clear lungs",
+    "grade": "DANGEROUS"
   }
 ];
 
@@ -5315,6 +7032,58 @@ export const FALLBACK_TREATMENTS: FallbackTreatment[] = [
     "conditions": [
       "dehydration",
       "viral-respiratory"
+    ]
+  },
+  {
+    "id": "a31f0c2d-9b4a-4e8d-b7c1-2e5f6a7b8c01",
+    "class_name": "Throat antibiotics",
+    "description": "Germ-killing medicines that clear strep throat when every dose is finished.",
+    "wording": {
+      "plain": "strep antibiotics",
+      "gentle": "finish-all-the-doses throat medicine",
+      "clinical": "oral antibiotics for streptococcal pharyngitis"
+    },
+    "conditions": [
+      "strep-throat"
+    ]
+  },
+  {
+    "id": "b42a1d3e-8c5b-4f9e-c8d2-3f6a7b8c9d02",
+    "class_name": "Ear-infection medicines",
+    "description": "Prescribed medicines that clear middle-ear infections, with rest for comfort.",
+    "wording": {
+      "plain": "ear-infection medicine",
+      "gentle": "sore-ear medicine",
+      "clinical": "antibiotics for acute otitis media"
+    },
+    "conditions": [
+      "ear-infection"
+    ]
+  },
+  {
+    "id": "c53b2e4f-9d6c-4a8d-d9e3-4a7b8c9d0e03",
+    "class_name": "Skin barrier creams",
+    "description": "Gentle daily moisturizers that keep itchy eczema skin calm and strong.",
+    "wording": {
+      "plain": "moisturizer",
+      "gentle": "everyday skin cream",
+      "clinical": "emollient therapy"
+    },
+    "conditions": [
+      "eczema"
+    ]
+  },
+  {
+    "id": "d64c3f5a-8e7d-4b9e-e8f4-5b8c9d0e1f04",
+    "class_name": "Lung-infection antibiotics",
+    "description": "Fast-start medicines that stop pneumonia early, with rest while lungs heal.",
+    "wording": {
+      "plain": "pneumonia antibiotics",
+      "gentle": "lung-healing medicine",
+      "clinical": "antibiotics for community-acquired pneumonia"
+    },
+    "conditions": [
+      "pneumonia"
     ]
   }
 ];
@@ -5379,6 +7148,66 @@ export const FALLBACK_RESOURCES: FallbackResource[] = [
       "answer": 2,
       "pearl": "No symptoms — that is why cuffs check it."
     }
+  },
+  {
+    "id": "32bc0643-db9e-4768-a35a-da0ebb0d3c59",
+    "condition_id": "strep-throat",
+    "title": "Strep Throat",
+    "url": "https://medlineplus.gov/streptococcalinfections.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "Strep throat is a bacterial sore throat — pain on swallowing, fever, red tonsils with white patches, and NO cough or runny nose. A quick throat test confirms it; antibiotics clear it fast and prevent complications. Finish every dose even after feeling better.",
+    "quiz": {
+      "stem": "Strep throat differs from a cold because there is…",
+      "choices": ["Lots of coughing", "No cough, white patches", "A stuffy nose"],
+      "answer": 1,
+      "pearl": "No cough + white patches means test for strep."
+    }
+  },
+  {
+    "id": "5374fdf0-a4b7-4a2f-8abf-1dceb66f5b2e",
+    "condition_id": "ear-infection",
+    "title": "Ear Infections",
+    "url": "https://medlineplus.gov/earinfections.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "Middle-ear infections follow colds in kids: ear tugging, pain, fever, trouble hearing. The eardrum looks red and bulging through the scope. Many mild cases improve with rest and pain relief; doctors prescribe medicine for severe ones. Never poke anything inside the ear.",
+    "quiz": {
+      "stem": "The best way to check a sore ear is to…",
+      "choices": ["Peek inside with a scope", "Poke it with a swab", "Shout into it"],
+      "answer": 0,
+      "pearl": "A scope shows the red, bulging eardrum."
+    }
+  },
+  {
+    "id": "85af6aa7-662d-4979-a819-2e619d68e05a",
+    "condition_id": "eczema",
+    "title": "Eczema",
+    "url": "https://medlineplus.gov/eczema.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "Eczema is dry, itchy skin that flares in elbow and knee creases, then calms for a while. Daily fragrance-free moisturizer is the foundation; short nails and cool cotton limit damage. Scratching breaks skin and invites infection, so hands stay busy instead.",
+    "quiz": {
+      "stem": "Daily care for itchy eczema starts with…",
+      "choices": ["A rough scrub brush", "Scratching the spots", "Gentle moisturizer"],
+      "answer": 2,
+      "pearl": "Daily cream keeps the skin wall strong."
+    }
+  },
+  {
+    "id": "670a3b6e-cf04-4831-9773-24a1c88c7774",
+    "condition_id": "pneumonia",
+    "title": "Pneumonia",
+    "url": "https://medlineplus.gov/pneumonia.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "Pneumonia is a lung infection — fever with a deep cough, fast breathing, and crackly lung sounds. Doctors listen for crackles and confirm with a chest image. Antibiotics plus rest treat most cases; fast hard breathing needs urgent care.",
+    "quiz": {
+      "stem": "Pneumonia differs from a cold because of…",
+      "choices": ["A runny nose", "Fever with crackly lungs", "Itchy eyes"],
+      "answer": 1,
+      "pearl": "Fever + crackles means the lungs need a doctor."
+    }
   }
 ];
 
@@ -5435,4 +7264,20 @@ export const FALLBACK_EXAM_FINDINGS: FallbackExamFinding[] = [
   { condition_id: 'hypertension', modality: 'feel', gentle: 'Pulse feels strong and bouncy.', steady: 'Bounding pulses; ankles look fine.', clinical: 'Bounding pulses; no edema.', expert: 'Bounding pulses; no peripheral edema.' },
   { condition_id: 'hypertension', modality: 'tap', gentle: 'Chest taps sound normal.', steady: 'Percussion normal.', clinical: 'Resonant; no abnormality.', expert: 'No percussive abnormality.' },
   { condition_id: 'hypertension', modality: 'listen', gentle: 'The arm cuff squeezes and reads a big number — too high!', steady: 'Cuff reads high even after quiet rest.', clinical: 'Cuff high after 5 minutes rest.', expert: 'Stage-2-range cuff readings after 5 minutes rest.' },
+  { condition_id: 'strep-throat', modality: 'look', gentle: 'Throat very red with white patches — and no cough at all.', steady: 'Red throat with white patches; no cough or runny nose.', clinical: 'Erythematous pharynx with exudates; no cough.', expert: 'Marked pharyngeal erythema with tonsillar exudates; cough absent.' },
+  { condition_id: 'strep-throat', modality: 'feel', gentle: 'Neck glands feel sore and puffy; forehead warm.', steady: 'Tender neck glands; feverish forehead.', clinical: 'Tender anterior nodes; febrile.', expert: 'Tender anterior cervical adenopathy; febrile.' },
+  { condition_id: 'strep-throat', modality: 'tap', gentle: 'Chest taps sound normal — the trouble is all in the throat.', steady: 'Chest normal; percussion adds nothing here.', clinical: 'Chest resonant; findings localize to the pharynx.', expert: 'No percussive abnormality; pharynx-localized findings.' },
+  { condition_id: 'strep-throat', modality: 'listen', gentle: 'Chest sounds clear — only the throat is sore.', steady: 'Lungs clear; no cough to hear.', clinical: 'Lungs clear; cough absent.', expert: 'Vesicular, no crackles; cough absent.' },
+  { condition_id: 'ear-infection', modality: 'look', gentle: 'One ear tugged red; the eardrum glows red through the scope.', steady: 'Tugging one ear; scope shows a red, bulging eardrum.', clinical: 'Bulging erythematous TM on otoscopy.', expert: 'Otoscopy: bulging erythematous TM, landmarks effaced.' },
+  { condition_id: 'ear-infection', modality: 'feel', gentle: 'The sore ear feels hot; forehead warm with fever.', steady: 'Tender around the sore ear; low fever.', clinical: 'Periauricular tenderness; febrile.', expert: 'Periauricular tenderness; low-grade pyrexia.' },
+  { condition_id: 'ear-infection', modality: 'tap', gentle: 'Head taps tell nothing — the scope does the finding.', steady: 'Percussion unhelpful for ears.', clinical: 'Percussion unhelpful here.', expert: 'No percussive role; this is an otoscopic diagnosis.' },
+  { condition_id: 'ear-infection', modality: 'listen', gentle: 'Hearing is fuzzy on the sore side, like cotton inside.', steady: 'Muffled hearing on the sore side.', clinical: 'Conductive hearing loss, affected side.', expert: 'Unilateral conductive loss; TM immobile on insufflation.' },
+  { condition_id: 'eczema', modality: 'look', gentle: 'Dry red patches hiding in the elbow and knee bends.', steady: 'Dry red patches in the elbow and knee creases.', clinical: 'Xerotic flexural plaques, symmetric.', expert: 'Symmetric flexural lichenified plaques; excoriations absent.' },
+  { condition_id: 'eczema', modality: 'feel', gentle: 'Patches feel rough and dry, like thirsty skin.', steady: 'Rough, dry plaques; skin warm, not hot.', clinical: 'Dry rough plaques; afebrile.', expert: 'Coarse dry plaques; no warmth to suggest superinfection.' },
+  { condition_id: 'eczema', modality: 'tap', gentle: 'Taps sound normal everywhere — skin tells this story.', steady: 'Percussion normal; this is a look-and-feel diagnosis.', clinical: 'Percussion unremarkable.', expert: 'No percussive abnormality; inspection diagnosis.' },
+  { condition_id: 'eczema', modality: 'listen', gentle: 'Heart and lungs sound fine — only the skin is unhappy.', steady: 'Heart and lungs normal.', clinical: 'Cardiopulmonary exam normal.', expert: 'No cardiopulmonary abnormality.' },
+  { condition_id: 'pneumonia', modality: 'look', gentle: 'Breathing fast and hard, cheeks flushed with fever.', steady: 'Fast hard breathing with fever flush.', clinical: 'Tachypneic and febrile; mild distress.', expert: 'Tachypnea with fever; accessory-muscle use emerging.' },
+  { condition_id: 'pneumonia', modality: 'feel', gentle: 'Chest moving fast; forehead hot with fever.', steady: 'Fast pulse; chest moves a little unevenly.', clinical: 'Tachycardic; asymmetric expansion.', expert: 'Tachycardia; asymmetric expansion; increased fremitus.' },
+  { condition_id: 'pneumonia', modality: 'tap', gentle: 'One chest spot thuds dull instead of hollow.', steady: 'One spot sounds dull — fluid where air should be.', clinical: 'Focal dullness to percussion.', expert: 'Focal dullness; consolidation pattern.' },
+  { condition_id: 'pneumonia', modality: 'listen', gentle: 'Crackly sounds in one lung spot, like bubble wrap.', steady: 'Crackles in one lung area.', clinical: 'Focal crackles.', expert: 'Focal late-inspiratory crackles; bronchial breath sounds.' },
 ];

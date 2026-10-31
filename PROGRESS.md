@@ -1,5 +1,14 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+> Run 20 ownership (2026-10-30, main agent): types.ts,
+> conditions.ts, fallbackPack.ts, ClinicScene.ts (gate/preload/
+> speaker), sprites.ts, mockData.ts, CHARACTER_BIBLE.md,
+> ART_BIBLE.md, art/manifest.json, public/assets/characters/*,
+> public/assets/learn/learn-{strep-throat,ear-infection,eczema,
+> pneumonia}.png, art/contact-sheets/*run20*, fallbackPack.test.ts
+> counts, Supabase patients/nodes/edges/resources/findings/
+> treatments rows. No other stream may touch these files.
+
 ## Run 19 (2026-10-30): learn cards — art headers, inline quiz, coin pill
 
 - 4 Block-U-verbatim Meta Image headers ($0.04), cropped 824x320,

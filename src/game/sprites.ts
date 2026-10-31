@@ -13,6 +13,10 @@ export const SPRITE_PREFIX: Record<string, string> = {
   Theo: 'theo',
   Priya: 'priya',
   Ellis: 'ellis',
+  Nina: 'nina',
+  Kai: 'kai',
+  Ada: 'ada',
+  Felix: 'felix',
 };
 
 export function spritePrefix(name: string): string | undefined {
@@ -41,5 +45,9 @@ export function blinkGapMs(name: string): [number, number] {
 export function bobRate(name: string): number {
   if (name === 'Priya') return 2.3;
   if (name === 'Ellis') return 1.4;
+  if (name === 'Kai') return 2.2;
+  if (name === 'Nina') return 1.9;
+  if (name === 'Ada') return 1.6;
+  if (name === 'Felix') return 1.5;
   return 1.8;
 }
