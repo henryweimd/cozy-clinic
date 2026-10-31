@@ -1,4 +1,4 @@
-# ANIMATION.md — Little Lives: Cozy Clinic
+# ANIMATION.md — Cozy Clinic
 
 Motion law. Key poses come from the image model; ALL motion is built
 in code. Jolly mascots read through small motions — modest is the bar:

@@ -1,4 +1,4 @@
-# CHARACTER_BIBLE.md — Little Lives: Cozy Clinic
+# CHARACTER_BIBLE.md — Cozy Clinic
 
 Cast law. Companion to `ART_BIBLE.md` (render rules) and
 `docs/ANIMATION.md` (motion rules). Only Mabel ships this run;

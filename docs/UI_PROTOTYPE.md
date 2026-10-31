@@ -1,4 +1,4 @@
-# UI_PROTOTYPE.md — Little Lives: Cozy Clinic
+# UI_PROTOTYPE.md — Cozy Clinic
 
 Interactive UI prototype spec, operator-ordered BEFORE backend work.
 Playtest this on a phone and answer the questionnaire at the end —

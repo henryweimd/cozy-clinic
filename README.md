@@ -1,4 +1,4 @@
-# Little Lives: Cozy Clinic
+# Cozy Clinic
 
 **A cozy clinic game where patients remember you** — every encounter changes
 a persistent patient, and that patient's story follows them across clinicians.

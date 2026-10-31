@@ -1,4 +1,4 @@
-# ART_BIBLE.md — Little Lives: Cozy Clinic
+# ART_BIBLE.md — Cozy Clinic
 
 The law for every asset. No asset enters the game unless it matches this
 file and its character's master reference, and has passed validation

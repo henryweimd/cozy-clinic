@@ -18,7 +18,7 @@ const CORS = {
 };
 
 const SYSTEM = [
-  'You write cozy educational game narration for "Little Lives: Cozy Clinic".',
+  'You write cozy educational game narration for "Cozy Clinic".',
   "Voice: warm third-person narrator, gentle and plain (a kid can follow).",
   "Return ONLY JSON: {\"flesh\": {\"<key>\": {\"narrative\": \"...\", \"teaching\": \"...\"}}}.",
   "Rules: narrative <= 60 words, third person, present tense, matches the given",

@@ -2,7 +2,7 @@
   "name": "cozy-clinic",
   "private": true,
   "version": "0.1.0",
-  "description": "Little Lives: Cozy Clinic — a cozy clinic game where patients remember you",
+  "description": "Cozy Clinic — a cozy clinic game where patients remember you",
   "type": "module",
   "scripts": {
     "dev": "vite",

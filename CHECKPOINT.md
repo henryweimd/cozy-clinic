@@ -1,3 +1,24 @@
+# CHECKPOINT — Run 52: rename (2026-11-01)
+
+Phase: "Little Lives" removal on `main`.
+
+Files changed: 14 (title, manifest, package, 7 doc
+headers, 2 prompts + live redeploy, auditor, PROGRESS,
+CHECKPOINT).
+
+Test result: `npm test` 430/430; tsc clean; build green;
+auditor 0 findings (new naming guard green).
+
+Deployment URL: https://cozy-clinic.vercel.app/ (title
+verified in the served HTML below).
+
+Playtest result: operator playtesting in parallel (this
+run answers their title note).
+
+Image spend this run: $0 (ledger ~$2.62 cumulative).
+
+STOP.
+
 # CHECKPOINT — Run 51: merged to main (2026-11-01)
 
 Phase: production merge. `main` @ `bca75d6` — the batch

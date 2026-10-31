@@ -1,4 +1,19 @@
-# PROGRESS.md — Little Lives: Cozy Clinic
+# PROGRESS.md — Cozy Clinic
+
+## Run 52 (2026-11-01): Cozy Clinic only, everywhere
+
+Branch: `main`. Operator playtesting in parallel.
+File ownership (main agent, this run): rename sweep +
+prompt redeploy, auditor guard, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream).
+
+- Operator direction: no more "Little Lives". Renamed in
+  all 13 spots: page title, PWA manifest, package.json,
+  README/PROGRESS/AGENTS/ART/CHARACTER/ANIMATION/UI
+  headers, and both runtime prompts (redeployed live).
+- Auditor gains a repo-wide no-"Little Lives" guard.
+- Verify: 430/430, tsc clean, build green, auditor 0.
+- Spend: $0 (ledger ~$2.62 cumulative).
 
 ## Run 51 (2026-11-01): MERGED — knottin batch is live
 

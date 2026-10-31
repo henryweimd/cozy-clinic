@@ -1,4 +1,4 @@
-# AGENTS.md — Little Lives: Cozy Clinic (public project rules)
+# AGENTS.md — Cozy Clinic (public project rules)
 
 > Loaded automatically by Muse Code in every session. This is the
 > public version kept in the shared repo; private studio rules
@@ -6,7 +6,7 @@
 
 ## Project
 
-Little Lives: Cozy Clinic — mobile-first 2.5D medical simulation game
+Cozy Clinic — mobile-first 2.5D medical simulation game
 (Phaser + TypeScript + Vite, browser) for the Meta AI Developer
 Hackathon, Indie track. Fictional characters, real medical
 conditions, graduated choice sets (2–3 early, up to 4–5 later),
