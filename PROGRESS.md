@@ -1,5 +1,33 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 38 (2026-11-01): knottin proxy + game client
+
+Branch: `feat/knottin-lab`. Queued next: lab screen
+(run 39), merge/docs (run 40).
+File ownership (main agent, this run): knottin-design
+edge fn, knottin client+tests, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- Proxy `supabase/functions/knottin-design/index.ts`
+  mirrors muse-reword: validates target/charge/modality,
+  reads COZY_PEPTIDE_KEY server-side, 50s upstream
+  timeout, vetoes malformed designs (sequence regex +
+  audit.passed), veto-echo on any failure.
+- Client `src/game/knottin.ts` mirrors reword.ts: guard,
+  55s timeout, cached C. diff demo design on any failure
+  (offline demo completes). 5 new tests.
+- Contract verified against the live API docs + probes:
+  POST /api/generate-peptide, Bearer auth, slim design
+  subset; no-auth/dummy-auth probes both 401 as expected.
+- NOT deployed: MCP token lacks edge_functions_write.
+  Operator step: `supabase functions deploy
+  knottin-design` (key already in Vault/Secrets). The lab
+  (run 39) shows cached demo until then.
+- Verify: 418/418, tsc clean, build green, deno run
+  parses+evaluates (bind blocked by sandbox; deno check
+  stub failure identical on muse-reword = environmental).
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 37 (2026-11-01): About repo link + build date
 
 Branch: `feat/knottin-lab`. Queued next: proxy+client

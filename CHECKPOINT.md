@@ -1,3 +1,25 @@
+# CHECKPOINT — Run 38: knottin proxy + client (2026-11-01)
+
+Phase: edge proxy + game client on `feat/knottin-lab`.
+`main` untouched (still run 31).
+
+Files changed: 5 (knottin-design fn, knottin client +
+tests, PROGRESS, CHECKPOINT). No UI yet — lab in run 39.
+
+Test result: `npm test` 418/418; tsc clean; build green;
+upstream probes 401-as-expected; deploy blocked (token
+lacks edge_functions_write) — operator deploys.
+
+Deployment URL: branch preview (SSO-gated); prod
+unchanged on main.
+
+Playtest result: NOT operator-playtested — programmatic
+verification only.
+
+Image spend this run: $0 (ledger ~$2.62 cumulative).
+
+STOP.
+
 # CHECKPOINT — Run 37: About repo link (2026-11-01)
 
 Phase: repo link + build date on `feat/knottin-lab`.
