@@ -1,5 +1,26 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 47 (2026-11-01): tempered-telling law in playbook + prompts
+
+Branch: `feat/knottin-lab`. Operator playtesting in parallel.
+File ownership (main agent, this run): playbook §3/§6,
+seed/extend prompts + redeploy, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- Operator direction: the run-46 sensibility becomes law.
+  Playbook §3 gains "tempered and telling" (reassure
+  without hiding; name the clinching/excluding feature,
+  ideally as mimicker contrast); §6 gains the "bare
+  alarming findings" anti-pattern with the c-diff example.
+- seed-patients + extend-trajectory SYSTEM prompts carry
+  the same rule, so runtime Spark 1.3 flesh (narrative +
+  teaching on new/returning scenarios) tempers and
+  discriminates. Both redeployed via CLI (verified output).
+- No new test: tone law, physician-reviewed; budgets
+  unchanged and green.
+- Verify: 429/429, tsc clean, build green.
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 46 (2026-11-01): tempered pathognomonic c-diff finding
 
 Branch: `feat/knottin-lab`. Operator playtesting in parallel.

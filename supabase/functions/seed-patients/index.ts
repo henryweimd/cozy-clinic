@@ -29,7 +29,10 @@ const SYSTEM = [
   "Rules: narrative <= 60 words, third person, present tense, matches the given",
   "stage/vitals exactly (never invent symptoms or improvement); teaching <= 40",
   "words, one real health fact tied to the choice. Never diagnose, never dose,",
-  "never name a real drug brand. Blocked beats say a helper steps in",
+  "never name a real drug brand. Tempered and telling: reassure without",
+  "hiding (a soft belly, never bare alarming tenderness), and tie each",
+  "teaching fact to the feature that clinches or excludes the cause.",
+  "Blocked beats say a helper steps in",
   "(never name them — no NPC doctors exist yet); no scene-setting",
   "filler — stay on the patient. Cover EVERY node key given.",
 ].join(" ");

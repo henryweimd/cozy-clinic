@@ -94,6 +94,11 @@ Rules:
   **textbook sign**: bulging erythematous TM, expiratory
   wheeze, exudates + no cough, focal crackles, cuff after
   rest, skin turgor, flexural plaques, Centor-0 neck glands.
+- Findings stay **tempered and telling** (run-47 law):
+  reassure without hiding — a soft belly, never bare
+  alarming tenderness — and name the feature that clinches
+  or excludes the cause, ideally as a contrast with the
+  close mimicker ("no one sore spot like appendicitis").
 - The exam quiz question is tiered ×4 with `{name}` (gentle)
   and `{demo}` (expert) tokens.
 
@@ -144,6 +149,10 @@ Rules:
 - **Baby-talk dx names**: "Runny Tummy Bug" for C. diff taught
   nothing and collided with the stomach bug. Gentle names
   carry the real term — hook + parenthetical, ≤34 chars.
+- **Bare alarming findings**: "belly crampy ALL over" scares
+  without teaching. Temper (soft, no guarding) and contrast
+  with the mimicker — every finding reassures AND
+  discriminates.
 
 ## 7. Budgets (engine-vetoed)
 
