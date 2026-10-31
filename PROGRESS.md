@@ -1,5 +1,33 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 40 (2026-11-01): merge decision (HOLD) + docs truth
+
+Branch: `feat/knottin-lab`. Batch complete; merge held
+for operator playtest (one fast-forward command away).
+File ownership (main agent, this run): README, demo
+script, submission checklist, AI_PROXY, in-game demo
+page, PROGRESS, CHECKPOINT. No game-logic changes.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- MERGE DECISION: HOLD. All programmatic acceptance
+  ticks (419/419, tsc, build, auditor 0, previews green,
+  fast-forward verified zero-conflict), but zero human
+  eyes have seen runs 32–39 UI and the proxy is
+  undeployed — production waits for the operator's
+  playtest + `supabase functions deploy knottin-design`.
+- Docs truth: README (419 tests, 30 roster, 36/612/576
+  fallback, lab bullets + tooling row, branch-verified
+  stamp), demo script (Beat 6 lab, no-onboarding fix,
+  true counts), checklist (branch-verified done-list,
+  merge + deploy + 28-condition pen), AI_PROXY
+  (knottin-design contract), in-game › DEMO (step 7 +
+  peptide tooling row).
+- Supabase re-verified: 36/612/576/29/28/112, 0
+  dangling. No secrets in repo (keys in Supabase
+  secrets only).
+- Verify: 419/419, tsc clean, build green, auditor 0.
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 39 (2026-11-01): full-screen Peptide Lab + trial flow
 
 Branch: `feat/knottin-lab`. Queued next: merge/docs

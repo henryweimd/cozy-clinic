@@ -42,7 +42,7 @@ path. Never real patient data.
 
 ```bash
 npm install
-npm test        # full suite — must pass (358 tests, green at last update)
+npm test        # full suite — must pass (419 tests, green at last update)
 npm run dev     # serves at http://localhost:5173 — open in a browser
 npm run build   # production build into dist/
 ```
@@ -58,9 +58,10 @@ Playable today on the live build; every step works, nothing staged:
 
 1. Meet Bram — visit #2, he recognizes you in the opening seconds.
 2. Clear the 4-round visit: ask a history question, examine,
-   diagnose, then treat — clues accumulate across rounds.
-3. Tap Next patient into a 10-strong roster (sleepy Theo to elder
-   Ellis to new Nina, Kai, Ada, Felix); reorder the Waiting queue.
+   diagnose, then treat — clues accumulate across rounds. On a
+   second take, pick the trial arm at Treat to open the Peptide
+   Lab (consent → live/cached design → back to visit).
+3. Tap Next patient into a 30-strong roster; reorder the Waiting queue.
    The left-edge exam tray holds Look / Feel / Tap / Listen with
    per-disease findings.
 4. Leave a care note (open a 2nd tab as another doctor to see it land).
@@ -94,8 +95,13 @@ this script plus the tooling table in-game.
   gone wrong and why) and returns the choice to the player.
 - **Runtime AI path:** browser game → Supabase Edge Function → Meta Model API.
   The browser NEVER calls Meta directly and NEVER holds a model key.
-- **Offline by design.** A fallback snapshot (32 patients, 544 nodes,
-  96 tiered exam findings, 24 Learn topics) ships in
+- **Clinical-trial path + Peptide Lab.** Two gut conditions carry an
+  experimental Custom Knottin Probiotic arm: it grades below proven
+  care (never BEST), then opens a full-screen lab — consent, a 4-stage
+  design pipeline (live via the `knottin-design` proxy, cached demo
+  offline), and a window onto the real operator-run Cozy Peptide site.
+- **Offline by design.** A fallback snapshot (36 patients, 612 nodes,
+  576 edges, 112 exam findings × 4 tiers, 31 Learn topics) ships in
   `src/data/fallbackPack.ts`; live reads fall back to it seamlessly.
 
 ## Meta AI tooling
@@ -103,6 +109,7 @@ this script plus the tooling table in-game.
 | Model / tool | What it does in this game | What breaks without it |
 |---|---|---|
 | Muse Spark (`muse-spark-1.3`) via Edge Functions | Trajectory seed/extend functions in `supabase/functions/` + live tiered greeting paraphrases at runtime (`muse-reword`, deployed, vetoed) | Stored futures + local greetings; the game runs fully on them with zero network |
+| Cozy Peptide API (operator-run) via `knottin-design` proxy | Live knottin designs in the Peptide Lab, vetoed server-side (sequence + audit shape); key in Supabase secrets, never the browser | Cached demo design; the lab runs fully on it with zero network |
 | Muse Image (community `muse-image-mcp`, not Meta-official) | All character mascots, clinic backdrops, Learn-card headers | No finished look; placeholders instead |
 | Built with Muse Code (Contributor tier) | The agentic build itself: game code, clinical modeling, art pipeline, tests | The documented craft story in `PROGRESS.md` |
 
@@ -121,7 +128,7 @@ sponsor's models; this one was raised by them: the agentic build log is a
 second demonstration of the model family, not just process documentation.
 
 Simulation at this scale is only sustainable because of Contributor-tier
-economics. Seeding a 32-patient persistent world with 544 pre-reviewed futures
+economics. Seeding a 36-patient persistent world with 612 pre-reviewed futures
 costs cents, and gameplay traverses stored nodes instead of billing per
 decision in the hot loop. Persistent patients with real branching futures —
 the core of the game — are only possible because generation is this cheap.
@@ -136,6 +143,10 @@ the core of the game — are only possible because generation is this cheap.
   asking its question first (tier-worded Gentle/Steady/Clinical/Expert);
   endings praise the player with an N-of-4 score line, never claiming
   the patient better/worse.
+- **Peptide Lab:** the knottin trial arm opens a full-screen lab
+  (consent → live/cached 4-stage pipeline → result → back to visit),
+  with ticker provenance and an external window onto the real
+  Cozy Peptide site; the ending modal re-offers on return.
 - **28 conditions** as tested state transitions, sourced from the MSD
   Manual Professional Edition (run-32 gut pack MedlinePlus-grounded,
   MSD cross-check pending review): asthma, sniffly cold (viral
@@ -170,5 +181,7 @@ Docs map: [`docs/UI_PROTOTYPE.md`](./docs/UI_PROTOTYPE.md) (interface spec),
 [`PROGRESS.md`](./PROGRESS.md) (build log).
 
 ---
-*Last verified 2026-11-01 against `main` @ `ffe8946` (368/368 tests, build green,
-live URL up). Firsthand operator paragraph + demo video still to come.*
+*Last verified 2026-11-01 on `feat/knottin-lab` @ `499440b` (419/419 tests,
+`tsc` clean, build green, auditor 0 findings, branch preview up;
+`main` holds run 31 until the merge call). Firsthand operator
+paragraph + demo video still to come.*

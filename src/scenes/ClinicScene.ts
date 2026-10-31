@@ -4341,6 +4341,7 @@ export class ClinicScene extends Phaser.Scene {
       '4 Leave a care note (2nd tab = doctor 2)',
       '5 Learn (+2), Shop boosts, Profile, About',
       '6 Cheer a colleague from any care note',
+      '7 Trial arm -> Peptide Lab (design, back)',
     ];
     for (const step of steps) {
       line(64, y, step, '#eaf5e9');
@@ -4351,6 +4352,7 @@ export class ClinicScene extends Phaser.Scene {
     y += 26;
     const tools: [string, string][] = [
       ['Spark 1.3 edge fns: futures + greeting reword;', 'else fallback pack only'],
+      ['Cozy Peptide API via proxy: lab designs;', 'else cached demo design'],
       ['Muse Image (mcp): mascots + plates;', 'else placeholders'],
       ['Muse Code: build + tests + art pipeline;', 'else no PROGRESS story'],
     ];

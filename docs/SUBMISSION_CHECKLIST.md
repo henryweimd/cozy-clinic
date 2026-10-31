@@ -5,33 +5,49 @@
 > Track judging rewards creativity, technical ambition, and
 > whether it works. Owner: operator, unless marked agent.
 
-## Done (agent, verified on `main`)
+## Done (agent, verified on `feat/knottin-lab`; `main` holds run 31)
 
-- [x] Live build at <https://cozy-clinic.vercel.app/> (200, fresh
-  bundle each run; offline fallback plays the full demo path)
-- [x] 24 MSD-sourced conditions × 4-round visits; 26 playable
-  patients with 6-expression sprite sets (368/368 tests, `tsc`
-  clean, layout auditor 0 findings, build green)
+- [x] Branch preview green every run; live build at
+  <https://cozy-clinic.vercel.app/> (200 on `main`; offline
+  fallback plays the full demo path on both)
+- [x] 28 conditions × 4-round visits (24 MSD + 4 MedlinePlus
+  gut); 30 playable patients with 6-expression sprite sets
+  (419/419 tests, `tsc` clean, layout auditor 0 findings,
+  build green)
 - [x] Living Chart persistence, shared care (handoffs/cheers),
   Learn cards with prize quizzes, Shop economy, 10-move undo,
-  4 reading tiers, streaks/combos
+  4 reading tiers, streaks/combos, About repo link + date
+- [x] Trial path + Peptide Lab: consent → live/cached 4-stage
+  pipeline → result → back; `knottin-design` proxy in repo
+  (deploy pending — MCP token lacks `edge_functions_write`;
+  operator runs `supabase functions deploy knottin-design`)
 - [x] Runtime Muse path: `muse-reword` Edge Function (server-side
   key, engine veto); seed/extend functions in repo
-- [x] README current (368 tests, 4 rounds, 26 patients, honest
-  tooling table); demo script in-repo + in-game (`› DEMO`)
+- [x] README current (419 tests, 36/612 fallback, lab + tooling
+  rows); demo script in-repo + in-game (`› DEMO`, lab beat)
 - [x] No secrets in repo (`.env` local-only; model key in
-  Supabase secrets as `META_API_KEY`)
+  Supabase secrets as `META_API_KEY`, peptide key as
+  `COZY_PEPTIDE_KEY`)
+- [x] Merge-ready: branch fast-forwards onto `main`
+  (zero-conflict); merge call recorded below
 
 ## Operator-only (needs a human)
 
-- [ ] **Medical review pen**: runs 20–28 content is DRAFT —
-  all 24 conditions' history/exam/dx/treat + Learn summaries.
-  Nothing ships as final without this.
+- [ ] **Merge call**: run-40 decision is HOLD — playtest the
+  branch preview, then merge (fast-forward, one command) or
+  say the word and the agent merges.
+- [ ] **Proxy deploy**: `supabase functions deploy
+  knottin-design` (key already saved; lights up live lab
+  designs with zero code change).
+- [ ] **Medical review pen**: runs 20–32 content is DRAFT —
+  all 28 conditions' history/exam/dx/treat + Learn summaries
+  (24 MSD + 4 MedlinePlus gut) + trial grades. Nothing ships
+  as final without this.
 - [ ] **Firsthand README paragraph**: the operator's
   domain paragraph (placeholder in README) — needs approval.
 - [ ] **Demo video** (2 min): record [DEMO_SCRIPT.md](./DEMO_SCRIPT.md)
   on a phone at the live URL; capture Bram visit + Nina
-  contrast + Learn card + arch page.
+  contrast + Learn card + Peptide Lab + arch page.
 - [ ] **Screenshots**: visit round, Learn card, Profile, waiting —
   from the live build, phone size.
 - [ ] **Submission form**: title, tagline, live URL, video URL,

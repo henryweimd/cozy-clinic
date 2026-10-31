@@ -1,3 +1,27 @@
+# CHECKPOINT — Run 40: merge decision + docs (2026-11-01)
+
+Phase: batch close on `feat/knottin-lab`. `main`
+untouched (still run 31).
+
+Decision: HOLD the merge — branch fast-forwards onto
+`main` cleanly, but production waits for operator
+playtest + proxy deploy. One command when ready.
+
+Files changed: 7 docs + in-game demo page (no logic).
+
+Test result: `npm test` 419/419; tsc clean; build green;
+auditor 0 findings; Supabase 0 dangling.
+
+Deployment URL: branch preview (SSO-gated); prod
+unchanged on main.
+
+Playtest result: NOT operator-playtested — programmatic
+verification only.
+
+Image spend this run: $0 (ledger ~$2.62 cumulative).
+
+STOP.
+
 # CHECKPOINT — Run 39: Peptide Lab screen (2026-11-01)
 
 Phase: trial flow on `feat/knottin-lab`. `main`

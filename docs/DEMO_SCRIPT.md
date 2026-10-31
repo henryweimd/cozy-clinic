@@ -14,8 +14,7 @@ recognizes the player in the opening seconds. Say:
 > "This is Cozy Clinic — patients remember you. Bram's back,
 > and the game knows what happened last time."
 
-Tap Bram to say hello if the onboard prompt is showing (it is
-skippable — skip on a second take).
+Bram greets on arrival — no tap-teaching, no onboarding tour.
 
 ## Beat 2 — the 4-round visit (0:20–1:10)
 
@@ -62,10 +61,23 @@ cast counts, pre-computed futures, engine veto. Close:
 > "Built by Muse, running on Muse — Spark simulates the
 > futures, the engine owns the truth, and it all plays offline."
 
+## Beat 6 — the Peptide Lab (second take, +0:40)
+
+Replay Bram to Treat and pick the Custom Knottin Probiotic arm
+instead of the cure: it grades below proven care (an adjunct,
+never BEST), then opens the full-screen lab — consent, the
+live 4-stage design pipeline (or the cached demo offline),
+result, Back to visit; the ending modal still praises the
+player. Say:
+
+> "Experimental care lives in trials — with consent, and
+> proven care first. The design runs live through our own
+> peptide API."
+
 ## If something fails live
 
-- **No network**: keep going — the fallback pack (32 patients,
-  544 futures) plays the identical path; say so, it's a feature.
+- **No network**: keep going — the fallback pack (36 patients,
+  612 futures) plays the identical path; say so, it's a feature.
 - **Wrong tap**: every round is recoverable; undo lives in
   Profile; blocked moves show the rescue beat (pick the joke
   card on purpose — judges laugh).
