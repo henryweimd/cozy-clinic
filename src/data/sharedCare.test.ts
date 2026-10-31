@@ -69,7 +69,7 @@ describe('outbox', () => {
     from_handle: 'Fox',
     team_tag: 'Sun',
     preset_id: 'rest-up',
-    encounter_summary: 'Visit #2 · 1 of 3 so far',
+    encounter_summary: 'Visit #2 · 1 of 4 so far',
     outcome: 'struggling',
     score: 1,
   };
@@ -88,8 +88,8 @@ describe('outbox', () => {
 
 describe('handoffSummary', () => {
   it('writes the encounter line for finished + live visits', () => {
-    expect(handoffSummary(2, 3, true)).toBe('Visit #2 · 3 of 3 right');
-    expect(handoffSummary(2, 1, false)).toBe('Visit #2 · 1 of 3 so far');
+    expect(handoffSummary(2, 4, true)).toBe('Visit #2 · 4 of 4 right');
+    expect(handoffSummary(2, 1, false)).toBe('Visit #2 · 1 of 4 so far');
   });
 });
 

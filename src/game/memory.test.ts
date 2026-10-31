@@ -21,12 +21,12 @@ describe('memoryLine', () => {
 });
 
 describe('recordMemory', () => {
-  it('records immutably, perfect at 3', () => {
-    const map = recordMemory({}, 'Milo', 3);
-    expect(map).toEqual({ Milo: { score: 3, perfect: true } });
-    const next = recordMemory(map, 'June', 1);
-    expect(map).toEqual({ Milo: { score: 3, perfect: true } });
-    expect(next.June).toEqual({ score: 1, perfect: false });
+  it('records immutably, perfect at 4', () => {
+    const map = recordMemory({}, 'Milo', 4);
+    expect(map).toEqual({ Milo: { score: 4, perfect: true } });
+    const next = recordMemory(map, 'June', 3);
+    expect(map).toEqual({ Milo: { score: 4, perfect: true } });
+    expect(next.June).toEqual({ score: 3, perfect: false });
   });
 });
 

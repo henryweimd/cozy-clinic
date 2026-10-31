@@ -1,5 +1,11 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+> Run 21 ownership (main agent): types.ts, conditions.ts,
+> conditions.test.ts, visit.ts, visit.test.ts, sharedCare.ts,
+> sharedCare.test.ts, memory.ts, economy.ts, ClinicScene.ts
+> (round flow), fallbackPack.ts (2 handoff seeds), Supabase
+> handoffs.score check. No other stream may touch these files.
+
 ## Run 20 (2026-10-30): content pack — 4 conditions + 4 patients + art
 
 - Conditions (DRAFT, pending operator medical review): strep-throat

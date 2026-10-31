@@ -41,4 +41,22 @@ describe.each(CONDITION_IDS)('treatment wording %s', (condition) => {
     expect(def.visitPearl.length).toBeGreaterThan(10);
     expect(def.visitPearl.length).toBeLessThanOrEqual(40);
   });
+
+  it('opens with a 3-question history round + tiered clue', () => {
+    const def = CONDITIONS[condition];
+    expect(def.historyOptions).toHaveLength(3);
+    const ids = def.historyOptions.map((o) => o.id);
+    expect(new Set(ids).size).toBe(3);
+    expect(ids).toContain(def.historyBestId);
+    for (const o of def.historyOptions) {
+      expect(o.label.length).toBeGreaterThan(0);
+      expect(o.label.length).toBeLessThanOrEqual(40);
+    }
+    for (const tier of ['gentle', 'steady', 'clinical', 'expert'] as const) {
+      expect(def.bestHistory[tier].length).toBeGreaterThan(10);
+      expect(def.historyQuiz[tier].length).toBeGreaterThan(10);
+    }
+    expect(def.historyQuiz.gentle).toContain('{name}');
+    expect(def.historyQuiz.expert).toContain('{demo}');
+  });
 });

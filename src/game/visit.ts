@@ -1,15 +1,16 @@
 /**
  * Visit-end rules + result copy (pure, unit-tested). A visit is a
- * 3-round mini-story (examine → diagnose → treat); the SET of
- * choices decides the ending. Recovered takes the right
- * diagnosis AND the right treatment; the exam round pays coins
- * and findings. Copy congratulates the PLAYER — never claims
+ * 4-round mini-story (ask → examine → diagnose → treat); the SET
+ * of choices decides the ending. Recovered takes the right
+ * diagnosis AND the right treatment; the ask/exam rounds pay
+ * coins and clues. Copy congratulates the PLAYER — never claims
  * the patient is better or worse.
  */
 
 export type VisitOutcome = 'recovered' | 'struggling';
 
 export interface RoundScore {
+  hxBest: boolean;
   examBest: boolean;
   dxCorrect: boolean;
   txBest: boolean;
@@ -20,12 +21,17 @@ export function visitOutcome(score: RoundScore): VisitOutcome {
 }
 
 export function scoreCount(score: RoundScore): number {
-  return (score.examBest ? 1 : 0) + (score.dxCorrect ? 1 : 0) + (score.txBest ? 1 : 0);
+  return (
+    (score.hxBest ? 1 : 0) +
+    (score.examBest ? 1 : 0) +
+    (score.dxCorrect ? 1 : 0) +
+    (score.txBest ? 1 : 0)
+  );
 }
 
-/** All three rounds right — earns the perfect-visit bonus. */
+/** All four rounds right — earns the perfect-visit bonus. */
 export function isPerfectVisit(score: RoundScore): boolean {
-  return score.examBest && score.dxCorrect && score.txBest;
+  return score.hxBest && score.examBest && score.dxCorrect && score.txBest;
 }
 
 type QuizTier = 'gentle' | 'steady' | 'clinical' | 'expert';
@@ -78,12 +84,12 @@ export interface ResultCopy {
 }
 
 export function resultCopy(input: ResultCopyInput): ResultCopy {
-  const scoreLine = `${scoreCount(input.score)} of 3 right`;
+  const scoreLine = `${scoreCount(input.score)} of 4 right`;
   if (input.outcome === 'recovered') {
     return {
-      // Flawless 3/3 earns its own headline (perfect-visit bonus
-      // lands with it); 2/3 keeps the warm standard praise.
-      title: scoreCount(input.score) === 3 ? 'Flawless visit, Doctor!' : 'Great work, Doctor!',
+      // Flawless 4/4 earns its own headline (perfect-visit bonus
+      // lands with it); 3/4 keeps the warm standard praise.
+      title: scoreCount(input.score) === 4 ? 'Flawless visit, Doctor!' : 'Great work, Doctor!',
       lines: [
         `Visit #${input.visitNo} complete`,
         scoreLine,

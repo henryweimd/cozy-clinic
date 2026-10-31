@@ -22,7 +22,7 @@ export function memoryLine(mem: VisitMemory | undefined): string | null {
 
 /** Pure: records one finished visit (immutable update). */
 export function recordMemory(map: MemoryMap, name: string, score: number): MemoryMap {
-  return { ...map, [name]: { score, perfect: score >= 3 } };
+  return { ...map, [name]: { score, perfect: score >= 4 } };
 }
 
 /** Shape guard for the persisted map (unit-tested). */

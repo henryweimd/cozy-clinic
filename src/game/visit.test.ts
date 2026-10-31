@@ -3,23 +3,23 @@ import { examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, vi
 
 describe('visitOutcome', () => {
   it('takes the right diagnosis AND the right treatment', () => {
-    expect(visitOutcome({ examBest: true, dxCorrect: true, txBest: true })).toBe('recovered');
-    expect(visitOutcome({ examBest: false, dxCorrect: true, txBest: true })).toBe('recovered');
-    expect(visitOutcome({ examBest: true, dxCorrect: false, txBest: true })).toBe('struggling');
-    expect(visitOutcome({ examBest: true, dxCorrect: true, txBest: false })).toBe('struggling');
+    expect(visitOutcome({ hxBest: true, examBest: true, dxCorrect: true, txBest: true })).toBe('recovered');
+    expect(visitOutcome({ hxBest: false, examBest: false, dxCorrect: true, txBest: true })).toBe('recovered');
+    expect(visitOutcome({ hxBest: true, examBest: true, dxCorrect: false, txBest: true })).toBe('struggling');
+    expect(visitOutcome({ hxBest: true, examBest: true, dxCorrect: true, txBest: false })).toBe('struggling');
   });
 
   it('counts the set', () => {
-    expect(scoreCount({ examBest: true, dxCorrect: false, txBest: true })).toBe(2);
+    expect(scoreCount({ hxBest: true, examBest: true, dxCorrect: false, txBest: true })).toBe(3);
   });
 });
 
 describe('isPerfectVisit', () => {
-  it('needs all three rounds right', () => {
-    expect(isPerfectVisit({ examBest: true, dxCorrect: true, txBest: true })).toBe(true);
-    expect(isPerfectVisit({ examBest: false, dxCorrect: true, txBest: true })).toBe(false);
-    expect(isPerfectVisit({ examBest: true, dxCorrect: false, txBest: true })).toBe(false);
-    expect(isPerfectVisit({ examBest: true, dxCorrect: true, txBest: false })).toBe(false);
+  it('needs all four rounds right', () => {
+    expect(isPerfectVisit({ hxBest: true, examBest: true, dxCorrect: true, txBest: true })).toBe(true);
+    expect(isPerfectVisit({ hxBest: false, examBest: true, dxCorrect: true, txBest: true })).toBe(false);
+    expect(isPerfectVisit({ hxBest: true, examBest: true, dxCorrect: false, txBest: true })).toBe(false);
+    expect(isPerfectVisit({ hxBest: true, examBest: true, dxCorrect: true, txBest: false })).toBe(false);
   });
 });
 
@@ -44,14 +44,14 @@ describe('resultCopy', () => {
       outcome: 'recovered',
       visitNo: 2,
       coinsEarned: 3,
-      score: { examBest: true, dxCorrect: true, txBest: true },
+      score: { hxBest: true, examBest: true, dxCorrect: true, txBest: true },
       condition: 'Sniffly Cold',
       pearl: 'Cough + sniffles, zero Centor: a virus',
     });
     expect(copy.title).toBe('Flawless visit, Doctor!');
     expect(copy.lines).toEqual([
       'Visit #2 complete',
-      '3 of 3 right',
+      '4 of 4 right',
       'Cough + sniffles, zero Centor: a virus',
       '+3 Care Coins earned',
     ]);
@@ -59,17 +59,17 @@ describe('resultCopy', () => {
     expect(copy.primary).toBe('Next patient');
   });
 
-  it('keeps the standard headline for a 2/3 recovery', () => {
+  it('keeps the standard headline for a 3/4 recovery', () => {
     const copy = resultCopy({
       outcome: 'recovered',
       visitNo: 2,
       coinsEarned: 2,
-      score: { examBest: false, dxCorrect: true, txBest: true },
+      score: { hxBest: true, examBest: false, dxCorrect: true, txBest: true },
       condition: 'Sniffly Cold',
       pearl: 'Cough + sniffles, zero Centor: a virus',
     });
     expect(copy.title).toBe('Great work, Doctor!');
-    expect(copy.lines[1]).toBe('2 of 3 right');
+    expect(copy.lines[1]).toBe('3 of 4 right');
   });
 
   it('keeps struggling cozy and never obliges learning', () => {
@@ -77,14 +77,14 @@ describe('resultCopy', () => {
       outcome: 'struggling',
       visitNo: 2,
       coinsEarned: 1,
-      score: { examBest: false, dxCorrect: false, txBest: true },
+      score: { hxBest: true, examBest: false, dxCorrect: false, txBest: true },
       condition: 'Sniffly Cold',
       pearl: 'Cough + sniffles, zero Centor: a virus',
     });
     expect(copy.title).toBe('Tough case — keep going!');
     expect(copy.lines).toEqual([
       'Visit #2',
-      '1 of 3 right',
+      '2 of 4 right',
       'Cough + sniffles, zero Centor: a virus',
       'Every doctor keeps learning.',
     ]);

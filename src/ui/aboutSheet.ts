@@ -12,8 +12,8 @@ import { THEME } from './chromeTheme';
 const TITLE = 'About Cozy Clinic';
 
 const BODY: readonly string[] = [
-  'Cozy Clinic is a cozy game about caring for patients who remember you. Meet Milo, Mabel, June, Theo, Priya, and Ellis — examine, diagnose, and treat them across visits while your Living Chart follows every friend.',
-  "How to play: clear each visit's three quiz rounds, earn Care Coins, read Learn topics to get sharper, and spend coins in the Shop. Slide the reading level from Gentle to Expert.",
+  'Cozy Clinic is a cozy game about caring for patients who remember you. Meet Milo, Mabel, June, Theo, Priya, Ellis, Nina, Kai, Ada, and Felix — ask, examine, diagnose, and treat them across visits while your Living Chart follows every friend.',
+  "How to play: clear each visit's four quiz rounds, earn Care Coins, read Learn topics to get sharper, and spend coins in the Shop. Slide the reading level from Gentle to Expert.",
   'Made for the Meta AI Developer Hackathon, Indie track. Muse Spark pre-computes patient futures and paraphrases greetings; Muse Image drew the cast; Muse Code built the game.',
   'Educational simulation only — never medical advice, never real patient data.',
 ];

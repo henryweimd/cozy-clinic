@@ -3,6 +3,9 @@ import type { ConditionDef, ConditionId } from './types';
 /** Exam-round finding when the pick isn't the revealing one. */
 export const EXAM_OTHER_FINDING = 'That exam finds nothing new.';
 
+/** History-round answer when the question leads nowhere. */
+export const HX_OTHER_FINDING = 'They shrug and change the subject — that question leads nowhere.';
+
 /** Display label for one action at one reading tier. */
 export function actionLabel(
   action: {
@@ -52,6 +55,24 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       steady: 'Lifted skin stays peaked — poor turgor, very dry inside.',
       clinical: 'Sustained tenting — poor turgor, volume depleted.',
       expert: 'Sustained skin tenting; poor turgor, volume depletion.',
+    },
+    historyOptions: [
+      { id: 'less-pee', label: 'Peeing less than usual?' },
+      { id: 'headaches', label: 'Any headaches lately?' },
+      { id: 'bad-sleep', label: 'Been sleeping badly?' },
+    ],
+    historyBestId: 'less-pee',
+    bestHistory: {
+      gentle: 'Barely peeing, and it is dark — fluids are really low.',
+      steady: 'Barely peeing, dark urine — fluid really low.',
+      clinical: 'Oliguria with dark urine — volume depleted.',
+      expert: 'Oliguria, dark urine; volume depletion.',
+    },
+    historyQuiz: {
+      gentle: '{name} is droopy and SO thirsty. What do you ask first?',
+      steady: 'Droopy and very thirsty. What do you ask first?',
+      clinical: 'Droopy, thirsty. First history question?',
+      expert: '{demo} with suspected volume depletion. First history question?',
     },
     dxOptions: ['asthma', 'dehydration', 'viral-respiratory'],
     dxPearl: {
@@ -128,6 +149,24 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       clinical: 'Nodes normal, no exudates — Centor 0. A virus, not strep.',
       expert: 'Cervical nodes normal, no exudates — Centor 0, viral.',
     },
+    historyOptions: [
+      { id: 'sick-contacts', label: 'Anyone around you sick?' },
+      { id: 'tummy', label: 'Any stomach aches?' },
+      { id: 'loud', label: 'Been near loud noises?' },
+    ],
+    historyBestId: 'sick-contacts',
+    bestHistory: {
+      gentle: 'Half the class is sneezing too — a cold is going around!',
+      steady: 'Classmates all have colds — it is going around.',
+      clinical: 'Multiple sick contacts — community URI spread.',
+      expert: 'Sick contacts positive; community URI circulation.',
+    },
+    historyQuiz: {
+      gentle: '{name} is sniffly and sneezy. What do you ask first?',
+      steady: 'Sniffles and sneezes. What do you ask first?',
+      clinical: 'Rhinorrhea and sneezing. First history question?',
+      expert: '{demo} with URI symptoms. First history question?',
+    },
     dxOptions: ['viral-respiratory', 'hypertension', 'asthma'],
     dxPearl: {
       right: 'Cough and sniffles with no strep signs — just a cold.',
@@ -203,6 +242,24 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       clinical: 'Expiratory wheezes — classic asthma.',
       expert: 'Polyphonic expiratory wheezes — obstructive pattern.',
     },
+    historyOptions: [
+      { id: 'triggers', label: 'Does running or dust make it worse?' },
+      { id: 'earaches', label: 'Any earaches?' },
+      { id: 'thirsty', label: 'Been thirsty lately?' },
+    ],
+    historyBestId: 'triggers',
+    bestHistory: {
+      gentle: 'Running and dusty rooms always set it off — twitchy airways!',
+      steady: 'Exercise and dust always trigger it — twitchy airways.',
+      clinical: 'Exercise and dust triggers — reactive airways.',
+      expert: 'Exercise/dust triggers; reactive airway pattern.',
+    },
+    historyQuiz: {
+      gentle: "{name}'s chest feels tight and whistly. What do you ask first?",
+      steady: 'Tight whistly chest. What do you ask first?',
+      clinical: 'Chest tightness, wheeze. First history question?',
+      expert: '{demo} with wheeze. First history question?',
+    },
     dxOptions: ['viral-respiratory', 'asthma', 'dehydration'],
     dxPearl: {
       right: 'Whistly breaths + tight chest: classic asthma.',
@@ -277,6 +334,24 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       steady: 'After five quiet minutes the cuff still reads high — it counts.',
       clinical: 'Cuff still high after 5 minutes rest.',
       expert: 'Persistent stage-2-range cuff readings.',
+    },
+    historyOptions: [
+      { id: 'salt-meds', label: 'Salty foods or missed medicines?' },
+      { id: 'pets', label: 'Any pet allergies?' },
+      { id: 'swim', label: 'Been swimming lately?' },
+    ],
+    historyBestId: 'salt-meds',
+    bestHistory: {
+      gentle: 'Extra salty snacks, and doses missed twice this week.',
+      steady: 'Salty diet plus missed doses this week.',
+      clinical: 'High sodium intake; missed doses this week.',
+      expert: 'Sodium load + nonadherence this week.',
+    },
+    historyQuiz: {
+      gentle: "{name}'s numbers are running high. What do you ask first?",
+      steady: 'Blood pressure running high. What do you ask first?',
+      clinical: 'Elevated BP. First history question?',
+      expert: '{demo} with elevated BP. First history question?',
     },
     dxOptions: ['dehydration', 'asthma', 'hypertension'],
     dxPearl: {
@@ -359,6 +434,24 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       clinical: 'Exudates + tender nodes, no cough — Centor 3-4.',
       expert: 'Exudates, tender nodes, no cough — Centor 3-4: test.',
     },
+    historyOptions: [
+      { id: 'strep-contact', label: 'Anyone home with strep throat?' },
+      { id: 'itchy', label: 'Any itchy skin?' },
+      { id: 'rain', label: 'Been out in the rain?' },
+    ],
+    historyBestId: 'strep-contact',
+    bestHistory: {
+      gentle: 'Big sibling just had strep — same sore throat, same week!',
+      steady: 'A sibling just had strep this week.',
+      clinical: 'Household strep contact this week.',
+      expert: 'Household GAS contact; exposure positive.',
+    },
+    historyQuiz: {
+      gentle: '{name} has a sore throat but NO cough. What do you ask first?',
+      steady: 'Sore throat, no cough. What do you ask first?',
+      clinical: 'Pharyngitis, no cough. First history question?',
+      expert: '{demo} with pharyngitis, no cough. First history question?',
+    },
     dxOptions: ['strep-throat', 'viral-respiratory', 'ear-infection'],
     dxPearl: {
       right: 'No cough + white patches + tender glands: strep.',
@@ -434,6 +527,24 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       steady: 'Red, bulging eardrum — a middle-ear infection.',
       clinical: 'Bulging erythematous TM — acute otitis media.',
       expert: 'Bulging erythematous TM; AOM.',
+    },
+    historyOptions: [
+      { id: 'cold-first', label: 'Cold or runny nose first?' },
+      { id: 'teeth', label: 'Any toothaches?' },
+      { id: 'breakfast', label: 'Been skipping breakfast?' },
+    ],
+    historyBestId: 'cold-first',
+    bestHistory: {
+      gentle: 'A runny cold all last week — then the ear started throbbing.',
+      steady: 'A cold last week, then the ear began throbbing.',
+      clinical: 'Viral URI last week, then otalgia — post-URI AOM.',
+      expert: 'URI prodrome then otalgia; post-viral AOM pattern.',
+    },
+    historyQuiz: {
+      gentle: '{name} keeps tugging a sore ear. What do you ask first?',
+      steady: 'Tugging a sore ear. What do you ask first?',
+      clinical: 'Otalgia, ear tugging. First history question?',
+      expert: '{demo} with otalgia. First history question?',
     },
     dxOptions: ['ear-infection', 'strep-throat', 'viral-respiratory'],
     dxPearl: {
@@ -511,6 +622,24 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       clinical: 'Xerotic flexural plaques — atopic dermatitis.',
       expert: 'Flexural lichenified plaques; atopic pattern.',
     },
+    historyOptions: [
+      { id: 'come-go', label: 'Do they come and go?' },
+      { id: 'fevers', label: 'Any fevers?' },
+      { id: 'shoes', label: 'New shoes lately?' },
+    ],
+    historyBestId: 'come-go',
+    bestHistory: {
+      gentle: 'Flares every few weeks, then calms — the classic on-and-off!',
+      steady: 'Flares every few weeks, then calms down.',
+      clinical: 'Relapsing-remitting course — classic atopic pattern.',
+      expert: 'Relapsing-remitting flexural course; atopic.',
+    },
+    historyQuiz: {
+      gentle: '{name} has itchy red patches. What do you ask first?',
+      steady: 'Itchy red patches. What do you ask first?',
+      clinical: 'Pruritic plaques. First history question?',
+      expert: '{demo} with pruritic plaques. First history question?',
+    },
     dxOptions: ['eczema', 'ear-infection', 'viral-respiratory'],
     dxPearl: {
       right: 'Itchy crease patches that come and go: eczema.',
@@ -586,6 +715,24 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       steady: 'Lung crackles with fast breathing — pneumonia.',
       clinical: 'Focal crackles, tachypnea — pneumonia.',
       expert: 'Focal crackles + tachypnea; CAP pattern.',
+    },
+    historyOptions: [
+      { id: 'breathe-hard', label: 'Hard to breathe or breathing fast?' },
+      { id: 'rash', label: 'Any rashes?' },
+      { id: 'reading', label: 'Been reading late?' },
+    ],
+    historyBestId: 'breathe-hard',
+    bestHistory: {
+      gentle: 'Breathing fast, and every breath is work — the lungs are struggling!',
+      steady: 'Breathing fast; every breath is work.',
+      clinical: 'Tachypnea with increased work of breathing.',
+      expert: 'Tachypnea, increased WOB; lower-airway involvement.',
+    },
+    historyQuiz: {
+      gentle: '{name} has fever and a deep cough. What do you ask first?',
+      steady: 'Fever and deep cough. What do you ask first?',
+      clinical: 'Fever, productive cough. First history question?',
+      expert: '{demo} with fever, productive cough. First history question?',
     },
     dxOptions: ['pneumonia', 'asthma', 'viral-respiratory'],
     dxPearl: {

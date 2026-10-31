@@ -53,7 +53,7 @@ import { EMPTY_STREAK, earnsDailyBonus, nextStreak, streakBonus } from '../game/
 import type { StreakState } from '../game/streak';
 import { playSfx, setSfxMuted, unlockSfx } from '../game/sfx';
 import type { RoundScore, VisitOutcome } from '../game/visit';
-import { actionLabel, CONDITION_TIER_NAMES, EXAM_OTHER_FINDING } from '../clinical/conditions';
+import { actionLabel, CONDITION_TIER_NAMES, EXAM_OTHER_FINDING, HX_OTHER_FINDING } from '../clinical/conditions';
 import type { ConditionId } from '../clinical/types';
 import { LearnList } from '../ui/learnList';
 import { AssetBrowser } from '../ui/assetBrowser';
@@ -375,7 +375,7 @@ interface CardWidgets {
 }
 
 /** Visit rounds: every case is a 3-beat mini-story. */
-type VisitRound = 'examine' | 'diagnose' | 'treat';
+type VisitRound = 'history' | 'examine' | 'diagnose' | 'treat';
 
 /** Tray maneuver -> exam_findings modality. */
 const TOOL_MODALITY: Record<ToolDef['id'], ExamModality> = {
@@ -427,8 +427,8 @@ export class ClinicScene extends Phaser.Scene {
   private cardRow!: Phaser.GameObjects.Container;
   private cards: CardWidgets[] = [];
   private revealedStage = -1;
-  private round: VisitRound = 'examine';
-  private roundScore: RoundScore = { examBest: false, dxCorrect: false, txBest: false };
+  private round: VisitRound = 'history';
+  private roundScore: RoundScore = { hxBest: false, examBest: false, dxCorrect: false, txBest: false };
   /** Monotonic guard: stale delayed advances never fire. */
   private roundToken = 0;
   private legend!: Phaser.GameObjects.Container;
@@ -1456,6 +1456,10 @@ export class ClinicScene extends Phaser.Scene {
    */
   private roundCardDefs(): { id: string; label: string }[] {
     const def = CONDITIONS[this.patientState.conditionId];
+    if (this.round === 'history') {
+      // Case-specific history questions — the opening ask.
+      return def.historyOptions.map((opt) => ({ id: `hx:${opt.id}`, label: opt.label }));
+    }
     if (this.round === 'examine') {
       // Case-specific bedside checks (never the generic 4-step
       // row — Look/Feel/Tap/Listen live in the exam tray).
@@ -1547,11 +1551,13 @@ export class ClinicScene extends Phaser.Scene {
     // diagnose are tier-free teaching words; treat keeps the
     // tier wording).
     const wording =
-      this.round === 'examine'
-        ? '1 · Examine…'
-        : this.round === 'diagnose'
-          ? '2 · Diagnose…'
-          : `3 · ${CHOOSE_PROMPT_WORDING[tier]}`;
+      this.round === 'history'
+        ? '1 · Ask…'
+        : this.round === 'examine'
+          ? '2 · Examine…'
+          : this.round === 'diagnose'
+            ? '3 · Diagnose…'
+            : `4 · ${CHOOSE_PROMPT_WORDING[tier]}`;
     const label = this.add
       .text(0, 0, wording, {
         fontFamily: FONT_FAMILY,
@@ -1696,7 +1702,8 @@ export class ClinicScene extends Phaser.Scene {
       yoyo: true,
       ease: 'Sine.easeInOut',
       onComplete: () => {
-        if (this.round === 'examine') this.resolveExam(i);
+        if (this.round === 'history') this.resolveHx(i);
+        else if (this.round === 'examine') this.resolveExam(i);
         else if (this.round === 'diagnose') this.resolveDx(i);
         else this.resolveCard(i);
       },
@@ -1738,8 +1745,9 @@ export class ClinicScene extends Phaser.Scene {
 
   /**
    * Round quiz question in the panel (untagged narration — the
-   * game asking YOU). Examine's is per-condition; diagnose/treat
-   * are tier templates. This is the explicit Choose cue.
+   * game asking YOU). History/examine are per-condition;
+   * diagnose/treat are tier templates. This is the explicit
+   * Choose cue.
    */
   /** Visit + telemed: the only views with cards, tray, and quiz. */
   private isQuizView(): boolean {
@@ -1750,9 +1758,11 @@ export class ClinicScene extends Phaser.Scene {
     const def = CONDITIONS[this.patientState.conditionId];
     const tier = this.tier();
     const q =
-      round === 'examine'
-        ? examQuestion(def.examQuiz[tier], this.activeName, this.demoTag())
-        : roundQuestion(round, tier, this.activeName);
+      round === 'history'
+        ? examQuestion(def.historyQuiz[tier], this.activeName, this.demoTag())
+        : round === 'examine'
+          ? examQuestion(def.examQuiz[tier], this.activeName, this.demoTag())
+          : roundQuestion(round, tier, this.activeName);
     this.lastQuestion = q;
     this.setConversation(speakerFor(this.activeName), q, 'tell');
     // One-shot coaches, at most one toast per question (the
@@ -1847,6 +1857,58 @@ export class ClinicScene extends Phaser.Scene {
           : `reword veto · ${res.note} (local kept)`,
       );
     }
+  }
+
+  /**
+   * HISTORY round: ask one question. The revealing one pays BEST
+   * (+coin) and a real clue; the rest lead nowhere (NOT_GREAT,
+   * no harm). Then the examine round.
+   */
+  private resolveHx(i: number): void {
+    const card = this.cards[i];
+    if (!card) return;
+    const def = CONDITIONS[this.patientState.conditionId];
+    this.undoStack = pushMove(this.undoStack, this.snapPreMove());
+    const pickId = card.actionId.replace('hx:', '');
+    const best = pickId === def.historyBestId;
+    const grade: ChoiceGrade = best ? 'BEST' : 'NOT_GREAT';
+    card.revealed = grade;
+    this.drawSpine(card, grade);
+    this.drawStamp(card, grade);
+    if (best) {
+      this.roundScore.hxBest = true;
+      const hxPay = this.correctPayout();
+      const total = hxPay + this.awardCombo();
+      this.wallet = earn(this.wallet, hxPay, 'earn:best-hx');
+      this.visitEarned += hxPay;
+      this.saveWallet();
+      playSfx('correct');
+      this.showToast(`Great question! +${total} ${this.coinWord(total)}${this.praiseSuffix()}`);
+    } else {
+      this.breakCombo();
+      this.showToast('Hmm, nothing new');
+    }
+    this.refreshChart();
+    this.refreshHud();
+    // The answer reads, then the next quiz lands (both beats
+    // token-guarded so switches/undos cancel the chain).
+    const token = this.roundToken;
+    this.time.delayedCall(900, () => {
+      if (token !== this.roundToken) return;
+      // Panel beats stay in the visit (the advance always runs —
+      // the return trip re-asks the live quiz).
+      if (this.isQuizView()) {
+        this.setConversation(
+          speakerFor(this.activeName),
+          best ? def.bestHistory[this.tier()] : HX_OTHER_FINDING,
+          'tell',
+        );
+      }
+      this.time.delayedCall(1800, () => {
+        if (token !== this.roundToken) return;
+        this.advanceRound('examine');
+      });
+    });
   }
 
   /**
@@ -2080,7 +2142,7 @@ export class ClinicScene extends Phaser.Scene {
       this.pendingStreak = { day: this.streak.streak, bonus };
     }
     if (isPerfectVisit(this.roundScore)) {
-      // Flawless 3/3: the perfect-visit bonus lands before the
+      // Flawless 4/4: the perfect-visit bonus lands before the
       // ending modal so its coins-earned line includes it.
       const perfectPay = EARN_PERFECT + perfectBonus(this.ownedIds);
       this.wallet = earn(this.wallet, perfectPay, 'earn:perfect-visit');
@@ -2143,8 +2205,8 @@ export class ClinicScene extends Phaser.Scene {
     this.visitEarned = 0;
     this.lastQuestion = null;
     this.roundToken += 1;
-    this.round = 'examine';
-    this.roundScore = { examBest: false, dxCorrect: false, txBest: false };
+    this.round = 'history';
+    this.roundScore = { hxBest: false, examBest: false, dxCorrect: false, txBest: false };
     this.visitCombo = 0;
     this.tapping = false;
     const row = this.cast ? patientByName(this.cast, name) : null;

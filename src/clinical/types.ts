@@ -120,6 +120,13 @@ export interface ConditionDef {
   /** Exam-round: the best check's finding. */
   /** Shown when the exam round's best step is picked (tiered). */
   bestFinding: { gentle: string; steady: string; clinical: string; expert: string };
+  /** History-round: 3 questions unique to this case + the best id. */
+  historyOptions: { id: string; label: string }[];
+  historyBestId: string;
+  /** Shown when the history round's best question is asked (tiered). */
+  bestHistory: { gentle: string; steady: string; clinical: string; expert: string };
+  /** History-round quiz question per tier ({name}/{demo} filled in). */
+  historyQuiz: { gentle: string; steady: string; clinical: string; expert: string };
   /** Diagnose-round: 3 option ids, one is `id` (position varies). */
   dxOptions: ConditionId[];
   /** Exam-round quiz question per tier ({name}/{demo} filled in). */

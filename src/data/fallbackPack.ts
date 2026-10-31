@@ -7218,7 +7218,7 @@ export const FALLBACK_HANDOFFS: FallbackHandoff[] = [
     "from_handle": "Wren",
     "team_tag": "Moon",
     "preset_id": "rest-up",
-    "encounter_summary": "Sick visit · 2 of 3 right",
+    "encounter_summary": "Sick visit · 2 of 4 right",
     "outcome": "struggling",
     "score": 2,
     "created_at": "2026-10-28T12:00:00.000Z"
@@ -7229,7 +7229,7 @@ export const FALLBACK_HANDOFFS: FallbackHandoff[] = [
     "from_handle": "Fox",
     "team_tag": "Sun",
     "preset_id": "recheck-breathing",
-    "encounter_summary": "Follow-up · 3 of 3 right",
+    "encounter_summary": "Follow-up · 3 of 4 right",
     "outcome": "recovered",
     "score": 3,
     "created_at": "2026-10-27T12:00:00.000Z"

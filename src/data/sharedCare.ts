@@ -279,8 +279,8 @@ export function shiftOutbox<T>(outbox: readonly T[], n: number): T[] {
 /** Pure: auto-written encounter summary (unit-tested). */
 export function handoffSummary(visitNo: number, score: number, ended: boolean): string {
   return ended
-    ? `Visit #${visitNo} · ${score} of 3 right`
-    : `Visit #${visitNo} · ${score} of 3 so far`;
+    ? `Visit #${visitNo} · ${score} of 4 right`
+    : `Visit #${visitNo} · ${score} of 4 so far`;
 }
 
 /**
