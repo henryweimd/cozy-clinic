@@ -1,5 +1,30 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 43 (2026-11-01): compulsion loop (ranks + nudges + joy)
+
+Branch: `feat/knottin-lab`. Operator playtesting in parallel.
+File ownership (main agent, this run): career module +
+tests, scene wiring (chip/rank/nudges/sfx), auditor
+career geometry, progression doc, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- Career ranks: +1 XP per recovered visit, zero for
+  struggling — wrong scenarios never advance you.
+  Pre-Med → Medical Student → Intern → Resident → Fellow
+  → Attending (thresholds 0/2/5/9/14/20). Exam-room chip
+  (visit-only, top-right calm band) + Profile identity
+  line; persisted locally.
+- Level-up: +10 coins inside the earnings line, fanfare
+  (perfect keeps its single one), toast over the modal.
+  Recovered endings coin the currency moment.
+- Affordability: first newly-unlocked item gets one
+  naming toast at visit end (level-up wins ties); the
+  Profile coin card dots amber while anything is in
+  reach. Purchases coin (gear) or fanfare (Nurse Birch).
+- Verify: 428/428 (+5 career tests), tsc clean, build
+  green, auditor 0 (8 new career checks).
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 42 (2026-11-01): lab leaves choices, joins the rail
 
 Branch: `feat/knottin-lab`. Operator playtesting in parallel.

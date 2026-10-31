@@ -36,3 +36,25 @@ In-game currency only; no real-money purchases in hackathon scope.
 
 Nothing here is enforced in code yet — this file is the contract the
 Milestone 3 schema migration will implement.
+
+## LIVE (run 43): career ranks + loop nudges
+
+Shipped in `src/game/career.ts` (pure + tested), persisted
+locally (`cozy-career-v1`); the `doctor_profile` row waits.
+
+- **Rank XP**: +1 per **recovered** visit (dx + tx right);
+  struggling visits earn zero — wrong scenarios never
+  advance you.
+- **Ranks**: Pre-Med (0), Medical Student (2), Intern (5),
+  Resident (9), Fellow (14), Attending (20). Shown on the
+  exam-room chip (`Lv N · short`) + the Profile identity
+  card; full title in the level-up toast.
+- **Level-up**: +10 Care Coins (`earn:level-up`, inside the
+  visit's earnings line) + fanfare + toast over the ending
+  modal. Recovered-but-same-rank coins the moment; perfect
+  keeps its single fanfare.
+- **Affordability nudge**: when a visit's earnings unlock a
+  first shop item, one toast names it; the Profile coin
+  card carries an amber dot while anything is in reach.
+- **Acquisition joy**: purchases coin (gear) or fanfare
+  (Nurse Birch, the first hire).

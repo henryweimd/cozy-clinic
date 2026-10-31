@@ -87,7 +87,8 @@ import {
   spend,
 } from '../game/economy';
 import type { Wallet } from '../game/economy';
-import { buyItem, learnBonus, nurseBonus, perfectBonus, toolBonus } from '../game/shop';
+import { SHOP_CATALOG, buyItem, learnBonus, nurseBonus, perfectBonus, toolBonus } from '../game/shop';
+import { LEVEL_BONUS, newlyAffordable, rankChip, rankFor } from '../game/career';
 import type { ShopItem } from '../game/shop';
 import { AboutSheet } from '../ui/aboutSheet';
 import { ProfileEditor } from '../ui/profileEditor';
@@ -296,6 +297,7 @@ interface UndoSnapshot {
 
 const WALLET_STORAGE_KEY = 'cozy-wallet-v1';
 const SHOP_STORAGE_KEY = 'cozy-shop-v1';
+const CAREER_STORAGE_KEY = 'cozy-career-v1';
 const LEARN_FILED_KEY = 'cozy-learn-filed-v1';
 const LEARN_OPENED_KEY = 'cozy-learn-opened-v1';
 const LEARN_PASSED_KEY = 'cozy-learn-passed-v1';
@@ -482,6 +484,12 @@ export class ClinicScene extends Phaser.Scene {
   private labZone!: Phaser.GameObjects.Zone;
   /** Visit key that already got the trial-lab toast (once each). */
   private labToastedFor = '';
+  /** Career recovered visits (rank XP; struggling earns zero). */
+  private careerRecovered = 0;
+  /** Wallet balance when the visit started (affordability math). */
+  private visitStartBalance = 0;
+  private levelChip!: Phaser.GameObjects.Container;
+  private levelChipText!: Phaser.GameObjects.Text;
   /** Filed conditions (visit order — the list accumulates). */
   private filedConds: { id: string; name: string }[] = [];
   /** Opened resource ids (their +2 is spent). */
@@ -652,6 +660,7 @@ export class ClinicScene extends Phaser.Scene {
     this.drawRoom();
     this.drawLightOverlays();
     this.drawTitle();
+    this.drawLevelChip();
     this.drawPatient();
     this.drawConversationPanel();
     this.drawCardRow();
@@ -678,7 +687,9 @@ export class ClinicScene extends Phaser.Scene {
       callback: () => this.maybeNudge(),
     });
     this.loadWallet();
+    this.loadCareer();
     this.visitEarned = 0;
+    this.visitStartBalance = this.wallet.balance;
     this.showView('visit', true);
     // The chart defaults OPEN on the patient's first appearance.
     this.chartDrawer.setOpen(true);
@@ -917,6 +928,35 @@ export class ClinicScene extends Phaser.Scene {
       .setDepth(5);
 
     this.patient.on('pointerdown', () => this.onPatientTap());
+  }
+
+  /**
+   * Player-rank chip: small pill in the top-right calm band
+   * (x400-532, y40-72 — clears the centered wordmark and the
+   * 5-tap trigger zone). Visit-only, like the nametag.
+   */
+  private drawLevelChip(): void {
+    const bg = this.add.graphics();
+    bg.fillStyle(CARD_FILL, 1);
+    bg.lineStyle(2, OUTLINE, 1);
+    bg.fillRoundedRect(400, 40, 132, 32, 16);
+    bg.strokeRoundedRect(400, 40, 132, 32, 16);
+    this.levelChipText = this.add
+      .text(466, 56, '', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '14px',
+        color: COCOA,
+      })
+      .setOrigin(0.5, 0.5);
+    this.levelChip = this.add.container(0, 0, [bg, this.levelChipText]);
+    this.levelChip.setDepth(6);
+    this.refreshLevelChip();
+  }
+
+  /** Re-reads rank text (cheap; visit arrival + level-up). */
+  private refreshLevelChip(): void {
+    this.levelChipText.setText(rankChip(rankFor(this.careerRecovered)));
   }
 
   // -- conversation panel (Visit + Telemed; the retired bubble's home) --
@@ -1325,6 +1365,25 @@ export class ClinicScene extends Phaser.Scene {
   private saveShop(): void {
     try {
       window.localStorage.setItem(SHOP_STORAGE_KEY, JSON.stringify(this.ownedIds));
+    } catch {
+      // Play on without saving.
+    }
+  }
+
+  /** Career recovered-visit count (rank XP lives here). */
+  private loadCareer(): void {
+    try {
+      const raw = window.localStorage.getItem(CAREER_STORAGE_KEY);
+      const n = raw ? (JSON.parse(raw) as unknown) : 0;
+      this.careerRecovered = typeof n === 'number' && n >= 0 ? Math.floor(n) : 0;
+    } catch {
+      this.careerRecovered = 0;
+    }
+  }
+
+  private saveCareer(): void {
+    try {
+      window.localStorage.setItem(CAREER_STORAGE_KEY, JSON.stringify(this.careerRecovered));
     } catch {
       // Play on without saving.
     }
@@ -2195,10 +2254,47 @@ export class ClinicScene extends Phaser.Scene {
       playSfx('fanfare');
     }
     const outcome = visitOutcome(this.roundScore);
+    // Career rank: recovered visits earn XP (struggling earns
+    // zero — wrong scenarios never advance you). A rank-up pays
+    // the level bonus into this visit's earnings and fanfares
+    // (perfect already fanned — one fanfare per ending);
+    // recovered-but-same-rank coins the currency moment.
+    let leveledTitle: string | null = null;
+    if (outcome === 'recovered') {
+      const before = rankFor(this.careerRecovered);
+      this.careerRecovered += 1;
+      this.saveCareer();
+      const after = rankFor(this.careerRecovered);
+      if (after.level > before.level) {
+        leveledTitle = after.title;
+        this.wallet = earn(this.wallet, LEVEL_BONUS, 'earn:level-up');
+        this.visitEarned += LEVEL_BONUS;
+        this.saveWallet();
+        if (!isPerfectVisit(this.roundScore)) playSfx('fanfare');
+      } else {
+        playSfx('coin');
+      }
+      this.refreshLevelChip();
+    }
     this.visitEnded = true;
     // The visit's over — the trial tab leaves with the round.
     this.refreshRailTabs();
     this.showResult(outcome);
+    // Ending toasts ride OVER the modal (toast depth 46): the
+    // level-up names its bonus; else the affordability nudge —
+    // this visit's earnings just unlocked a shop item.
+    if (leveledTitle !== null) {
+      this.showToast(`Level up! ${leveledTitle} (+${LEVEL_BONUS} ${this.coinWord(LEVEL_BONUS)})`);
+    } else if (this.visitEarned > 0) {
+      const unlocked = newlyAffordable(
+        this.ownedIds,
+        this.visitStartBalance,
+        this.wallet.balance,
+      );
+      if (unlocked.length > 0) {
+        this.showToast(`You can afford the ${unlocked[0].name}!`);
+      }
+    }
   }
 
   /**
@@ -2243,6 +2339,7 @@ export class ClinicScene extends Phaser.Scene {
     ]);
     // Fresh visit: clock + coins baseline restart, result clears.
     this.visitEnded = false;
+    this.visitStartBalance = this.wallet.balance;
     this.labToastedFor = '';
     this.lastOutcome = null;
     this.hideResult();
@@ -3076,7 +3173,7 @@ export class ClinicScene extends Phaser.Scene {
     this.profileRows.add(disc);
     label(108, dy + 48, (this.doctorHandle[0] ?? 'D').toUpperCase(), '26px', '#ffffff', true, 0.5);
     label(150, dy + 36, `Doctor ${this.doctorHandle.slice(0, 8)}`, '22px', COCOA, true, 0);
-    label(150, dy + 66, 'your doctor \u00b7 tap to change', '14px', SECONDARY, false, 0);
+    label(150, dy + 66, `${rankFor(this.careerRecovered).title} \u00b7 tap to change`, '14px', SECONDARY, false, 0);
     const badge = this.add.graphics();
     badge.fillStyle(COIN_GOLD, 1);
     badge.lineStyle(2, OUTLINE, 1);
@@ -3126,6 +3223,19 @@ export class ClinicScene extends Phaser.Scene {
       if (!this.shop.open) this.shop.show(this.wallet.balance, this.ownedIds);
     });
     this.profileRows.add(coinZone);
+    // Affordability badge: an unowned item is in reach — the
+    // loop's quiet "come spend" (rebuilt every arrival).
+    const canBuy = SHOP_CATALOG.some(
+      (item) => !item.soon && !this.ownedIds.includes(item.id) && item.cost <= this.wallet.balance,
+    );
+    if (canBuy) {
+      const afford = this.add.graphics();
+      afford.fillStyle(AMBER, 1);
+      afford.lineStyle(2, OUTLINE, 1);
+      afford.fillCircle(244, 430, 8);
+      afford.strokeCircle(244, 430, 8);
+      this.profileRows.add(afford);
+    }
     // Topics panel (282..492 x 416..536): book + N-of-M +
     // chevron. Taps open the Learning List.
     card(282, py, 210, 120);
@@ -3840,6 +3950,9 @@ export class ClinicScene extends Phaser.Scene {
       this.saveShop();
       this.refreshHud();
       this.shop.refresh(this.wallet.balance, this.ownedIds);
+      // Acquisition joy: coins for gear, fanfare for the hire.
+      if (item.id === 'nurse-birch') playSfx('fanfare');
+      else playSfx('coin');
       this.showToast(
         item.id === 'nurse-birch' ? 'Nurse Birch joined your clinic!' : `${item.name} is yours!`,
       );
@@ -3985,6 +4098,8 @@ export class ClinicScene extends Phaser.Scene {
       this.peptideLab.hide();
     }
     this.nametag.setVisible(next === 'visit');
+    this.levelChip.setVisible(next === 'visit');
+    if (next === 'visit') this.refreshLevelChip();
     // The exam patient never leaks into Waiting/Learn/Profile.
     this.patient.setVisible(next === 'visit' || next === 'telemed');
     this.patientShadow.setVisible(next === 'visit' || next === 'telemed');

@@ -1,3 +1,24 @@
+# CHECKPOINT — Run 43: compulsion loop (2026-11-01)
+
+Phase: ranks + nudges on `feat/knottin-lab`. `main`
+untouched (still run 31).
+
+Files changed: 8 (career module + tests, scene wiring,
+auditor, progression doc, README, PROGRESS, CHECKPOINT).
+
+Test result: `npm test` 428/428; tsc clean; build green;
+auditor 0 findings (8 new career checks).
+
+Deployment URL: branch preview (SSO-gated); prod
+unchanged on main.
+
+Playtest result: operator playtesting in parallel (this
+run answers their loop note).
+
+Image spend this run: $0 (ledger ~$2.62 cumulative).
+
+STOP.
+
 # CHECKPOINT — Run 42: lab rail tab (2026-11-01)
 
 Phase: trial-tray rework on `feat/knottin-lab`. `main`
