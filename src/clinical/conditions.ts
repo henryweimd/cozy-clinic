@@ -22,34 +22,34 @@ export const CONDITION_TIER_NAMES: Record<
   ConditionId,
   { gentle: string; steady: string; clinical: string; expert: string }
 > = {
-  dehydration: { gentle: 'Dried Out', steady: 'Dehydration', clinical: 'Dehydration', expert: 'Dehydration' },
-  'viral-respiratory': { gentle: 'Sniffly Cold', steady: 'Common Cold', clinical: 'Viral URI', expert: 'Viral URI' },
+  dehydration: { gentle: 'Dehydration', steady: 'Dehydration', clinical: 'Dehydration', expert: 'Dehydration' },
+  'viral-respiratory': { gentle: 'Common Cold', steady: 'Common Cold', clinical: 'Viral URI', expert: 'Viral URI' },
   asthma: { gentle: 'Asthma', steady: 'Asthma', clinical: 'Asthma flare', expert: 'Asthma Exacerbation' },
   hypertension: { gentle: 'High Blood Pressure', steady: 'High Blood Pressure', clinical: 'Hypertension', expert: 'Hypertension' },
   'strep-throat': { gentle: 'Strep Sore Throat', steady: 'Strep Throat', clinical: 'Strep pharyngitis', expert: 'Group A strep pharyngitis' },
-  'ear-infection': { gentle: 'Sore Ear', steady: 'Ear Infection', clinical: 'Otitis media', expert: 'Acute otitis media' },
-  eczema: { gentle: 'Itchy Skin', steady: 'Eczema', clinical: 'Atopic dermatitis', expert: 'Atopic dermatitis' },
-  pneumonia: { gentle: 'Lung Infection', steady: 'Pneumonia', clinical: 'Pneumonia', expert: 'Community-acquired pneumonia' },
-  croup: { gentle: 'Seal-Bark Cough', steady: 'Croup', clinical: 'Croup', expert: 'Viral croup (LTB)' },
-  'hand-foot-mouth': { gentle: 'Spotty Hands-Feet-Mouth', steady: 'Hand-Foot-Mouth', clinical: 'Hand-foot-mouth disease', expert: 'HFMD (coxsackie)' },
-  'lyme-disease': { gentle: 'Tick-Bite Bullseye Rash', steady: 'Lyme Disease', clinical: 'Lyme disease', expert: 'Lyme disease (EM)' },
-  appendicitis: { gentle: 'Sore Appendix', steady: 'Appendicitis', clinical: 'Appendicitis', expert: 'Acute appendicitis' },
-  'swimmers-ear': { gentle: 'Pool Ear Ouch', steady: "Swimmer's Ear", clinical: 'Otitis externa', expert: 'Acute otitis externa' },
-  mono: { gentle: 'Wiped-Out Sickness', steady: 'Mono', clinical: 'Mononucleosis', expert: 'EBV mononucleosis' },
+  'ear-infection': { gentle: 'Ear Infection', steady: 'Ear Infection', clinical: 'Otitis media', expert: 'Acute otitis media' },
+  eczema: { gentle: 'Eczema', steady: 'Eczema', clinical: 'Atopic dermatitis', expert: 'Atopic dermatitis' },
+  pneumonia: { gentle: 'Pneumonia (lung infection)', steady: 'Pneumonia', clinical: 'Pneumonia', expert: 'Community-acquired pneumonia' },
+  croup: { gentle: 'Croup (seal-bark cough)', steady: 'Croup', clinical: 'Croup', expert: 'Viral croup (LTB)' },
+  'hand-foot-mouth': { gentle: 'Hand-Foot-Mouth', steady: 'Hand-Foot-Mouth', clinical: 'Hand-foot-mouth disease', expert: 'HFMD (coxsackie)' },
+  'lyme-disease': { gentle: 'Lyme Disease (tick bite)', steady: 'Lyme Disease', clinical: 'Lyme disease', expert: 'Lyme disease (EM)' },
+  appendicitis: { gentle: 'Appendicitis', steady: 'Appendicitis', clinical: 'Appendicitis', expert: 'Acute appendicitis' },
+  'swimmers-ear': { gentle: "Swimmer's Ear", steady: "Swimmer's Ear", clinical: 'Otitis externa', expert: 'Acute otitis externa' },
+  mono: { gentle: 'Mono (weeks of tired)', steady: 'Mono', clinical: 'Mononucleosis', expert: 'EBV mononucleosis' },
   'nose-bead': { gentle: 'Bead Stuck in Nose', steady: 'Bead in the Nose', clinical: 'Nasal foreign body', expert: 'Nasal FB' },
-  gastroenteritis: { gentle: 'Tummy Bug', steady: 'Stomach Bug', clinical: 'Gastroenteritis', expert: 'Viral gastroenteritis' },
-  'hay-fever': { gentle: 'Pollen Sniffles', steady: 'Hay Fever', clinical: 'Allergic rhinitis', expert: 'Seasonal allergic rhinitis' },
-  ringworm: { gentle: 'Ring-Shaped Rash', steady: 'Ringworm', clinical: 'Ringworm of the body', expert: 'Tinea corporis' },
-  'pink-eye': { gentle: 'Gooey Pink Eyes', steady: 'Pink Eye', clinical: 'Viral conjunctivitis', expert: 'Adenoviral conjunctivitis' },
-  'ankle-sprain': { gentle: 'Twisted Ankle', steady: 'Sprained Ankle', clinical: 'Ankle sprain', expert: 'Lateral ankle sprain' },
-  chickenpox: { gentle: 'Itchy Spotty Pox', steady: 'Chickenpox', clinical: 'Chickenpox (varicella)', expert: 'Varicella' },
-  uti: { gentle: 'Burning Pee Ouch', steady: 'Bladder Infection', clinical: 'Urinary tract infection', expert: 'Acute cystitis' },
-  stye: { gentle: 'Sore Eyelid Bump', steady: 'Stye', clinical: 'Hordeolum (stye)', expert: 'External hordeolum' },
-  nosebleed: { gentle: 'Bleedy Nose Drip', steady: 'Nosebleed', clinical: 'Epistaxis (nosebleed)', expert: 'Anterior epistaxis' },
-  'c-diff-colitis': { gentle: 'Runny Tummy Bug', steady: 'C. Diff Colitis', clinical: 'C. difficile colitis', expert: 'C. difficile infection' },
-  'travelers-diarrhea': { gentle: "Traveler's Tummy Runs", steady: "Traveler's Diarrhea", clinical: "Traveler's diarrhea", expert: 'E. coli enteritis (travel)' },
-  'lactose-intolerance': { gentle: 'Milky Tummy Aches', steady: 'Lactose Intolerance', clinical: 'Lactose intolerance', expert: 'Lactase deficiency' },
-  constipation: { gentle: 'Hard Poops Ouch', steady: 'Constipation', clinical: 'Constipation', expert: 'Functional constipation' },
+  gastroenteritis: { gentle: 'Stomach Bug (gastroenteritis)', steady: 'Stomach Bug', clinical: 'Gastroenteritis', expert: 'Viral gastroenteritis' },
+  'hay-fever': { gentle: 'Hay Fever (pollen allergy)', steady: 'Hay Fever', clinical: 'Allergic rhinitis', expert: 'Seasonal allergic rhinitis' },
+  ringworm: { gentle: 'Ringworm (skin fungus)', steady: 'Ringworm', clinical: 'Ringworm of the body', expert: 'Tinea corporis' },
+  'pink-eye': { gentle: 'Pink Eye', steady: 'Pink Eye', clinical: 'Viral conjunctivitis', expert: 'Adenoviral conjunctivitis' },
+  'ankle-sprain': { gentle: 'Sprained Ankle', steady: 'Sprained Ankle', clinical: 'Ankle sprain', expert: 'Lateral ankle sprain' },
+  chickenpox: { gentle: 'Chickenpox', steady: 'Chickenpox', clinical: 'Chickenpox (varicella)', expert: 'Varicella' },
+  uti: { gentle: 'Bladder Infection (burning pee)', steady: 'Bladder Infection', clinical: 'Urinary tract infection', expert: 'Acute cystitis' },
+  stye: { gentle: 'Stye (eyelid bump)', steady: 'Stye', clinical: 'Hordeolum (stye)', expert: 'External hordeolum' },
+  nosebleed: { gentle: 'Nosebleed', steady: 'Nosebleed', clinical: 'Epistaxis (nosebleed)', expert: 'Anterior epistaxis' },
+  'c-diff-colitis': { gentle: 'C. Diff Diarrhea', steady: 'C. Diff Colitis', clinical: 'C. difficile colitis', expert: 'C. difficile infection' },
+  'travelers-diarrhea': { gentle: "Traveler's Diarrhea", steady: "Traveler's Diarrhea", clinical: "Traveler's diarrhea", expert: 'E. coli enteritis (travel)' },
+  'lactose-intolerance': { gentle: 'Milk Trouble (lactose)', steady: 'Lactose Intolerance', clinical: 'Lactose intolerance', expert: 'Lactase deficiency' },
+  constipation: { gentle: 'Constipation (stuck poop)', steady: 'Constipation', clinical: 'Constipation', expert: 'Functional constipation' },
 };
 
 /**
@@ -155,7 +155,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
 
   'viral-respiratory': {
     id: 'viral-respiratory',
-    name: 'Sniffly Cold',
+    name: 'Common Cold',
     plainWords: 'A common cold: sniffles, sneezes, and a worn-out feeling.',
     examOptions: [
       { id: 'neck-glands', label: 'Neck glands' },
@@ -816,7 +816,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-25 pack — DRAFT, pending operator medical review. MSD: Croup. */
   croup: {
     id: 'croup',
-    name: 'Seal-Bark Cough',
+    name: 'Croup',
     plainWords: 'A barky seal-like cough with noisy breathing in — worse at night.',
     examOptions: [
       { id: 'breath-in-listen', label: 'Listen to the breath in' },
@@ -910,7 +910,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-25 pack — DRAFT, pending operator medical review. MSD: HFMD. */
   'hand-foot-mouth': {
     id: 'hand-foot-mouth',
-    name: 'Spotty Hands-Feet-Mouth',
+    name: 'Hand-Foot-Mouth',
     plainWords: 'Fever plus sores in the mouth and spots on hands and feet.',
     examOptions: [
       { id: 'hands-feet-mouth', label: 'Look at hands, feet, mouth' },
@@ -965,7 +965,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       {
         id: 'cool-sips',
         label: 'Cool sips + gentle pain relief',
-        labels: { gentle: 'Cool sips and ouchie medicine', steady: 'Cool sips + gentle pain relief', clinical: 'Cool fluids + pain relief', expert: 'PO fluids + antipyretics' },
+        labels: { gentle: 'Cool sips and pain-relief medicine', steady: 'Cool sips + gentle pain relief', clinical: 'Cool fluids + pain relief', expert: 'PO fluids + antipyretics' },
         gradeByStage: ['NOT_GREAT', 'BEST', 'BEST', 'BEST'],
         stageDeltaByGrade: { BEST: -1, NOT_GREAT: 0, WRONG: 1, DANGEROUS: 0 },
         vitalsDelta: { energy: 1, comfort: 1 },
@@ -1004,7 +1004,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-25 pack — DRAFT, pending operator medical review. MSD: Lyme. */
   'lyme-disease': {
     id: 'lyme-disease',
-    name: 'Tick-Bite Bullseye Rash',
+    name: 'Lyme Disease',
     plainWords: 'A spreading bullseye rash after a tick bite in the woods.',
     examOptions: [
       { id: 'rash-edge', label: 'Study the round rash edge' },
@@ -1098,7 +1098,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-25 pack — DRAFT, pending operator medical review. MSD: Appendicitis. */
   appendicitis: {
     id: 'appendicitis',
-    name: 'Sore Appendix',
+    name: 'Appendicitis',
     plainWords: 'Belly pain that starts near the navel, then moves to the lower right.',
     examOptions: [
       { id: 'rlq-press', label: 'Press the lower-right belly' },
@@ -1192,7 +1192,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-26 pack — DRAFT, pending operator medical review. MSD: External Otitis. */
   'swimmers-ear': {
     id: 'swimmers-ear',
-    name: 'Pool Ear Ouch',
+    name: "Swimmer's Ear",
     plainWords: 'Outer-ear infection after swimming — tugging the ear hurts a lot.',
     examOptions: [
       { id: 'tug-ear', label: 'Tug the outer ear gently' },
@@ -1286,7 +1286,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-26 pack — DRAFT, pending operator medical review. MSD: Mononucleosis. */
   mono: {
     id: 'mono',
-    name: 'Wiped-Out Sickness',
+    name: 'Mono',
     plainWords: 'Weeks of crushing tiredness with sore throat and big neck glands.',
     examOptions: [
       { id: 'neck-glands-big', label: 'Feel the big neck glands' },
@@ -1380,7 +1380,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-26 pack — DRAFT, pending operator medical review. MSD: Nasal Foreign Bodies. */
   'nose-bead': {
     id: 'nose-bead',
-    name: 'Bead Stuck in Nose',
+    name: 'Bead in the Nose',
     plainWords: 'Something small stuck in one nostril — stinky on that side only.',
     examOptions: [
       { id: 'peek-nostril', label: 'Peek inside the nostril' },
@@ -1474,7 +1474,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-26 pack — DRAFT, pending operator medical review. MSD: Gastroenteritis. */
   gastroenteritis: {
     id: 'gastroenteritis',
-    name: 'Tummy Bug',
+    name: 'Stomach Bug',
     plainWords: 'Throwing up and watery diarrhea with cramps all over the belly.',
     examOptions: [
       { id: 'soft-belly', label: 'Press the soft all-over belly' },
@@ -1568,7 +1568,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-27 pack — DRAFT, pending operator medical review. MSD: Allergic Rhinitis. */
   'hay-fever': {
     id: 'hay-fever',
-    name: 'Pollen Sniffles',
+    name: 'Hay Fever',
     plainWords: 'Itchy eyes and sneeze attacks every spring near flowers — no fever.',
     examOptions: [
       { id: 'nose-peek', label: 'Peek inside the nose' },
@@ -1662,7 +1662,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-27 pack — DRAFT, pending operator medical review. MSD: Tinea Corporis. */
   ringworm: {
     id: 'ringworm',
-    name: 'Ring-Shaped Rash',
+    name: 'Ringworm',
     plainWords: 'An itchy ring patch with clear skin inside — spreading outward.',
     examOptions: [
       { id: 'skin-edge', label: 'Look at the rash edge' },
@@ -1756,7 +1756,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-27 pack — DRAFT, pending operator medical review. MSD: Conjunctivitis Overview. */
   'pink-eye': {
     id: 'pink-eye',
-    name: 'Gooey Pink Eyes',
+    name: 'Pink Eye',
     plainWords: 'Pink watery eyes with goo — showed up right after a cold.',
     examOptions: [
       { id: 'eye-peek', label: 'Look closely at the eyes' },
@@ -1850,7 +1850,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-27 pack — DRAFT, pending operator medical review. MSD: Sprains Overview. */
   'ankle-sprain': {
     id: 'ankle-sprain',
-    name: 'Twisted Ankle',
+    name: 'Sprained Ankle',
     plainWords: 'The ankle rolled inward at soccer — puffy outside, still walks.',
     examOptions: [
       { id: 'ankle-press', label: 'Press the ankle bones' },
@@ -1944,7 +1944,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-28 pack — DRAFT, pending operator medical review. MSD: Chickenpox. */
   chickenpox: {
     id: 'chickenpox',
-    name: 'Itchy Spotty Pox',
+    name: 'Chickenpox',
     plainWords: 'Super-itchy blister spots in bunches — a friend has them too.',
     examOptions: [
       { id: 'spot-peek', label: 'Look closely at spots' },
@@ -2038,7 +2038,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-28 pack — DRAFT, pending operator medical review. MSD: UTI in Children. */
   uti: {
     id: 'uti',
-    name: 'Burning Pee Ouch',
+    name: 'Bladder Infection',
     plainWords: 'Peeing burns and runs all the time — only tiny squirts come out.',
     examOptions: [
       { id: 'pee-test', label: 'Test the pee' },
@@ -2132,7 +2132,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-28 pack — DRAFT, pending operator medical review. MSD: Chalazion and Hordeolum. */
   stye: {
     id: 'stye',
-    name: 'Sore Eyelid Bump',
+    name: 'Stye',
     plainWords: 'A sore red bump on the eyelid edge after dirty-hand rubbing.',
     examOptions: [
       { id: 'lid-peek', label: 'Look closely at the lid' },
@@ -2226,7 +2226,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-28 pack — DRAFT, pending operator medical review. MSD: Epistaxis. */
   nosebleed: {
     id: 'nosebleed',
-    name: 'Bleedy Nose Drip',
+    name: 'Nosebleed',
     plainWords: 'Picking started a one-side nose drip — no bonk or injury.',
     examOptions: [
       { id: 'drip-spot', label: 'Find the drip spot' },
@@ -2320,7 +2320,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-32 knottin-lab pack — DRAFT, pending operator medical review. MedlinePlus: C. diff Infections. */
   'c-diff-colitis': {
     id: 'c-diff-colitis',
-    name: 'Runny Tummy Bug',
+    name: 'C. Diff Colitis',
     plainWords: 'Watery diarrhea with cramps and fever, right after antibiotics.',
     examOptions: [
       { id: 'crampy-press', label: 'Press the crampy belly' },
@@ -2415,7 +2415,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-32 knottin-lab pack — DRAFT, pending operator medical review. MedlinePlus: Traveler's diarrhea diet. */
   'travelers-diarrhea': {
     id: 'travelers-diarrhea',
-    name: "Traveler's Tummy Runs",
+    name: "Traveler's Diarrhea",
     plainWords: 'Watery diarrhea a day after a trip with new food and water.',
     examOptions: [
       { id: 'soft-gurgly-press', label: 'Press the soft gurgly belly' },
@@ -2510,7 +2510,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-32 knottin-lab pack — DRAFT, pending operator medical review. MedlinePlus: Lactose Intolerance. */
   'lactose-intolerance': {
     id: 'lactose-intolerance',
-    name: 'Milky Tummy Aches',
+    name: 'Lactose Intolerance',
     plainWords: 'Gassy cramps and the runs after milk or ice cream.',
     examOptions: [
       { id: 'bloat-press', label: 'Press the bloated belly' },
@@ -2604,7 +2604,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
   /** Run-32 knottin-lab pack — DRAFT, pending operator medical review. MedlinePlus: Constipation. */
   constipation: {
     id: 'constipation',
-    name: 'Hard Poops Ouch',
+    name: 'Constipation',
     plainWords: 'Hard dry poops fewer than three times a week, with belly aches.',
     examOptions: [
       { id: 'left-belly-full', label: 'Feel the full left belly' },

@@ -1,5 +1,30 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 41 (2026-11-01): Gentle dx names teach real medicine
+
+Branch: `feat/knottin-lab`. Queued next: lab tray (run 42).
+File ownership (main agent, this run): conditions names +
+1 label, conditions tests, auditor gentle cards,
+playbook wording law, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- Operator playtest note: Gentle was baby-talk bordering on
+  inaccurate ("Runny Tummy Bug" for C. diff — and it
+  collided with the stomach bug). Revised all 28 gentle dx
+  names: simple hook + real term ("C. Diff Diarrhea",
+  "Stomach Bug (gastroenteritis)", "Mono (weeks of
+  tired)"), each ≤34 chars, pairwise distinct.
+- def.names → steady/canonical terms (chart drawer, Learn
+  topics, result modal, dev monitor all read real now).
+- 1 action label ("ouchie medicine" → "pain-relief
+  medicine"); playbook §5/§6 gain the run-41 naming law.
+- Note: cards + panel are single-style surfaces, so the
+  parenthetical rides in-line (no lighter-color gloss pass
+  — the words themselves now carry the medicine).
+- Verify: 422/422 (+3 naming tests), tsc clean, build
+  green, auditor 0 (28 new card-fit checks).
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 40 (2026-11-01): merge decision (HOLD) + docs truth
 
 Branch: `feat/knottin-lab`. Batch complete; merge held

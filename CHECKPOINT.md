@@ -1,3 +1,24 @@
+# CHECKPOINT — Run 41: Gentle naming (2026-11-01)
+
+Phase: wording accuracy on `feat/knottin-lab`. `main`
+untouched (still run 31).
+
+Files changed: 6 (conditions names + label, tests,
+auditor, playbook, PROGRESS, CHECKPOINT). Content-only.
+
+Test result: `npm test` 422/422; tsc clean; build green;
+auditor 0 findings (28 new card-fit checks).
+
+Deployment URL: branch preview (SSO-gated); prod
+unchanged on main.
+
+Playtest result: operator playtesting in parallel (this
+run answers their wording note).
+
+Image spend this run: $0 (ledger ~$2.62 cumulative).
+
+STOP.
+
 # CHECKPOINT — Run 40: merge decision + docs (2026-11-01)
 
 Phase: batch close on `feat/knottin-lab`. `main`

@@ -116,7 +116,11 @@ Rules:
 ## 5. Tier-writing rules
 
 - **Gentle**: grade-school words, exclamation welcome, no
-  abbreviations, no Latin. "Zero cough", "yucky mucus".
+  abbreviations, no Latin. "Zero cough", "yucky mucus". But
+  dx NAMES must still teach: simple hook + the real term in
+  parentheses ("Mono (weeks of tired)"), never baby-talk
+  ("Wiped-Out Sickness"), never colliding across conditions
+  (run-41 law — the audit test trips on regressions).
 - **Steady**: educated adult, plain clinical words. Canonical.
 - **Clinical**: healthcare-worker vocabulary, **spelled out**
   (rhinorrhea fine, URI ok only if standard; never cryptic
@@ -137,6 +141,9 @@ Rules:
 - **Myth reinforcement**: never imply headaches warn of HTN,
   cold air causes colds, or antibiotics treat viruses.
 - **Grim stage 3**: "needs care now" is the ceiling.
+- **Baby-talk dx names**: "Runny Tummy Bug" for C. diff taught
+  nothing and collided with the stomach bug. Gentle names
+  carry the real term — hook + parenthetical, ≤34 chars.
 
 ## 7. Budgets (engine-vetoed)
 

@@ -1,6 +1,57 @@
 import { describe, expect, it } from 'vitest';
-import { actionLabel, CONDITIONS } from './conditions';
+import { actionLabel, CONDITIONS, CONDITION_TIER_NAMES } from './conditions';
 import type { ConditionId } from './types';
+
+/**
+ * Gentle dx names must teach real medicine: simple words WITH
+ * the real term (hook + parenthetical), never baby-talk, never
+ * colliding (c-diff vs. stomach bug read different). The card-fit
+ * geometry (2 wrapped lines) is mirrored in the layout auditor.
+ */
+describe('gentle dx names', () => {
+  const BABY_TALK = [
+    'Dried Out', 'Sniffly Cold', 'Sore Ear', 'Itchy Skin', 'Lung Infection',
+    'Seal-Bark Cough', 'Spotty Hands-Feet-Mouth', 'Tick-Bite Bullseye Rash',
+    'Sore Appendix', 'Pool Ear Ouch', 'Wiped-Out Sickness', 'Runny Tummy Bug',
+    "Traveler's Tummy Runs", 'Milky Tummy Aches', 'Hard Poops Ouch',
+    'Bleedy Nose Drip', 'Gooey Pink Eyes', 'Itchy Spotty Pox',
+    'Burning Pee Ouch', 'Sore Eyelid Bump', 'Pollen Sniffles',
+    'Ring-Shaped Rash', 'Twisted Ankle', 'Ouch', 'ouchie',
+  ];
+
+  it('keeps every tier name in the 34-char card budget', () => {
+    for (const id of CONDITION_IDS) {
+      for (const tier of ['gentle', 'steady', 'clinical', 'expert'] as const) {
+        const text = CONDITION_TIER_NAMES[id][tier];
+        expect(text.length).toBeGreaterThan(0);
+        expect(text.length).toBeLessThanOrEqual(34);
+      }
+    }
+  });
+
+  it('keeps gentle names pairwise distinct (no collisions)', () => {
+    const seen = new Map<string, string>();
+    for (const id of CONDITION_IDS) {
+      const text = CONDITION_TIER_NAMES[id].gentle;
+      expect(seen.has(text)).toBe(false);
+      seen.set(text, id);
+    }
+  });
+
+  it('carries no baby-talk in gentle names or canonical names', () => {
+    for (const id of CONDITION_IDS) {
+      const hay = `${CONDITION_TIER_NAMES[id].gentle} ${CONDITIONS[id].name}`;
+      for (const banned of BABY_TALK) {
+        expect(hay.includes(banned)).toBe(false);
+      }
+    }
+    for (const id of CONDITION_IDS) {
+      for (const action of CONDITIONS[id].actions) {
+        expect(action.labels.gentle.includes('ouchie')).toBe(false);
+      }
+    }
+  });
+});
 
 const CONDITION_IDS = Object.keys(CONDITIONS) as ConditionId[];
 
