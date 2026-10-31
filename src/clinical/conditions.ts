@@ -3,8 +3,8 @@ import type { ConditionDef, ConditionId } from './types';
 /** Exam-round finding when the pick isn't the revealing one. */
 export const EXAM_OTHER_FINDING = 'That exam finds nothing new.';
 
-/** History-round answer when the question leads nowhere. */
-export const HX_OTHER_FINDING = 'They shrug and change the subject — that question leads nowhere.';
+/** History-round answer when the question's answer is no (a dead end). */
+export const HX_OTHER_FINDING = 'They shake their head — nope, none of that.';
 
 /** Display label for one action at one reading tier. */
 export function actionLabel(
@@ -58,8 +58,8 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     },
     historyOptions: [
       { id: 'less-pee', label: 'Peeing less than usual?' },
-      { id: 'headaches', label: 'Any headaches lately?' },
-      { id: 'bad-sleep', label: 'Been sleeping badly?' },
+      { id: 'rash', label: 'Any rashes?' },
+      { id: 'sneezing', label: 'Been sneezing a lot?' },
     ],
     historyBestId: 'less-pee',
     bestHistory: {
@@ -150,16 +150,16 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       expert: 'Cervical nodes normal, no exudates — Centor 0, viral.',
     },
     historyOptions: [
-      { id: 'sick-contacts', label: 'Anyone around you sick?' },
-      { id: 'tummy', label: 'Any stomach aches?' },
-      { id: 'loud', label: 'Been near loud noises?' },
+      { id: 'how-start', label: 'How did it start — sniffles first?' },
+      { id: 'throwing-up', label: 'Been throwing up?' },
+      { id: 'high-fever', label: 'High fever with chills?' },
     ],
-    historyBestId: 'sick-contacts',
+    historyBestId: 'how-start',
     bestHistory: {
-      gentle: 'Half the class is sneezing too — a cold is going around!',
-      steady: 'Classmates all have colds — it is going around.',
-      clinical: 'Multiple sick contacts — community URI spread.',
-      expert: 'Sick contacts positive; community URI circulation.',
+      gentle: 'Started with a tickly nose two days ago — now full sniffles and sneezes!',
+      steady: 'Tickly nose two days ago, now full sniffles — the classic cold rollout.',
+      clinical: 'Gradual coryzal onset over 2 days; afebrile.',
+      expert: 'Gradual coryzal prodrome, afebrile — viral URI pattern.',
     },
     historyQuiz: {
       gentle: '{name} is sniffly and sneezy. What do you ask first?',
@@ -243,16 +243,16 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       expert: 'Polyphonic expiratory wheezes — obstructive pattern.',
     },
     historyOptions: [
-      { id: 'triggers', label: 'Does running or dust make it worse?' },
+      { id: 'night-running', label: 'Worse at night or with running?' },
       { id: 'earaches', label: 'Any earaches?' },
       { id: 'thirsty', label: 'Been thirsty lately?' },
     ],
-    historyBestId: 'triggers',
+    historyBestId: 'night-running',
     bestHistory: {
-      gentle: 'Running and dusty rooms always set it off — twitchy airways!',
-      steady: 'Exercise and dust always trigger it — twitchy airways.',
-      clinical: 'Exercise and dust triggers — reactive airways.',
-      expert: 'Exercise/dust triggers; reactive airway pattern.',
+      gentle: 'Worse every night and after running — airways that overreact!',
+      steady: 'Worse at night and with running — reactive airways.',
+      clinical: 'Nocturnal + exercise triggers — reversible airway pattern.',
+      expert: 'Nocturnal/exercise triggers; episodic reversible pattern.',
     },
     historyQuiz: {
       gentle: "{name}'s chest feels tight and whistly. What do you ask first?",
@@ -336,22 +336,22 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       expert: 'Persistent stage-2-range cuff readings.',
     },
     historyOptions: [
-      { id: 'salt-meds', label: 'Salty foods or missed medicines?' },
-      { id: 'pets', label: 'Any pet allergies?' },
-      { id: 'swim', label: 'Been swimming lately?' },
+      { id: 'feel-different', label: 'Feel any different at all?' },
+      { id: 'chest-vision', label: 'Chest pain or vision changes?' },
+      { id: 'thirsty', label: 'Extra thirsty lately?' },
     ],
-    historyBestId: 'salt-meds',
+    historyBestId: 'feel-different',
     bestHistory: {
-      gentle: 'Extra salty snacks, and doses missed twice this week.',
-      steady: 'Salty diet plus missed doses this week.',
-      clinical: 'High sodium intake; missed doses this week.',
-      expert: 'Sodium load + nonadherence this week.',
+      gentle: 'Feels totally fine — high pressure usually hides with NO symptoms!',
+      steady: 'Feels fine — pressure this high with zero symptoms.',
+      clinical: 'Asymptomatic despite elevation — silent disease.',
+      expert: 'Asymptomatic; end-organ review negative — silent HTN.',
     },
     historyQuiz: {
-      gentle: "{name}'s numbers are running high. What do you ask first?",
-      steady: 'Blood pressure running high. What do you ask first?',
-      clinical: 'Elevated BP. First history question?',
-      expert: '{demo} with elevated BP. First history question?',
+      gentle: "{name}'s numbers are running high but feels fine. What do you ask first?",
+      steady: 'High numbers, feels fine. What do you ask first?',
+      clinical: 'Elevated BP, asymptomatic. First history question?',
+      expert: '{demo} with asymptomatic elevation. First history question?',
     },
     dxOptions: ['dehydration', 'asthma', 'hypertension'],
     dxPearl: {
@@ -435,16 +435,16 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       expert: 'Exudates, tender nodes, no cough — Centor 3-4: test.',
     },
     historyOptions: [
-      { id: 'strep-contact', label: 'Anyone home with strep throat?' },
+      { id: 'fever-cough', label: 'Fever? And any cough at all?' },
+      { id: 'runny-nose', label: 'Runny or stuffy nose?' },
       { id: 'itchy', label: 'Any itchy skin?' },
-      { id: 'rain', label: 'Been out in the rain?' },
     ],
-    historyBestId: 'strep-contact',
+    historyBestId: 'fever-cough',
     bestHistory: {
-      gentle: 'Big sibling just had strep — same sore throat, same week!',
-      steady: 'A sibling just had strep this week.',
-      clinical: 'Household strep contact this week.',
-      expert: 'Household GAS contact; exposure positive.',
+      gentle: 'Feverish since yesterday, and ZERO cough — the classic strep pattern!',
+      steady: 'Fever since yesterday, zero cough — classic strep pattern.',
+      clinical: 'Fever-positive, cough-negative — Centor history.',
+      expert: 'Fever+, cough−; Centor criteria from history alone.',
     },
     historyQuiz: {
       gentle: '{name} has a sore throat but NO cough. What do you ask first?',
@@ -529,16 +529,16 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       expert: 'Bulging erythematous TM; AOM.',
     },
     historyOptions: [
-      { id: 'cold-first', label: 'Cold or runny nose first?' },
+      { id: 'worse-night', label: 'Worse at night or lying flat?' },
       { id: 'teeth', label: 'Any toothaches?' },
-      { id: 'breakfast', label: 'Been skipping breakfast?' },
+      { id: 'dizzy', label: 'Feeling dizzy or spinny?' },
     ],
-    historyBestId: 'cold-first',
+    historyBestId: 'worse-night',
     bestHistory: {
-      gentle: 'A runny cold all last week — then the ear started throbbing.',
-      steady: 'A cold last week, then the ear began throbbing.',
-      clinical: 'Viral URI last week, then otalgia — post-URI AOM.',
-      expert: 'URI prodrome then otalgia; post-viral AOM pattern.',
+      gentle: 'Much worse lying flat — last night was rough!',
+      steady: 'Worse lying flat; rough night.',
+      clinical: 'Recumbent worsening, night waking — AOM pattern.',
+      expert: 'Nocturnal recumbent worsening; middle-ear pattern.',
     },
     historyQuiz: {
       gentle: '{name} keeps tugging a sore ear. What do you ask first?',
@@ -623,16 +623,16 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       expert: 'Flexural lichenified plaques; atopic pattern.',
     },
     historyOptions: [
-      { id: 'come-go', label: 'Do they come and go?' },
+      { id: 'atopy-family', label: 'Asthma or hay fever in the family?' },
       { id: 'fevers', label: 'Any fevers?' },
       { id: 'shoes', label: 'New shoes lately?' },
     ],
-    historyBestId: 'come-go',
+    historyBestId: 'atopy-family',
     bestHistory: {
-      gentle: 'Flares every few weeks, then calms — the classic on-and-off!',
-      steady: 'Flares every few weeks, then calms down.',
-      clinical: 'Relapsing-remitting course — classic atopic pattern.',
-      expert: 'Relapsing-remitting flexural course; atopic.',
+      gentle: 'Mom has hay fever — the itchy-family pattern!',
+      steady: 'Hay fever and asthma run in the family — the atopic trio.',
+      clinical: 'Family atopy positive — atopic triad pattern.',
+      expert: 'Atopic family history; triad pattern complete.',
     },
     historyQuiz: {
       gentle: '{name} has itchy red patches. What do you ask first?',
@@ -717,16 +717,16 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       expert: 'Focal crackles + tachypnea; CAP pattern.',
     },
     historyOptions: [
-      { id: 'breathe-hard', label: 'Hard to breathe or breathing fast?' },
+      { id: 'deep-breath', label: 'Does a deep breath hurt the chest?' },
       { id: 'rash', label: 'Any rashes?' },
-      { id: 'reading', label: 'Been reading late?' },
+      { id: 'sneezing', label: 'Any sneezing?' },
     ],
-    historyBestId: 'breathe-hard',
+    historyBestId: 'deep-breath',
     bestHistory: {
-      gentle: 'Breathing fast, and every breath is work — the lungs are struggling!',
-      steady: 'Breathing fast; every breath is work.',
-      clinical: 'Tachypnea with increased work of breathing.',
-      expert: 'Tachypnea, increased WOB; lower-airway involvement.',
+      gentle: 'Deep breaths ache on one side — that is where the germ sits!',
+      steady: 'Deep breaths ache on one side — infection sits there.',
+      clinical: 'Focal pleuritic pain — localized infection.',
+      expert: 'Focal pleurisy; consolidating process lateralized.',
     },
     historyQuiz: {
       gentle: '{name} has fever and a deep cough. What do you ask first?',

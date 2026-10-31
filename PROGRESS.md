@@ -1,5 +1,8 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+> Run 22 ownership (main agent): conditions.ts (history blocks
+> only), HX_OTHER_FINDING. No other stream may touch these files.
+
 ## Run 21 (2026-10-30): 4-round visits — history ask round
 
 - Visits are now ask -> examine -> diagnose -> treat. New opening
