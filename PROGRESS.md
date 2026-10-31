@@ -1,6 +1,6 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
-## Run 27 (in progress): content pack 4 — hay-fever, ringworm, pink-eye, ankle-sprain + Willow/Jasper/Hazel/Finn
+## Run 27 (2026-11-01): content pack 4 — hay-fever, ringworm, pink-eye, ankle-sprain + Willow/Jasper/Hazel/Finn
 
 File ownership (main agent, this run): same content-pack set
 as runs 25/26 (types, conditions, fallbackPack+tests, mockData,
@@ -8,6 +8,29 @@ sprites, ClinicScene Speaker/guard/preload, aboutSheet cast,
 CHARACTER_BIBLE, playbook §1, manifest, process_character,
 README/docs counts, PROGRESS, CHECKPOINT).
 Hands off: src/data/maneuvers.* (other stream).
+
+- Conditions (DRAFT, pending operator medical review):
+  hay fever ↔ cold reverse-mimicker (itch + seasonal, no
+  fever), ringworm ↔ eczema/Lyme (scaly ring, clear center),
+  viral pink eye ↔ allergy/cold (watery post-cold),
+  ankle sprain (inversion, walks 4 steps, RICE/Ottawa).
+  MSD-grounded, 4 rounds x 4 tiers, examiner quizzes on
+  condition-specific moves (nose peek, rash edge, eye peek,
+  ankle-bone press).
+- Pack: 28 patients / 20 conditions / 476 nodes / 448 edges /
+  20 resources; Supabase mirrors exactly (24→28 patients,
+  408→476 nodes, 384→448 edges, resources 16→20, findings
+  64→80, treatments 16→20, 0 dangling); CHECK widened to 20.
+- Art: Willow (Remy-base, apron), Jasper (Leo-base,
+  wristband), Hazel (Cleo-base, bookmark), Finn (Remy-base,
+  jersey); 24 sprites + 4 Block-U headers (824x320), all
+  contact sheets reviewed, zero re-asks, no rescales needed.
+- Verify: auditor 0 findings (pins 16→20, label regex fixed
+  for escaped apostrophes); npm test 318/318; tsc clean;
+  build green; live 200 + new assets 200.
+- Also this session: first-visit guided tour removed
+  outright per operator (`a569894`, -104 lines).
+- Spend: $0.28 (ledger ~$1.99 cumulative).
 
 ## Run 26 (2026-10-31): content pack 3 — swimmers-ear, mono, nose-bead, gastro + Otto/Cleo/Remy/Willa
 

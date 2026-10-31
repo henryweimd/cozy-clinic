@@ -1,3 +1,31 @@
+# CHECKPOINT — Run 27: content pack 4 (2026-11-01)
+
+Phase: 4 MSD-grounded conditions (hay fever, ringworm,
+pink eye, ankle sprain) + Willow/Jasper/Hazel/Finn via
+SCENARIO_PLAYBOOK pipeline, per operator sleep-shift
+go-ahead. Plus: guided-tour removal (`a569894`).
+
+Files changed: 47 (types, conditions, fallbackPack+tests,
+mockData, sprites, ClinicScene Speaker/guard/preload,
+aboutSheet cast, CHARACTER_BIBLE, playbook §1, manifest,
+process_character, contact sheets x5, 24 sprites, 4 headers,
+README/docs counts, PROGRESS). Commit `26be4f8` on main.
+
+Test result: auditor 0 findings (pins 16→20, regex fix);
+`npm test` 318/318; tsc clean; build green. Supabase:
+28/476/448, resources 20, findings 80, treatments 20,
+0 dangling.
+
+Deployment URL: `https://cozy-clinic.vercel.app/` (live-polled
+200 + new assets 200 after push).
+
+Playtest result: NOT operator-playtested this run —
+programmatic verification only.
+
+Image spend this run: $0.28 (ledger ~$1.99 cumulative, STOP at $120).
+
+STOP.
+
 # CHECKPOINT — Run 26: content pack 3 (2026-10-31)
 
 Phase: 4 reverse-mimicker conditions (swimmer's ear, mono,
