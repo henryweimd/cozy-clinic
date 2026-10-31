@@ -1,5 +1,35 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 32 (2026-11-01): knottin-lab content pack — gut conditions + trial scaffolding
+
+Branch: `feat/knottin-lab` from tag `pre-knottin-20261101`
+(tag pushed; main untouched until run-35 merge decision).
+File ownership (main agent, this run): types, conditions,
+fallbackPack+tests, mockData, sprites, ClinicScene trial
+entry (placeholder only), aboutSheet roll-call cap, art
+pipeline + manifests + public assets, Supabase gut rows,
+CHARACTER_BIBLE, SCENARIO_PLAYBOOK §1, PROGRESS, CHECKPOINT.
+No edge functions (run 33), no lab screen (run 34).
+Hands off: src/data/maneuvers.* (other stream); `main`
+branch (merge only at run 35 if acceptance ticks).
+
+- 4 MedlinePlus-grounded gut conditions (DRAFT): c-diff
+  flagship (Bram), travelers restraint case (Pearl),
+  lactose (Lena), constipation (Cole); 4 rounds × 4 tiers.
+- Trial arm: `opensLab` on ActionDef; c-diff trial =
+  NOT_GREAT, travelers trial = WRONG; run-32 placeholder
+  toasts the referral + ticker line, grades normally.
+- Name collisions found + fixed pre-ship: Otis/Wren taken
+  by seed cast, Reed/Wren by doctor handles → Bram/Pearl.
+- About roll-call capped (was overflowing the card —
+  latent bug masked by a stale auditor copy, now fixed).
+- Art: 35 images ($0.35); 4×6 sprite sets VALIDATE PASS,
+  4 headers 824×320; 7 face-only regens for drift.
+- Supabase: 36/612/576/28/112/29, 0 dangling; CHECK
+  widened to 28; Custom Knottin Probiotic class row live.
+- Verify: 408/408, tsc clean, build green, auditor 0.
+- Spend: $0.35 (ledger ~$2.62 cumulative).
+
 ## Run 31 (2026-11-01): submission prep (agent-side counts + docs truth)
 
 File ownership (main agent, this run): SUBMISSION_CHECKLIST,

@@ -38,6 +38,17 @@
    - stye → Chalazion and Hordeolum
    - nosebleed → Epistaxis
    (all at `msdmanuals.com/professional/…`)
+   Run-32 knottin-lab pack is MedlinePlus-grounded (code
+   comments cite pages); MSD professional cross-check rides
+   with the operator's medical review:
+   - c-diff-colitis → C. Diff Infections
+   - travelers-diarrhea → Traveler's Diarrhea Diet
+   - lactose-intolerance → Lactose Intolerance
+   - constipation → Constipation
+   Trial-arm rule (knottin): experimental options carry
+   `opensLab`, grade NOT_GREAT where plausible (never BEST
+   over proven care) and WRONG where not indicated; the
+   trial choice always preserves standard-care-first.
 2. **NIH MedlinePlus** — patient-facing links for Learn cards only.
 3. **Operator (physician) pen** — final review; new content ships
    as DRAFT until reviewed.

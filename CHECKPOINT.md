@@ -1,3 +1,32 @@
+# CHECKPOINT — Run 32: knottin-lab content pack (2026-11-01)
+
+Phase: gut content pack + trial scaffolding on
+`feat/knottin-lab`. First of the knottin batch; `main`
+untouched (still run 31, still shippable for freeze).
+
+Files changed: types, conditions (+4 defs), fallbackPack
+(+4/+68/+64/+5/+4/+16) + test counts, mockData, sprites,
+ClinicScene (Speaker/guard/headers/trial toast), aboutSheet
+(roll-call cap), art pipeline + manifest + 24 sprites +
+4 headers + 5 plates, Supabase rows, bible, playbook,
+PROGRESS, CHECKPOINT.
+
+Test result: auditor 0 findings; `npm test` 408/408; tsc
+clean; build green; Supabase 36/612/576/28/112/29,
+0 dangling.
+
+Deployment URL: branch preview (see push output); prod
+`https://cozy-clinic.vercel.app/` unchanged on main.
+
+Playtest result: NOT operator-playtested — programmatic
+verification only. Operator owes: medical pen (all 4 new
+conditions DRAFT), trial-grade review, preview playtest.
+
+Image spend this run: $0.35 (ledger ~$2.62 cumulative,
+STOP at $120).
+
+STOP.
+
 # CHECKPOINT — Run 31: submission prep (2026-11-01)
 
 Phase: agent-side submission truth (counts only). Last of

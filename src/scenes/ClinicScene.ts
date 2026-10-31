@@ -258,7 +258,7 @@ const GRADE_COLOR: Record<ChoiceGrade, number> = {
 };
 
 type ViewName = 'waiting' | 'visit' | 'telemed' | 'portal' | 'learn' | 'profile';
-type Speaker = 'MABEL' | 'JUNE' | 'MILO' | 'THEO' | 'PRIYA' | 'ELLIS' | 'NINA' | 'KAI' | 'ADA' | 'FELIX' | 'HUGO' | 'IVY' | 'LEO' | 'RUBY' | 'OTTO' | 'CLEO' | 'REMY' | 'WILLA' | 'WILLOW' | 'JASPER' | 'HAZEL' | 'FINN' | 'POPPY' | 'MAYA' | 'ELI' | 'MAX' | 'YOU';
+type Speaker = 'MABEL' | 'JUNE' | 'MILO' | 'THEO' | 'PRIYA' | 'ELLIS' | 'NINA' | 'KAI' | 'ADA' | 'FELIX' | 'HUGO' | 'IVY' | 'LEO' | 'RUBY' | 'OTTO' | 'CLEO' | 'REMY' | 'WILLA' | 'WILLOW' | 'JASPER' | 'HAZEL' | 'FINN' | 'POPPY' | 'MAYA' | 'ELI' | 'MAX' | 'BRAM' | 'PEARL' | 'LENA' | 'COLE' | 'YOU';
 
 
 
@@ -271,7 +271,8 @@ function speakerFor(patientName: string): Speaker {
     key === 'LEO' || key === 'RUBY' || key === 'OTTO' || key === 'CLEO' ||
     key === 'REMY' || key === 'WILLA' || key === 'WILLOW' || key === 'JASPER' ||
     key === 'HAZEL' || key === 'FINN' || key === 'POPPY' || key === 'MAYA' ||
-    key === 'ELI' || key === 'MAX'
+    key === 'ELI' || key === 'MAX' || key === 'BRAM' || key === 'PEARL' ||
+    key === 'LENA' || key === 'COLE'
   )
     return key;
   return 'MABEL';
@@ -605,7 +606,7 @@ export class ClinicScene extends Phaser.Scene {
     }
     // Learn-card headers: one cozy banner per condition
     // (offline-safe); keys `learn-<condition_id>`.
-    for (const id of ['asthma', 'viral-respiratory', 'dehydration', 'hypertension', 'strep-throat', 'ear-infection', 'eczema', 'pneumonia', 'croup', 'hand-foot-mouth', 'lyme-disease', 'appendicitis', 'swimmers-ear', 'mono', 'nose-bead', 'gastroenteritis', 'hay-fever', 'ringworm', 'pink-eye', 'ankle-sprain', 'chickenpox', 'uti', 'stye', 'nosebleed']) {
+    for (const id of ['asthma', 'viral-respiratory', 'dehydration', 'hypertension', 'strep-throat', 'ear-infection', 'eczema', 'pneumonia', 'croup', 'hand-foot-mouth', 'lyme-disease', 'appendicitis', 'swimmers-ear', 'mono', 'nose-bead', 'gastroenteritis', 'hay-fever', 'ringworm', 'pink-eye', 'ankle-sprain', 'chickenpox', 'uti', 'stye', 'nosebleed', 'c-diff-colitis', 'travelers-diarrhea', 'lactose-intolerance', 'constipation']) {
       this.load.image(`learn-${id}`, `assets/learn/learn-${id}.png`);
     }
     // No prop preloads: the plush P2 props clash with the photoreal
@@ -2067,6 +2068,13 @@ export class ClinicScene extends Phaser.Scene {
     else {
       playSfx('wrong');
       this.showToast('Oh no — that made things worse');
+    }
+    if (action.opensLab) {
+      // Run-32 scaffolding: the trial arm grades normally
+      // (stamp + face + conversation still read the grade);
+      // run 34 opens the full-screen Peptide Lab here.
+      this.showToast('Trial noted — Peptide Lab opens soon!');
+      this.ticker.pushLive(`trial referral filed for ${this.activeName} (lab opens next update)`);
     }
     this.refreshChart();
     if (grade === 'BEST') {

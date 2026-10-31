@@ -522,6 +522,58 @@ export const FALLBACK_PATIENTS: FallbackPatient[] = [
     "facial_features": "daring bead eyes, brave gap-tooth grin",
     "accessories_clothing": "tiny acorn tucked behind ear",
     "start_stage": 2
+  },
+  {
+    "id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "name": "Bram",
+    "condition_id": "c-diff-colitis",
+    "age_band": "adult",
+    "age_years": 68,
+    "sex": "M",
+    "persona": "lighthouse keeper",
+    "fur_shade": "#8A7F72",
+    "facial_features": "kind bead eyes, calm lighthouse smile",
+    "accessories_clothing": "brass-button cardigan",
+    "start_stage": 2
+  },
+  {
+    "id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "name": "Pearl",
+    "condition_id": "travelers-diarrhea",
+    "age_band": "child",
+    "age_years": 7,
+    "sex": "F",
+    "persona": "junior birdwatcher",
+    "fur_shade": "#8C7B9E",
+    "facial_features": "bright bead eyes, curious chirpy smile",
+    "accessories_clothing": "tiny binoculars on a cord",
+    "start_stage": 2
+  },
+  {
+    "id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "name": "Lena",
+    "condition_id": "lactose-intolerance",
+    "age_band": "teen",
+    "age_years": 14,
+    "sex": "F",
+    "persona": "book-cart helper",
+    "fur_shade": "#B49B7A",
+    "facial_features": "gentle bead eyes, shy bookish smile",
+    "accessories_clothing": "pocket notebook full of lists",
+    "start_stage": 2
+  },
+  {
+    "id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "name": "Cole",
+    "condition_id": "constipation",
+    "age_band": "child",
+    "age_years": 8,
+    "sex": "M",
+    "persona": "pebble collector",
+    "fur_shade": "#6E8898",
+    "facial_features": "steady bead eyes, bright pebble grin",
+    "accessories_clothing": "smooth river pebble in pocket",
+    "start_stage": 2
   }
 ];
 
@@ -9229,6 +9281,1094 @@ export const FALLBACK_NODES: FallbackNode[] = [
     "teaching": "Beads belong in pockets, not noses.",
     "animation_cue": "worried",
     "memory": "First visit: drippy. Tried \"Tilt head way back\" → gushy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "ad75d0b1-b51b-45cf-bc45-67ea1d2985ec",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Bram grips his crampy belly on the bench. Watery runs started days after antibiotic syrup for an earache. The cozy clinic feels calm around him.",
+    "teaching": "Antibiotics first, then watery runs with fever, means C. diff.",
+    "animation_cue": "idle",
+    "memory": "First visit: crampy."
+  },
+  {
+    "id": "6132a997-cdbc-4839-9250-977a81654db5",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Bram starts targeted antibiotics with fluids. His tummy feels a little gurgly. He looks perky and rests softly in the cozy room.",
+    "teaching": "Targeted antibiotics evict the C. diff germs.",
+    "animation_cue": "recovery",
+    "memory": "First visit: crampy. Tried \"Targeted antibiotics + fluids\" → gurgly."
+  },
+  {
+    "id": "6eb6cbb1-e1e2-4dbb-8546-5effd3f74c26",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Bram signs up for the knottin probiotic trial. Watery runs grip his belly. He looks droopy and rests softly in the cozy room.",
+    "teaching": "The trial is tomorrow's hope — today's cure comes first.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. Tried \"Join the knottin trial\" → crampy."
+  },
+  {
+    "id": "cd27dc4f-b0fd-4f93-9aaa-5cb53c23c5ba",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Bram takes more of the same antibiotic. Runs and fever wear him out. He looks droopy and rests softly in the cozy room.",
+    "teaching": "More of the same feeds the C. diff.",
+    "animation_cue": "sick",
+    "memory": "First visit: crampy. Tried \"More of the same antibiotic\" → severe."
+  },
+  {
+    "id": "69baa80d-7fdf-4f50-8a8b-69df78762f24",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Bram starts to take gut-slowing pills, but a helper gently stops him. Watery runs grip his belly. He does not get worse.",
+    "teaching": "Slowing the gut traps C. diff poisons inside.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "0c48b9bc-d3ec-4c85-9db8-5c9b90298301",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Bram keeps taking targeted antibiotics with fluids. His tummy feels calm and fine. He looks perky and cozy.",
+    "teaching": "Targeted antibiotics evict the C. diff germs.",
+    "animation_cue": "happy",
+    "memory": "First visit: crampy. Tried \"Targeted antibiotics + fluids\" → gurgly. Tried \"Targeted antibiotics + fluids\" → calm."
+  },
+  {
+    "id": "7f0239dd-d380-4d5f-b04d-df6e8250ab11",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Bram keeps waiting on the knottin trial list. His tummy feels a little gurgly. He looks comfortable and cozy.",
+    "teaching": "The trial is tomorrow's hope — today's cure comes first.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. Tried \"Targeted antibiotics + fluids\" → gurgly. Tried \"Join the knottin trial\" → gurgly."
+  },
+  {
+    "id": "725ad58e-95f6-4db8-83e1-0781cae2e267",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Bram keeps taking more of the same antibiotic. Watery runs grip his belly. He looks droopy and cozy.",
+    "teaching": "More of the same feeds the C. diff.",
+    "animation_cue": "sick",
+    "memory": "First visit: crampy. Tried \"Targeted antibiotics + fluids\" → gurgly. Tried \"More of the same antibiotic\" → crampy."
+  },
+  {
+    "id": "d39c19bf-63f4-4000-8778-822e66e3b8ea",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Bram starts to take gut-slowing pills, but a helper gently stops him. His tummy feels a little gurgly. He does not get worse.",
+    "teaching": "Slowing the gut traps C. diff poisons inside.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. Tried \"Targeted antibiotics + fluids\" → gurgly. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "325a409b-cdf4-4ae7-8062-4dd3360d6621",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Bram keeps taking targeted antibiotics with fluids. His tummy feels a little gurgly. He looks perky and cozy.",
+    "teaching": "Targeted antibiotics evict the C. diff germs.",
+    "animation_cue": "recovery",
+    "memory": "First visit: crampy. Tried \"Join the knottin trial\" → crampy. Tried \"Targeted antibiotics + fluids\" → gurgly."
+  },
+  {
+    "id": "8e70bd6e-e6b4-48b0-a802-819b31e438f6",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Bram keeps waiting on the knottin trial list. Watery runs grip his belly. He looks droopy and cozy.",
+    "teaching": "The trial is tomorrow's hope — today's cure comes first.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. Tried \"Join the knottin trial\" → crampy. Tried \"Join the knottin trial\" → crampy."
+  },
+  {
+    "id": "f4991ed6-3ee8-40ef-a883-b9e4f0fc4576",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Bram keeps taking more of the same antibiotic. Runs and fever wear him out. He looks droopy and cozy.",
+    "teaching": "More of the same feeds the C. diff.",
+    "animation_cue": "sick",
+    "memory": "First visit: crampy. Tried \"Join the knottin trial\" → crampy. Tried \"More of the same antibiotic\" → severe."
+  },
+  {
+    "id": "a0758ff4-b036-4a51-9c0f-9f699f628edd",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Bram starts to take gut-slowing pills, but a helper gently stops him. Watery runs grip his belly. He does not get worse.",
+    "teaching": "Slowing the gut traps C. diff poisons inside.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. Tried \"Join the knottin trial\" → crampy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "051ea953-1359-44f1-8ac9-dc8b6986634d",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Bram keeps taking targeted antibiotics with fluids. Watery runs grip his belly. He looks perky and cozy.",
+    "teaching": "Targeted antibiotics evict the C. diff germs.",
+    "animation_cue": "recovery",
+    "memory": "First visit: crampy. Tried \"More of the same antibiotic\" → severe. Tried \"Targeted antibiotics + fluids\" → crampy."
+  },
+  {
+    "id": "3b6ee6ff-7be7-448f-9d13-2987fe85ad6f",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Bram keeps waiting on the knottin trial list. Runs and fever wear him out. He looks droopy and cozy.",
+    "teaching": "The trial is tomorrow's hope — today's cure comes first.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. Tried \"More of the same antibiotic\" → severe. Tried \"Join the knottin trial\" → severe."
+  },
+  {
+    "id": "0c3cf4b8-3ace-44db-9595-307270eafb40",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Bram keeps taking more of the same antibiotic. Runs and fever wear him out. He looks droopy and cozy.",
+    "teaching": "More of the same feeds the C. diff.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. Tried \"More of the same antibiotic\" → severe. Tried \"More of the same antibiotic\" → severe."
+  },
+  {
+    "id": "8cb5692b-f7d3-4efb-8912-38137afb54e4",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Bram starts to take gut-slowing pills, but a helper gently stops him. Runs and fever wear him out. He does not get worse.",
+    "teaching": "Slowing the gut traps C. diff poisons inside.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. Tried \"More of the same antibiotic\" → severe. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "61123501-7048-4662-b925-ca3f0c498cb8",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Pearl squirms on the bench after the long flight home. Watery poops started the very next day after strange new water. The cozy clinic feels calm around her.",
+    "teaching": "Trip plus new water, runs in a day: traveler's.",
+    "animation_cue": "idle",
+    "memory": "First visit: runny."
+  },
+  {
+    "id": "3ceea82c-cd9b-4380-a543-6e7ad6b6aa5f",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Pearl sips fluids and rests cozy. Her tummy rumbles a little. She looks perky and rests softly in the cozy room.",
+    "teaching": "Sips and rest beat the trip bug.",
+    "animation_cue": "recovery",
+    "memory": "First visit: runny. Tried \"Fluids, sips, and rest\" → gurgly."
+  },
+  {
+    "id": "61e62a42-d65d-4178-9382-b3caace7da07",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Pearl nibbles bland crackers and rests. Watery runs rush all day. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Bland foods comfort — fluids truly cure.",
+    "animation_cue": "worried",
+    "memory": "First visit: runny. Tried \"Bland foods and rest\" → runny."
+  },
+  {
+    "id": "91473e33-3544-4896-b85f-917585a4b705",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Pearl signs up for the knottin probiotic trial. Runs leave her dry and dizzy. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Too new for a trip bug — fluids were the fix.",
+    "animation_cue": "sick",
+    "memory": "First visit: runny. Tried \"Join the knottin trial\" → severe."
+  },
+  {
+    "id": "18584840-6a56-4093-b74a-27dbb154dbca",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Pearl starts to take leftover pills and guess the dose, but a helper gently stops her. Watery runs rush all day. She does not get worse.",
+    "teaching": "Guessed pill doses harm instead of healing.",
+    "animation_cue": "worried",
+    "memory": "First visit: runny. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "ea8ba335-2499-476e-a6ca-156af3effd5b",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Pearl keeps sipping fluids and resting. Her tummy feels calm and fine. She looks perky and cozy.",
+    "teaching": "Sips and rest beat the trip bug.",
+    "animation_cue": "happy",
+    "memory": "First visit: runny. Tried \"Fluids, sips, and rest\" → gurgly. Tried \"Fluids, sips, and rest\" → calm."
+  },
+  {
+    "id": "cd56b48c-f832-4de9-b68b-290cd4895c06",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Pearl keeps resting on bland foods. Her tummy rumbles a little. She looks comfortable and cozy.",
+    "teaching": "Bland foods comfort — fluids truly cure.",
+    "animation_cue": "worried",
+    "memory": "First visit: runny. Tried \"Fluids, sips, and rest\" → gurgly. Tried \"Bland foods and rest\" → gurgly."
+  },
+  {
+    "id": "cf81adfd-d148-41b3-bfa5-8d80dfa5ca23",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Pearl keeps waiting on the knottin trial list. Watery runs rush all day. She looks droopy and cozy.",
+    "teaching": "Too new for a trip bug — fluids were the fix.",
+    "animation_cue": "sick",
+    "memory": "First visit: runny. Tried \"Fluids, sips, and rest\" → gurgly. Tried \"Join the knottin trial\" → runny."
+  },
+  {
+    "id": "daaecdee-f2db-4bdd-9888-6a726d86b775",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Pearl starts to take leftover pills and guess the dose, but a helper gently stops her. Her tummy rumbles a little. She does not get worse.",
+    "teaching": "Guessed pill doses harm instead of healing.",
+    "animation_cue": "worried",
+    "memory": "First visit: runny. Tried \"Fluids, sips, and rest\" → gurgly. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "18260697-af02-4a47-84ac-db0c424bb819",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Pearl keeps sipping fluids and resting. Her tummy rumbles a little. She looks perky and cozy.",
+    "teaching": "Sips and rest beat the trip bug.",
+    "animation_cue": "recovery",
+    "memory": "First visit: runny. Tried \"Bland foods and rest\" → runny. Tried \"Fluids, sips, and rest\" → gurgly."
+  },
+  {
+    "id": "2d8b6c83-6181-40f7-9211-0267431d84cc",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Pearl keeps resting on bland foods. Watery runs rush all day. She looks droopy and cozy.",
+    "teaching": "Bland foods comfort — fluids truly cure.",
+    "animation_cue": "worried",
+    "memory": "First visit: runny. Tried \"Bland foods and rest\" → runny. Tried \"Bland foods and rest\" → runny."
+  },
+  {
+    "id": "a2867e38-f132-402f-8710-7ff7376e5aa2",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Pearl keeps waiting on the knottin trial list. Runs leave her dry and dizzy. She looks droopy and cozy.",
+    "teaching": "Too new for a trip bug — fluids were the fix.",
+    "animation_cue": "sick",
+    "memory": "First visit: runny. Tried \"Bland foods and rest\" → runny. Tried \"Join the knottin trial\" → severe."
+  },
+  {
+    "id": "22924fdb-f8b1-45ea-b901-3b86a4f40f17",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Pearl starts to take leftover pills and guess the dose, but a helper gently stops her. Watery runs rush all day. She does not get worse.",
+    "teaching": "Guessed pill doses harm instead of healing.",
+    "animation_cue": "worried",
+    "memory": "First visit: runny. Tried \"Bland foods and rest\" → runny. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "42c56cbd-f646-459e-8add-fcb2a18c3b6a",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Pearl keeps sipping fluids and resting. Watery runs rush all day. She looks perky and cozy.",
+    "teaching": "Sips and rest beat the trip bug.",
+    "animation_cue": "recovery",
+    "memory": "First visit: runny. Tried \"Join the knottin trial\" → severe. Tried \"Fluids, sips, and rest\" → runny."
+  },
+  {
+    "id": "804773f8-d0b4-4188-b464-833a77ab824f",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Pearl keeps resting on bland foods. Runs leave her dry and dizzy. She looks droopy and cozy.",
+    "teaching": "Bland foods comfort — fluids truly cure.",
+    "animation_cue": "worried",
+    "memory": "First visit: runny. Tried \"Join the knottin trial\" → severe. Tried \"Bland foods and rest\" → severe."
+  },
+  {
+    "id": "201d2202-ee2d-4c15-a59b-d579f9d257ce",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Pearl keeps waiting on the knottin trial list. Runs leave her dry and dizzy. She looks droopy and cozy.",
+    "teaching": "Too new for a trip bug — fluids were the fix.",
+    "animation_cue": "worried",
+    "memory": "First visit: runny. Tried \"Join the knottin trial\" → severe. Tried \"Join the knottin trial\" → severe."
+  },
+  {
+    "id": "1a4e7198-d6d5-4544-9408-176b1d99c78a",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Pearl starts to take leftover pills and guess the dose, but a helper gently stops her. Runs leave her dry and dizzy. She does not get worse.",
+    "teaching": "Guessed pill doses harm instead of healing.",
+    "animation_cue": "worried",
+    "memory": "First visit: runny. Tried \"Join the knottin trial\" → severe. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "0ca87090-e0cf-4bc4-9d91-d761078f5a0f",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Lena presses her bloated belly by the book cart. Milkshakes and ice cream always end in gas, cramps, and the runs. The cozy clinic feels calm around her.",
+    "teaching": "Dairy brings gas and runs; a breath test confirms: lactose.",
+    "animation_cue": "idle",
+    "memory": "First visit: crampy."
+  },
+  {
+    "id": "761fd994-e0fc-40c0-bd99-22ccf3c44ce6",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Lena cuts back on dairy and tries lactase helpers. Big dairy days make her gassy. She looks perky and rests softly in the cozy room.",
+    "teaching": "Lactase helpers digest what the tummy cannot.",
+    "animation_cue": "recovery",
+    "memory": "First visit: crampy. Tried \"Less dairy + lactase helpers\" → gassy."
+  },
+  {
+    "id": "14f4f6f0-6b5f-4fcb-90b4-b4cd2723f4f1",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Lena switches to yogurt and hard cheese. Cramps and runs follow dairy. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Low-lactose dairy comforts — enzymes truly fix.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. Tried \"Yogurt and hard cheese only\" → crampy."
+  },
+  {
+    "id": "334f4071-db58-4fdd-853d-bdb41381f850",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Lena chugs extra milk to train her tummy. Gas and belly pain never quit. She looks droopy and rests softly in the cozy room.",
+    "teaching": "More milk, more misery — no training effect.",
+    "animation_cue": "sick",
+    "memory": "First visit: crampy. Tried \"Drink MORE milk to train it\" → miserable."
+  },
+  {
+    "id": "420eed3a-53c0-4e54-ba6b-da40a6f17ceb",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Lena starts to try an internet colon cleanse, but a helper gently stops her. Cramps and runs follow dairy. She does not get worse.",
+    "teaching": "Cleanse powders dehydrate instead of healing.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "218a25e2-7858-4484-b84d-05376c4c6f4e",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Lena keeps using less dairy with lactase helpers. Her tummy feels calm and fine. She looks perky and cozy.",
+    "teaching": "Lactase helpers digest what the tummy cannot.",
+    "animation_cue": "happy",
+    "memory": "First visit: crampy. Tried \"Less dairy + lactase helpers\" → gassy. Tried \"Less dairy + lactase helpers\" → calm."
+  },
+  {
+    "id": "44cb9bd7-b8aa-48f6-b46e-c47e73496ef7",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Lena keeps eating only low-lactose dairy. Big dairy days make her gassy. She looks comfortable and cozy.",
+    "teaching": "Low-lactose dairy comforts — enzymes truly fix.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. Tried \"Less dairy + lactase helpers\" → gassy. Tried \"Yogurt and hard cheese only\" → gassy."
+  },
+  {
+    "id": "668a50ef-ad00-45bf-bf11-c5a1b81e96d3",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Lena keeps chugging extra milk. Cramps and runs follow dairy. She looks droopy and cozy.",
+    "teaching": "More milk, more misery — no training effect.",
+    "animation_cue": "sick",
+    "memory": "First visit: crampy. Tried \"Less dairy + lactase helpers\" → gassy. Tried \"Drink MORE milk to train it\" → crampy."
+  },
+  {
+    "id": "4d947747-f033-4a17-bd30-27faaccb148a",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Lena starts to try an internet colon cleanse, but a helper gently stops her. Big dairy days make her gassy. She does not get worse.",
+    "teaching": "Cleanse powders dehydrate instead of healing.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. Tried \"Less dairy + lactase helpers\" → gassy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "dec1bbe0-30a6-489f-bc1b-d9f4ddf5ef00",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Lena keeps using less dairy with lactase helpers. Big dairy days make her gassy. She looks perky and cozy.",
+    "teaching": "Lactase helpers digest what the tummy cannot.",
+    "animation_cue": "recovery",
+    "memory": "First visit: crampy. Tried \"Yogurt and hard cheese only\" → crampy. Tried \"Less dairy + lactase helpers\" → gassy."
+  },
+  {
+    "id": "37bc3f02-8baf-4eb2-bce7-1b8016b1a7d1",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Lena keeps eating only low-lactose dairy. Cramps and runs follow dairy. She looks droopy and cozy.",
+    "teaching": "Low-lactose dairy comforts — enzymes truly fix.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. Tried \"Yogurt and hard cheese only\" → crampy. Tried \"Yogurt and hard cheese only\" → crampy."
+  },
+  {
+    "id": "6cf46c80-a353-49dc-a495-2933a1cd3cdd",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Lena keeps chugging extra milk. Gas and belly pain never quit. She looks droopy and cozy.",
+    "teaching": "More milk, more misery — no training effect.",
+    "animation_cue": "sick",
+    "memory": "First visit: crampy. Tried \"Yogurt and hard cheese only\" → crampy. Tried \"Drink MORE milk to train it\" → miserable."
+  },
+  {
+    "id": "a3cbc697-3245-44a5-bcf0-a241cef23ccf",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Lena starts to try an internet colon cleanse, but a helper gently stops her. Cramps and runs follow dairy. She does not get worse.",
+    "teaching": "Cleanse powders dehydrate instead of healing.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. Tried \"Yogurt and hard cheese only\" → crampy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "32bfacb1-1af3-41a4-9056-a94a6712a381",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Lena keeps using less dairy with lactase helpers. Cramps and runs follow dairy. She looks perky and cozy.",
+    "teaching": "Lactase helpers digest what the tummy cannot.",
+    "animation_cue": "recovery",
+    "memory": "First visit: crampy. Tried \"Drink MORE milk to train it\" → miserable. Tried \"Less dairy + lactase helpers\" → crampy."
+  },
+  {
+    "id": "b0ab13e8-1b4c-4684-bc1e-f5d40cdd6a46",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Lena keeps eating only low-lactose dairy. Gas and belly pain never quit. She looks droopy and cozy.",
+    "teaching": "Low-lactose dairy comforts — enzymes truly fix.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. Tried \"Drink MORE milk to train it\" → miserable. Tried \"Yogurt and hard cheese only\" → miserable."
+  },
+  {
+    "id": "f7dbf555-b044-4702-8977-10a6048721a0",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Lena keeps chugging extra milk. Gas and belly pain never quit. She looks droopy and cozy.",
+    "teaching": "More milk, more misery — no training effect.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. Tried \"Drink MORE milk to train it\" → miserable. Tried \"Drink MORE milk to train it\" → miserable."
+  },
+  {
+    "id": "1590e105-a4ae-4f07-952e-03e34d76553b",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Lena starts to try an internet colon cleanse, but a helper gently stops her. Gas and belly pain never quit. She does not get worse.",
+    "teaching": "Cleanse powders dehydrate instead of healing.",
+    "animation_cue": "worried",
+    "memory": "First visit: crampy. Tried \"Drink MORE milk to train it\" → miserable. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "c6b5856a-a8c0-47ae-8ceb-be9266ece87c",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cole shifts on the bench, holding his left side. No poop in four days — hard, dry, and hurty to push. The cozy clinic feels calm around him.",
+    "teaching": "Hard poops, fewer than three a week: constipation.",
+    "animation_cue": "idle",
+    "memory": "First visit: stuck."
+  },
+  {
+    "id": "628d3046-74e0-448c-b88a-fa9a668d0c35",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Cole eats fiber foods, drinks water, and plays. His poops come slow and firm. He looks perky and rests softly in the cozy room.",
+    "teaching": "Fiber, water, and play push poops through.",
+    "animation_cue": "recovery",
+    "memory": "First visit: stuck. Tried \"Fiber foods + water + play\" → slow."
+  },
+  {
+    "id": "3f6ae525-5f19-4b49-94a9-5da196c73849",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cole starts a same-time potty routine. Hard poops barely come. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Routine helps — fiber truly fixes.",
+    "animation_cue": "worried",
+    "memory": "First visit: stuck. Tried \"Same-time potty routine\" → stuck."
+  },
+  {
+    "id": "558faad4-cd89-47eb-92f0-ad9df6d6943c",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cole holds his poops in until later. Nothing comes out at all. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Holding dries poops harder.",
+    "animation_cue": "sick",
+    "memory": "First visit: stuck. Tried \"Hold poops in until later\" → blocked."
+  },
+  {
+    "id": "7b34ebde-a480-4d39-ab0f-8dca59fbb6bf",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cole starts to swallow a handful of laxatives, but a helper gently stops him. Hard poops barely come. He does not get worse.",
+    "teaching": "Too many laxatives cramp and dehydrate.",
+    "animation_cue": "worried",
+    "memory": "First visit: stuck. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "6f600aea-168f-40db-9e02-cbce6c67ee65",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Cole keeps eating fiber with water and play. His poops come easy and fine. He looks perky and cozy.",
+    "teaching": "Fiber, water, and play push poops through.",
+    "animation_cue": "happy",
+    "memory": "First visit: stuck. Tried \"Fiber foods + water + play\" → slow. Tried \"Fiber foods + water + play\" → calm."
+  },
+  {
+    "id": "d0572329-59c1-431b-b779-f94eabc6c988",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Cole keeps up with the potty routine. His poops come slow and firm. He looks comfortable and cozy.",
+    "teaching": "Routine helps — fiber truly fixes.",
+    "animation_cue": "worried",
+    "memory": "First visit: stuck. Tried \"Fiber foods + water + play\" → slow. Tried \"Same-time potty routine\" → slow."
+  },
+  {
+    "id": "3407264b-5c57-462b-beda-75dd95ae6adf",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cole keeps holding his poops in. Hard poops barely come. He looks droopy and cozy.",
+    "teaching": "Holding dries poops harder.",
+    "animation_cue": "sick",
+    "memory": "First visit: stuck. Tried \"Fiber foods + water + play\" → slow. Tried \"Hold poops in until later\" → stuck."
+  },
+  {
+    "id": "883a54d2-fe25-42cb-9e99-b72bb24bdd51",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Cole starts to swallow a handful of laxatives, but a helper gently stops him. His poops come slow and firm. He does not get worse.",
+    "teaching": "Too many laxatives cramp and dehydrate.",
+    "animation_cue": "worried",
+    "memory": "First visit: stuck. Tried \"Fiber foods + water + play\" → slow. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "d3dea2fc-2d8f-4aa0-882b-f235991fd372",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Cole keeps eating fiber with water and play. His poops come slow and firm. He looks perky and cozy.",
+    "teaching": "Fiber, water, and play push poops through.",
+    "animation_cue": "recovery",
+    "memory": "First visit: stuck. Tried \"Same-time potty routine\" → stuck. Tried \"Fiber foods + water + play\" → slow."
+  },
+  {
+    "id": "9f394d11-8cfb-49e3-9d97-b1f4684b8226",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cole keeps up with the potty routine. Hard poops barely come. He looks droopy and cozy.",
+    "teaching": "Routine helps — fiber truly fixes.",
+    "animation_cue": "worried",
+    "memory": "First visit: stuck. Tried \"Same-time potty routine\" → stuck. Tried \"Same-time potty routine\" → stuck."
+  },
+  {
+    "id": "d1a3fbbd-5a8e-47bb-b76a-659bff835518",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cole keeps holding his poops in. Nothing comes out at all. He looks droopy and cozy.",
+    "teaching": "Holding dries poops harder.",
+    "animation_cue": "sick",
+    "memory": "First visit: stuck. Tried \"Same-time potty routine\" → stuck. Tried \"Hold poops in until later\" → blocked."
+  },
+  {
+    "id": "ac72541c-dcdd-440d-898c-b5673c88bb23",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cole starts to swallow a handful of laxatives, but a helper gently stops him. Hard poops barely come. He does not get worse.",
+    "teaching": "Too many laxatives cramp and dehydrate.",
+    "animation_cue": "worried",
+    "memory": "First visit: stuck. Tried \"Same-time potty routine\" → stuck. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "a9f4ca96-f90a-4baa-8178-f9663ea57b1e",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Cole keeps eating fiber with water and play. Hard poops barely come. He looks perky and cozy.",
+    "teaching": "Fiber, water, and play push poops through.",
+    "animation_cue": "recovery",
+    "memory": "First visit: stuck. Tried \"Hold poops in until later\" → blocked. Tried \"Fiber foods + water + play\" → stuck."
+  },
+  {
+    "id": "d552ca7d-b633-4bf9-b76e-8ec311cbf009",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cole keeps up with the potty routine. Nothing comes out at all. He looks droopy and cozy.",
+    "teaching": "Routine helps — fiber truly fixes.",
+    "animation_cue": "worried",
+    "memory": "First visit: stuck. Tried \"Hold poops in until later\" → blocked. Tried \"Same-time potty routine\" → blocked."
+  },
+  {
+    "id": "f0ed487f-5268-4504-98ae-b336e40701ad",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cole keeps holding his poops in. Nothing comes out at all. He looks droopy and cozy.",
+    "teaching": "Holding dries poops harder.",
+    "animation_cue": "worried",
+    "memory": "First visit: stuck. Tried \"Hold poops in until later\" → blocked. Tried \"Hold poops in until later\" → blocked."
+  },
+  {
+    "id": "86740f1c-6eb3-43a7-b0a6-0e94dab6938f",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cole starts to swallow a handful of laxatives, but a helper gently stops him. Nothing comes out at all. He does not get worse.",
+    "teaching": "Too many laxatives cramp and dehydrate.",
+    "animation_cue": "worried",
+    "memory": "First visit: stuck. Tried \"Hold poops in until later\" → blocked. A risky idea came up; we steered clear."
   }
 ];
 
@@ -13840,6 +14980,582 @@ export const FALLBACK_EDGES: FallbackEdge[] = [
     "kind": "decision",
     "choice_label": "Plug it with a bead",
     "grade": "DANGEROUS"
+  },
+  {
+    "id": "10783b7c-155e-452f-8394-58597ffe50f3",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "from_node_id": "ad75d0b1-b51b-45cf-bc45-67ea1d2985ec",
+    "to_node_id": "6132a997-cdbc-4839-9250-977a81654db5",
+    "kind": "decision",
+    "choice_label": "Targeted antibiotics + fluids",
+    "grade": "BEST"
+  },
+  {
+    "id": "d88540ce-11e3-407f-bc67-169c9e36e53d",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "from_node_id": "ad75d0b1-b51b-45cf-bc45-67ea1d2985ec",
+    "to_node_id": "6eb6cbb1-e1e2-4dbb-8546-5effd3f74c26",
+    "kind": "decision",
+    "choice_label": "Join the knottin trial",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "bf631def-b008-4cf6-90c5-d0aa9d935e67",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "from_node_id": "ad75d0b1-b51b-45cf-bc45-67ea1d2985ec",
+    "to_node_id": "cd27dc4f-b0fd-4f93-9aaa-5cb53c23c5ba",
+    "kind": "decision",
+    "choice_label": "More of the same antibiotic",
+    "grade": "WRONG"
+  },
+  {
+    "id": "e3cefec4-a91b-49f8-94a2-cfb781684a43",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "from_node_id": "ad75d0b1-b51b-45cf-bc45-67ea1d2985ec",
+    "to_node_id": "69baa80d-7fdf-4f50-8a8b-69df78762f24",
+    "kind": "decision",
+    "choice_label": "Gut-slowing anti-poop pills",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "861174e8-c27d-41fe-81fa-8f1039d18344",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "from_node_id": "6132a997-cdbc-4839-9250-977a81654db5",
+    "to_node_id": "0c48b9bc-d3ec-4c85-9db8-5c9b90298301",
+    "kind": "decision",
+    "choice_label": "Targeted antibiotics + fluids",
+    "grade": "BEST"
+  },
+  {
+    "id": "ea3f17b1-1cf3-4693-a988-4663b26719b9",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "from_node_id": "6132a997-cdbc-4839-9250-977a81654db5",
+    "to_node_id": "7f0239dd-d380-4d5f-b04d-df6e8250ab11",
+    "kind": "decision",
+    "choice_label": "Join the knottin trial",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "38b9703e-7118-47f1-aee8-a16cdedf9fce",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "from_node_id": "6132a997-cdbc-4839-9250-977a81654db5",
+    "to_node_id": "725ad58e-95f6-4db8-83e1-0781cae2e267",
+    "kind": "decision",
+    "choice_label": "More of the same antibiotic",
+    "grade": "WRONG"
+  },
+  {
+    "id": "389ff0cd-cc29-494a-9951-f4cf3da686b6",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "from_node_id": "6132a997-cdbc-4839-9250-977a81654db5",
+    "to_node_id": "d39c19bf-63f4-4000-8778-822e66e3b8ea",
+    "kind": "decision",
+    "choice_label": "Gut-slowing anti-poop pills",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "1b5387c0-7d61-4296-91f4-6dc12af65255",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "from_node_id": "6eb6cbb1-e1e2-4dbb-8546-5effd3f74c26",
+    "to_node_id": "325a409b-cdf4-4ae7-8062-4dd3360d6621",
+    "kind": "decision",
+    "choice_label": "Targeted antibiotics + fluids",
+    "grade": "BEST"
+  },
+  {
+    "id": "7006c80d-78fb-4935-a80d-632ce5377870",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "from_node_id": "6eb6cbb1-e1e2-4dbb-8546-5effd3f74c26",
+    "to_node_id": "8e70bd6e-e6b4-48b0-a802-819b31e438f6",
+    "kind": "decision",
+    "choice_label": "Join the knottin trial",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "c8cbaa57-d743-4428-a306-65d1eb39c711",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "from_node_id": "6eb6cbb1-e1e2-4dbb-8546-5effd3f74c26",
+    "to_node_id": "f4991ed6-3ee8-40ef-a883-b9e4f0fc4576",
+    "kind": "decision",
+    "choice_label": "More of the same antibiotic",
+    "grade": "WRONG"
+  },
+  {
+    "id": "96052a7e-6b03-411e-9b53-f614fc1b9d3d",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "from_node_id": "6eb6cbb1-e1e2-4dbb-8546-5effd3f74c26",
+    "to_node_id": "a0758ff4-b036-4a51-9c0f-9f699f628edd",
+    "kind": "decision",
+    "choice_label": "Gut-slowing anti-poop pills",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "4069cacd-f63a-44b4-b466-91821cffd36d",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "from_node_id": "cd27dc4f-b0fd-4f93-9aaa-5cb53c23c5ba",
+    "to_node_id": "051ea953-1359-44f1-8ac9-dc8b6986634d",
+    "kind": "decision",
+    "choice_label": "Targeted antibiotics + fluids",
+    "grade": "BEST"
+  },
+  {
+    "id": "5bc67559-e29c-4af2-919e-978587f050b2",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "from_node_id": "cd27dc4f-b0fd-4f93-9aaa-5cb53c23c5ba",
+    "to_node_id": "3b6ee6ff-7be7-448f-9d13-2987fe85ad6f",
+    "kind": "decision",
+    "choice_label": "Join the knottin trial",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "ad639faf-5fae-4724-8e09-9dcb34ec3920",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "from_node_id": "cd27dc4f-b0fd-4f93-9aaa-5cb53c23c5ba",
+    "to_node_id": "0c3cf4b8-3ace-44db-9595-307270eafb40",
+    "kind": "decision",
+    "choice_label": "More of the same antibiotic",
+    "grade": "WRONG"
+  },
+  {
+    "id": "fbb96fc5-5c6b-450a-b97f-8109264817b1",
+    "patient_id": "cbc5e971-b195-4777-bf89-5e1592371105",
+    "from_node_id": "cd27dc4f-b0fd-4f93-9aaa-5cb53c23c5ba",
+    "to_node_id": "8cb5692b-f7d3-4efb-8912-38137afb54e4",
+    "kind": "decision",
+    "choice_label": "Gut-slowing anti-poop pills",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "97dce1fb-4b29-4575-a0b3-610e9c47df78",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "from_node_id": "61123501-7048-4662-b925-ca3f0c498cb8",
+    "to_node_id": "3ceea82c-cd9b-4380-a543-6e7ad6b6aa5f",
+    "kind": "decision",
+    "choice_label": "Fluids, sips, and rest",
+    "grade": "BEST"
+  },
+  {
+    "id": "e8746cee-2a6d-40e5-9d35-c1ac02ee76bd",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "from_node_id": "61123501-7048-4662-b925-ca3f0c498cb8",
+    "to_node_id": "61e62a42-d65d-4178-9382-b3caace7da07",
+    "kind": "decision",
+    "choice_label": "Bland foods and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "4c72f3f6-76ec-4fbb-a039-e67d91a97d88",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "from_node_id": "61123501-7048-4662-b925-ca3f0c498cb8",
+    "to_node_id": "91473e33-3544-4896-b85f-917585a4b705",
+    "kind": "decision",
+    "choice_label": "Join the knottin trial",
+    "grade": "WRONG"
+  },
+  {
+    "id": "e39326de-c5a6-4b0a-aba6-60b26b30c770",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "from_node_id": "61123501-7048-4662-b925-ca3f0c498cb8",
+    "to_node_id": "18584840-6a56-4093-b74a-27dbb154dbca",
+    "kind": "decision",
+    "choice_label": "Leftover antibiotics, guessed dose",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "57c94946-e421-4eb5-b12e-6769fdf8d052",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "from_node_id": "3ceea82c-cd9b-4380-a543-6e7ad6b6aa5f",
+    "to_node_id": "ea8ba335-2499-476e-a6ca-156af3effd5b",
+    "kind": "decision",
+    "choice_label": "Fluids, sips, and rest",
+    "grade": "BEST"
+  },
+  {
+    "id": "95c4ddf5-8a7b-4c52-918f-4a6ec3f9b6aa",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "from_node_id": "3ceea82c-cd9b-4380-a543-6e7ad6b6aa5f",
+    "to_node_id": "cd56b48c-f832-4de9-b68b-290cd4895c06",
+    "kind": "decision",
+    "choice_label": "Bland foods and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "f1e91a82-3361-4d70-942f-c0cb540eb345",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "from_node_id": "3ceea82c-cd9b-4380-a543-6e7ad6b6aa5f",
+    "to_node_id": "cf81adfd-d148-41b3-bfa5-8d80dfa5ca23",
+    "kind": "decision",
+    "choice_label": "Join the knottin trial",
+    "grade": "WRONG"
+  },
+  {
+    "id": "089799e7-7729-4197-9dd4-65baf3011dc6",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "from_node_id": "3ceea82c-cd9b-4380-a543-6e7ad6b6aa5f",
+    "to_node_id": "daaecdee-f2db-4bdd-9888-6a726d86b775",
+    "kind": "decision",
+    "choice_label": "Leftover antibiotics, guessed dose",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "9ddde5eb-0f1f-4571-a13e-92908083de3b",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "from_node_id": "61e62a42-d65d-4178-9382-b3caace7da07",
+    "to_node_id": "18260697-af02-4a47-84ac-db0c424bb819",
+    "kind": "decision",
+    "choice_label": "Fluids, sips, and rest",
+    "grade": "BEST"
+  },
+  {
+    "id": "b8ae56c5-9659-4a44-93d8-062afac7abac",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "from_node_id": "61e62a42-d65d-4178-9382-b3caace7da07",
+    "to_node_id": "2d8b6c83-6181-40f7-9211-0267431d84cc",
+    "kind": "decision",
+    "choice_label": "Bland foods and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "df99752e-6302-4b49-adbb-82d3a95265bc",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "from_node_id": "61e62a42-d65d-4178-9382-b3caace7da07",
+    "to_node_id": "a2867e38-f132-402f-8710-7ff7376e5aa2",
+    "kind": "decision",
+    "choice_label": "Join the knottin trial",
+    "grade": "WRONG"
+  },
+  {
+    "id": "19a98145-da35-4844-baf0-4dc3b0c556c7",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "from_node_id": "61e62a42-d65d-4178-9382-b3caace7da07",
+    "to_node_id": "22924fdb-f8b1-45ea-b901-3b86a4f40f17",
+    "kind": "decision",
+    "choice_label": "Leftover antibiotics, guessed dose",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "887acd2a-bafe-41c0-8bf7-9eca223d1d62",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "from_node_id": "91473e33-3544-4896-b85f-917585a4b705",
+    "to_node_id": "42c56cbd-f646-459e-8add-fcb2a18c3b6a",
+    "kind": "decision",
+    "choice_label": "Fluids, sips, and rest",
+    "grade": "BEST"
+  },
+  {
+    "id": "8a6eb45a-2e16-40de-a4ae-895783f79720",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "from_node_id": "91473e33-3544-4896-b85f-917585a4b705",
+    "to_node_id": "804773f8-d0b4-4188-b464-833a77ab824f",
+    "kind": "decision",
+    "choice_label": "Bland foods and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "6e001c87-e615-402e-9581-94ed55988dbe",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "from_node_id": "91473e33-3544-4896-b85f-917585a4b705",
+    "to_node_id": "201d2202-ee2d-4c15-a59b-d579f9d257ce",
+    "kind": "decision",
+    "choice_label": "Join the knottin trial",
+    "grade": "WRONG"
+  },
+  {
+    "id": "c5a5a530-b32f-49d8-b889-6cd8bcf06fbe",
+    "patient_id": "bcf37457-5120-4ec1-bb2f-a48cfc0ca932",
+    "from_node_id": "91473e33-3544-4896-b85f-917585a4b705",
+    "to_node_id": "1a4e7198-d6d5-4544-9408-176b1d99c78a",
+    "kind": "decision",
+    "choice_label": "Leftover antibiotics, guessed dose",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "a914690c-2893-468d-aa7c-a181d0d48d49",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "from_node_id": "0ca87090-e0cf-4bc4-9d91-d761078f5a0f",
+    "to_node_id": "761fd994-e0fc-40c0-bd99-22ccf3c44ce6",
+    "kind": "decision",
+    "choice_label": "Less dairy + lactase helpers",
+    "grade": "BEST"
+  },
+  {
+    "id": "638882e8-b821-44dd-af39-e30bba8161b4",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "from_node_id": "0ca87090-e0cf-4bc4-9d91-d761078f5a0f",
+    "to_node_id": "14f4f6f0-6b5f-4fcb-90b4-b4cd2723f4f1",
+    "kind": "decision",
+    "choice_label": "Yogurt and hard cheese only",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "28d5462a-8e8d-4ccc-92e0-21bbbc24bfcd",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "from_node_id": "0ca87090-e0cf-4bc4-9d91-d761078f5a0f",
+    "to_node_id": "334f4071-db58-4fdd-853d-bdb41381f850",
+    "kind": "decision",
+    "choice_label": "Drink MORE milk to train it",
+    "grade": "WRONG"
+  },
+  {
+    "id": "219b2363-8f1c-4850-bf98-8fd44a72f618",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "from_node_id": "0ca87090-e0cf-4bc4-9d91-d761078f5a0f",
+    "to_node_id": "420eed3a-53c0-4e54-ba6b-da40a6f17ceb",
+    "kind": "decision",
+    "choice_label": "Internet colon-cleanse powder",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "f07f1635-039d-4d18-8455-c6d6c0de9430",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "from_node_id": "761fd994-e0fc-40c0-bd99-22ccf3c44ce6",
+    "to_node_id": "218a25e2-7858-4484-b84d-05376c4c6f4e",
+    "kind": "decision",
+    "choice_label": "Less dairy + lactase helpers",
+    "grade": "BEST"
+  },
+  {
+    "id": "daa1a290-aca5-4b19-8b50-d489035df3d0",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "from_node_id": "761fd994-e0fc-40c0-bd99-22ccf3c44ce6",
+    "to_node_id": "44cb9bd7-b8aa-48f6-b46e-c47e73496ef7",
+    "kind": "decision",
+    "choice_label": "Yogurt and hard cheese only",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "e74dd727-d1a8-4971-91a4-ab49e95ee044",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "from_node_id": "761fd994-e0fc-40c0-bd99-22ccf3c44ce6",
+    "to_node_id": "668a50ef-ad00-45bf-bf11-c5a1b81e96d3",
+    "kind": "decision",
+    "choice_label": "Drink MORE milk to train it",
+    "grade": "WRONG"
+  },
+  {
+    "id": "42f2b8b6-a71a-4a9f-bcc0-cfbf46269a93",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "from_node_id": "761fd994-e0fc-40c0-bd99-22ccf3c44ce6",
+    "to_node_id": "4d947747-f033-4a17-bd30-27faaccb148a",
+    "kind": "decision",
+    "choice_label": "Internet colon-cleanse powder",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "288f7d7c-69b9-41d6-98d3-dfdbe252d20a",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "from_node_id": "14f4f6f0-6b5f-4fcb-90b4-b4cd2723f4f1",
+    "to_node_id": "dec1bbe0-30a6-489f-bc1b-d9f4ddf5ef00",
+    "kind": "decision",
+    "choice_label": "Less dairy + lactase helpers",
+    "grade": "BEST"
+  },
+  {
+    "id": "391d85b1-c158-40dc-90be-c1edf3aedd01",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "from_node_id": "14f4f6f0-6b5f-4fcb-90b4-b4cd2723f4f1",
+    "to_node_id": "37bc3f02-8baf-4eb2-bce7-1b8016b1a7d1",
+    "kind": "decision",
+    "choice_label": "Yogurt and hard cheese only",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "b827bfe6-8fac-4477-9688-1e6835237707",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "from_node_id": "14f4f6f0-6b5f-4fcb-90b4-b4cd2723f4f1",
+    "to_node_id": "6cf46c80-a353-49dc-a495-2933a1cd3cdd",
+    "kind": "decision",
+    "choice_label": "Drink MORE milk to train it",
+    "grade": "WRONG"
+  },
+  {
+    "id": "cf1bc0a5-ec1b-4357-9199-9278dc3ac367",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "from_node_id": "14f4f6f0-6b5f-4fcb-90b4-b4cd2723f4f1",
+    "to_node_id": "a3cbc697-3245-44a5-bcf0-a241cef23ccf",
+    "kind": "decision",
+    "choice_label": "Internet colon-cleanse powder",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "7843b5f0-5068-4ee4-ad60-3ed773adaeab",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "from_node_id": "334f4071-db58-4fdd-853d-bdb41381f850",
+    "to_node_id": "32bfacb1-1af3-41a4-9056-a94a6712a381",
+    "kind": "decision",
+    "choice_label": "Less dairy + lactase helpers",
+    "grade": "BEST"
+  },
+  {
+    "id": "58d30d93-13c8-480a-b8ff-66300b257057",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "from_node_id": "334f4071-db58-4fdd-853d-bdb41381f850",
+    "to_node_id": "b0ab13e8-1b4c-4684-bc1e-f5d40cdd6a46",
+    "kind": "decision",
+    "choice_label": "Yogurt and hard cheese only",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "ee78a23b-48db-4de3-ab00-59c84a3fcabc",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "from_node_id": "334f4071-db58-4fdd-853d-bdb41381f850",
+    "to_node_id": "f7dbf555-b044-4702-8977-10a6048721a0",
+    "kind": "decision",
+    "choice_label": "Drink MORE milk to train it",
+    "grade": "WRONG"
+  },
+  {
+    "id": "f1853e33-e6ec-4243-a7d6-ec899f67ddc3",
+    "patient_id": "295d6317-7665-45fa-a723-2222bf43f13e",
+    "from_node_id": "334f4071-db58-4fdd-853d-bdb41381f850",
+    "to_node_id": "1590e105-a4ae-4f07-952e-03e34d76553b",
+    "kind": "decision",
+    "choice_label": "Internet colon-cleanse powder",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "154e20aa-9e03-4289-b221-5d37a2538a2c",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "from_node_id": "c6b5856a-a8c0-47ae-8ceb-be9266ece87c",
+    "to_node_id": "628d3046-74e0-448c-b88a-fa9a668d0c35",
+    "kind": "decision",
+    "choice_label": "Fiber foods + water + play",
+    "grade": "BEST"
+  },
+  {
+    "id": "76941e4a-0ffe-4288-b4ae-31c7f7f3674e",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "from_node_id": "c6b5856a-a8c0-47ae-8ceb-be9266ece87c",
+    "to_node_id": "3f6ae525-5f19-4b49-94a9-5da196c73849",
+    "kind": "decision",
+    "choice_label": "Same-time potty routine",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "c4c5f91c-ce0c-4b96-a369-9e4bd5cd919a",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "from_node_id": "c6b5856a-a8c0-47ae-8ceb-be9266ece87c",
+    "to_node_id": "558faad4-cd89-47eb-92f0-ad9df6d6943c",
+    "kind": "decision",
+    "choice_label": "Hold poops in until later",
+    "grade": "WRONG"
+  },
+  {
+    "id": "5e1b82e0-0ba5-4925-b03e-a2efd0403ed1",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "from_node_id": "c6b5856a-a8c0-47ae-8ceb-be9266ece87c",
+    "to_node_id": "7b34ebde-a480-4d39-ab0f-8dca59fbb6bf",
+    "kind": "decision",
+    "choice_label": "Handful of grown-up laxatives",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "f08e6b86-937c-463f-bb2a-d6a97d7bb011",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "from_node_id": "628d3046-74e0-448c-b88a-fa9a668d0c35",
+    "to_node_id": "6f600aea-168f-40db-9e02-cbce6c67ee65",
+    "kind": "decision",
+    "choice_label": "Fiber foods + water + play",
+    "grade": "BEST"
+  },
+  {
+    "id": "531568db-117e-4ea8-ab16-6af1d410f48f",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "from_node_id": "628d3046-74e0-448c-b88a-fa9a668d0c35",
+    "to_node_id": "d0572329-59c1-431b-b779-f94eabc6c988",
+    "kind": "decision",
+    "choice_label": "Same-time potty routine",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "f79e9042-7c79-4fc6-8e6a-2735473b2898",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "from_node_id": "628d3046-74e0-448c-b88a-fa9a668d0c35",
+    "to_node_id": "3407264b-5c57-462b-beda-75dd95ae6adf",
+    "kind": "decision",
+    "choice_label": "Hold poops in until later",
+    "grade": "WRONG"
+  },
+  {
+    "id": "0ed078ca-cb06-43eb-9f9d-427e22bd7517",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "from_node_id": "628d3046-74e0-448c-b88a-fa9a668d0c35",
+    "to_node_id": "883a54d2-fe25-42cb-9e99-b72bb24bdd51",
+    "kind": "decision",
+    "choice_label": "Handful of grown-up laxatives",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "28ab8014-a079-49ea-a832-07f88177c632",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "from_node_id": "3f6ae525-5f19-4b49-94a9-5da196c73849",
+    "to_node_id": "d3dea2fc-2d8f-4aa0-882b-f235991fd372",
+    "kind": "decision",
+    "choice_label": "Fiber foods + water + play",
+    "grade": "BEST"
+  },
+  {
+    "id": "e41116aa-0ef9-4a5b-a55a-dcd20ed0a192",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "from_node_id": "3f6ae525-5f19-4b49-94a9-5da196c73849",
+    "to_node_id": "9f394d11-8cfb-49e3-9d97-b1f4684b8226",
+    "kind": "decision",
+    "choice_label": "Same-time potty routine",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "18fc23bf-b948-496c-bb36-4ab869f87547",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "from_node_id": "3f6ae525-5f19-4b49-94a9-5da196c73849",
+    "to_node_id": "d1a3fbbd-5a8e-47bb-b76a-659bff835518",
+    "kind": "decision",
+    "choice_label": "Hold poops in until later",
+    "grade": "WRONG"
+  },
+  {
+    "id": "60e1448b-011b-4988-9da2-ebced7a46fdf",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "from_node_id": "3f6ae525-5f19-4b49-94a9-5da196c73849",
+    "to_node_id": "ac72541c-dcdd-440d-898c-b5673c88bb23",
+    "kind": "decision",
+    "choice_label": "Handful of grown-up laxatives",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "c23bd2c8-7898-482b-974d-1ec328950f03",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "from_node_id": "558faad4-cd89-47eb-92f0-ad9df6d6943c",
+    "to_node_id": "a9f4ca96-f90a-4baa-8178-f9663ea57b1e",
+    "kind": "decision",
+    "choice_label": "Fiber foods + water + play",
+    "grade": "BEST"
+  },
+  {
+    "id": "a41941a2-a5ca-4db1-8e2d-6b294349d480",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "from_node_id": "558faad4-cd89-47eb-92f0-ad9df6d6943c",
+    "to_node_id": "d552ca7d-b633-4bf9-b76e-8ec311cbf009",
+    "kind": "decision",
+    "choice_label": "Same-time potty routine",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "33d3b1d3-c783-4488-a437-d6e01aec6688",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "from_node_id": "558faad4-cd89-47eb-92f0-ad9df6d6943c",
+    "to_node_id": "f0ed487f-5268-4504-98ae-b336e40701ad",
+    "kind": "decision",
+    "choice_label": "Hold poops in until later",
+    "grade": "WRONG"
+  },
+  {
+    "id": "a3e15a3b-523b-4c70-8379-778813e6e2f6",
+    "patient_id": "e4882f70-734a-4813-b3e4-b4069a4a33c5",
+    "from_node_id": "558faad4-cd89-47eb-92f0-ad9df6d6943c",
+    "to_node_id": "86740f1c-6eb3-43a7-b0a6-0e94dab6938f",
+    "kind": "decision",
+    "choice_label": "Handful of grown-up laxatives",
+    "grade": "DANGEROUS"
   }
 ];
 
@@ -14156,6 +15872,72 @@ export const FALLBACK_TREATMENTS: FallbackTreatment[] = [
     },
     "conditions": [
       "nosebleed"
+    ]
+  },
+  {
+    "id": "e32c0a01-0000-4000-8000-000000000001",
+    "class_name": "Targeted C. diff antibiotics",
+    "description": "Targeted antibiotics with fluids that evict C. diff germs.",
+    "wording": {
+      "plain": "targeted antibiotics + fluids",
+      "gentle": "special germ-fighting syrup",
+      "clinical": "targeted anti-C. diff therapy"
+    },
+    "conditions": [
+      "c-diff-colitis"
+    ]
+  },
+  {
+    "id": "e32c0a01-0000-4000-8000-000000000002",
+    "class_name": "Custom Knottin Probiotic",
+    "description": "Experimental trial probiotic: engineered yeast brewing gut-healing knottins.",
+    "wording": {
+      "plain": "knottin probiotic trial",
+      "gentle": "tiny-helper germ trial",
+      "clinical": "knottin probiotic RCT (experimental)"
+    },
+    "conditions": [
+      "c-diff-colitis",
+      "travelers-diarrhea"
+    ]
+  },
+  {
+    "id": "e32c0a01-0000-4000-8000-000000000003",
+    "class_name": "Rehydration + rest",
+    "description": "Fluids, sips, and rest that beat trip tummy bugs.",
+    "wording": {
+      "plain": "fluids and rest",
+      "gentle": "sips and cozy rest",
+      "clinical": "oral rehydration + rest"
+    },
+    "conditions": [
+      "travelers-diarrhea"
+    ]
+  },
+  {
+    "id": "e32c0a01-0000-4000-8000-000000000004",
+    "class_name": "Lactase enzyme helpers",
+    "description": "Less dairy plus lactase enzymes that digest milk sugar.",
+    "wording": {
+      "plain": "less dairy + lactase",
+      "gentle": "less milk + helper drops",
+      "clinical": "lactase replacement + limits"
+    },
+    "conditions": [
+      "lactose-intolerance"
+    ]
+  },
+  {
+    "id": "e32c0a01-0000-4000-8000-000000000005",
+    "class_name": "Fiber + fluids + play",
+    "description": "Fiber foods, water, and active play that keep poops moving.",
+    "wording": {
+      "plain": "fiber + water + play",
+      "gentle": "fruits, water, and play",
+      "clinical": "fiber/fluids/activity"
+    },
+    "conditions": [
+      "constipation"
     ]
   }
 ];
@@ -14584,6 +16366,82 @@ export const FALLBACK_RESOURCES: FallbackResource[] = [
       "answer": 0,
       "pearl": "Front drip: pinch 10 min."
     }
+  },
+  {
+    "id": "f32c0a01-0000-4000-8000-000000000001",
+    "condition_id": "c-diff-colitis",
+    "title": "C. Diff Infections",
+    "url": "https://medlineplus.gov/cdiffinfections.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "C. diff germs strike after antibiotics wipe out good gut germs, causing watery diarrhea with cramps and fever. A stool test finds them; targeted antibiotics plus fluids cure most cases, while soap-and-water handwashing stops the spread.",
+    "quiz": {
+      "stem": "Runs right after antibiotics means think…",
+      "choices": [
+        "C. diff",
+        "Too much candy",
+        "A cold"
+      ],
+      "answer": 0,
+      "pearl": "Post-antibiotic runs: C. diff."
+    }
+  },
+  {
+    "id": "f32c0a01-0000-4000-8000-000000000002",
+    "condition_id": "travelers-diarrhea",
+    "title": "Traveler's Diarrhea",
+    "url": "https://medlineplus.gov/ency/article/002433.htm",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "New water and foods on trips can bring watery diarrhea within a day, often from E. coli germs. Steady sips of fluids plus rest beat most cases; safe water and careful foods prevent the next one.",
+    "quiz": {
+      "stem": "Trip water plus runs in a day means…",
+      "choices": [
+        "A trip tummy bug",
+        "Too much sleep",
+        "Dry skin"
+      ],
+      "answer": 0,
+      "pearl": "Trip runs: sip fluids, rest."
+    }
+  },
+  {
+    "id": "f32c0a01-0000-4000-8000-000000000003",
+    "condition_id": "lactose-intolerance",
+    "title": "Lactose Intolerance",
+    "url": "https://medlineplus.gov/lactoseintolerance.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "Missing lactase enzyme means milk sugar ferments into gas, cramps, and the runs after dairy. Less dairy plus lactase helper drops fix it; a breath test confirms the miss.",
+    "quiz": {
+      "stem": "Gas and runs after ice cream means…",
+      "choices": [
+        "A sprain",
+        "Lactose intolerance",
+        "An earache"
+      ],
+      "answer": 1,
+      "pearl": "Dairy gas + runs: lactose."
+    }
+  },
+  {
+    "id": "f32c0a01-0000-4000-8000-000000000004",
+    "condition_id": "constipation",
+    "title": "Constipation",
+    "url": "https://medlineplus.gov/constipation.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "Fewer than three hard dry poops a week with belly aches means constipation. Fiber foods, water, and active play keep things moving; holding it in only dries poops harder.",
+    "quiz": {
+      "stem": "Hard poops, days apart, need…",
+      "choices": [
+        "Holding it in",
+        "Fiber, water, play",
+        "Less water"
+      ],
+      "answer": 1,
+      "pearl": "Hard rare poops: fiber + play."
+    }
   }
 ];
 
@@ -14719,5 +16577,21 @@ export const FALLBACK_EXAM_FINDINGS: FallbackExamFinding[] = [
   { condition_id: 'nosebleed', modality: 'look', gentle: 'Red drip coming from one nostril.', steady: 'One-sided front nose drip.', clinical: 'Unilateral anterior drip.', expert: 'Anterior unilateral epistaxis.' },
   { condition_id: 'nosebleed', modality: 'feel', gentle: 'Nose tip soft; pinching feels fine.', steady: 'Soft nose tip; no fracture feel.', clinical: 'No step-off; septum midline.', expert: 'No deformity; Kiesselbach source.' },
   { condition_id: 'nosebleed', modality: 'tap', gentle: 'Face taps sound normal.', steady: 'Sinus percussion normal.', clinical: 'Sinuses non-tender.', expert: 'No sinus tenderness.' },
-  { condition_id: 'nosebleed', modality: 'listen', gentle: 'Breathing sounds fine; sniffly drip.', steady: 'Lungs clear; nose sniffly.', clinical: 'Lungs clear; mild congestion.', expert: 'Vesicular; no distress.' }
+  { condition_id: 'nosebleed', modality: 'listen', gentle: 'Breathing sounds fine; sniffly drip.', steady: 'Lungs clear; nose sniffly.', clinical: 'Lungs clear; mild congestion.', expert: 'Vesicular; no distress.' },
+  { condition_id: 'c-diff-colitis', modality: 'look', gentle: 'Crampy and hurrying to the bathroom.', steady: 'Crampy; frequent bathroom runs.', clinical: 'Restless; frequent watery stools.', expert: 'Urgency with watery output.' },
+  { condition_id: 'c-diff-colitis', modality: 'feel', gentle: 'Belly crampy all over to press.', steady: 'Diffuse crampy tenderness.', clinical: 'Diffuse tenderness; no focal guarding.', expert: 'Diffuse cramping; nontoxic.' },
+  { condition_id: 'c-diff-colitis', modality: 'tap', gentle: 'Belly taps sound gurgly.', steady: 'Hyperactive gurgles on tap.', clinical: 'Diffuse hyperactive sounds.', expert: 'Hyperresonant gurgles; no mass.' },
+  { condition_id: 'c-diff-colitis', modality: 'listen', gentle: 'Tummy rumbles loud all over.', steady: 'Loud rumbles everywhere.', clinical: 'Hyperactive bowel sounds.', expert: 'Hyperactive; febrile.' },
+  { condition_id: 'travelers-diarrhea', modality: 'look', gentle: 'Gurgly and running to the bathroom.', steady: 'Gurgly; frequent loose stools.', clinical: 'Restless; watery frequency.', expert: 'Mild volume depletion signs.' },
+  { condition_id: 'travelers-diarrhea', modality: 'feel', gentle: 'Soft belly, sore all over.', steady: 'Soft diffuse soreness.', clinical: 'Soft; diffuse mild tenderness.', expert: 'Soft, nontender, non-focal.' },
+  { condition_id: 'travelers-diarrhea', modality: 'tap', gentle: 'Belly taps sound gurgly.', steady: 'Gurgly taps everywhere.', clinical: 'Diffuse gurgles.', expert: 'Hyperactive; no focal dullness.' },
+  { condition_id: 'travelers-diarrhea', modality: 'listen', gentle: 'Tummy gurgles loud.', steady: 'Loud gurgles all over.', clinical: 'Hyperactive bowel sounds.', expert: 'Hyperactive; lungs clear.' },
+  { condition_id: 'lactose-intolerance', modality: 'look', gentle: 'Bloated and gassy after dairy.', steady: 'Bloated; dairy recent.', clinical: 'Abdominal bloating post-dairy.', expert: 'Bloating; no distress.' },
+  { condition_id: 'lactose-intolerance', modality: 'feel', gentle: 'Puffy gassy belly to press.', steady: 'Puffy gassy belly.', clinical: 'Tympanitic distension.', expert: 'Diffuse tympany; nontender.' },
+  { condition_id: 'lactose-intolerance', modality: 'tap', gentle: 'Belly taps drum-like and hollow.', steady: 'Drummy hollow taps.', clinical: 'Diffuse tympany.', expert: 'Tympanitic throughout.' },
+  { condition_id: 'lactose-intolerance', modality: 'listen', gentle: 'Loud gurgles after milk.', steady: 'Gurgly after dairy.', clinical: 'Hyperactive post-lactose sounds.', expert: 'Hyperactive; benign.' },
+  { condition_id: 'constipation', modality: 'look', gentle: 'Uncomfy, holding the left side.', steady: 'Uncomfy; guards left side.', clinical: 'Mild distress; left-sided ache.', expert: 'Left-sided fullness evident.' },
+  { condition_id: 'constipation', modality: 'feel', gentle: 'Left belly full and firm.', steady: 'Left belly full of firm poop.', clinical: 'Left-sided firm fullness.', expert: 'Firm stool palpable, left colon.' },
+  { condition_id: 'constipation', modality: 'tap', gentle: 'Left belly taps dull and full.', steady: 'Dull full taps, left side.', clinical: 'Left-sided dullness.', expert: 'Dullness over loaded colon.' },
+  { condition_id: 'constipation', modality: 'listen', gentle: 'Tummy quiet and slow.', steady: 'Sluggish quiet gurgles.', clinical: 'Hypoactive bowel sounds.', expert: 'Hypoactive; no obstruction signs.' }
 ];

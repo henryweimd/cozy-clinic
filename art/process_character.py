@@ -261,6 +261,26 @@ CHARACTERS = {
         "feet": ([(545, 770), (855, 1075)], 1395, 1432),
         "cap": None,
     },
+    "bram": {
+        "paste_x": 22,
+        "feet": ([(560, 745), (880, 1055)], 1395, 1432),
+        "cap": None,
+    },
+    "pearl": {
+        "paste_x": 22,
+        "feet": ([(560, 745), (880, 1055)], 1395, 1432),
+        "cap": None,
+    },
+    "lena": {
+        "paste_x": 22,
+        "feet": ([(530, 780), (760, 1090)], 1395, 1432),
+        "cap": None,
+    },
+    "cole": {
+        "paste_x": 22,
+        "feet": ([(530, 780), (760, 1090)], 1395, 1432),
+        "cap": None,
+    },
 }
 
 FRAMES = ("idle", "blink", "happy", "sick", "pained", "relieved")

@@ -14,8 +14,9 @@
  * hand-foot-mouth, lyme-disease, appendicitis) + run-26 pack
  * (swimmers-ear, mono, nose-bead, gastroenteritis) + run-27 pack
  * (hay-fever, ringworm, pink-eye, ankle-sprain) + run-28 pack
- * (chickenpox, uti, stye, nosebleed) — DRAFT,
- * pending operator medical review.
+ * (chickenpox, uti, stye, nosebleed) + run-32 knottin-lab pack
+ * (c-diff-colitis, travelers-diarrhea, lactose-intolerance,
+ * constipation) — DRAFT, pending operator medical review.
  */
 export type ConditionId =
   | 'asthma'
@@ -41,7 +42,11 @@ export type ConditionId =
   | 'chickenpox'
   | 'uti'
   | 'stye'
-  | 'nosebleed';
+  | 'nosebleed'
+  | 'c-diff-colitis'
+  | 'travelers-diarrhea'
+  | 'lactose-intolerance'
+  | 'constipation';
 
 /** Ordered stage within a condition. Lower index = healthier. */
 export type StageId = string;
@@ -122,6 +127,12 @@ export interface ActionDef {
   vitalsDelta: Partial<Vitals>;
   /** Follow-up line shown after the consequence lands. */
   hootLine: string;
+  /**
+   * Trial-arm actions: run 34 opens the full-screen Peptide
+   * Lab when picked; run 32 only toasts a referral note.
+   * Grading is unaffected — the grade rides gradeByStage.
+   */
+  opensLab?: boolean;
 }
 
 /** Static definition of one condition's stage ladder + actions. */

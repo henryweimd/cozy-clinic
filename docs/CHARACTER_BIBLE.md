@@ -168,6 +168,10 @@ body plan, no new species without a bible amendment.
 | Maya (SHIPS 2026-11-01) | Dance-class regular, uti case | Soft periwinkle `#8494B8` | Graceful bounce (motion: 2.0 rad/s); graceful beads, twirl smile | Rose-pink leg warmers (fixed; below face plate) |
 | Eli (SHIPS 2026-11-01) | Marble champion, stye case | Deep pine `#5F7A6B` | Steady sway (motion: 1.8 rad/s); sharp beads, shooter grin | Cord necklace w/ green marble (fixed; below face plate) |
 | Max (SHIPS 2026-11-01) | Climbing-tree daredevil, nosebleed case | Bronze amber `#A8823F` | Daring bounce (motion: 2.2 rad/s); daring beads, gap-tooth grin | Tiny acorn behind ear (fixed; above face plate, side) |
+| Bram (SHIPS 2026-11-01) | Lighthouse keeper, c-diff-colitis case | Warm gray `#8A7F72` | Calm sway (motion: 1.4 rad/s); kind beads, lighthouse smile | Brass-button cardigan (fixed; below face plate) |
+| Pearl (SHIPS 2026-11-01) | Junior birdwatcher, travelers-diarrhea case | Dusty lavender `#8C7B9E` | Bright bounce (motion: 2.4 rad/s); curious beads, chirpy smile | Binoculars on cord (fixed; below face plate) |
+| Lena (SHIPS 2026-11-01) | Book-cart helper, lactose-intolerance case | Warm sand `#B49B7A` | Gentle sway (motion: 1.6 rad/s); gentle beads, bookish smile | Pocket notebook (fixed; below face plate) |
+| Cole (SHIPS 2026-11-01) | Pebble collector, constipation case | Slate teal `#6E8898` | Steady bounce (motion: 2.0 rad/s); steady beads, pebble grin | River pebble in pocket (fixed; below face plate) |
 | Dr. Nora (reserved) | Reassuring AI colleague doctor | Rose-taupe `#A2766B` | Reassuring half-smile | White coat + sage scrubs (outfit, same silhouette) |
 
 ## Population mixing system (normative 2026-10-30)

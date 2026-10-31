@@ -1270,5 +1270,14 @@
   "max_note": "Max SHIPS 2026-11-01: bronze-amber daredevil, acorn behind ear (fixed, side); 6-frame set via Hazel-identity edit, paste_x=22; daring bounce 2.2",
   "max_contact_sheet": "art/contact-sheets/plate-max.png",
   "run28_learn_headers_contact_sheet": "art/contact-sheets/learn-headers28.png",
-  "run28_spend_note": "24 character images + 4 Block-U headers x $0.01 = $0.28 (nosebleed v1 blocked by moderation, no charge; v2 blood-free ships); ledger ~$2.27 cumulative; at >= $120 STOP - not reached"
+  "run28_spend_note": "24 character images + 4 Block-U headers x $0.01 = $0.28 (nosebleed v1 blocked by moderation, no charge; v2 blood-free ships); ledger ~$2.27 cumulative; at >= $120 STOP - not reached",
+  "bram_note": "Bram SHIPS 2026-11-01: warm-gray lighthouse keeper, brass-button cardigan (fixed, below face); 6-frame set via Willow-identity edit, paste_x=22; calm bounce 1.4",
+  "bram_contact_sheet": "art/contact-sheets/plate-bram.png",
+  "pearl_note": "Pearl SHIPS 2026-11-01: dusty-lavender birdwatcher, binoculars cord (fixed, below face); 6-frame set via Willow-identity edit, paste_x=22; bright bounce 2.4",
+  "pearl_contact_sheet": "art/contact-sheets/plate-pearl.png",
+  "lena_note": "Lena SHIPS 2026-11-01: sand book-cart helper, pocket notebook (fixed, below face); 6-frame set via Cleo-identity edit, paste_x=22; gentle bounce 1.6",
+  "lena_contact_sheet": "art/contact-sheets/plate-lena.png",
+  "cole_note": "Cole SHIPS 2026-11-01: slate-teal pebble collector, river pebble (fixed, below face); 6-frame set via Cleo-identity edit, paste_x=22; steady bounce 2.0",
+  "cole_contact_sheet": "art/contact-sheets/plate-cole.png",
+  "learn_headers32": "art/contact-sheets/learn-headers32.png"
 }
