@@ -63,6 +63,19 @@ export function waitingNames(order: readonly string[], activeName: string): stri
 }
 
 /**
+ * Pure: who is physically IN the waiting room (the head of the
+ * queue, capped — the room shows 2, the rest are on the way).
+ * The badge, ticker, and demo line all read this (unit-tested).
+ */
+export function roomWaiting(
+  order: readonly string[],
+  activeName: string,
+  cap = 2,
+): string[] {
+  return waitingNames(order, activeName).slice(0, cap);
+}
+
+/**
  * Pure: swap one step toward the front (-1) or back (+1).
  * Out-of-range moves return the order unchanged (new array).
  */

@@ -1,3 +1,24 @@
+# CHECKPOINT — Run 50: occupancy (2026-11-01)
+
+Phase: count coherence on `feat/knottin-lab`. `main`
+untouched (still run 31).
+
+Files changed: 6 (mockData helper + test, scene wiring,
+auditor, PROGRESS, CHECKPOINT).
+
+Test result: `npm test` 430/430; tsc clean; build green;
+auditor 0 findings.
+
+Deployment URL: branch preview (SSO-gated); prod
+unchanged on main.
+
+Playtest result: operator playtesting in parallel (this
+run answers their mismatch note).
+
+Image spend this run: $0 (ledger ~$2.62 cumulative).
+
+STOP.
+
 # CHECKPOINT — Run 49: live badge (2026-11-01)
 
 Phase: queue count on `feat/knottin-lab`. `main`

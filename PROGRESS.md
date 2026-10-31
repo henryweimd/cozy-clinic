@@ -1,5 +1,23 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 50 (2026-11-01): badge matches the room (occupancy)
+
+Branch: `feat/knottin-lab`. Operator playtesting in parallel.
+File ownership (main agent, this run): roomWaiting helper
++ test, 4 scene call sites, auditor literal, PROGRESS,
+CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- Operator note: room shows 2, badge said 28. New pure
+  `roomWaiting` (queue head, cap 2) is the single source:
+  badge, room rows, switch ticker, and the demo step all
+  read it — every surface now agrees on who is physically
+  waiting. The "+N more on the way" line still explains
+  the rest of the queue.
+- Verify: 430/430 (+1 occupancy test), tsc clean, build
+  green, auditor 0.
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 49 (2026-11-01): waiting badge counts the live queue
 
 Branch: `feat/knottin-lab`. Operator playtesting in parallel.

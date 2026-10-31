@@ -16,6 +16,7 @@ import {
   moveWaiting,
   nearestLevelStop,
   quoteIfSpoken,
+  roomWaiting,
   waitingNames,
 } from '../ui/mockData';
 import type { ChromeTier, VisitContext } from '../ui/mockData';
@@ -2356,7 +2357,7 @@ export class ClinicScene extends Phaser.Scene {
     this.activeName = name;
     // The room narrates the handoff (waiting-2: most friends are
     // on the way, not on screen).
-    const waiting = waitingNames(this.waitingOrder, name).length;
+    const waiting = roomWaiting(this.waitingOrder, name).length;
     this.ticker.setLines([
       `${name} is with you`,
       waiting > 0 ? `${waiting} waiting` : 'room is clear',
@@ -2658,7 +2659,8 @@ export class ClinicScene extends Phaser.Scene {
     const names = waitingNames(this.waitingOrder, this.activeName);
     // Waiting-2: a real room accumulates — two friends on screen,
     // the rest on the way (chevrons still reorder the full queue).
-    const shown = names.slice(0, 2);
+    // The badge/ticker/demo line read the same helper (run 50).
+    const shown = roomWaiting(this.waitingOrder, this.activeName);
     const hidden = names.length - shown.length;
     if (hidden > 0) {
       const more = this.add
@@ -2796,9 +2798,9 @@ export class ClinicScene extends Phaser.Scene {
     this.syncWaitingBadge();
   }
 
-  /** Waiting badge = live queue (intro order minus the exam room). */
+  /** Waiting badge = room occupancy (who is physically waiting). */
   private syncWaitingBadge(): void {
-    const n = waitingNames(this.waitingOrder, this.activeName).length;
+    const n = roomWaiting(this.waitingOrder, this.activeName).length;
     this.waitingCountText.setText(`${n}`);
     this.waitingBadge.setVisible(n > 0);
   }
@@ -3704,9 +3706,9 @@ export class ClinicScene extends Phaser.Scene {
     this.learnBadge = this.add.container(TAB_X.learn + 22, 900, [badge]);
     this.learnBadge.setVisible(false);
     nav.add(this.learnBadge);
-    // Waiting badge: the live queue count (actively waiting —
-    // the intro queue minus whoever is in the exam room — never
-    // the whole roster). Hidden when nobody waits.
+    // Waiting badge: room occupancy (who is physically waiting
+    // — the same 2 the room shows, never the whole roster).
+    // Hidden when nobody waits.
     const waitingBadge = this.add.graphics();
     waitingBadge.fillStyle(SAGE, 1);
     waitingBadge.lineStyle(2, OUTLINE, 1);
@@ -4578,7 +4580,7 @@ export class ClinicScene extends Phaser.Scene {
     const steps = [
       '1 Meet Bram — visit #2, he remembers you',
       '2 Ask/exam/dx/treat — clues accumulate',
-      `3 Next patient (${waitingNames(this.waitingOrder, this.activeName).length} waiting); tray = exam`,
+      `3 Next patient (${roomWaiting(this.waitingOrder, this.activeName).length} waiting); tray = exam`,
       '4 Leave a care note (2nd tab = doctor 2)',
       '5 Learn (+2), Shop boosts, Profile, About',
       '6 Cheer a colleague from any care note',

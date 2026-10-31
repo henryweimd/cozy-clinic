@@ -8,6 +8,7 @@ import {
   moveWaiting,
   nearestLevelStop,
   quoteIfSpoken,
+  roomWaiting,
   waitingNames,
 } from './mockData';
 
@@ -29,6 +30,15 @@ describe('waitingNames', () => {
     expect(waitingNames(order, 'Milo')).toEqual(order.filter((n) => n !== 'Milo'));
     expect(waitingNames(order, 'June')).toEqual(order.filter((n) => n !== 'June'));
     expect(waitingNames(order, 'Milo')).not.toContain('Milo');
+  });
+
+  it('roomWaiting caps at who is physically in the room', () => {
+    const order = MOCK_ROSTER.map((e) => e.name);
+    expect(roomWaiting(order, 'Milo')).toEqual(
+      order.filter((n) => n !== 'Milo').slice(0, 2),
+    );
+    expect(roomWaiting(['Milo'], 'Milo')).toEqual([]);
+    expect(roomWaiting(['A', 'Milo'], 'Milo')).toEqual(['A']);
   });
 
   it('gives every entry a complaint + visit kind for the list line', () => {
