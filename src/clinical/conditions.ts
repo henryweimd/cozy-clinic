@@ -57,16 +57,16 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       expert: 'Sustained skin tenting; poor turgor, volume depletion.',
     },
     historyOptions: [
-      { id: 'less-pee', label: 'Peeing less than usual?' },
+      { id: 'losses', label: 'Throwing up, diarrhea, or big sweats?' },
       { id: 'rash', label: 'Any rashes?' },
       { id: 'sneezing', label: 'Been sneezing a lot?' },
     ],
-    historyBestId: 'less-pee',
+    historyBestId: 'losses',
     bestHistory: {
-      gentle: 'Barely peeing, and it is dark — fluids are really low.',
-      steady: 'Barely peeing, dark urine — fluid really low.',
-      clinical: 'Oliguria with dark urine — volume depleted.',
-      expert: 'Oliguria, dark urine; volume depletion.',
+      gentle: 'Threw up twice, and barely peeing since — fluids are really low!',
+      steady: 'Vomiting twice, now barely peeing — volume low.',
+      clinical: 'Emesis x2 with new oliguria — volume depleted.',
+      expert: 'Fluid losses with oliguria; ECF contraction.',
     },
     historyQuiz: {
       gentle: '{name} is droopy and SO thirsty. What do you ask first?',
@@ -156,10 +156,10 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     ],
     historyBestId: 'how-start',
     bestHistory: {
-      gentle: 'Started with a tickly nose two days ago — now full sniffles and sneezes!',
-      steady: 'Tickly nose two days ago, now full sniffles — the classic cold rollout.',
-      clinical: 'Gradual coryzal onset over 2 days; afebrile.',
-      expert: 'Gradual coryzal prodrome, afebrile — viral URI pattern.',
+      gentle: 'Scratchy throat first, then sneezes, now a runny nose — the cold parade!',
+      steady: 'Scratchy throat, then sneezing, now runny nose — classic sequence.',
+      clinical: 'Pharyngeal scratch, then sneezing, now rhinorrhea; afebrile.',
+      expert: 'Sequential URI prodrome, afebrile — rhinoviral pattern.',
     },
     historyQuiz: {
       gentle: '{name} is sniffly and sneezy. What do you ask first?',
@@ -243,16 +243,16 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       expert: 'Polyphonic expiratory wheezes — obstructive pattern.',
     },
     historyOptions: [
-      { id: 'night-running', label: 'Worse at night or with running?' },
+      { id: 'come-go', label: 'Come and go, or always there?' },
       { id: 'earaches', label: 'Any earaches?' },
       { id: 'thirsty', label: 'Been thirsty lately?' },
     ],
-    historyBestId: 'night-running',
+    historyBestId: 'come-go',
     bestHistory: {
-      gentle: 'Worse every night and after running — airways that overreact!',
-      steady: 'Worse at night and with running — reactive airways.',
-      clinical: 'Nocturnal + exercise triggers — reversible airway pattern.',
-      expert: 'Nocturnal/exercise triggers; episodic reversible pattern.',
+      gentle: 'Fine for days, then tight and whistly — it comes and goes!',
+      steady: 'Episodes come and go — fine between, tight and whistly within.',
+      clinical: 'Variable episodic symptoms — reversible pattern.',
+      expert: 'Symptoms vary over time and intensity; reversible obstruction.',
     },
     historyQuiz: {
       gentle: "{name}'s chest feels tight and whistly. What do you ask first?",
@@ -342,9 +342,9 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     ],
     historyBestId: 'feel-different',
     bestHistory: {
-      gentle: 'Feels totally fine — high pressure usually hides with NO symptoms!',
-      steady: 'Feels fine — pressure this high with zero symptoms.',
-      clinical: 'Asymptomatic despite elevation — silent disease.',
+      gentle: 'Feels totally fine — no headache warns you. Only the cuff knows!',
+      steady: 'Feels fine — no headache, no warning. Only the cuff knows.',
+      clinical: 'Asymptomatic — no prodrome; diagnosis by cuff.',
       expert: 'Asymptomatic; end-organ review negative — silent HTN.',
     },
     historyQuiz: {
@@ -441,10 +441,10 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     ],
     historyBestId: 'fever-cough',
     bestHistory: {
-      gentle: 'Feverish since yesterday, and ZERO cough — the classic strep pattern!',
-      steady: 'Fever since yesterday, zero cough — classic strep pattern.',
-      clinical: 'Fever-positive, cough-negative — Centor history.',
-      expert: 'Fever+, cough−; Centor criteria from history alone.',
+      gentle: 'Fine at breakfast, feverish by lunch, ZERO cough — hit fast like strep!',
+      steady: 'Sudden sore throat + fever, zero cough — strep strikes fast.',
+      clinical: 'Abrupt pharyngitis + fever, cough-negative.',
+      expert: 'Abrupt fever+, cough−; Centor history.',
     },
     historyQuiz: {
       gentle: '{name} has a sore throat but NO cough. What do you ask first?',
@@ -535,10 +535,10 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     ],
     historyBestId: 'worse-night',
     bestHistory: {
-      gentle: 'Much worse lying flat — last night was rough!',
-      steady: 'Worse lying flat; rough night.',
-      clinical: 'Recumbent worsening, night waking — AOM pattern.',
-      expert: 'Nocturnal recumbent worsening; middle-ear pattern.',
+      gentle: 'Started hurting last night, worse lying flat — came on fast!',
+      steady: 'Acute overnight onset, worse recumbent.',
+      clinical: 'Acute <48h otalgia, recumbent worsening.',
+      expert: 'Acute otalgia, recumbent worsening; middle-ear pattern.',
     },
     historyQuiz: {
       gentle: '{name} keeps tugging a sore ear. What do you ask first?',
@@ -629,10 +629,10 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     ],
     historyBestId: 'atopy-family',
     bestHistory: {
-      gentle: 'Mom has hay fever — the itchy-family pattern!',
-      steady: 'Hay fever and asthma run in the family — the atopic trio.',
-      clinical: 'Family atopy positive — atopic triad pattern.',
-      expert: 'Atopic family history; triad pattern complete.',
+      gentle: 'Mom has hay fever — and the itch is the worst part!',
+      steady: 'Family atopy; itch is the worst symptom.',
+      clinical: 'Family atopy; pruritus primary, relapsing.',
+      expert: 'Atopic family history; pruritus-led relapsing course.',
     },
     historyQuiz: {
       gentle: '{name} has itchy red patches. What do you ask first?',
@@ -723,10 +723,10 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     ],
     historyBestId: 'deep-breath',
     bestHistory: {
-      gentle: 'Deep breaths ache on one side — that is where the germ sits!',
-      steady: 'Deep breaths ache on one side — infection sits there.',
-      clinical: 'Focal pleuritic pain — localized infection.',
-      expert: 'Focal pleurisy; consolidating process lateralized.',
+      gentle: 'Deep breaths ache on one side — and the cough brings up yucky mucus!',
+      steady: 'One-sided ache on deep breaths; cough brings up mucus.',
+      clinical: 'Focal pleurisy + productive cough.',
+      expert: 'Focal pleurisy, productive cough; consolidation.',
     },
     historyQuiz: {
       gentle: '{name} has fever and a deep cough. What do you ask first?',

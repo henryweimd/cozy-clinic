@@ -1,5 +1,9 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+> Run 23 ownership (main agent): conditions.ts (history blocks),
+> docs/SCENARIO_PLAYBOOK.md (new). No other stream may touch
+> these files.
+
 ## Run 22 (2026-10-30): history rounds sharpened (operator revision)
 
 - All 8 history trios rewritten around discriminating, teachable
