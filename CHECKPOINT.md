@@ -1,3 +1,24 @@
+# CHECKPOINT — Run 51: merged to main (2026-11-01)
+
+Phase: production merge. `main` @ `bca75d6` — the batch
+(runs 32–50) is LIVE.
+
+Files changed: 4 docs post-merge (README, checklist,
+PROGRESS, CHECKPOINT). No code.
+
+Test result: `npm test` 430/430; tsc clean; build green;
+auditor 0 findings (all re-run pre-merge).
+
+Deployment URL: https://cozy-clinic.vercel.app/ (Vercel
+success, 200, new bundle verified in the served JS).
+
+Playtest result: operator playtested the branch across
+runs 41–50; production serving identical code.
+
+Image spend this run: $0 (ledger ~$2.62 cumulative).
+
+STOP.
+
 # CHECKPOINT — Run 50: occupancy (2026-11-01)
 
 Phase: count coherence on `feat/knottin-lab`. `main`

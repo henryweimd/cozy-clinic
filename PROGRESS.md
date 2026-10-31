@@ -1,5 +1,25 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 51 (2026-11-01): MERGED — knottin batch is live
+
+Branch: `main` @ `bca75d6` (fast-forward from
+`feat/knottin-lab`, zero conflicts). Operator said push it.
+File ownership (main agent, this run): merge, prod verify,
+docs truth, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream).
+
+- Pre-merge gates fresh: 430/430, tsc clean, build green,
+  auditor 0, Supabase 36/612/576/0 dangling.
+- Merged + pushed; Vercel production success, live 200,
+  served bundle verified new ("Exam Room" × 2 in the JS).
+- Docs truth on main: README stamp, checklist merge item.
+- Live now: gut-first Bram onboarding, 30 patients / 28
+  conditions, Peptide Lab rail tab (proxy LIVE, ~51s
+  designs), Gentle naming, ranks + loop, Exam Room first.
+- Still operator-side: medical pen (all 28 DRAFT), demo
+  video, firsthand paragraph, screenshots, submission form.
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 50 (2026-11-01): badge matches the room (occupancy)
 
 Branch: `feat/knottin-lab`. Operator playtesting in parallel.

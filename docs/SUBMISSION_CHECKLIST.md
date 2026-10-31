@@ -5,7 +5,7 @@
 > Track judging rewards creativity, technical ambition, and
 > whether it works. Owner: operator, unless marked agent.
 
-## Done (agent, verified on `feat/knottin-lab`; `main` holds run 31)
+## Done (agent, verified on `main`, production live)
 
 - [x] Branch preview green every run; live build at
   <https://cozy-clinic.vercel.app/> (200 on `main`; offline
@@ -33,9 +33,9 @@
 
 ## Operator-only (needs a human)
 
-- [ ] **Merge call**: run-40 decision is HOLD — playtest the
-  branch preview, then merge (fast-forward, one command) or
-  say the word and the agent merges.
+- [x] **Merge call**: operator said push it — fast-forwarded
+  to `main` @ `bca75d6`, production verified serving the new
+  bundle ("Exam Room" markers live).
 - [x] **Proxy deploy**: done by agent (CLI + secret
   promotion + live verify) — no operator action needed.
 - [ ] **Medical review pen**: runs 20–32 content is DRAFT —
