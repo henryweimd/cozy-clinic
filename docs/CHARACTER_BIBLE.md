@@ -160,6 +160,10 @@ body plan, no new species without a bible amendment.
 | Cleo (SHIPS 2026-10-31) | Choir soloist, mono case | Dusty violet `#9B85B5` | Weary sway (motion: 1.4 rad/s); tired beads, patient smile | Golden star barrette (fixed; above face plate, side) |
 | Remy (SHIPS 2026-10-31) | Button collector, nose-bead case | Toasted honey `#C09A6B` | Bouncy bounce (motion: 2.4 rad/s); curious beads, impish smile | Red pocket overalls (fixed; below face plate) |
 | Willa (SHIPS 2026-10-31) | Playground regular, gastroenteritis case | Pale eucalyptus `#A8BFAC` | Gentle sway (motion: 1.7 rad/s); droopy beads, brave smile | Mint polka-dot bow (fixed; above face plate, side) |
+| Willow (SHIPS 2026-11-01) | Flower-garden helper, hay-fever case | Muted wisteria `#8E7FA8` | Dreamy sway (motion: 1.6 rad/s); dreamy beads, flowery smile | Sage-green gardening apron (fixed; below face plate) |
+| Jasper (SHIPS 2026-11-01) | Wrestling-club rookie, ringworm case | Fired clay `#A9714B` | Tough bounce (motion: 2.1 rad/s); determined beads, tough grin | Navy wristband (fixed; below face plate) |
+| Hazel (SHIPS 2026-11-01) | Library bookworm, pink-eye case | Deep warm greige `#6E6259` | Sleepy sway (motion: 1.5 rad/s); thoughtful beads, bookish smile | Teal felt bookmark behind ear (fixed; above face plate, side) |
+| Finn (SHIPS 2026-11-01) | Soccer striker, ankle-sprain case | Muted grass `#6F9A5E` | Eager bounce (motion: 2.3 rad/s); eager beads, sporty grin | White soccer jersey w/ green stripe (fixed; below face plate) |
 | Dr. Nora (reserved) | Reassuring AI colleague doctor | Rose-taupe `#A2766B` | Reassuring half-smile | White coat + sage scrubs (outfit, same silhouette) |
 
 ## Population mixing system (normative 2026-10-30)

@@ -418,6 +418,58 @@ export const FALLBACK_PATIENTS: FallbackPatient[] = [
     "facial_features": "droopy bead eyes, brave little smile",
     "accessories_clothing": "mint polka-dot bow",
     "start_stage": 2
+  },
+  {
+    "id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "name": "Willow",
+    "condition_id": "hay-fever",
+    "age_band": "child",
+    "age_years": 7,
+    "sex": "F",
+    "persona": "flower-garden helper",
+    "fur_shade": "#8E7FA8",
+    "facial_features": "dreamy bead eyes, soft flowery smile",
+    "accessories_clothing": "sage-green gardening apron",
+    "start_stage": 2
+  },
+  {
+    "id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "name": "Jasper",
+    "condition_id": "ringworm",
+    "age_band": "child",
+    "age_years": 10,
+    "sex": "M",
+    "persona": "wrestling-club rookie",
+    "fur_shade": "#A9714B",
+    "facial_features": "determined bead eyes, tough little grin",
+    "accessories_clothing": "navy wristband",
+    "start_stage": 2
+  },
+  {
+    "id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "name": "Hazel",
+    "condition_id": "pink-eye",
+    "age_band": "child",
+    "age_years": 9,
+    "sex": "F",
+    "persona": "library bookworm",
+    "fur_shade": "#6E6259",
+    "facial_features": "thoughtful bead eyes, quiet bookish smile",
+    "accessories_clothing": "teal felt bookmark behind ear",
+    "start_stage": 2
+  },
+  {
+    "id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "name": "Finn",
+    "condition_id": "ankle-sprain",
+    "age_band": "child",
+    "age_years": 11,
+    "sex": "M",
+    "persona": "soccer striker",
+    "fur_shade": "#6F9A5E",
+    "facial_features": "eager bead eyes, big sporty grin",
+    "accessories_clothing": "white soccer jersey with green stripe",
+    "start_stage": 2
   }
 ];
 
@@ -6949,6 +7001,1094 @@ export const FALLBACK_NODES: FallbackNode[] = [
     "teaching": "Straight salt water poisons instead of hydrating.",
     "animation_cue": "worried",
     "memory": "First visit: pukey. Tried \"Big greasy meal to settle it\" → drained. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "7503ef05-8b9a-4813-ad16-e5b7dd72f4ad",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willow sneezes into her sleeve by the flower bed. Her eyes itch and her nose runs every spring. The cozy clinic feels calm around her.",
+    "teaching": "Itchy eyes plus spring sneezes with no fever means pollen trouble.",
+    "animation_cue": "idle",
+    "memory": "First visit: sneezy."
+  },
+  {
+    "id": "e0784749-2daf-4cd0-8266-0a073f5e8161",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Willow starts the allergy medicine and nose spray. Her nose feels a little sniffly. She looks perky and rests softly in the cozy room.",
+    "teaching": "Allergy medicine calms the sneezy attack.",
+    "animation_cue": "recovery",
+    "memory": "First visit: sneezy. Tried \"Allergy medicine + nose spray\" → sniffly."
+  },
+  {
+    "id": "2befbf1e-f961-4b05-9aba-62b180fbfe65",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willow takes decongestant and rests. Her eyes itch and sneezes keep coming. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Decongestants unstuff — allergy medicine truly fixes.",
+    "animation_cue": "worried",
+    "memory": "First visit: sneezy. Tried \"Decongestant and rest\" → sneezy."
+  },
+  {
+    "id": "6b202e1d-b7e9-44a2-a485-49404b59ed5e",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willow swallows antibiotics for the sniffles. She cannot stop sneezing at all. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Antibiotics cannot beat pollen — only germs.",
+    "animation_cue": "sick",
+    "memory": "First visit: sneezy. Tried \"Antibiotics for the sniffles\" → miserable."
+  },
+  {
+    "id": "4d79a9ba-24a9-4ee3-a60b-0715041ecb67",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willow starts to take strong steroid pills for months, but a helper gently stops her. Her eyes itch and sneezes keep coming. She does not get worse.",
+    "teaching": "Steroid pills need a doctor watching closely.",
+    "animation_cue": "worried",
+    "memory": "First visit: sneezy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "f6dfc3e9-5238-4c41-a282-b68dae50c743",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Willow keeps taking the allergy medicine daily. Her nose is clear and her eyes feel calm. She looks perky and cozy.",
+    "teaching": "Allergy medicine calms the sneezy attack.",
+    "animation_cue": "happy",
+    "memory": "First visit: sneezy. Tried \"Allergy medicine + nose spray\" → sniffly. Tried \"Allergy medicine + nose spray\" → clear."
+  },
+  {
+    "id": "a25134fa-f28d-4444-b861-40263e5e6246",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Willow keeps resting with decongestant. Her nose feels a little sniffly. She looks comfortable and cozy.",
+    "teaching": "Decongestants unstuff — allergy medicine truly fixes.",
+    "animation_cue": "worried",
+    "memory": "First visit: sneezy. Tried \"Allergy medicine + nose spray\" → sniffly. Tried \"Decongestant and rest\" → sniffly."
+  },
+  {
+    "id": "1c93bd83-c593-43c7-af05-5af6ae414fe6",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willow keeps taking antibiotics for sniffles. Her eyes itch and sneezes keep coming. She looks droopy and cozy.",
+    "teaching": "Antibiotics cannot beat pollen — only germs.",
+    "animation_cue": "sick",
+    "memory": "First visit: sneezy. Tried \"Allergy medicine + nose spray\" → sniffly. Tried \"Antibiotics for the sniffles\" → sneezy."
+  },
+  {
+    "id": "3610d2ee-62c7-4537-9d4d-98412a1f0333",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Willow starts to take strong steroid pills for months, but a helper gently stops her. Her nose feels a little sniffly. She does not get worse.",
+    "teaching": "Steroid pills need a doctor watching closely.",
+    "animation_cue": "worried",
+    "memory": "First visit: sneezy. Tried \"Allergy medicine + nose spray\" → sniffly. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "52a809cd-3faa-4677-9713-6e544d45cb44",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Willow keeps taking the allergy medicine daily. Her nose feels a little sniffly. She looks perky and cozy.",
+    "teaching": "Allergy medicine calms the sneezy attack.",
+    "animation_cue": "recovery",
+    "memory": "First visit: sneezy. Tried \"Decongestant and rest\" → sneezy. Tried \"Allergy medicine + nose spray\" → sniffly."
+  },
+  {
+    "id": "f94d1991-7169-42a7-9882-12a04b8e1fa6",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willow keeps resting with decongestant. Her eyes itch and sneezes keep coming. She looks droopy and cozy.",
+    "teaching": "Decongestants unstuff — allergy medicine truly fixes.",
+    "animation_cue": "worried",
+    "memory": "First visit: sneezy. Tried \"Decongestant and rest\" → sneezy. Tried \"Decongestant and rest\" → sneezy."
+  },
+  {
+    "id": "35842f15-3864-4f07-a60e-9823b4f90774",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willow keeps taking antibiotics for sniffles. She cannot stop sneezing at all. She looks droopy and cozy.",
+    "teaching": "Antibiotics cannot beat pollen — only germs.",
+    "animation_cue": "sick",
+    "memory": "First visit: sneezy. Tried \"Decongestant and rest\" → sneezy. Tried \"Antibiotics for the sniffles\" → miserable."
+  },
+  {
+    "id": "53b4c183-0698-41f7-9b4f-d38f661ca681",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willow starts to take strong steroid pills for months, but a helper gently stops her. Her eyes itch and sneezes keep coming. She does not get worse.",
+    "teaching": "Steroid pills need a doctor watching closely.",
+    "animation_cue": "worried",
+    "memory": "First visit: sneezy. Tried \"Decongestant and rest\" → sneezy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "bd02ff24-7a1a-48ca-8580-729cfe9a359d",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Willow keeps taking the allergy medicine daily. Her eyes itch and sneezes keep coming. She looks perky and cozy.",
+    "teaching": "Allergy medicine calms the sneezy attack.",
+    "animation_cue": "recovery",
+    "memory": "First visit: sneezy. Tried \"Antibiotics for the sniffles\" → miserable. Tried \"Allergy medicine + nose spray\" → sneezy."
+  },
+  {
+    "id": "1a8293c0-df09-4fc0-be5b-18222e6a61c0",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willow keeps resting with decongestant. She cannot stop sneezing at all. She looks droopy and cozy.",
+    "teaching": "Decongestants unstuff — allergy medicine truly fixes.",
+    "animation_cue": "worried",
+    "memory": "First visit: sneezy. Tried \"Antibiotics for the sniffles\" → miserable. Tried \"Decongestant and rest\" → miserable."
+  },
+  {
+    "id": "adcf0a4a-af0d-4a54-b64f-389a156bd091",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willow keeps taking antibiotics for sniffles. She cannot stop sneezing at all. She looks droopy and cozy.",
+    "teaching": "Antibiotics cannot beat pollen — only germs.",
+    "animation_cue": "worried",
+    "memory": "First visit: sneezy. Tried \"Antibiotics for the sniffles\" → miserable. Tried \"Antibiotics for the sniffles\" → miserable."
+  },
+  {
+    "id": "4e0b5003-b50e-4dec-ae43-17fc469de10b",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willow starts to take strong steroid pills for months, but a helper gently stops her. She cannot stop sneezing at all. She does not get worse.",
+    "teaching": "Steroid pills need a doctor watching closely.",
+    "animation_cue": "worried",
+    "memory": "First visit: sneezy. Tried \"Antibiotics for the sniffles\" → miserable. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "dcf44b62-fffb-4a4a-a592-238a1e145771",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Jasper scratches the itchy ring on his arm. The red ring keeps growing since wrestling camp. The cozy clinic feels calm around him.",
+    "teaching": "A scaly ring edge with clear skin inside means ringworm.",
+    "animation_cue": "idle",
+    "memory": "First visit: ringy."
+  },
+  {
+    "id": "ed62211f-f12a-45bd-8cbd-8497f6e01389",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Jasper starts the antifungal cream. One spot feels a little itchy. He looks perky and rests softly in the cozy room.",
+    "teaching": "Antifungal cream melts the ring away.",
+    "animation_cue": "recovery",
+    "memory": "First visit: ringy. Tried \"Antifungal cream every day\" → spotty."
+  },
+  {
+    "id": "cf35056b-fc2d-42f7-acce-b2b13fc39dde",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Jasper washes up and keeps it dry. The itchy ring keeps growing. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Clean and dry comforts — cream truly cures.",
+    "animation_cue": "worried",
+    "memory": "First visit: ringy. Tried \"Wash, keep dry, and wait\" → ringy."
+  },
+  {
+    "id": "49764b3f-27e4-413f-ab77-53d6548a3aa3",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Jasper rubs steroid cream on the ring. Rings are spreading everywhere. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Steroid cream feeds the fungus — the ring spreads.",
+    "animation_cue": "sick",
+    "memory": "First visit: ringy. Tried \"Steroid cream on the ring\" → spreading."
+  },
+  {
+    "id": "53a9e25b-3cb5-47aa-a415-7476ee09dfc2",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Jasper starts to scrub the ring with bleach, but a helper gently stops him. The itchy ring keeps growing. He does not get worse.",
+    "teaching": "Bleach burns skin instead of curing it.",
+    "animation_cue": "worried",
+    "memory": "First visit: ringy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "903f263d-cd70-4b3f-ba39-6b322c5d6720",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Jasper keeps using the antifungal cream daily. His skin is smooth and clear again. He looks perky and cozy.",
+    "teaching": "Antifungal cream melts the ring away.",
+    "animation_cue": "happy",
+    "memory": "First visit: ringy. Tried \"Antifungal cream every day\" → spotty. Tried \"Antifungal cream every day\" → clear."
+  },
+  {
+    "id": "662d3bfa-9ff8-415e-8ae8-9e7cb8df9746",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Jasper keeps washing and keeping it dry. One spot feels a little itchy. He looks comfortable and cozy.",
+    "teaching": "Clean and dry comforts — cream truly cures.",
+    "animation_cue": "worried",
+    "memory": "First visit: ringy. Tried \"Antifungal cream every day\" → spotty. Tried \"Wash, keep dry, and wait\" → spotty."
+  },
+  {
+    "id": "6c32bf98-36b0-411b-aa21-138752a2995b",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Jasper keeps rubbing steroid cream on it. The itchy ring keeps growing. He looks droopy and cozy.",
+    "teaching": "Steroid cream feeds the fungus — the ring spreads.",
+    "animation_cue": "sick",
+    "memory": "First visit: ringy. Tried \"Antifungal cream every day\" → spotty. Tried \"Steroid cream on the ring\" → ringy."
+  },
+  {
+    "id": "524abb11-7537-43ca-a6bd-14515d1bf0a8",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Jasper starts to scrub the ring with bleach, but a helper gently stops him. One spot feels a little itchy. He does not get worse.",
+    "teaching": "Bleach burns skin instead of curing it.",
+    "animation_cue": "worried",
+    "memory": "First visit: ringy. Tried \"Antifungal cream every day\" → spotty. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "ad23cbf8-e957-4fe0-a632-379d2fa96d15",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Jasper keeps using the antifungal cream daily. One spot feels a little itchy. He looks perky and cozy.",
+    "teaching": "Antifungal cream melts the ring away.",
+    "animation_cue": "recovery",
+    "memory": "First visit: ringy. Tried \"Wash, keep dry, and wait\" → ringy. Tried \"Antifungal cream every day\" → spotty."
+  },
+  {
+    "id": "a2a586bf-4194-4f76-84f6-5cbcdbefae87",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Jasper keeps washing and keeping it dry. The itchy ring keeps growing. He looks droopy and cozy.",
+    "teaching": "Clean and dry comforts — cream truly cures.",
+    "animation_cue": "worried",
+    "memory": "First visit: ringy. Tried \"Wash, keep dry, and wait\" → ringy. Tried \"Wash, keep dry, and wait\" → ringy."
+  },
+  {
+    "id": "a0f37a6d-84d8-4fc3-a7e9-61277eb4614d",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Jasper keeps rubbing steroid cream on it. Rings are spreading everywhere. He looks droopy and cozy.",
+    "teaching": "Steroid cream feeds the fungus — the ring spreads.",
+    "animation_cue": "sick",
+    "memory": "First visit: ringy. Tried \"Wash, keep dry, and wait\" → ringy. Tried \"Steroid cream on the ring\" → spreading."
+  },
+  {
+    "id": "aa602c90-7df2-4580-ae89-6925c4e526da",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Jasper starts to scrub the ring with bleach, but a helper gently stops him. The itchy ring keeps growing. He does not get worse.",
+    "teaching": "Bleach burns skin instead of curing it.",
+    "animation_cue": "worried",
+    "memory": "First visit: ringy. Tried \"Wash, keep dry, and wait\" → ringy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "76759e68-7e12-450f-9076-92f5d60fe0c4",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Jasper keeps using the antifungal cream daily. The itchy ring keeps growing. He looks perky and cozy.",
+    "teaching": "Antifungal cream melts the ring away.",
+    "animation_cue": "recovery",
+    "memory": "First visit: ringy. Tried \"Steroid cream on the ring\" → spreading. Tried \"Antifungal cream every day\" → ringy."
+  },
+  {
+    "id": "ee6e2c2d-3822-40e1-b794-c32318ce7715",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Jasper keeps washing and keeping it dry. Rings are spreading everywhere. He looks droopy and cozy.",
+    "teaching": "Clean and dry comforts — cream truly cures.",
+    "animation_cue": "worried",
+    "memory": "First visit: ringy. Tried \"Steroid cream on the ring\" → spreading. Tried \"Wash, keep dry, and wait\" → spreading."
+  },
+  {
+    "id": "e4014e6d-226b-4d64-b5c6-74e281cfe479",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Jasper keeps rubbing steroid cream on it. Rings are spreading everywhere. He looks droopy and cozy.",
+    "teaching": "Steroid cream feeds the fungus — the ring spreads.",
+    "animation_cue": "worried",
+    "memory": "First visit: ringy. Tried \"Steroid cream on the ring\" → spreading. Tried \"Steroid cream on the ring\" → spreading."
+  },
+  {
+    "id": "89d493a8-da5b-4276-a92d-680a8b815d7c",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Jasper starts to scrub the ring with bleach, but a helper gently stops him. Rings are spreading everywhere. He does not get worse.",
+    "teaching": "Bleach burns skin instead of curing it.",
+    "animation_cue": "worried",
+    "memory": "First visit: ringy. Tried \"Steroid cream on the ring\" → spreading. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "c562c23b-4ab0-4db6-b4ed-2ad898817624",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hazel blinks her pink gooey eyes over her book. Watery goo came right after her cold. The cozy clinic feels calm around her.",
+    "teaching": "Pink watery eyes right after a cold means pink eye.",
+    "animation_cue": "idle",
+    "memory": "First visit: gooey."
+  },
+  {
+    "id": "b4a98406-972b-4e41-9fef-fe90b77c7271",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Hazel holds a cool cloth and washes her hands. Her eyes look a little pink. She looks perky and rests softly in the cozy room.",
+    "teaching": "Cool cloths and clean hands beat pink eye.",
+    "animation_cue": "recovery",
+    "memory": "First visit: gooey. Tried \"Cool compress + handwashing\" → pinkish."
+  },
+  {
+    "id": "c092d51b-0b52-4621-a22a-7425fd7dfe02",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hazel rests her eyes in a dim room. Her eyes are pink and gooey. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Dim rest soothes — compresses truly heal.",
+    "animation_cue": "worried",
+    "memory": "First visit: gooey. Tried \"Eye rest in a dim room\" → gooey."
+  },
+  {
+    "id": "96bbfce6-58e4-469d-b4f4-010a8b6a1584",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hazel takes antibiotic eye drops. Her eyes are all gunked up. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Antibiotics cannot beat viruses — only germs.",
+    "animation_cue": "sick",
+    "memory": "First visit: gooey. Tried \"Antibiotic eye drops\" → gunky."
+  },
+  {
+    "id": "064e2dfa-9b6d-4caf-8152-7e594ee07fca",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hazel starts to use her friend's strong eye drops, but a helper gently stops her. Her eyes are pink and gooey. She does not get worse.",
+    "teaching": "Steroid drops feed eye viruses instead.",
+    "animation_cue": "worried",
+    "memory": "First visit: gooey. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "1dea469b-7b19-4edc-bb50-cf8e6cc0f8d3",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Hazel keeps using cool cloths and handwashing. Her eyes are clear and bright again. She looks perky and cozy.",
+    "teaching": "Cool cloths and clean hands beat pink eye.",
+    "animation_cue": "happy",
+    "memory": "First visit: gooey. Tried \"Cool compress + handwashing\" → pinkish. Tried \"Cool compress + handwashing\" → clear."
+  },
+  {
+    "id": "00c28e37-d872-4391-897d-d59fcb67b54a",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Hazel keeps resting her eyes in dim light. Her eyes look a little pink. She looks comfortable and cozy.",
+    "teaching": "Dim rest soothes — compresses truly heal.",
+    "animation_cue": "worried",
+    "memory": "First visit: gooey. Tried \"Cool compress + handwashing\" → pinkish. Tried \"Eye rest in a dim room\" → pinkish."
+  },
+  {
+    "id": "f9507c01-f3a0-4eb3-a1aa-a90d2f708cfe",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hazel keeps using antibiotic eye drops. Her eyes are pink and gooey. She looks droopy and cozy.",
+    "teaching": "Antibiotics cannot beat viruses — only germs.",
+    "animation_cue": "sick",
+    "memory": "First visit: gooey. Tried \"Cool compress + handwashing\" → pinkish. Tried \"Antibiotic eye drops\" → gooey."
+  },
+  {
+    "id": "41969d68-9a3d-4ad6-b7c4-e5de9b4ccbe4",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Hazel starts to use her friend's strong eye drops, but a helper gently stops her. Her eyes look a little pink. She does not get worse.",
+    "teaching": "Steroid drops feed eye viruses instead.",
+    "animation_cue": "worried",
+    "memory": "First visit: gooey. Tried \"Cool compress + handwashing\" → pinkish. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "6689f15b-0b6a-4659-b8b7-4ad1a0e0e509",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Hazel keeps using cool cloths and handwashing. Her eyes look a little pink. She looks perky and cozy.",
+    "teaching": "Cool cloths and clean hands beat pink eye.",
+    "animation_cue": "recovery",
+    "memory": "First visit: gooey. Tried \"Eye rest in a dim room\" → gooey. Tried \"Cool compress + handwashing\" → pinkish."
+  },
+  {
+    "id": "780d733b-c8d0-4aab-9a56-80f01b2abfc6",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hazel keeps resting her eyes in dim light. Her eyes are pink and gooey. She looks droopy and cozy.",
+    "teaching": "Dim rest soothes — compresses truly heal.",
+    "animation_cue": "worried",
+    "memory": "First visit: gooey. Tried \"Eye rest in a dim room\" → gooey. Tried \"Eye rest in a dim room\" → gooey."
+  },
+  {
+    "id": "6c37b4d1-b9ba-4f9a-bbe7-7885294f5d71",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hazel keeps using antibiotic eye drops. Her eyes are all gunked up. She looks droopy and cozy.",
+    "teaching": "Antibiotics cannot beat viruses — only germs.",
+    "animation_cue": "sick",
+    "memory": "First visit: gooey. Tried \"Eye rest in a dim room\" → gooey. Tried \"Antibiotic eye drops\" → gunky."
+  },
+  {
+    "id": "e35ab3f7-d164-4ec6-9171-7d46632d85e9",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hazel starts to use her friend's strong eye drops, but a helper gently stops her. Her eyes are pink and gooey. She does not get worse.",
+    "teaching": "Steroid drops feed eye viruses instead.",
+    "animation_cue": "worried",
+    "memory": "First visit: gooey. Tried \"Eye rest in a dim room\" → gooey. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "925613c4-58b6-4e42-9325-c7f2bd967b5a",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Hazel keeps using cool cloths and handwashing. Her eyes are pink and gooey. She looks perky and cozy.",
+    "teaching": "Cool cloths and clean hands beat pink eye.",
+    "animation_cue": "recovery",
+    "memory": "First visit: gooey. Tried \"Antibiotic eye drops\" → gunky. Tried \"Cool compress + handwashing\" → gooey."
+  },
+  {
+    "id": "9686262b-c0a8-41d4-844b-fef5d281c4a1",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hazel keeps resting her eyes in dim light. Her eyes are all gunked up. She looks droopy and cozy.",
+    "teaching": "Dim rest soothes — compresses truly heal.",
+    "animation_cue": "worried",
+    "memory": "First visit: gooey. Tried \"Antibiotic eye drops\" → gunky. Tried \"Eye rest in a dim room\" → gunky."
+  },
+  {
+    "id": "59e04129-0033-480d-bef0-ddb68bb50d09",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hazel keeps using antibiotic eye drops. Her eyes are all gunked up. She looks droopy and cozy.",
+    "teaching": "Antibiotics cannot beat viruses — only germs.",
+    "animation_cue": "worried",
+    "memory": "First visit: gooey. Tried \"Antibiotic eye drops\" → gunky. Tried \"Antibiotic eye drops\" → gunky."
+  },
+  {
+    "id": "52d2c045-85a7-41dd-b300-ba28016b38eb",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hazel starts to use her friend's strong eye drops, but a helper gently stops her. Her eyes are all gunked up. She does not get worse.",
+    "teaching": "Steroid drops feed eye viruses instead.",
+    "animation_cue": "worried",
+    "memory": "First visit: gooey. Tried \"Antibiotic eye drops\" → gunky. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "d38a34e5-5726-45f0-92ef-5ac473f8cb38",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Finn hops off the soccer field holding his ankle. It rolled inward and puffed up outside. The cozy clinic feels calm around him.",
+    "teaching": "A rolled ankle that still walks four steps is a sprain.",
+    "animation_cue": "idle",
+    "memory": "First visit: swollen."
+  },
+  {
+    "id": "fd95388f-40ac-45d2-a4dc-5514aaf5c70c",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Finn rests with ice and his foot up. His ankle feels a little tender. He looks perky and rests softly in the cozy room.",
+    "teaching": "Rest, ice, squeeze, lift — the sprain settles.",
+    "animation_cue": "recovery",
+    "memory": "First visit: swollen. Tried \"Rest, ice, compress, elevate\" → tender."
+  },
+  {
+    "id": "fe028d54-d572-457b-b4bf-d9ad66c960df",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Finn straps on a brace and keeps walking. His ankle is puffy and sore. He looks droopy and rests softly in the cozy room.",
+    "teaching": "A brace steadies — icing truly heals.",
+    "animation_cue": "worried",
+    "memory": "First visit: swollen. Tried \"Ankle brace, keep walking\" → swollen."
+  },
+  {
+    "id": "7e0692df-268d-4573-bb74-8c5ebd54b4aa",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Finn runs back into the soccer game. His ankle blew up like a balloon. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Playing through re-twists the sore ankle.",
+    "animation_cue": "sick",
+    "memory": "First visit: swollen. Tried \"Play through the soccer game\" → ballooned."
+  },
+  {
+    "id": "18ced8d4-6524-4603-9e22-186af83d534c",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Finn starts to tie a tight belt above his ankle, but a helper gently stops him. His ankle is puffy and sore. He does not get worse.",
+    "teaching": "A tourniquet starves the foot of blood.",
+    "animation_cue": "worried",
+    "memory": "First visit: swollen. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "b6965243-c9d6-4a80-b23a-d088691c5225",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Finn keeps resting, icing, and elevating. His ankles feel springy and fast. He looks perky and cozy.",
+    "teaching": "Rest, ice, squeeze, lift — the sprain settles.",
+    "animation_cue": "happy",
+    "memory": "First visit: swollen. Tried \"Rest, ice, compress, elevate\" → tender. Tried \"Rest, ice, compress, elevate\" → springy."
+  },
+  {
+    "id": "bbfc994b-cc5d-470c-9b3d-ad10d80d0407",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Finn keeps walking in the ankle brace. His ankle feels a little tender. He looks comfortable and cozy.",
+    "teaching": "A brace steadies — icing truly heals.",
+    "animation_cue": "worried",
+    "memory": "First visit: swollen. Tried \"Rest, ice, compress, elevate\" → tender. Tried \"Ankle brace, keep walking\" → tender."
+  },
+  {
+    "id": "378ae447-f3ad-4a7b-9d2d-54862bd40427",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Finn keeps playing through the soccer game. His ankle is puffy and sore. He looks droopy and cozy.",
+    "teaching": "Playing through re-twists the sore ankle.",
+    "animation_cue": "sick",
+    "memory": "First visit: swollen. Tried \"Rest, ice, compress, elevate\" → tender. Tried \"Play through the soccer game\" → swollen."
+  },
+  {
+    "id": "de11fae4-9e67-4fb6-9a47-bac546ba960c",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Finn starts to tie a tight belt above his ankle, but a helper gently stops him. His ankle feels a little tender. He does not get worse.",
+    "teaching": "A tourniquet starves the foot of blood.",
+    "animation_cue": "worried",
+    "memory": "First visit: swollen. Tried \"Rest, ice, compress, elevate\" → tender. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "cc7dd4b6-cd30-45ba-a613-cfcaae920310",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Finn keeps resting, icing, and elevating. His ankle feels a little tender. He looks perky and cozy.",
+    "teaching": "Rest, ice, squeeze, lift — the sprain settles.",
+    "animation_cue": "recovery",
+    "memory": "First visit: swollen. Tried \"Ankle brace, keep walking\" → swollen. Tried \"Rest, ice, compress, elevate\" → tender."
+  },
+  {
+    "id": "1589dfbf-0d09-4efe-9a5e-d976b4e51e3c",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Finn keeps walking in the ankle brace. His ankle is puffy and sore. He looks droopy and cozy.",
+    "teaching": "A brace steadies — icing truly heals.",
+    "animation_cue": "worried",
+    "memory": "First visit: swollen. Tried \"Ankle brace, keep walking\" → swollen. Tried \"Ankle brace, keep walking\" → swollen."
+  },
+  {
+    "id": "dd14e796-bf79-4e8e-8724-d5e6f6eea098",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Finn keeps playing through the soccer game. His ankle blew up like a balloon. He looks droopy and cozy.",
+    "teaching": "Playing through re-twists the sore ankle.",
+    "animation_cue": "sick",
+    "memory": "First visit: swollen. Tried \"Ankle brace, keep walking\" → swollen. Tried \"Play through the soccer game\" → ballooned."
+  },
+  {
+    "id": "ad427475-eafb-4d90-a559-ae2188ed7d57",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Finn starts to tie a tight belt above his ankle, but a helper gently stops him. His ankle is puffy and sore. He does not get worse.",
+    "teaching": "A tourniquet starves the foot of blood.",
+    "animation_cue": "worried",
+    "memory": "First visit: swollen. Tried \"Ankle brace, keep walking\" → swollen. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "5aa1ad14-60ac-418a-9553-3f6193c4a7a0",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Finn keeps resting, icing, and elevating. His ankle is puffy and sore. He looks perky and cozy.",
+    "teaching": "Rest, ice, squeeze, lift — the sprain settles.",
+    "animation_cue": "recovery",
+    "memory": "First visit: swollen. Tried \"Play through the soccer game\" → ballooned. Tried \"Rest, ice, compress, elevate\" → swollen."
+  },
+  {
+    "id": "6b37c3df-f62a-43a7-b54b-acd48fce6b9d",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Finn keeps walking in the ankle brace. His ankle blew up like a balloon. He looks droopy and cozy.",
+    "teaching": "A brace steadies — icing truly heals.",
+    "animation_cue": "worried",
+    "memory": "First visit: swollen. Tried \"Play through the soccer game\" → ballooned. Tried \"Ankle brace, keep walking\" → ballooned."
+  },
+  {
+    "id": "b24d74cf-a45f-44ee-931a-b966c6661c28",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Finn keeps playing through the soccer game. His ankle blew up like a balloon. He looks droopy and cozy.",
+    "teaching": "Playing through re-twists the sore ankle.",
+    "animation_cue": "worried",
+    "memory": "First visit: swollen. Tried \"Play through the soccer game\" → ballooned. Tried \"Play through the soccer game\" → ballooned."
+  },
+  {
+    "id": "243b7d8a-d3c4-4059-94d3-ad877566170d",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Finn starts to tie a tight belt above his ankle, but a helper gently stops him. His ankle blew up like a balloon. He does not get worse.",
+    "teaching": "A tourniquet starves the foot of blood.",
+    "animation_cue": "worried",
+    "memory": "First visit: swollen. Tried \"Play through the soccer game\" → ballooned. A risky idea came up; we steered clear."
   }
 ];
 
@@ -10408,6 +11548,582 @@ export const FALLBACK_EDGES: FallbackEdge[] = [
     "kind": "decision",
     "choice_label": "Chug pure salt water",
     "grade": "DANGEROUS"
+  },
+  {
+    "id": "62946ce1-933b-4af6-8360-c94117918550",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "from_node_id": "7503ef05-8b9a-4813-ad16-e5b7dd72f4ad",
+    "to_node_id": "e0784749-2daf-4cd0-8266-0a073f5e8161",
+    "kind": "decision",
+    "choice_label": "Allergy medicine + nose spray",
+    "grade": "BEST"
+  },
+  {
+    "id": "a8681a4f-3ce6-42f1-a228-139b7c146934",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "from_node_id": "7503ef05-8b9a-4813-ad16-e5b7dd72f4ad",
+    "to_node_id": "2befbf1e-f961-4b05-9aba-62b180fbfe65",
+    "kind": "decision",
+    "choice_label": "Decongestant and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "4b719b3c-30c6-41e9-a400-8a17a308d415",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "from_node_id": "7503ef05-8b9a-4813-ad16-e5b7dd72f4ad",
+    "to_node_id": "6b202e1d-b7e9-44a2-a485-49404b59ed5e",
+    "kind": "decision",
+    "choice_label": "Antibiotics for the sniffles",
+    "grade": "WRONG"
+  },
+  {
+    "id": "658496f6-33b1-4e8d-8762-ef76730451e1",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "from_node_id": "7503ef05-8b9a-4813-ad16-e5b7dd72f4ad",
+    "to_node_id": "4d79a9ba-24a9-4ee3-a60b-0715041ecb67",
+    "kind": "decision",
+    "choice_label": "Steroid pills all season long",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "3ddc4d7c-4aaf-463f-81f6-3d905b4ff4ef",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "from_node_id": "e0784749-2daf-4cd0-8266-0a073f5e8161",
+    "to_node_id": "f6dfc3e9-5238-4c41-a282-b68dae50c743",
+    "kind": "decision",
+    "choice_label": "Allergy medicine + nose spray",
+    "grade": "BEST"
+  },
+  {
+    "id": "696ca53e-1336-4752-8a9b-57da96ffccba",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "from_node_id": "e0784749-2daf-4cd0-8266-0a073f5e8161",
+    "to_node_id": "a25134fa-f28d-4444-b861-40263e5e6246",
+    "kind": "decision",
+    "choice_label": "Decongestant and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "9e21e050-ef09-41a4-8a80-ba07c96cb0b9",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "from_node_id": "e0784749-2daf-4cd0-8266-0a073f5e8161",
+    "to_node_id": "1c93bd83-c593-43c7-af05-5af6ae414fe6",
+    "kind": "decision",
+    "choice_label": "Antibiotics for the sniffles",
+    "grade": "WRONG"
+  },
+  {
+    "id": "c39479ca-3c10-429e-855a-e79b53a199ba",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "from_node_id": "e0784749-2daf-4cd0-8266-0a073f5e8161",
+    "to_node_id": "3610d2ee-62c7-4537-9d4d-98412a1f0333",
+    "kind": "decision",
+    "choice_label": "Steroid pills all season long",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "1de2f934-67e2-4349-8141-24b356e8fb3a",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "from_node_id": "2befbf1e-f961-4b05-9aba-62b180fbfe65",
+    "to_node_id": "52a809cd-3faa-4677-9713-6e544d45cb44",
+    "kind": "decision",
+    "choice_label": "Allergy medicine + nose spray",
+    "grade": "BEST"
+  },
+  {
+    "id": "648f808b-5350-4573-821e-73b548f935f0",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "from_node_id": "2befbf1e-f961-4b05-9aba-62b180fbfe65",
+    "to_node_id": "f94d1991-7169-42a7-9882-12a04b8e1fa6",
+    "kind": "decision",
+    "choice_label": "Decongestant and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "ee835607-3649-4035-97ba-a5bb21f8a1a0",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "from_node_id": "2befbf1e-f961-4b05-9aba-62b180fbfe65",
+    "to_node_id": "35842f15-3864-4f07-a60e-9823b4f90774",
+    "kind": "decision",
+    "choice_label": "Antibiotics for the sniffles",
+    "grade": "WRONG"
+  },
+  {
+    "id": "e608bc04-ddef-4250-bebb-b9a08fabc2f5",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "from_node_id": "2befbf1e-f961-4b05-9aba-62b180fbfe65",
+    "to_node_id": "53b4c183-0698-41f7-9b4f-d38f661ca681",
+    "kind": "decision",
+    "choice_label": "Steroid pills all season long",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "ef781373-a9b5-407a-9587-960a30571d70",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "from_node_id": "6b202e1d-b7e9-44a2-a485-49404b59ed5e",
+    "to_node_id": "bd02ff24-7a1a-48ca-8580-729cfe9a359d",
+    "kind": "decision",
+    "choice_label": "Allergy medicine + nose spray",
+    "grade": "BEST"
+  },
+  {
+    "id": "68744a5c-27cf-4ed4-95eb-64ea0a2db2d6",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "from_node_id": "6b202e1d-b7e9-44a2-a485-49404b59ed5e",
+    "to_node_id": "1a8293c0-df09-4fc0-be5b-18222e6a61c0",
+    "kind": "decision",
+    "choice_label": "Decongestant and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "6bf4f77a-e060-4bc7-8566-ce2f4e2f9bbf",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "from_node_id": "6b202e1d-b7e9-44a2-a485-49404b59ed5e",
+    "to_node_id": "adcf0a4a-af0d-4a54-b64f-389a156bd091",
+    "kind": "decision",
+    "choice_label": "Antibiotics for the sniffles",
+    "grade": "WRONG"
+  },
+  {
+    "id": "d16dfe6f-18a0-4347-a50a-b8a47b87ae9f",
+    "patient_id": "1906f339-a6df-4f80-beb7-2a6d93ddfabc",
+    "from_node_id": "6b202e1d-b7e9-44a2-a485-49404b59ed5e",
+    "to_node_id": "4e0b5003-b50e-4dec-ae43-17fc469de10b",
+    "kind": "decision",
+    "choice_label": "Steroid pills all season long",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "11eabc92-b658-4fbf-99af-5952b66659d4",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "from_node_id": "dcf44b62-fffb-4a4a-a592-238a1e145771",
+    "to_node_id": "ed62211f-f12a-45bd-8cbd-8497f6e01389",
+    "kind": "decision",
+    "choice_label": "Antifungal cream every day",
+    "grade": "BEST"
+  },
+  {
+    "id": "0097cc72-9f2c-4e00-8ebb-29c814f51559",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "from_node_id": "dcf44b62-fffb-4a4a-a592-238a1e145771",
+    "to_node_id": "cf35056b-fc2d-42f7-acce-b2b13fc39dde",
+    "kind": "decision",
+    "choice_label": "Wash, keep dry, and wait",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "8fd4d369-67c2-4891-9322-3d9c77b59ed2",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "from_node_id": "dcf44b62-fffb-4a4a-a592-238a1e145771",
+    "to_node_id": "49764b3f-27e4-413f-ab77-53d6548a3aa3",
+    "kind": "decision",
+    "choice_label": "Steroid cream on the ring",
+    "grade": "WRONG"
+  },
+  {
+    "id": "0cee64a4-88c8-4501-a65c-2880a64032b3",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "from_node_id": "dcf44b62-fffb-4a4a-a592-238a1e145771",
+    "to_node_id": "53a9e25b-3cb5-47aa-a415-7476ee09dfc2",
+    "kind": "decision",
+    "choice_label": "Scrub it with bleach",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "8baec61e-17e1-453d-968c-4e120557c2ea",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "from_node_id": "ed62211f-f12a-45bd-8cbd-8497f6e01389",
+    "to_node_id": "903f263d-cd70-4b3f-ba39-6b322c5d6720",
+    "kind": "decision",
+    "choice_label": "Antifungal cream every day",
+    "grade": "BEST"
+  },
+  {
+    "id": "ca32d832-4ff5-42d3-aba8-95c79da9ca6d",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "from_node_id": "ed62211f-f12a-45bd-8cbd-8497f6e01389",
+    "to_node_id": "662d3bfa-9ff8-415e-8ae8-9e7cb8df9746",
+    "kind": "decision",
+    "choice_label": "Wash, keep dry, and wait",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "6ac7babe-34e7-4078-ab57-470772a27cca",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "from_node_id": "ed62211f-f12a-45bd-8cbd-8497f6e01389",
+    "to_node_id": "6c32bf98-36b0-411b-aa21-138752a2995b",
+    "kind": "decision",
+    "choice_label": "Steroid cream on the ring",
+    "grade": "WRONG"
+  },
+  {
+    "id": "3b8ab6fb-08a3-493f-ac32-fdd7ef85da7c",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "from_node_id": "ed62211f-f12a-45bd-8cbd-8497f6e01389",
+    "to_node_id": "524abb11-7537-43ca-a6bd-14515d1bf0a8",
+    "kind": "decision",
+    "choice_label": "Scrub it with bleach",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "52f91550-80b4-45af-b443-4cc091c9abf2",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "from_node_id": "cf35056b-fc2d-42f7-acce-b2b13fc39dde",
+    "to_node_id": "ad23cbf8-e957-4fe0-a632-379d2fa96d15",
+    "kind": "decision",
+    "choice_label": "Antifungal cream every day",
+    "grade": "BEST"
+  },
+  {
+    "id": "4c0b7f8f-2d08-4117-805a-f605729e97b0",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "from_node_id": "cf35056b-fc2d-42f7-acce-b2b13fc39dde",
+    "to_node_id": "a2a586bf-4194-4f76-84f6-5cbcdbefae87",
+    "kind": "decision",
+    "choice_label": "Wash, keep dry, and wait",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "9d685afd-74b0-4e31-9048-ca9446ba68dc",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "from_node_id": "cf35056b-fc2d-42f7-acce-b2b13fc39dde",
+    "to_node_id": "a0f37a6d-84d8-4fc3-a7e9-61277eb4614d",
+    "kind": "decision",
+    "choice_label": "Steroid cream on the ring",
+    "grade": "WRONG"
+  },
+  {
+    "id": "a945f97c-c26b-4514-9971-a57fe1862bae",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "from_node_id": "cf35056b-fc2d-42f7-acce-b2b13fc39dde",
+    "to_node_id": "aa602c90-7df2-4580-ae89-6925c4e526da",
+    "kind": "decision",
+    "choice_label": "Scrub it with bleach",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "4a968c7f-89d2-40c0-828f-cc751b4ea2b4",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "from_node_id": "49764b3f-27e4-413f-ab77-53d6548a3aa3",
+    "to_node_id": "76759e68-7e12-450f-9076-92f5d60fe0c4",
+    "kind": "decision",
+    "choice_label": "Antifungal cream every day",
+    "grade": "BEST"
+  },
+  {
+    "id": "f007ca70-7340-4128-b84a-16584fdca736",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "from_node_id": "49764b3f-27e4-413f-ab77-53d6548a3aa3",
+    "to_node_id": "ee6e2c2d-3822-40e1-b794-c32318ce7715",
+    "kind": "decision",
+    "choice_label": "Wash, keep dry, and wait",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "c9e85c34-5e61-4a96-9bd7-fd3935c47206",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "from_node_id": "49764b3f-27e4-413f-ab77-53d6548a3aa3",
+    "to_node_id": "e4014e6d-226b-4d64-b5c6-74e281cfe479",
+    "kind": "decision",
+    "choice_label": "Steroid cream on the ring",
+    "grade": "WRONG"
+  },
+  {
+    "id": "255abb92-2bef-437b-9542-ce49b937bf44",
+    "patient_id": "4a00d75f-5437-4c94-a51e-30a1bc7a3964",
+    "from_node_id": "49764b3f-27e4-413f-ab77-53d6548a3aa3",
+    "to_node_id": "89d493a8-da5b-4276-a92d-680a8b815d7c",
+    "kind": "decision",
+    "choice_label": "Scrub it with bleach",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "4f21f6c7-1715-4651-aafa-5825a29ea6b9",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "from_node_id": "c562c23b-4ab0-4db6-b4ed-2ad898817624",
+    "to_node_id": "b4a98406-972b-4e41-9fef-fe90b77c7271",
+    "kind": "decision",
+    "choice_label": "Cool compress + handwashing",
+    "grade": "BEST"
+  },
+  {
+    "id": "fb6585d2-53ed-495b-a9cb-c5d93d9afd52",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "from_node_id": "c562c23b-4ab0-4db6-b4ed-2ad898817624",
+    "to_node_id": "c092d51b-0b52-4621-a22a-7425fd7dfe02",
+    "kind": "decision",
+    "choice_label": "Eye rest in a dim room",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "7843588e-4de8-48cd-8f31-6a23c3a7ff1e",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "from_node_id": "c562c23b-4ab0-4db6-b4ed-2ad898817624",
+    "to_node_id": "96bbfce6-58e4-469d-b4f4-010a8b6a1584",
+    "kind": "decision",
+    "choice_label": "Antibiotic eye drops",
+    "grade": "WRONG"
+  },
+  {
+    "id": "a0cd3303-c0f3-4538-88cb-ca4f7c2cfbc0",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "from_node_id": "c562c23b-4ab0-4db6-b4ed-2ad898817624",
+    "to_node_id": "064e2dfa-9b6d-4caf-8152-7e594ee07fca",
+    "kind": "decision",
+    "choice_label": "Steroid drops from a friend",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "99e0ec16-5a29-4678-af1a-38a9582f5c04",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "from_node_id": "b4a98406-972b-4e41-9fef-fe90b77c7271",
+    "to_node_id": "1dea469b-7b19-4edc-bb50-cf8e6cc0f8d3",
+    "kind": "decision",
+    "choice_label": "Cool compress + handwashing",
+    "grade": "BEST"
+  },
+  {
+    "id": "fe04c25e-1955-4429-a9eb-f7970a0ec612",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "from_node_id": "b4a98406-972b-4e41-9fef-fe90b77c7271",
+    "to_node_id": "00c28e37-d872-4391-897d-d59fcb67b54a",
+    "kind": "decision",
+    "choice_label": "Eye rest in a dim room",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "b6da48a8-114e-442a-b809-b5f922e1c149",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "from_node_id": "b4a98406-972b-4e41-9fef-fe90b77c7271",
+    "to_node_id": "f9507c01-f3a0-4eb3-a1aa-a90d2f708cfe",
+    "kind": "decision",
+    "choice_label": "Antibiotic eye drops",
+    "grade": "WRONG"
+  },
+  {
+    "id": "a0d9f4f6-a1ec-41b9-9df2-0bb550ce352f",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "from_node_id": "b4a98406-972b-4e41-9fef-fe90b77c7271",
+    "to_node_id": "41969d68-9a3d-4ad6-b7c4-e5de9b4ccbe4",
+    "kind": "decision",
+    "choice_label": "Steroid drops from a friend",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "adf0e0cd-2bb3-44b6-b8ff-b34b482d834c",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "from_node_id": "c092d51b-0b52-4621-a22a-7425fd7dfe02",
+    "to_node_id": "6689f15b-0b6a-4659-b8b7-4ad1a0e0e509",
+    "kind": "decision",
+    "choice_label": "Cool compress + handwashing",
+    "grade": "BEST"
+  },
+  {
+    "id": "6ce7e9ea-79b6-46c2-a3f8-808499d261ee",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "from_node_id": "c092d51b-0b52-4621-a22a-7425fd7dfe02",
+    "to_node_id": "780d733b-c8d0-4aab-9a56-80f01b2abfc6",
+    "kind": "decision",
+    "choice_label": "Eye rest in a dim room",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "a054acf1-8153-458c-a946-930d3df86938",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "from_node_id": "c092d51b-0b52-4621-a22a-7425fd7dfe02",
+    "to_node_id": "6c37b4d1-b9ba-4f9a-bbe7-7885294f5d71",
+    "kind": "decision",
+    "choice_label": "Antibiotic eye drops",
+    "grade": "WRONG"
+  },
+  {
+    "id": "d6c0b0a7-7baf-499c-8263-a4b0466d3c7f",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "from_node_id": "c092d51b-0b52-4621-a22a-7425fd7dfe02",
+    "to_node_id": "e35ab3f7-d164-4ec6-9171-7d46632d85e9",
+    "kind": "decision",
+    "choice_label": "Steroid drops from a friend",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "80eb319c-78e8-4901-bb0a-6f2d383fd02d",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "from_node_id": "96bbfce6-58e4-469d-b4f4-010a8b6a1584",
+    "to_node_id": "925613c4-58b6-4e42-9325-c7f2bd967b5a",
+    "kind": "decision",
+    "choice_label": "Cool compress + handwashing",
+    "grade": "BEST"
+  },
+  {
+    "id": "4490341b-1284-49b3-83f3-59217a04df6b",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "from_node_id": "96bbfce6-58e4-469d-b4f4-010a8b6a1584",
+    "to_node_id": "9686262b-c0a8-41d4-844b-fef5d281c4a1",
+    "kind": "decision",
+    "choice_label": "Eye rest in a dim room",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "4d325412-5735-455f-949a-34cfdff1d556",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "from_node_id": "96bbfce6-58e4-469d-b4f4-010a8b6a1584",
+    "to_node_id": "59e04129-0033-480d-bef0-ddb68bb50d09",
+    "kind": "decision",
+    "choice_label": "Antibiotic eye drops",
+    "grade": "WRONG"
+  },
+  {
+    "id": "32df6d0d-889b-46a2-88d5-ecd9441b23e8",
+    "patient_id": "4b91af2d-08f0-4ca9-b9ce-4098934fbe78",
+    "from_node_id": "96bbfce6-58e4-469d-b4f4-010a8b6a1584",
+    "to_node_id": "52d2c045-85a7-41dd-b300-ba28016b38eb",
+    "kind": "decision",
+    "choice_label": "Steroid drops from a friend",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "ff42b76d-c738-4b1b-9eaa-2ef35cbafa3d",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "from_node_id": "d38a34e5-5726-45f0-92ef-5ac473f8cb38",
+    "to_node_id": "fd95388f-40ac-45d2-a4dc-5514aaf5c70c",
+    "kind": "decision",
+    "choice_label": "Rest, ice, compress, elevate",
+    "grade": "BEST"
+  },
+  {
+    "id": "599f07fa-c538-430a-ae7c-ead4e5710e29",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "from_node_id": "d38a34e5-5726-45f0-92ef-5ac473f8cb38",
+    "to_node_id": "fe028d54-d572-457b-b4bf-d9ad66c960df",
+    "kind": "decision",
+    "choice_label": "Ankle brace, keep walking",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "75474402-b799-4762-bf9d-bfce7b72aca5",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "from_node_id": "d38a34e5-5726-45f0-92ef-5ac473f8cb38",
+    "to_node_id": "7e0692df-268d-4573-bb74-8c5ebd54b4aa",
+    "kind": "decision",
+    "choice_label": "Play through the soccer game",
+    "grade": "WRONG"
+  },
+  {
+    "id": "7ded6f09-66cb-426f-9950-15be19114de0",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "from_node_id": "d38a34e5-5726-45f0-92ef-5ac473f8cb38",
+    "to_node_id": "18ced8d4-6524-4603-9e22-186af83d534c",
+    "kind": "decision",
+    "choice_label": "Belt tourniquet on the leg",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "65f43682-ba26-4667-a904-c3c599fc69f0",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "from_node_id": "fd95388f-40ac-45d2-a4dc-5514aaf5c70c",
+    "to_node_id": "b6965243-c9d6-4a80-b23a-d088691c5225",
+    "kind": "decision",
+    "choice_label": "Rest, ice, compress, elevate",
+    "grade": "BEST"
+  },
+  {
+    "id": "89dff862-d685-4075-baf9-5707311e11a9",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "from_node_id": "fd95388f-40ac-45d2-a4dc-5514aaf5c70c",
+    "to_node_id": "bbfc994b-cc5d-470c-9b3d-ad10d80d0407",
+    "kind": "decision",
+    "choice_label": "Ankle brace, keep walking",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "f89bf4a8-61ea-4257-9cb3-3cc551c10d57",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "from_node_id": "fd95388f-40ac-45d2-a4dc-5514aaf5c70c",
+    "to_node_id": "378ae447-f3ad-4a7b-9d2d-54862bd40427",
+    "kind": "decision",
+    "choice_label": "Play through the soccer game",
+    "grade": "WRONG"
+  },
+  {
+    "id": "5abd304a-6b35-47a0-bb86-23b3bc5222ab",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "from_node_id": "fd95388f-40ac-45d2-a4dc-5514aaf5c70c",
+    "to_node_id": "de11fae4-9e67-4fb6-9a47-bac546ba960c",
+    "kind": "decision",
+    "choice_label": "Belt tourniquet on the leg",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "b7e864a1-90f8-4828-891a-4be155101296",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "from_node_id": "fe028d54-d572-457b-b4bf-d9ad66c960df",
+    "to_node_id": "cc7dd4b6-cd30-45ba-a613-cfcaae920310",
+    "kind": "decision",
+    "choice_label": "Rest, ice, compress, elevate",
+    "grade": "BEST"
+  },
+  {
+    "id": "2478a7bc-a016-4493-a217-0fa21d07a9e0",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "from_node_id": "fe028d54-d572-457b-b4bf-d9ad66c960df",
+    "to_node_id": "1589dfbf-0d09-4efe-9a5e-d976b4e51e3c",
+    "kind": "decision",
+    "choice_label": "Ankle brace, keep walking",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "56d380e0-1687-4053-899a-726c6ad0ac94",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "from_node_id": "fe028d54-d572-457b-b4bf-d9ad66c960df",
+    "to_node_id": "dd14e796-bf79-4e8e-8724-d5e6f6eea098",
+    "kind": "decision",
+    "choice_label": "Play through the soccer game",
+    "grade": "WRONG"
+  },
+  {
+    "id": "27913e8b-00c3-401e-beda-e803f28dd6b8",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "from_node_id": "fe028d54-d572-457b-b4bf-d9ad66c960df",
+    "to_node_id": "ad427475-eafb-4d90-a559-ae2188ed7d57",
+    "kind": "decision",
+    "choice_label": "Belt tourniquet on the leg",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "a6a8e3e3-e893-4ae6-91c4-ca7cae01dc5e",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "from_node_id": "7e0692df-268d-4573-bb74-8c5ebd54b4aa",
+    "to_node_id": "5aa1ad14-60ac-418a-9553-3f6193c4a7a0",
+    "kind": "decision",
+    "choice_label": "Rest, ice, compress, elevate",
+    "grade": "BEST"
+  },
+  {
+    "id": "d1aa4531-8b57-43a2-bba4-c4430d5c1ce2",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "from_node_id": "7e0692df-268d-4573-bb74-8c5ebd54b4aa",
+    "to_node_id": "6b37c3df-f62a-43a7-b54b-acd48fce6b9d",
+    "kind": "decision",
+    "choice_label": "Ankle brace, keep walking",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "d9944200-0556-43cd-b0f7-4964bcacf147",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "from_node_id": "7e0692df-268d-4573-bb74-8c5ebd54b4aa",
+    "to_node_id": "b24d74cf-a45f-44ee-931a-b966c6661c28",
+    "kind": "decision",
+    "choice_label": "Play through the soccer game",
+    "grade": "WRONG"
+  },
+  {
+    "id": "02591a20-45ec-4df2-b4d4-27d7cbef2494",
+    "patient_id": "4dd4949e-cbfa-4231-a554-36cc53000510",
+    "from_node_id": "7e0692df-268d-4573-bb74-8c5ebd54b4aa",
+    "to_node_id": "243b7d8a-d3c4-4059-94d3-ad877566170d",
+    "kind": "decision",
+    "choice_label": "Belt tourniquet on the leg",
+    "grade": "DANGEROUS"
   }
 ];
 
@@ -10620,6 +12336,58 @@ export const FALLBACK_TREATMENTS: FallbackTreatment[] = [
     },
     "conditions": [
       "gastroenteritis"
+    ]
+  },
+  {
+    "id": "e27c0a01-0000-4000-8000-000000000001",
+    "class_name": "Allergy medicine",
+    "description": "Antihistamine plus nose spray that calm pollen attacks.",
+    "wording": {
+      "plain": "allergy medicine",
+      "gentle": "sneeze-stopping syrup",
+      "clinical": "antihistamine + nasal steroid"
+    },
+    "conditions": [
+      "hay-fever"
+    ]
+  },
+  {
+    "id": "e27c0a01-0000-4000-8000-000000000002",
+    "class_name": "Antifungal cream",
+    "description": "Cream that melts fungus rings away.",
+    "wording": {
+      "plain": "antifungal cream",
+      "gentle": "ring-fighting cream",
+      "clinical": "topical antifungal"
+    },
+    "conditions": [
+      "ringworm"
+    ]
+  },
+  {
+    "id": "e27c0a01-0000-4000-8000-000000000003",
+    "class_name": "Cool compress care",
+    "description": "Cool cloths and handwashing that beat pink eye.",
+    "wording": {
+      "plain": "compress + handwashing",
+      "gentle": "cool cloth + clean hands",
+      "clinical": "supportive compress + hygiene"
+    },
+    "conditions": [
+      "pink-eye"
+    ]
+  },
+  {
+    "id": "e27c0a01-0000-4000-8000-000000000004",
+    "class_name": "RICE care",
+    "description": "Rest, ice, compression, elevation for sprains.",
+    "wording": {
+      "plain": "rest + ice + elevation",
+      "gentle": "rest, ice, lift it up",
+      "clinical": "rest/ice/compression/elevation"
+    },
+    "conditions": [
+      "ankle-sprain"
     ]
   }
 ];
@@ -10896,6 +12664,82 @@ export const FALLBACK_RESOURCES: FallbackResource[] = [
       "answer": 0,
       "pearl": "Tiny sips refill what puking stole."
     }
+  },
+  {
+    "id": "f27c0a01-0000-4000-8000-000000000001",
+    "condition_id": "hay-fever",
+    "title": "Hay Fever",
+    "url": "https://medlineplus.gov/hayfever.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "Hay fever brings itchy eyes, sneeze attacks, and a runny nose every pollen season — with no fever at all. Allergy medicine plus a nose spray calm it; antibiotics cannot beat pollen.",
+    "quiz": {
+      "stem": "Itchy eyes + spring sneezes, no fever means…",
+      "choices": [
+        "A common cold",
+        "Hay fever",
+        "An ear infection"
+      ],
+      "answer": 1,
+      "pearl": "Spring itch + sneeze: pollen."
+    }
+  },
+  {
+    "id": "f27c0a01-0000-4000-8000-000000000002",
+    "condition_id": "ringworm",
+    "title": "Ringworm",
+    "url": "https://medlineplus.gov/tineainfections.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "Ringworm is a skin fungus making an itchy red ring with clear skin inside — wrestlers and puppies spread it. Antifungal cream cures it; steroid cream feeds the fungus and bleach burns the skin.",
+    "quiz": {
+      "stem": "A scaly ring with a clear center needs…",
+      "choices": [
+        "Steroid cream",
+        "Bleach scrub",
+        "Antifungal cream"
+      ],
+      "answer": 2,
+      "pearl": "Scaly ring, clear center: fungus."
+    }
+  },
+  {
+    "id": "f27c0a01-0000-4000-8000-000000000003",
+    "condition_id": "pink-eye",
+    "title": "Pink Eye",
+    "url": "https://medlineplus.gov/pinkeye.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "Viral pink eye makes eyes pink and watery with goo, often right after a cold — and it spreads fast through classrooms. Cool cloths plus handwashing heal it; antibiotics cannot beat viruses.",
+    "quiz": {
+      "stem": "Pink watery eyes after a cold need…",
+      "choices": [
+        "Cool cloths + handwashing",
+        "Antibiotic drops",
+        "Steroid drops"
+      ],
+      "answer": 0,
+      "pearl": "Pink + watery after cold: virus."
+    }
+  },
+  {
+    "id": "f27c0a01-0000-4000-8000-000000000004",
+    "condition_id": "ankle-sprain",
+    "title": "Sprained Ankle",
+    "url": "https://medlineplus.gov/ankleinjuriesanddisorders.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "A sprained ankle rolls inward in sports, swelling on the outside — but it still walks four steps, so no x-ray is needed. Rest, ice, compression, and elevation heal it; playing through re-twists it.",
+    "quiz": {
+      "stem": "A rolled ankle that still walks needs…",
+      "choices": [
+        "Rest, ice, compress, elevate",
+        "Keep playing soccer",
+        "A tight belt tourniquet"
+      ],
+      "answer": 0,
+      "pearl": "Rolled ankle, walks: sprain."
+    }
   }
 ];
 
@@ -10999,5 +12843,21 @@ export const FALLBACK_EXAM_FINDINGS: FallbackExamFinding[] = [
   { condition_id: 'gastroenteritis', modality: 'look', gentle: 'Pale and droopy; tongue looks dry.', steady: 'Pale, droopy, dry lips.', clinical: 'Pale; dry lips; mild distress.', expert: 'Pallor; dry mucosae; mild distress.' },
   { condition_id: 'gastroenteritis', modality: 'feel', gentle: 'Belly soft and gurgly all over.', steady: 'Soft belly, gurgly everywhere.', clinical: 'Soft diffuse tenderness; gurgly.', expert: 'Soft diffuse abdomen; non-focal.' },
   { condition_id: 'gastroenteritis', modality: 'tap', gentle: 'Belly taps sound hollow and gassy.', steady: 'Gassy hollow taps all over.', clinical: 'Diffuse tympany.', expert: 'Diffuse tympany; no focal dullness.' },
-  { condition_id: 'gastroenteritis', modality: 'listen', gentle: 'Belly grumbles and gurgles loudly.', steady: 'Loud gurgly bowel sounds.', clinical: 'Hyperactive bowel sounds.', expert: 'Hyperactive rushing bowel sounds.' }
+  { condition_id: 'gastroenteritis', modality: 'listen', gentle: 'Belly grumbles and gurgles loudly.', steady: 'Loud gurgly bowel sounds.', clinical: 'Hyperactive bowel sounds.', expert: 'Hyperactive rushing bowel sounds.' },
+  { condition_id: 'hay-fever', modality: 'look', gentle: 'Eyes itchy and watery; nose runny.', steady: 'Itchy watery eyes; clear runny nose.', clinical: 'Watery pruritic eyes; clear rhinorrhea.', expert: 'Pruritic watery eyes; boggy turbinates.' },
+  { condition_id: 'hay-fever', modality: 'feel', gentle: 'Nose tickly; rubbing it feels good.', steady: 'Nose itchy; no tender spots.', clinical: 'Nasal pruritus; sinuses non-tender.', expert: 'Nasal pruritus; no sinus tenderness.' },
+  { condition_id: 'hay-fever', modality: 'tap', gentle: 'Face taps sound normal.', steady: 'Sinus percussion normal.', clinical: 'Sinuses non-tender.', expert: 'No sinus tenderness.' },
+  { condition_id: 'hay-fever', modality: 'listen', gentle: 'Sneezes pop a lot; chest is clear.', steady: 'Frequent sneezes; lungs clear.', clinical: 'Paroxysmal sneezing; lungs clear.', expert: 'Sneeze paroxysms; vesicular lungs.' },
+  { condition_id: 'ringworm', modality: 'look', gentle: 'Red ring with clear skin inside.', steady: 'Red scaly ring; clear center.', clinical: 'Annular erythema; central clearing.', expert: 'Annular plaque; scaly raised edge.' },
+  { condition_id: 'ringworm', modality: 'feel', gentle: 'Ring edge feels rough and bumpy.', steady: 'Rough scaly ring edge.', clinical: 'Scaly palpable advancing edge.', expert: 'Palpable scaly border; KOH positive.' },
+  { condition_id: 'ringworm', modality: 'tap', gentle: 'Skin taps sound normal.', steady: 'No tapping clues; look and feel tell.', clinical: 'Percussion non-contributory.', expert: 'Percussion not indicated.' },
+  { condition_id: 'ringworm', modality: 'listen', gentle: 'Body sounds fine all over.', steady: 'No lung or heart clues.', clinical: 'Cardiopulmonary exam normal.', expert: 'No systemic findings.' },
+  { condition_id: 'pink-eye', modality: 'look', gentle: 'Eyes pink with watery goo.', steady: 'Pink eyes; watery discharge.', clinical: 'Conjunctival injection; watery.', expert: 'Bilateral injection; watery discharge.' },
+  { condition_id: 'pink-eye', modality: 'feel', gentle: 'Eyelids a bit crusty and sticky.', steady: 'Crusty sticky eyelids.', clinical: 'Mild lid crusting present.', expert: 'Mild lid edema; preauricular node.' },
+  { condition_id: 'pink-eye', modality: 'tap', gentle: 'Head taps sound normal.', steady: 'Percussion normal.', clinical: 'Percussion unremarkable.', expert: 'No percussive abnormality.' },
+  { condition_id: 'pink-eye', modality: 'listen', gentle: 'Eyes watery; breathing sounds fine.', steady: 'Lungs clear; cold almost gone.', clinical: 'Lungs clear; resolving cold.', expert: 'Vesicular; resolving viral cold.' },
+  { condition_id: 'ankle-sprain', modality: 'look', gentle: 'Ankle puffy on the outside.', steady: 'Swollen outside of ankle.', clinical: 'Lateral ankle swelling.', expert: 'Lateral swelling; no deformity.' },
+  { condition_id: 'ankle-sprain', modality: 'feel', gentle: 'Sore outside; ankle bones feel fine.', steady: 'Tender ligaments; bones fine.', clinical: 'Ligament tenderness; no bony pain.', expert: 'ATFL tenderness; Ottawa negative.' },
+  { condition_id: 'ankle-sprain', modality: 'tap', gentle: 'Toe taps wiggle fine.', steady: 'Toes move fine; foot warm.', clinical: 'Distal neurovascular intact.', expert: 'Neurovascularly intact distally.' },
+  { condition_id: 'ankle-sprain', modality: 'listen', gentle: 'No crackle sounds; just ouch.', steady: 'No crepitus; just pain.', clinical: 'No crepitus on motion.', expert: 'No crepitus; stable syndesmosis.' }
 ];

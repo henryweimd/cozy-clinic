@@ -1250,5 +1250,15 @@
   "willa_note": "Willa SHIPS 2026-10-31: pale-eucalyptus playground regular, mint bow (fixed, side); 6-frame set via Nina-identity edit + 0.88 rescale, paste_x=24 (wide bow); gentle sway 1.7",
   "willa_contact_sheet": "art/contact-sheets/plate-willa.png",
   "run26_learn_headers_contact_sheet": "art/contact-sheets/learn-headers26.png",
-  "run26_spend_note": "25 character images (4x6 + 1 Remy re-ask) + 4 Block-U headers x $0.01 = $0.29; ledger ~$1.71 cumulative; at >= $120 STOP - not reached"
+  "run26_spend_note": "25 character images (4x6 + 1 Remy re-ask) + 4 Block-U headers x $0.01 = $0.29; ledger ~$1.71 cumulative; at >= $120 STOP - not reached",
+  "willow_note": "Willow SHIPS 2026-11-01: muted wisteria garden helper, sage apron (fixed, below face); 6-frame set via Remy-identity edit, paste_x=22; dreamy sway 1.6",
+  "willow_contact_sheet": "art/contact-sheets/plate-willow.png",
+  "jasper_note": "Jasper SHIPS 2026-11-01: fired-clay wrestler rookie, navy wristband (fixed, below face); 6-frame set via Leo-identity edit, paste_x=22; tough bounce 2.1",
+  "jasper_contact_sheet": "art/contact-sheets/plate-jasper.png",
+  "hazel_note": "Hazel SHIPS 2026-11-01: warm-greige bookworm, teal bookmark behind ear (fixed, side); 6-frame set via Cleo-identity edit, paste_x=22; sleepy sway 1.5",
+  "hazel_contact_sheet": "art/contact-sheets/plate-hazel.png",
+  "finn_note": "Finn SHIPS 2026-11-01: muted-grass soccer striker, white jersey green stripe (fixed, below face); 6-frame set via Remy-identity edit, paste_x=22; eager bounce 2.3",
+  "finn_contact_sheet": "art/contact-sheets/plate-finn.png",
+  "run27_learn_headers_contact_sheet": "art/contact-sheets/learn-headers27.png",
+  "run27_spend_note": "24 character images + 4 Block-U headers x $0.01 = $0.28; ledger ~$1.99 cumulative; at >= $120 STOP - not reached"
 }

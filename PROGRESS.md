@@ -1,5 +1,14 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 27 (in progress): content pack 4 — hay-fever, ringworm, pink-eye, ankle-sprain + Willow/Jasper/Hazel/Finn
+
+File ownership (main agent, this run): same content-pack set
+as runs 25/26 (types, conditions, fallbackPack+tests, mockData,
+sprites, ClinicScene Speaker/guard/preload, aboutSheet cast,
+CHARACTER_BIBLE, playbook §1, manifest, process_character,
+README/docs counts, PROGRESS, CHECKPOINT).
+Hands off: src/data/maneuvers.* (other stream).
+
 ## Run 26 (2026-10-31): content pack 3 — swimmers-ear, mono, nose-bead, gastro + Otto/Cleo/Remy/Willa
 
 File ownership (main agent, this run): same content-pack set

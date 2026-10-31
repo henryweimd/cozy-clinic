@@ -221,6 +221,26 @@ CHARACTERS = {
         "feet": ([(530, 745), (725, 1070)], 1395, 1432),
         "cap": None,
     },
+    "willow": {
+        "paste_x": 22,
+        "feet": ([(560, 745), (880, 1055)], 1395, 1432),
+        "cap": None,
+    },
+    "jasper": {
+        "paste_x": 22,
+        "feet": ([(545, 775), (850, 1080)], 1395, 1432),
+        "cap": None,
+    },
+    "hazel": {
+        "paste_x": 22,
+        "feet": ([(545, 770), (855, 1075)], 1395, 1432),
+        "cap": None,
+    },
+    "finn": {
+        "paste_x": 22,
+        "feet": ([(565, 750), (885, 1055)], 1395, 1432),
+        "cap": None,
+    },
 }
 
 FRAMES = ("idle", "blink", "happy", "sick", "pained", "relieved")

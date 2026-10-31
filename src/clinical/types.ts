@@ -12,7 +12,8 @@
  * Launch four (brief Section 6) + run-20 pack (strep-throat,
  * ear-infection, eczema, pneumonia) + run-25 pack (croup,
  * hand-foot-mouth, lyme-disease, appendicitis) + run-26 pack
- * (swimmers-ear, mono, nose-bead, gastroenteritis) — DRAFT,
+ * (swimmers-ear, mono, nose-bead, gastroenteritis) + run-27 pack
+ * (hay-fever, ringworm, pink-eye, ankle-sprain) — DRAFT,
  * pending operator medical review.
  */
 export type ConditionId =
@@ -31,7 +32,11 @@ export type ConditionId =
   | 'swimmers-ear'
   | 'mono'
   | 'nose-bead'
-  | 'gastroenteritis';
+  | 'gastroenteritis'
+  | 'hay-fever'
+  | 'ringworm'
+  | 'pink-eye'
+  | 'ankle-sprain';
 
 /** Ordered stage within a condition. Lower index = healthier. */
 export type StageId = string;

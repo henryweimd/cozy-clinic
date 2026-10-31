@@ -29,6 +29,10 @@
    - mono → Epstein-Barr Virus Infections
    - nose-bead → Nasal Foreign Bodies
    - gastroenteritis → Gastroenteritis
+   - hay-fever → Allergic Rhinitis
+   - ringworm → Tinea Corporis
+   - pink-eye → Conjunctivitis Overview
+   - ankle-sprain → Sprains Overview
    (all at `msdmanuals.com/professional/…`)
 2. **NIH MedlinePlus** — patient-facing links for Learn cards only.
 3. **Operator (physician) pen** — final review; new content ships
