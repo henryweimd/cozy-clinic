@@ -1,5 +1,31 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 39 (2026-11-01): full-screen Peptide Lab + trial flow
+
+Branch: `feat/knottin-lab`. Queued next: merge/docs
+(run 40).
+File ownership (main agent, this run): peptideLab
+module, ClinicScene lab wiring, trial targets + tests,
+auditor lab geometry, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- New `PeptideLab` screen (a view, not an overlay):
+  consent → 4-stage pipeline → result → back to visit.
+  Consent frames experimental/trial-ruled/proven-first/
+  fictional-future; result shows sequence, shape, scores,
+  yeast chassis, live/cached badge.
+- Trial tap grades normally, books the visit end
+  silently, opens the lab; the ending modal re-offers on
+  return (never a dead end, never a skipped ending).
+- External window onto the real cozy-peptide site from
+  consent + result; ticker lines for referral/live/cached
+  (ribbon-visible only); reduced-motion skips staging.
+- Live strings bounded (topology truncate, mono wrap
+  math); lab unreachable without a filed referral.
+- Verify: 419/419, tsc clean, build green, auditor 0
+  (28 new lab checks).
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 38 (2026-11-01): knottin proxy + game client
 
 Branch: `feat/knottin-lab`. Queued next: lab screen

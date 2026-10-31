@@ -58,6 +58,21 @@ export const CACHED_DESIGN: KnottinDesign = {
 
 const SEQ_RE = /^[ACDEFGHIKLMNPQRSTVWY]{10,100}$/;
 
+/**
+ * Trial targets by condition: the ONLY conditions whose
+ * treatment set carries the knottin trial arm (opensLab).
+ * Pure + unit-tested; unknown conditions get no lab.
+ */
+const TRIAL_TARGETS: Record<string, string> = {
+  'c-diff-colitis': 'Clostridioides difficile colonization in the gut',
+  'travelers-diarrhea': 'Enterotoxigenic E. coli gut infection',
+};
+
+/** Pure: the trial target for a condition, or null (unit-tested). */
+export function trialTargetFor(conditionId: string): string | null {
+  return TRIAL_TARGETS[conditionId] ?? null;
+}
+
 /** Shape guard for the proxy response (unit-tested). */
 export function isKnottinResponse(v: unknown): v is {
   fallback: boolean;

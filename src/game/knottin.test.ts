@@ -1,5 +1,18 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { CACHED_DESIGN, designPeptide, isKnottinResponse } from './knottin';
+import { CACHED_DESIGN, designPeptide, isKnottinResponse, trialTargetFor } from './knottin';
+
+describe('trialTargetFor', () => {
+  it('maps the two trial conditions and nothing else', () => {
+    expect(trialTargetFor('c-diff-colitis')).toBe(
+      'Clostridioides difficile colonization in the gut',
+    );
+    expect(trialTargetFor('travelers-diarrhea')).toBe(
+      'Enterotoxigenic E. coli gut infection',
+    );
+    expect(trialTargetFor('asthma')).toBeNull();
+    expect(trialTargetFor('nope')).toBeNull();
+  });
+});
 
 const LIVE = { fallback: false, design: CACHED_DESIGN };
 

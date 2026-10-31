@@ -1,3 +1,25 @@
+# CHECKPOINT — Run 39: Peptide Lab screen (2026-11-01)
+
+Phase: trial flow on `feat/knottin-lab`. `main`
+untouched (still run 31).
+
+Files changed: 7 (peptideLab, ClinicScene wiring,
+knottin targets + tests, types comment, auditor,
+PROGRESS, CHECKPOINT).
+
+Test result: `npm test` 419/419; tsc clean; build green;
+auditor 0 findings (28 new lab checks).
+
+Deployment URL: branch preview (SSO-gated); prod
+unchanged on main.
+
+Playtest result: NOT operator-playtested — programmatic
+verification only.
+
+Image spend this run: $0 (ledger ~$2.62 cumulative).
+
+STOP.
+
 # CHECKPOINT — Run 38: knottin proxy + client (2026-11-01)
 
 Phase: edge proxy + game client on `feat/knottin-lab`.

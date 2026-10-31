@@ -129,7 +129,7 @@ export interface ActionDef {
   hootLine: string;
   /**
    * Trial-arm actions: run 34 opens the full-screen Peptide
-   * Lab when picked; run 32 only toasts a referral note.
+   * Lab when picked (consent, pipeline, result, back).
    * Grading is unaffected — the grade rides gradeByStage.
    */
   opensLab?: boolean;
