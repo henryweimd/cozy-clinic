@@ -1,3 +1,24 @@
+# CHECKPOINT — Run 46: c-diff finding (2026-11-01)
+
+Phase: exam wording on `feat/knottin-lab`. `main`
+untouched (still run 31).
+
+Files changed: 3 (conditions wording, PROGRESS,
+CHECKPOINT). Content-only.
+
+Test result: `npm test` 429/429; tsc clean; build green;
+auditor 0 findings.
+
+Deployment URL: branch preview (SSO-gated); prod
+unchanged on main.
+
+Playtest result: operator playtesting in parallel (this
+run answers their tenderness note).
+
+Image spend this run: $0 (ledger ~$2.62 cumulative).
+
+STOP.
+
 # CHECKPOINT — Run 45: tray parking (2026-11-01)
 
 Phase: lab-tab visibility on `feat/knottin-lab`. `main`

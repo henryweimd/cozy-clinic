@@ -2329,10 +2329,10 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     ],
     examBestId: 'crampy-press',
     bestFinding: {
-      gentle: 'Belly crampy ALL over, with watery poops and fever!',
-      steady: 'Crampy diffuse belly; watery diarrhea, fever.',
-      clinical: 'Diffuse crampy tenderness; watery diarrhea, febrile.',
-      expert: 'Diffuse cramping; watery diarrhea; febrile post-antibiotics.',
+      gentle: 'Crampy all over but soft — no one sore spot like appendicitis!',
+      steady: 'Diffuse crampy belly, soft, no focal spot; watery diarrhea, fever.',
+      clinical: 'Diffuse crampy tenderness, soft abdomen, no peritoneal signs.',
+      expert: 'Diffuse crampy, soft, no guarding; febrile post-antibiotics.',
     },
     historyOptions: [
       { id: 'antibiotics-runs', label: 'Ask: "Did you take antibiotics lately?"' },
@@ -2355,7 +2355,7 @@ export const CONDITIONS: Record<string, ConditionDef> = {
     dxOptions: ['c-diff-colitis', 'gastroenteritis', 'appendicitis'],
     dxPearl: {
       right: 'Antibiotics first, then watery runs + fever: C. diff.',
-      wrong: 'Runs after antibiotics? Think C. diff, not a plain tummy bug.',
+      wrong: 'Runs after antibiotics? Think C. diff, not a plain stomach bug.',
     },
     visitPearl: 'Post-antibiotic runs: C. diff',
     examQuiz: {

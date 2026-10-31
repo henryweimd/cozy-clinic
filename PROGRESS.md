@@ -1,5 +1,26 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 46 (2026-11-01): tempered pathognomonic c-diff finding
+
+Branch: `feat/knottin-lab`. Operator playtesting in parallel.
+File ownership (main agent, this run): c-diff finding +
+pearl, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- Operator note: "belly cramps all over" reads as alarming
+  diffuse tenderness. Rewritten around the discriminating
+  bedside feature — diffuse + soft + no focal spot (the
+  appendicitis contrast), no guarding/peritoneal signs at
+  higher tiers. Tempered (soft, reassuring) and teaching
+  (the focal-vs-diffuse fork).
+- Other 3 gut findings audited: travelers (soft + no sore
+  spot), lactose (dairy-locked gas pattern), constipation
+  (left-sided stool) already tempered + specific — kept.
+  Pearl touch: "plain tummy bug" → "plain stomach bug".
+- Panel fit measured: all 4 tiers ≤2 lines (budget 4).
+- Verify: 429/429, tsc clean, build green, auditor 0.
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 45 (2026-11-01): trays park when the lab tab arrives
 
 Branch: `feat/knottin-lab`. Operator playtesting in parallel.
