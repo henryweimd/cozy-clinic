@@ -1,5 +1,22 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 49 (2026-11-01): waiting badge counts the live queue
+
+Branch: `feat/knottin-lab`. Operator playtesting in parallel.
+File ownership (main agent, this run): badge sync + demo
+count, auditor badge coords, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- Operator note: the badge showed the whole roster minus
+  one, drawn once. It now shows actively waiting (intro
+  queue minus the exam room), synced on patient switch +
+  waiting refresh, hidden at zero. Same fix for the
+  in-game › DEMO step-3 count (it included the exam room).
+- Also repaired run-48 fallout: the auditor's badge
+  coordinates still pointed at the old waiting slot.
+- Verify: 429/429, tsc clean, build green, auditor 0.
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 48 (2026-11-01): Exam Room first, Waiting second
 
 Branch: `feat/knottin-lab`. Operator playtesting in parallel.

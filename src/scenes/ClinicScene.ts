@@ -484,6 +484,8 @@ export class ClinicScene extends Phaser.Scene {
   private labZone!: Phaser.GameObjects.Zone;
   /** Visit key that already got the trial-lab toast (once each). */
   private labToastedFor = '';
+  private waitingBadge!: Phaser.GameObjects.Container;
+  private waitingCountText!: Phaser.GameObjects.Text;
   /** Career recovered visits (rank XP; struggling earns zero). */
   private careerRecovered = 0;
   /** Wallet balance when the visit started (affordability math). */
@@ -2414,6 +2416,7 @@ export class ClinicScene extends Phaser.Scene {
     this.refreshHud();
     this.showView('visit');
     this.chartDrawer.setOpen(true);
+    this.syncWaitingBadge();
     this.showToast(`${name} is with you!`);
   }
 
@@ -2790,6 +2793,14 @@ export class ClinicScene extends Phaser.Scene {
       row.add([upZone, downZone]);
       this.waitingRows.add(row);
     });
+    this.syncWaitingBadge();
+  }
+
+  /** Waiting badge = live queue (intro order minus the exam room). */
+  private syncWaitingBadge(): void {
+    const n = waitingNames(this.waitingOrder, this.activeName).length;
+    this.waitingCountText.setText(`${n}`);
+    this.waitingBadge.setVisible(n > 0);
   }
 
   // -- VIEW 3: telemedicine call frame (Visit geometry + frame) --
@@ -3693,22 +3704,28 @@ export class ClinicScene extends Phaser.Scene {
     this.learnBadge = this.add.container(TAB_X.learn + 22, 900, [badge]);
     this.learnBadge.setVisible(false);
     nav.add(this.learnBadge);
-    // Waiting badge: how many friends are waiting (roster minus
-    // the visit — 3 with the fixed cast, drawn once).
+    // Waiting badge: the live queue count (actively waiting —
+    // the intro queue minus whoever is in the exam room — never
+    // the whole roster). Hidden when nobody waits.
     const waitingBadge = this.add.graphics();
     waitingBadge.fillStyle(SAGE, 1);
     waitingBadge.lineStyle(2, OUTLINE, 1);
     waitingBadge.fillCircle(0, 0, 10);
     waitingBadge.strokeCircle(0, 0, 10);
-    const waitingCount = this.add
-      .text(0, 0, `${MOCK_ROSTER.length - 1}`, {
+    this.waitingCountText = this.add
+      .text(0, 0, '', {
         fontFamily: FONT_FAMILY,
         fontStyle: 'bold',
         fontSize: '13px',
         color: COCOA,
       })
       .setOrigin(0.5, 0.5);
-    nav.add(this.add.container(TAB_X.waiting + 28, 900, [waitingBadge, waitingCount]));
+    this.waitingBadge = this.add.container(TAB_X.waiting + 28, 900, [
+      waitingBadge,
+      this.waitingCountText,
+    ]);
+    nav.add(this.waitingBadge);
+    this.syncWaitingBadge();
   }
 
   /**
@@ -4561,7 +4578,7 @@ export class ClinicScene extends Phaser.Scene {
     const steps = [
       '1 Meet Bram — visit #2, he remembers you',
       '2 Ask/exam/dx/treat — clues accumulate',
-      `3 Next patient (${this.waitingOrder.length} waiting); tray = exam`,
+      `3 Next patient (${waitingNames(this.waitingOrder, this.activeName).length} waiting); tray = exam`,
       '4 Leave a care note (2nd tab = doctor 2)',
       '5 Learn (+2), Shop boosts, Profile, About',
       '6 Cheer a colleague from any care note',
