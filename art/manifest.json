@@ -1240,5 +1240,15 @@
   "ruby_note": "Ruby SHIPS 2026-10-31: dusty-plum drama lead, striped scarf (fixed, below face); 6-frame set via Ada-identity edit + 0.88 rescale, paste_x=22; graceful sway 1.7",
   "ruby_contact_sheet": "art/contact-sheets/plate-ruby.png",
   "run25_learn_headers_contact_sheet": "art/contact-sheets/learn-headers25.png",
-  "run25_spend_note": "24 character images (4x6, zero re-asks) + 4 Block-U headers x $0.01 = $0.28; ledger ~$1.42 cumulative; at >= $120 STOP - not reached"
+  "run25_spend_note": "24 character images (4x6, zero re-asks) + 4 Block-U headers x $0.01 = $0.28; ledger ~$1.42 cumulative; at >= $120 STOP - not reached",
+  "otto_note": "Otto SHIPS 2026-10-31: deep sea-slate swimmer, goggles on forehead (fixed, above face); 6-frame set via Kai-identity edit + 0.88 rescale, paste_x=22; eager bounce 2.2",
+  "otto_contact_sheet": "art/contact-sheets/plate-otto.png",
+  "cleo_note": "Cleo SHIPS 2026-10-31: dusty-violet choir soloist, gold star barrette (fixed, side); 6-frame set via Ada-identity edit + 0.88 rescale, paste_x=22; weary sway 1.4",
+  "cleo_contact_sheet": "art/contact-sheets/plate-cleo.png",
+  "remy_note": "Remy SHIPS 2026-10-31: toasted-honey button collector, red overalls (fixed, below face); 6-frame set via Milo-identity edit v2 + 0.88 rescale, paste_x=22; bouncy 2.4 (v1 rejected: Theo-base beanie + floor shadow)",
+  "remy_contact_sheet": "art/contact-sheets/plate-remy.png",
+  "willa_note": "Willa SHIPS 2026-10-31: pale-eucalyptus playground regular, mint bow (fixed, side); 6-frame set via Nina-identity edit + 0.88 rescale, paste_x=24 (wide bow); gentle sway 1.7",
+  "willa_contact_sheet": "art/contact-sheets/plate-willa.png",
+  "run26_learn_headers_contact_sheet": "art/contact-sheets/learn-headers26.png",
+  "run26_spend_note": "25 character images (4x6 + 1 Remy re-ask) + 4 Block-U headers x $0.01 = $0.29; ledger ~$1.71 cumulative; at >= $120 STOP - not reached"
 }

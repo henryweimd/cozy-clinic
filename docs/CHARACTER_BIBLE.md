@@ -156,6 +156,10 @@ body plan, no new species without a bible amendment.
 | Ivy (SHIPS 2026-10-31) | Sticker collector, hand-foot-mouth case | Warm apricot-sand `#BFA08A` | Bright bounce (motion: 2.0 rad/s); careful small smile | Daisy hair clip (fixed; above face plate, side) |
 | Leo (SHIPS 2026-10-31) | Trail explorer, lyme-disease case | Sage-moss `#93A284` | Eager bounce (motion: 2.1 rad/s); big cheerful closed smile | Olive trail vest (fixed; below face plate) |
 | Ruby (SHIPS 2026-10-31) | Drama-club lead, appendicitis case | Dusty plum `#A87F8E` | Graceful sway (motion: 1.7 rad/s); brave smile | Striped rehearsal scarf (fixed; below face plate) |
+| Otto (SHIPS 2026-10-31) | Swim-team sprinter, swimmers-ear case | Deep sea-slate `#66808F` | Eager bounce (motion: 2.2 rad/s); big splashy smile | Blue swim goggles on forehead (fixed; above face plate) |
+| Cleo (SHIPS 2026-10-31) | Choir soloist, mono case | Dusty violet `#9B85B5` | Weary sway (motion: 1.4 rad/s); tired beads, patient smile | Golden star barrette (fixed; above face plate, side) |
+| Remy (SHIPS 2026-10-31) | Button collector, nose-bead case | Toasted honey `#C09A6B` | Bouncy bounce (motion: 2.4 rad/s); curious beads, impish smile | Red pocket overalls (fixed; below face plate) |
+| Willa (SHIPS 2026-10-31) | Playground regular, gastroenteritis case | Pale eucalyptus `#A8BFAC` | Gentle sway (motion: 1.7 rad/s); droopy beads, brave smile | Mint polka-dot bow (fixed; above face plate, side) |
 | Dr. Nora (reserved) | Reassuring AI colleague doctor | Rose-taupe `#A2766B` | Reassuring half-smile | White coat + sage scrubs (outfit, same silhouette) |
 
 ## Population mixing system (normative 2026-10-30)

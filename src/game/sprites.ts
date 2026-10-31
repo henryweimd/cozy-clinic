@@ -21,6 +21,10 @@ export const SPRITE_PREFIX: Record<string, string> = {
   Ivy: 'ivy',
   Leo: 'leo',
   Ruby: 'ruby',
+  Otto: 'otto',
+  Cleo: 'cleo',
+  Remy: 'remy',
+  Willa: 'willa',
 };
 
 export function spritePrefix(name: string): string | undefined {
@@ -57,5 +61,9 @@ export function bobRate(name: string): number {
   if (name === 'Ivy') return 2.0;
   if (name === 'Leo') return 2.1;
   if (name === 'Ruby') return 1.7;
+  if (name === 'Otto') return 2.2;
+  if (name === 'Cleo') return 1.4;
+  if (name === 'Remy') return 2.4;
+  if (name === 'Willa') return 1.7;
   return 1.8;
 }

@@ -201,6 +201,26 @@ CHARACTERS = {
         "feet": ([(530, 780), (760, 1090)], 1395, 1432),
         "cap": None,
     },
+    "otto": {
+        "paste_x": 22,
+        "feet": ([(530, 780), (760, 1090)], 1395, 1432),
+        "cap": None,
+    },
+    "cleo": {
+        "paste_x": 22,
+        "feet": ([(530, 780), (760, 1090)], 1395, 1432),
+        "cap": None,
+    },
+    "remy": {
+        "paste_x": 22,
+        "feet": ([(560, 745), (720, 1060)], 1395, 1432),
+        "cap": None,
+    },
+    "willa": {
+        "paste_x": 24,
+        "feet": ([(530, 745), (725, 1070)], 1395, 1432),
+        "cap": None,
+    },
 }
 
 FRAMES = ("idle", "blink", "happy", "sick", "pained", "relieved")

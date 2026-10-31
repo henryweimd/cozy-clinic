@@ -1,5 +1,14 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 26 (in progress): content pack 3 — swimmers-ear, mono, nose-bead, gastro + Otto/Cleo/Remy/Willa
+
+File ownership (main agent, this run): same content-pack set
+as run 25 (types, conditions, fallbackPack+tests, mockData,
+sprites, ClinicScene Speaker/guard/preload, aboutSheet cast,
+CHARACTER_BIBLE, playbook §1, manifest, process_character,
+README/docs counts, PROGRESS, CHECKPOINT).
+Hands off: src/data/maneuvers.* (other stream).
+
 ## Run 25 (2026-10-31): content pack 2 — croup, HFM, Lyme, appendicitis + Hugo/Ivy/Leo/Ruby
 
 - Conditions (DRAFT, pending operator medical review): croup

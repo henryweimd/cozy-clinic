@@ -366,6 +366,58 @@ export const FALLBACK_PATIENTS: FallbackPatient[] = [
     "facial_features": "expressive bead eyes, brave smile",
     "accessories_clothing": "striped rehearsal scarf",
     "start_stage": 2
+  },
+  {
+    "id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "name": "Otto",
+    "condition_id": "swimmers-ear",
+    "age_band": "child",
+    "age_years": 8,
+    "sex": "M",
+    "persona": "swim-team sprinter",
+    "fur_shade": "#66808F",
+    "facial_features": "bright bead eyes, big splashy smile",
+    "accessories_clothing": "blue swim goggles on forehead",
+    "start_stage": 2
+  },
+  {
+    "id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "name": "Cleo",
+    "condition_id": "mono",
+    "age_band": "teen",
+    "age_years": 16,
+    "sex": "F",
+    "persona": "choir soloist",
+    "fur_shade": "#9B85B5",
+    "facial_features": "tired bead eyes, soft patient smile",
+    "accessories_clothing": "small golden star barrette",
+    "start_stage": 2
+  },
+  {
+    "id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "name": "Remy",
+    "condition_id": "nose-bead",
+    "age_band": "child",
+    "age_years": 3,
+    "sex": "M",
+    "persona": "button collector",
+    "fur_shade": "#C09A6B",
+    "facial_features": "curious bead eyes, tiny impish smile",
+    "accessories_clothing": "red pocket overalls",
+    "start_stage": 2
+  },
+  {
+    "id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "name": "Willa",
+    "condition_id": "gastroenteritis",
+    "age_band": "child",
+    "age_years": 6,
+    "sex": "F",
+    "persona": "playground regular",
+    "fur_shade": "#A8BFAC",
+    "facial_features": "droopy bead eyes, brave little smile",
+    "accessories_clothing": "mint polka-dot bow",
+    "start_stage": 2
   }
 ];
 
@@ -5809,6 +5861,1094 @@ export const FALLBACK_NODES: FallbackNode[] = [
     "teaching": "Laxatives can burst a sore appendix.",
     "animation_cue": "worried",
     "memory": "First visit: guarding. Tried \"Painkillers and wait a week\" → rigid. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "0da71c2d-f01b-48df-bc0a-c317e3ff1835",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Otto drips pool water onto the bench. His outer ear aches and tugging it stings. The cozy clinic feels calm around him.",
+    "teaching": "Ear pain worse when tugged, after swimming, means the outer ear.",
+    "animation_cue": "idle",
+    "memory": "First visit: tug-ouchy."
+  },
+  {
+    "id": "790556ec-eae8-4661-bfa8-4fbea44c2742",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Otto gets the antibiotic ear drops. His ear feels a little itchy. He looks perky and rests softly in the cozy room.",
+    "teaching": "Ear drops fight the outer-ear germ on the spot.",
+    "animation_cue": "recovery",
+    "memory": "First visit: tug-ouchy. Tried \"Antibiotic ear drops\" → itchy."
+  },
+  {
+    "id": "c50ee0cb-ca43-4ba6-9f2e-59aff9fc3972",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Otto keeps the sore ear dry and rests. His outer ear aches when tugged. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Dry rest helps — drops do the real curing.",
+    "animation_cue": "worried",
+    "memory": "First visit: tug-ouchy. Tried \"Keep the ear dry and rest\" → tug-ouchy."
+  },
+  {
+    "id": "632ed2de-c7a8-4e3b-8ef4-1c3d2864f053",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Otto dives back in to swim it out. His ear throbs and feels plugged. He looks droopy and rests softly in the cozy room.",
+    "teaching": "More pool water only feeds the outer-ear germ.",
+    "animation_cue": "sick",
+    "memory": "First visit: tug-ouchy. Tried \"Swim it out at the pool\" → throbbing."
+  },
+  {
+    "id": "897927db-6a54-4023-8a8f-b118670e76c0",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Otto starts to dig the ear out with a hairpin, but a helper gently stops him. His outer ear aches when tugged. He does not get worse.",
+    "teaching": "Pins puncture ears instead of cleaning them.",
+    "animation_cue": "worried",
+    "memory": "First visit: tug-ouchy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "4afbf04f-9e24-4116-8afa-a09be0bbfe09",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Otto keeps getting the ear drops on schedule. His ears feel comfy and splash-ready. He looks perky and cozy.",
+    "teaching": "Ear drops fight the outer-ear germ on the spot.",
+    "animation_cue": "happy",
+    "memory": "First visit: tug-ouchy. Tried \"Antibiotic ear drops\" → itchy. Tried \"Antibiotic ear drops\" → splashing."
+  },
+  {
+    "id": "bbed339c-d5af-4f3d-b0ad-608231bbeec2",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Otto keeps resting with a dry ear. His ear feels a little itchy. He looks comfortable and cozy.",
+    "teaching": "Dry rest helps — drops do the real curing.",
+    "animation_cue": "worried",
+    "memory": "First visit: tug-ouchy. Tried \"Antibiotic ear drops\" → itchy. Tried \"Keep the ear dry and rest\" → itchy."
+  },
+  {
+    "id": "650e2aa1-754c-44fb-8b0c-98c7876ab18e",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Otto keeps swimming it out at the pool. His outer ear aches when tugged. He looks droopy and cozy.",
+    "teaching": "More pool water only feeds the outer-ear germ.",
+    "animation_cue": "sick",
+    "memory": "First visit: tug-ouchy. Tried \"Antibiotic ear drops\" → itchy. Tried \"Swim it out at the pool\" → tug-ouchy."
+  },
+  {
+    "id": "6af8fc5c-9eba-48e4-b84c-f81be7326eeb",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Otto starts to dig the ear out with a hairpin, but a helper gently stops him. His ear feels a little itchy. He does not get worse.",
+    "teaching": "Pins puncture ears instead of cleaning them.",
+    "animation_cue": "worried",
+    "memory": "First visit: tug-ouchy. Tried \"Antibiotic ear drops\" → itchy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "01ba7207-94e3-45a1-b97f-182c50d8884c",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Otto keeps getting the ear drops on schedule. His ear feels a little itchy. He looks perky and cozy.",
+    "teaching": "Ear drops fight the outer-ear germ on the spot.",
+    "animation_cue": "recovery",
+    "memory": "First visit: tug-ouchy. Tried \"Keep the ear dry and rest\" → tug-ouchy. Tried \"Antibiotic ear drops\" → itchy."
+  },
+  {
+    "id": "b8f79ec8-2736-4df3-92c3-c83a133c5183",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Otto keeps resting with a dry ear. His outer ear aches when tugged. He looks droopy and cozy.",
+    "teaching": "Dry rest helps — drops do the real curing.",
+    "animation_cue": "worried",
+    "memory": "First visit: tug-ouchy. Tried \"Keep the ear dry and rest\" → tug-ouchy. Tried \"Keep the ear dry and rest\" → tug-ouchy."
+  },
+  {
+    "id": "26449a07-6396-4664-97bd-8d97d7d6a9ca",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Otto keeps swimming it out at the pool. His ear throbs and feels plugged. He looks droopy and cozy.",
+    "teaching": "More pool water only feeds the outer-ear germ.",
+    "animation_cue": "sick",
+    "memory": "First visit: tug-ouchy. Tried \"Keep the ear dry and rest\" → tug-ouchy. Tried \"Swim it out at the pool\" → throbbing."
+  },
+  {
+    "id": "c0c6d949-1cde-4e57-99b8-4eb51d331b86",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Otto starts to dig the ear out with a hairpin, but a helper gently stops him. His outer ear aches when tugged. He does not get worse.",
+    "teaching": "Pins puncture ears instead of cleaning them.",
+    "animation_cue": "worried",
+    "memory": "First visit: tug-ouchy. Tried \"Keep the ear dry and rest\" → tug-ouchy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "d305a78b-74d9-483d-ad90-3b0962527f7b",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Otto keeps getting the ear drops on schedule. His outer ear aches when tugged. He looks perky and cozy.",
+    "teaching": "Ear drops fight the outer-ear germ on the spot.",
+    "animation_cue": "recovery",
+    "memory": "First visit: tug-ouchy. Tried \"Swim it out at the pool\" → throbbing. Tried \"Antibiotic ear drops\" → tug-ouchy."
+  },
+  {
+    "id": "861be889-4c6e-4e4b-a44e-1f2d64738c42",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Otto keeps resting with a dry ear. His ear throbs and feels plugged. He looks droopy and cozy.",
+    "teaching": "Dry rest helps — drops do the real curing.",
+    "animation_cue": "worried",
+    "memory": "First visit: tug-ouchy. Tried \"Swim it out at the pool\" → throbbing. Tried \"Keep the ear dry and rest\" → throbbing."
+  },
+  {
+    "id": "df265f1a-bdf2-42e6-9b64-735541b11068",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Otto keeps swimming it out at the pool. His ear throbs and feels plugged. He looks droopy and cozy.",
+    "teaching": "More pool water only feeds the outer-ear germ.",
+    "animation_cue": "worried",
+    "memory": "First visit: tug-ouchy. Tried \"Swim it out at the pool\" → throbbing. Tried \"Swim it out at the pool\" → throbbing."
+  },
+  {
+    "id": "71f7714b-cffa-4305-ab54-9325e30f1876",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Otto starts to dig the ear out with a hairpin, but a helper gently stops him. His ear throbs and feels plugged. He does not get worse.",
+    "teaching": "Pins puncture ears instead of cleaning them.",
+    "animation_cue": "worried",
+    "memory": "First visit: tug-ouchy. Tried \"Swim it out at the pool\" → throbbing. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "bb49a0a2-dae4-409c-8998-575caf8e4dda",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cleo slumps in the chair, too tired to hum. Her throat aches and her neck glands bulge. The cozy clinic feels calm around her.",
+    "teaching": "Weeks wiped out with sore throat and big glands spells mono.",
+    "animation_cue": "idle",
+    "memory": "First visit: wiped-out."
+  },
+  {
+    "id": "0d499d6b-394a-4c00-a36d-bdcdac6afb8f",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Cleo settles into total rest with fluids. She feels tired and draggy. She looks perky and rests softly in the cozy room.",
+    "teaching": "Mono only heals with weeks of real rest.",
+    "animation_cue": "recovery",
+    "memory": "First visit: wiped-out. Tried \"Total rest + fluids for weeks\" → draggy."
+  },
+  {
+    "id": "dd29c5da-b87c-4df3-9b4b-eb3bd4d3fe34",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cleo soothes her throat gently. Exhaustion pins her down; her throat aches. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Soothed throats comfort — rest still heals.",
+    "animation_cue": "worried",
+    "memory": "First visit: wiped-out. Tried \"Soothe the throat gently\" → wiped-out."
+  },
+  {
+    "id": "ad66e208-cb18-4cf9-b880-b864812e5bad",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cleo swallows leftover amoxicillin. She can barely rise from bed. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Amoxicillin breaks mono out in a rash.",
+    "animation_cue": "sick",
+    "memory": "First visit: wiped-out. Tried \"Leftover amoxicillin\" → bedbound."
+  },
+  {
+    "id": "229a957a-3992-454b-af6c-a64d59f4c791",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cleo starts to play tackle football this weekend, but a helper gently stops her. Exhaustion pins her down; her throat aches. She does not get worse.",
+    "teaching": "Hard hits can burst a mono-swollen spleen.",
+    "animation_cue": "worried",
+    "memory": "First visit: wiped-out. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "69cbf070-95ec-4fac-8645-7260c3d5d56f",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Cleo keeps resting totally with fluids. Her voice is back and she sings again. She looks perky and cozy.",
+    "teaching": "Mono only heals with weeks of real rest.",
+    "animation_cue": "happy",
+    "memory": "First visit: wiped-out. Tried \"Total rest + fluids for weeks\" → draggy. Tried \"Total rest + fluids for weeks\" → singing."
+  },
+  {
+    "id": "cd233608-74b2-479f-a589-8f5500f29e33",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Cleo keeps soothing her throat gently. She feels tired and draggy. She looks comfortable and cozy.",
+    "teaching": "Soothed throats comfort — rest still heals.",
+    "animation_cue": "worried",
+    "memory": "First visit: wiped-out. Tried \"Total rest + fluids for weeks\" → draggy. Tried \"Soothe the throat gently\" → draggy."
+  },
+  {
+    "id": "e2c2e0bb-36f8-4613-ae16-07cc26408c86",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cleo keeps swallowing leftover amoxicillin. Exhaustion pins her down; her throat aches. She looks droopy and cozy.",
+    "teaching": "Amoxicillin breaks mono out in a rash.",
+    "animation_cue": "sick",
+    "memory": "First visit: wiped-out. Tried \"Total rest + fluids for weeks\" → draggy. Tried \"Leftover amoxicillin\" → wiped-out."
+  },
+  {
+    "id": "d5475127-4456-4976-b739-8fde3e831d9b",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Cleo starts to play tackle football this weekend, but a helper gently stops her. She feels tired and draggy. She does not get worse.",
+    "teaching": "Hard hits can burst a mono-swollen spleen.",
+    "animation_cue": "worried",
+    "memory": "First visit: wiped-out. Tried \"Total rest + fluids for weeks\" → draggy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "7c7e3119-7213-42f8-95e9-60353004d179",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Cleo keeps resting totally with fluids. She feels tired and draggy. She looks perky and cozy.",
+    "teaching": "Mono only heals with weeks of real rest.",
+    "animation_cue": "recovery",
+    "memory": "First visit: wiped-out. Tried \"Soothe the throat gently\" → wiped-out. Tried \"Total rest + fluids for weeks\" → draggy."
+  },
+  {
+    "id": "87a67c84-e2c5-4689-b49a-2cc129b7e9f5",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cleo keeps soothing her throat gently. Exhaustion pins her down; her throat aches. She looks droopy and cozy.",
+    "teaching": "Soothed throats comfort — rest still heals.",
+    "animation_cue": "worried",
+    "memory": "First visit: wiped-out. Tried \"Soothe the throat gently\" → wiped-out. Tried \"Soothe the throat gently\" → wiped-out."
+  },
+  {
+    "id": "aca6bc02-4ac1-4422-9c58-ccb4dcb8aa74",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cleo keeps swallowing leftover amoxicillin. She can barely rise from bed. She looks droopy and cozy.",
+    "teaching": "Amoxicillin breaks mono out in a rash.",
+    "animation_cue": "sick",
+    "memory": "First visit: wiped-out. Tried \"Soothe the throat gently\" → wiped-out. Tried \"Leftover amoxicillin\" → bedbound."
+  },
+  {
+    "id": "b88227ef-324d-4b00-a901-5c1e5a5a8f4c",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cleo starts to play tackle football this weekend, but a helper gently stops her. Exhaustion pins her down; her throat aches. She does not get worse.",
+    "teaching": "Hard hits can burst a mono-swollen spleen.",
+    "animation_cue": "worried",
+    "memory": "First visit: wiped-out. Tried \"Soothe the throat gently\" → wiped-out. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "e4475c23-6512-4ca9-8cc9-5c0d8e2019ab",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Cleo keeps resting totally with fluids. Exhaustion pins her down; her throat aches. She looks perky and cozy.",
+    "teaching": "Mono only heals with weeks of real rest.",
+    "animation_cue": "recovery",
+    "memory": "First visit: wiped-out. Tried \"Leftover amoxicillin\" → bedbound. Tried \"Total rest + fluids for weeks\" → wiped-out."
+  },
+  {
+    "id": "e0e45151-e55c-4b61-a602-593d629500ea",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cleo keeps soothing her throat gently. She can barely rise from bed. She looks droopy and cozy.",
+    "teaching": "Soothed throats comfort — rest still heals.",
+    "animation_cue": "worried",
+    "memory": "First visit: wiped-out. Tried \"Leftover amoxicillin\" → bedbound. Tried \"Soothe the throat gently\" → bedbound."
+  },
+  {
+    "id": "b9673ec0-3279-4149-9949-2d7c266abfc2",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cleo keeps swallowing leftover amoxicillin. She can barely rise from bed. She looks droopy and cozy.",
+    "teaching": "Amoxicillin breaks mono out in a rash.",
+    "animation_cue": "worried",
+    "memory": "First visit: wiped-out. Tried \"Leftover amoxicillin\" → bedbound. Tried \"Leftover amoxicillin\" → bedbound."
+  },
+  {
+    "id": "d51e7222-b9d5-4fda-b41f-ebaa1ac5c695",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Cleo starts to play tackle football this weekend, but a helper gently stops her. She can barely rise from bed. She does not get worse.",
+    "teaching": "Hard hits can burst a mono-swollen spleen.",
+    "animation_cue": "worried",
+    "memory": "First visit: wiped-out. Tried \"Leftover amoxicillin\" → bedbound. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "a127e050-f273-4d15-b534-2c08426015e5",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Remy wrinkles his nose at the smell. One nostril oozes stinky goo; the other side is fine. The cozy clinic feels calm around him.",
+    "teaching": "Stink from one nostril only means something is stuck inside.",
+    "animation_cue": "idle",
+    "memory": "First visit: stinky."
+  },
+  {
+    "id": "06d2ec1e-af18-4432-9d5e-60678a660ee3",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Remy visits the doctor to lift it out. One nostril feels a little funny. He looks perky and rests softly in the cozy room.",
+    "teaching": "Tiny doctor tools lift beads out safely.",
+    "animation_cue": "recovery",
+    "memory": "First visit: stinky. Tried \"Doctor visit to lift it out\" → sniffly."
+  },
+  {
+    "id": "fb185a24-1507-4e6f-9004-51cf2162b2d4",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Remy gives one gentle blow. One nostril oozes stinky goo. He looks droopy and rests softly in the cozy room.",
+    "teaching": "One gentle blow is fine — then doctors take over.",
+    "animation_cue": "worried",
+    "memory": "First visit: stinky. Tried \"One gentle blow, then stop\" → stinky."
+  },
+  {
+    "id": "c15da4c0-bf2f-4b59-9b92-3cbe63303541",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Remy fishes with tweezers. His nostril is plugged and sore. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Tweezers shove beads deeper inside.",
+    "animation_cue": "sick",
+    "memory": "First visit: stinky. Tried \"Fish it out with tweezers\" → plugged."
+  },
+  {
+    "id": "5a3e8378-9028-41df-8693-1662e33792d3",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Remy starts to sniff hard to suck it up, but a helper gently stops him. One nostril oozes stinky goo. He does not get worse.",
+    "teaching": "Hard sniffing can drag beads toward the lungs.",
+    "animation_cue": "worried",
+    "memory": "First visit: stinky. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "01c7bb47-1e76-4c3b-901c-7e98998c70e8",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Remy keeps letting the doctor lift it out. His nose is clear and sniffing happily. He looks perky and cozy.",
+    "teaching": "Tiny doctor tools lift beads out safely.",
+    "animation_cue": "happy",
+    "memory": "First visit: stinky. Tried \"Doctor visit to lift it out\" → sniffly. Tried \"Doctor visit to lift it out\" → clear."
+  },
+  {
+    "id": "a2e4c6e0-1c1f-4d4d-9a09-ce4dff760848",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Remy keeps resting after the one blow. One nostril feels a little funny. He looks comfortable and cozy.",
+    "teaching": "One gentle blow is fine — then doctors take over.",
+    "animation_cue": "worried",
+    "memory": "First visit: stinky. Tried \"Doctor visit to lift it out\" → sniffly. Tried \"One gentle blow, then stop\" → sniffly."
+  },
+  {
+    "id": "3c18162b-e257-457f-b151-01a5afc2d172",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Remy keeps fishing with tweezers. One nostril oozes stinky goo. He looks droopy and cozy.",
+    "teaching": "Tweezers shove beads deeper inside.",
+    "animation_cue": "sick",
+    "memory": "First visit: stinky. Tried \"Doctor visit to lift it out\" → sniffly. Tried \"Fish it out with tweezers\" → stinky."
+  },
+  {
+    "id": "ddf869c2-e306-496d-bf52-a9a2923108c8",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Remy starts to sniff hard to suck it up, but a helper gently stops him. One nostril feels a little funny. He does not get worse.",
+    "teaching": "Hard sniffing can drag beads toward the lungs.",
+    "animation_cue": "worried",
+    "memory": "First visit: stinky. Tried \"Doctor visit to lift it out\" → sniffly. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "b43107a8-bf98-4840-bb6f-3d3bdd662c44",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Remy keeps letting the doctor lift it out. One nostril feels a little funny. He looks perky and cozy.",
+    "teaching": "Tiny doctor tools lift beads out safely.",
+    "animation_cue": "recovery",
+    "memory": "First visit: stinky. Tried \"One gentle blow, then stop\" → stinky. Tried \"Doctor visit to lift it out\" → sniffly."
+  },
+  {
+    "id": "0cc7c039-1f9b-491c-bd7a-f0594372dca1",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Remy keeps resting after the one blow. One nostril oozes stinky goo. He looks droopy and cozy.",
+    "teaching": "One gentle blow is fine — then doctors take over.",
+    "animation_cue": "worried",
+    "memory": "First visit: stinky. Tried \"One gentle blow, then stop\" → stinky. Tried \"One gentle blow, then stop\" → stinky."
+  },
+  {
+    "id": "657130df-db57-40ac-94c1-5ef0dc6494f6",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Remy keeps fishing with tweezers. His nostril is plugged and sore. He looks droopy and cozy.",
+    "teaching": "Tweezers shove beads deeper inside.",
+    "animation_cue": "sick",
+    "memory": "First visit: stinky. Tried \"One gentle blow, then stop\" → stinky. Tried \"Fish it out with tweezers\" → plugged."
+  },
+  {
+    "id": "330390b8-2a31-4c30-90a7-e34adbe6a88c",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Remy starts to sniff hard to suck it up, but a helper gently stops him. One nostril oozes stinky goo. He does not get worse.",
+    "teaching": "Hard sniffing can drag beads toward the lungs.",
+    "animation_cue": "worried",
+    "memory": "First visit: stinky. Tried \"One gentle blow, then stop\" → stinky. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "77d8ce77-e835-4b04-8555-534e75d6347c",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Remy keeps letting the doctor lift it out. One nostril oozes stinky goo. He looks perky and cozy.",
+    "teaching": "Tiny doctor tools lift beads out safely.",
+    "animation_cue": "recovery",
+    "memory": "First visit: stinky. Tried \"Fish it out with tweezers\" → plugged. Tried \"Doctor visit to lift it out\" → stinky."
+  },
+  {
+    "id": "b6e121bc-4573-4b9a-94c0-fe8c57d59b26",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Remy keeps resting after the one blow. His nostril is plugged and sore. He looks droopy and cozy.",
+    "teaching": "One gentle blow is fine — then doctors take over.",
+    "animation_cue": "worried",
+    "memory": "First visit: stinky. Tried \"Fish it out with tweezers\" → plugged. Tried \"One gentle blow, then stop\" → plugged."
+  },
+  {
+    "id": "0cd38f38-cc3a-4bfa-99a1-d6c7733114bc",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Remy keeps fishing with tweezers. His nostril is plugged and sore. He looks droopy and cozy.",
+    "teaching": "Tweezers shove beads deeper inside.",
+    "animation_cue": "worried",
+    "memory": "First visit: stinky. Tried \"Fish it out with tweezers\" → plugged. Tried \"Fish it out with tweezers\" → plugged."
+  },
+  {
+    "id": "b2b237c9-00b6-4b3b-96c1-8bef9cf4bddc",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Remy starts to sniff hard to suck it up, but a helper gently stops him. His nostril is plugged and sore. He does not get worse.",
+    "teaching": "Hard sniffing can drag beads toward the lungs.",
+    "animation_cue": "worried",
+    "memory": "First visit: stinky. Tried \"Fish it out with tweezers\" → plugged. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "66b9247e-7a9b-4508-bc94-488a363eabca",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willa clutches her gurgly belly. Vomit and watery poops keep coming with cramps. The cozy clinic feels calm around her.",
+    "teaching": "Puking plus watery poops with cramps everywhere is a tummy bug.",
+    "animation_cue": "idle",
+    "memory": "First visit: pukey."
+  },
+  {
+    "id": "6b51bf7b-2539-41b4-90f3-b31d3781e22c",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Willa takes tiny rehydration sips. Her belly feels a little queasy. She looks perky and rests softly in the cozy room.",
+    "teaching": "Tiny sips refill everything puking stole.",
+    "animation_cue": "recovery",
+    "memory": "First visit: pukey. Tried \"Rehydration sips, tiny + often\" → queasy."
+  },
+  {
+    "id": "89e25fd3-ad4a-4d88-974a-d3840aa27a70",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willa nibbles plain crackers in bed. Vomit and watery poops keep coming. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Crackers comfort — sips do the refilling.",
+    "animation_cue": "worried",
+    "memory": "First visit: pukey. Tried \"Plain crackers and rest\" → pukey."
+  },
+  {
+    "id": "f2909ed4-941e-44a8-864b-6ea121fe7e6d",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willa eats a big greasy meal. She feels weak and dried out. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Grease on a pukey tummy bounces back.",
+    "animation_cue": "sick",
+    "memory": "First visit: pukey. Tried \"Big greasy meal to settle it\" → drained."
+  },
+  {
+    "id": "c2345638-2676-4bc5-9d4f-8828fa387bc2",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willa starts to chug the pure salt water, but a helper gently stops her. Vomit and watery poops keep coming. She does not get worse.",
+    "teaching": "Straight salt water poisons instead of hydrating.",
+    "animation_cue": "worried",
+    "memory": "First visit: pukey. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "b0130af8-abe5-429f-b779-84e5d8d1fa70",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Willa keeps taking tiny sips often. Her belly is calm and snack-ready. She looks perky and cozy.",
+    "teaching": "Tiny sips refill everything puking stole.",
+    "animation_cue": "happy",
+    "memory": "First visit: pukey. Tried \"Rehydration sips, tiny + often\" → queasy. Tried \"Rehydration sips, tiny + often\" → snacky."
+  },
+  {
+    "id": "905093b3-93e7-4aae-a502-8f9c492b4158",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Willa keeps nibbling crackers and resting. Her belly feels a little queasy. She looks comfortable and cozy.",
+    "teaching": "Crackers comfort — sips do the refilling.",
+    "animation_cue": "worried",
+    "memory": "First visit: pukey. Tried \"Rehydration sips, tiny + often\" → queasy. Tried \"Plain crackers and rest\" → queasy."
+  },
+  {
+    "id": "4dec8d8b-9ea2-4da6-8ade-80b35674143b",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willa keeps eating big greasy meals. Vomit and watery poops keep coming. She looks droopy and cozy.",
+    "teaching": "Grease on a pukey tummy bounces back.",
+    "animation_cue": "sick",
+    "memory": "First visit: pukey. Tried \"Rehydration sips, tiny + often\" → queasy. Tried \"Big greasy meal to settle it\" → pukey."
+  },
+  {
+    "id": "59907a8e-72b3-436c-ab1e-52066e19b028",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Willa starts to chug the pure salt water, but a helper gently stops her. Her belly feels a little queasy. She does not get worse.",
+    "teaching": "Straight salt water poisons instead of hydrating.",
+    "animation_cue": "worried",
+    "memory": "First visit: pukey. Tried \"Rehydration sips, tiny + often\" → queasy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "1f9e2f3f-b2b5-42bf-b108-fd6b54490a3d",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Willa keeps taking tiny sips often. Her belly feels a little queasy. She looks perky and cozy.",
+    "teaching": "Tiny sips refill everything puking stole.",
+    "animation_cue": "recovery",
+    "memory": "First visit: pukey. Tried \"Plain crackers and rest\" → pukey. Tried \"Rehydration sips, tiny + often\" → queasy."
+  },
+  {
+    "id": "aa7f3c1b-dc6c-4215-b0f5-7a4b6fd00f5d",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willa keeps nibbling crackers and resting. Vomit and watery poops keep coming. She looks droopy and cozy.",
+    "teaching": "Crackers comfort — sips do the refilling.",
+    "animation_cue": "worried",
+    "memory": "First visit: pukey. Tried \"Plain crackers and rest\" → pukey. Tried \"Plain crackers and rest\" → pukey."
+  },
+  {
+    "id": "7ccb30b8-1fb4-40d7-98e4-8f0b10c57687",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willa keeps eating big greasy meals. She feels weak and dried out. She looks droopy and cozy.",
+    "teaching": "Grease on a pukey tummy bounces back.",
+    "animation_cue": "sick",
+    "memory": "First visit: pukey. Tried \"Plain crackers and rest\" → pukey. Tried \"Big greasy meal to settle it\" → drained."
+  },
+  {
+    "id": "dfee8f2d-b6d4-4302-8f9e-a8a9cbb69959",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willa starts to chug the pure salt water, but a helper gently stops her. Vomit and watery poops keep coming. She does not get worse.",
+    "teaching": "Straight salt water poisons instead of hydrating.",
+    "animation_cue": "worried",
+    "memory": "First visit: pukey. Tried \"Plain crackers and rest\" → pukey. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "5e3706f4-a95b-4adf-802a-074482afde6d",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Willa keeps taking tiny sips often. Vomit and watery poops keep coming. She looks perky and cozy.",
+    "teaching": "Tiny sips refill everything puking stole.",
+    "animation_cue": "recovery",
+    "memory": "First visit: pukey. Tried \"Big greasy meal to settle it\" → drained. Tried \"Rehydration sips, tiny + often\" → pukey."
+  },
+  {
+    "id": "e2532d93-2b1a-49b6-b982-32e032694f3f",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willa keeps nibbling crackers and resting. She feels weak and dried out. She looks droopy and cozy.",
+    "teaching": "Crackers comfort — sips do the refilling.",
+    "animation_cue": "worried",
+    "memory": "First visit: pukey. Tried \"Big greasy meal to settle it\" → drained. Tried \"Plain crackers and rest\" → drained."
+  },
+  {
+    "id": "94d956b8-be80-4c16-8242-a561c95b3eef",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willa keeps eating big greasy meals. She feels weak and dried out. She looks droopy and cozy.",
+    "teaching": "Grease on a pukey tummy bounces back.",
+    "animation_cue": "worried",
+    "memory": "First visit: pukey. Tried \"Big greasy meal to settle it\" → drained. Tried \"Big greasy meal to settle it\" → drained."
+  },
+  {
+    "id": "ce56a14f-77dc-4dc9-97b3-0610f1f1290b",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Willa starts to chug the pure salt water, but a helper gently stops her. She feels weak and dried out. She does not get worse.",
+    "teaching": "Straight salt water poisons instead of hydrating.",
+    "animation_cue": "worried",
+    "memory": "First visit: pukey. Tried \"Big greasy meal to settle it\" → drained. A risky idea came up; we steered clear."
   }
 ];
 
@@ -8692,6 +9832,582 @@ export const FALLBACK_EDGES: FallbackEdge[] = [
     "kind": "decision",
     "choice_label": "Laxative to flush it out",
     "grade": "DANGEROUS"
+  },
+  {
+    "id": "a8636cea-2e83-4df3-a0dd-51208d32b55b",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "from_node_id": "0da71c2d-f01b-48df-bc0a-c317e3ff1835",
+    "to_node_id": "790556ec-eae8-4661-bfa8-4fbea44c2742",
+    "kind": "decision",
+    "choice_label": "Antibiotic ear drops",
+    "grade": "BEST"
+  },
+  {
+    "id": "39e2ebb0-a525-492b-a1e2-95af2e80a8ad",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "from_node_id": "0da71c2d-f01b-48df-bc0a-c317e3ff1835",
+    "to_node_id": "c50ee0cb-ca43-4ba6-9f2e-59aff9fc3972",
+    "kind": "decision",
+    "choice_label": "Keep the ear dry and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "6ee23783-ae20-43d2-b209-ea264ba60b83",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "from_node_id": "0da71c2d-f01b-48df-bc0a-c317e3ff1835",
+    "to_node_id": "632ed2de-c7a8-4e3b-8ef4-1c3d2864f053",
+    "kind": "decision",
+    "choice_label": "Swim it out at the pool",
+    "grade": "WRONG"
+  },
+  {
+    "id": "ac59c4a5-9655-4088-b244-c6e7e545dc56",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "from_node_id": "0da71c2d-f01b-48df-bc0a-c317e3ff1835",
+    "to_node_id": "897927db-6a54-4023-8a8f-b118670e76c0",
+    "kind": "decision",
+    "choice_label": "Dig it out with a hairpin",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "9f297386-7e2e-468e-a3fd-6aaf8a1a785b",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "from_node_id": "790556ec-eae8-4661-bfa8-4fbea44c2742",
+    "to_node_id": "4afbf04f-9e24-4116-8afa-a09be0bbfe09",
+    "kind": "decision",
+    "choice_label": "Antibiotic ear drops",
+    "grade": "BEST"
+  },
+  {
+    "id": "13d81d2f-8fbb-445b-8ae7-58a915edad7f",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "from_node_id": "790556ec-eae8-4661-bfa8-4fbea44c2742",
+    "to_node_id": "bbed339c-d5af-4f3d-b0ad-608231bbeec2",
+    "kind": "decision",
+    "choice_label": "Keep the ear dry and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "c943f6e2-c39f-45b7-85c0-c867d566f746",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "from_node_id": "790556ec-eae8-4661-bfa8-4fbea44c2742",
+    "to_node_id": "650e2aa1-754c-44fb-8b0c-98c7876ab18e",
+    "kind": "decision",
+    "choice_label": "Swim it out at the pool",
+    "grade": "WRONG"
+  },
+  {
+    "id": "d5a68008-1620-4c06-87c9-7d024b83e4a0",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "from_node_id": "790556ec-eae8-4661-bfa8-4fbea44c2742",
+    "to_node_id": "6af8fc5c-9eba-48e4-b84c-f81be7326eeb",
+    "kind": "decision",
+    "choice_label": "Dig it out with a hairpin",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "881bb268-8dd2-4249-972f-0281db6a7ad6",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "from_node_id": "c50ee0cb-ca43-4ba6-9f2e-59aff9fc3972",
+    "to_node_id": "01ba7207-94e3-45a1-b97f-182c50d8884c",
+    "kind": "decision",
+    "choice_label": "Antibiotic ear drops",
+    "grade": "BEST"
+  },
+  {
+    "id": "60e8138d-0923-4e91-99e6-e9d1cc6b9e9c",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "from_node_id": "c50ee0cb-ca43-4ba6-9f2e-59aff9fc3972",
+    "to_node_id": "b8f79ec8-2736-4df3-92c3-c83a133c5183",
+    "kind": "decision",
+    "choice_label": "Keep the ear dry and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "87fdae5c-6e28-4e35-a242-19d1942c5970",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "from_node_id": "c50ee0cb-ca43-4ba6-9f2e-59aff9fc3972",
+    "to_node_id": "26449a07-6396-4664-97bd-8d97d7d6a9ca",
+    "kind": "decision",
+    "choice_label": "Swim it out at the pool",
+    "grade": "WRONG"
+  },
+  {
+    "id": "5c2d29dc-8e68-4b7d-b682-1ba3bf308540",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "from_node_id": "c50ee0cb-ca43-4ba6-9f2e-59aff9fc3972",
+    "to_node_id": "c0c6d949-1cde-4e57-99b8-4eb51d331b86",
+    "kind": "decision",
+    "choice_label": "Dig it out with a hairpin",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "a548f95b-61b8-4dc7-825f-4917f9966873",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "from_node_id": "632ed2de-c7a8-4e3b-8ef4-1c3d2864f053",
+    "to_node_id": "d305a78b-74d9-483d-ad90-3b0962527f7b",
+    "kind": "decision",
+    "choice_label": "Antibiotic ear drops",
+    "grade": "BEST"
+  },
+  {
+    "id": "7a01ecab-6c6d-4212-abeb-56a8d6361843",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "from_node_id": "632ed2de-c7a8-4e3b-8ef4-1c3d2864f053",
+    "to_node_id": "861be889-4c6e-4e4b-a44e-1f2d64738c42",
+    "kind": "decision",
+    "choice_label": "Keep the ear dry and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "9e1e8367-47d6-4132-8863-ff72bc47d43f",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "from_node_id": "632ed2de-c7a8-4e3b-8ef4-1c3d2864f053",
+    "to_node_id": "df265f1a-bdf2-42e6-9b64-735541b11068",
+    "kind": "decision",
+    "choice_label": "Swim it out at the pool",
+    "grade": "WRONG"
+  },
+  {
+    "id": "65f814a3-b7bd-439a-b488-adb4112af30e",
+    "patient_id": "e96de9c5-d4ae-4fd2-986a-7db94d0600dd",
+    "from_node_id": "632ed2de-c7a8-4e3b-8ef4-1c3d2864f053",
+    "to_node_id": "71f7714b-cffa-4305-ab54-9325e30f1876",
+    "kind": "decision",
+    "choice_label": "Dig it out with a hairpin",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "f2c2194d-ffb7-4b59-90c9-85070b8cc9ed",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "from_node_id": "bb49a0a2-dae4-409c-8998-575caf8e4dda",
+    "to_node_id": "0d499d6b-394a-4c00-a36d-bdcdac6afb8f",
+    "kind": "decision",
+    "choice_label": "Total rest + fluids for weeks",
+    "grade": "BEST"
+  },
+  {
+    "id": "520e47dc-2a31-4454-8677-9fb5e34c27cf",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "from_node_id": "bb49a0a2-dae4-409c-8998-575caf8e4dda",
+    "to_node_id": "dd29c5da-b87c-4df3-9b4b-eb3bd4d3fe34",
+    "kind": "decision",
+    "choice_label": "Soothe the throat gently",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "c0d0bfe1-54bb-47e2-a4bd-e90bb75c27c1",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "from_node_id": "bb49a0a2-dae4-409c-8998-575caf8e4dda",
+    "to_node_id": "ad66e208-cb18-4cf9-b880-b864812e5bad",
+    "kind": "decision",
+    "choice_label": "Leftover amoxicillin",
+    "grade": "WRONG"
+  },
+  {
+    "id": "0b4f6308-bbd4-471f-b8dd-42583b95a9ba",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "from_node_id": "bb49a0a2-dae4-409c-8998-575caf8e4dda",
+    "to_node_id": "229a957a-3992-454b-af6c-a64d59f4c791",
+    "kind": "decision",
+    "choice_label": "Tackle football this weekend",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "311480b3-44cc-4977-8059-403e1a61cfdc",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "from_node_id": "0d499d6b-394a-4c00-a36d-bdcdac6afb8f",
+    "to_node_id": "69cbf070-95ec-4fac-8645-7260c3d5d56f",
+    "kind": "decision",
+    "choice_label": "Total rest + fluids for weeks",
+    "grade": "BEST"
+  },
+  {
+    "id": "cdb1ef8e-c0bf-420d-bc72-ffa7d10cb872",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "from_node_id": "0d499d6b-394a-4c00-a36d-bdcdac6afb8f",
+    "to_node_id": "cd233608-74b2-479f-a589-8f5500f29e33",
+    "kind": "decision",
+    "choice_label": "Soothe the throat gently",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "f35f4810-beb4-4324-aa81-b186cc5266c9",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "from_node_id": "0d499d6b-394a-4c00-a36d-bdcdac6afb8f",
+    "to_node_id": "e2c2e0bb-36f8-4613-ae16-07cc26408c86",
+    "kind": "decision",
+    "choice_label": "Leftover amoxicillin",
+    "grade": "WRONG"
+  },
+  {
+    "id": "b2379a96-baaf-4ef0-8cec-1cb75005d190",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "from_node_id": "0d499d6b-394a-4c00-a36d-bdcdac6afb8f",
+    "to_node_id": "d5475127-4456-4976-b739-8fde3e831d9b",
+    "kind": "decision",
+    "choice_label": "Tackle football this weekend",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "3e8b212d-7bf3-4233-852e-007f51fbbccc",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "from_node_id": "dd29c5da-b87c-4df3-9b4b-eb3bd4d3fe34",
+    "to_node_id": "7c7e3119-7213-42f8-95e9-60353004d179",
+    "kind": "decision",
+    "choice_label": "Total rest + fluids for weeks",
+    "grade": "BEST"
+  },
+  {
+    "id": "da5d9595-506d-4b6a-a0b8-606f86a9a9f1",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "from_node_id": "dd29c5da-b87c-4df3-9b4b-eb3bd4d3fe34",
+    "to_node_id": "87a67c84-e2c5-4689-b49a-2cc129b7e9f5",
+    "kind": "decision",
+    "choice_label": "Soothe the throat gently",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "e48a5aa1-9635-434c-8ae3-28c6195afb9b",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "from_node_id": "dd29c5da-b87c-4df3-9b4b-eb3bd4d3fe34",
+    "to_node_id": "aca6bc02-4ac1-4422-9c58-ccb4dcb8aa74",
+    "kind": "decision",
+    "choice_label": "Leftover amoxicillin",
+    "grade": "WRONG"
+  },
+  {
+    "id": "20df0a17-c18a-49d1-aae4-3ee684836f9f",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "from_node_id": "dd29c5da-b87c-4df3-9b4b-eb3bd4d3fe34",
+    "to_node_id": "b88227ef-324d-4b00-a901-5c1e5a5a8f4c",
+    "kind": "decision",
+    "choice_label": "Tackle football this weekend",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "f024663a-10cf-4303-8b7f-90b1a501d0f3",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "from_node_id": "ad66e208-cb18-4cf9-b880-b864812e5bad",
+    "to_node_id": "e4475c23-6512-4ca9-8cc9-5c0d8e2019ab",
+    "kind": "decision",
+    "choice_label": "Total rest + fluids for weeks",
+    "grade": "BEST"
+  },
+  {
+    "id": "ad76486a-3047-41f7-9e6f-1f65ae31574e",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "from_node_id": "ad66e208-cb18-4cf9-b880-b864812e5bad",
+    "to_node_id": "e0e45151-e55c-4b61-a602-593d629500ea",
+    "kind": "decision",
+    "choice_label": "Soothe the throat gently",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "fb99a5a7-3bb0-49fd-af5d-f83b1ab7eafb",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "from_node_id": "ad66e208-cb18-4cf9-b880-b864812e5bad",
+    "to_node_id": "b9673ec0-3279-4149-9949-2d7c266abfc2",
+    "kind": "decision",
+    "choice_label": "Leftover amoxicillin",
+    "grade": "WRONG"
+  },
+  {
+    "id": "b0b56417-d6b9-4060-9cec-2df2010b3d39",
+    "patient_id": "339033ce-6799-40a0-916c-4c3d0d4cf362",
+    "from_node_id": "ad66e208-cb18-4cf9-b880-b864812e5bad",
+    "to_node_id": "d51e7222-b9d5-4fda-b41f-ebaa1ac5c695",
+    "kind": "decision",
+    "choice_label": "Tackle football this weekend",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "8df47c8c-27ec-4d59-a0eb-b1d8d583b730",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "from_node_id": "a127e050-f273-4d15-b534-2c08426015e5",
+    "to_node_id": "06d2ec1e-af18-4432-9d5e-60678a660ee3",
+    "kind": "decision",
+    "choice_label": "Doctor visit to lift it out",
+    "grade": "BEST"
+  },
+  {
+    "id": "a68e6e27-69b0-4164-b0a2-08191e667d08",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "from_node_id": "a127e050-f273-4d15-b534-2c08426015e5",
+    "to_node_id": "fb185a24-1507-4e6f-9004-51cf2162b2d4",
+    "kind": "decision",
+    "choice_label": "One gentle blow, then stop",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "3836072d-185d-41d1-ade0-739d7f178e24",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "from_node_id": "a127e050-f273-4d15-b534-2c08426015e5",
+    "to_node_id": "c15da4c0-bf2f-4b59-9b92-3cbe63303541",
+    "kind": "decision",
+    "choice_label": "Fish it out with tweezers",
+    "grade": "WRONG"
+  },
+  {
+    "id": "50b11dc8-2a65-419b-80b5-077b0ca2440d",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "from_node_id": "a127e050-f273-4d15-b534-2c08426015e5",
+    "to_node_id": "5a3e8378-9028-41df-8693-1662e33792d3",
+    "kind": "decision",
+    "choice_label": "Sniff hard to suck it up",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "9fb7e256-93e2-4641-88c4-6a20e4d0d25d",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "from_node_id": "06d2ec1e-af18-4432-9d5e-60678a660ee3",
+    "to_node_id": "01c7bb47-1e76-4c3b-901c-7e98998c70e8",
+    "kind": "decision",
+    "choice_label": "Doctor visit to lift it out",
+    "grade": "BEST"
+  },
+  {
+    "id": "7ee6510c-91b1-4e55-8f9a-aecd4a868b41",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "from_node_id": "06d2ec1e-af18-4432-9d5e-60678a660ee3",
+    "to_node_id": "a2e4c6e0-1c1f-4d4d-9a09-ce4dff760848",
+    "kind": "decision",
+    "choice_label": "One gentle blow, then stop",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "6baa5975-03c4-4c12-bc17-ed188fae02d5",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "from_node_id": "06d2ec1e-af18-4432-9d5e-60678a660ee3",
+    "to_node_id": "3c18162b-e257-457f-b151-01a5afc2d172",
+    "kind": "decision",
+    "choice_label": "Fish it out with tweezers",
+    "grade": "WRONG"
+  },
+  {
+    "id": "27ed8a50-1865-4017-8a6a-ac82e3ed6f72",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "from_node_id": "06d2ec1e-af18-4432-9d5e-60678a660ee3",
+    "to_node_id": "ddf869c2-e306-496d-bf52-a9a2923108c8",
+    "kind": "decision",
+    "choice_label": "Sniff hard to suck it up",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "a9a68c9f-77ab-4656-96e9-e72c8c263d2d",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "from_node_id": "fb185a24-1507-4e6f-9004-51cf2162b2d4",
+    "to_node_id": "b43107a8-bf98-4840-bb6f-3d3bdd662c44",
+    "kind": "decision",
+    "choice_label": "Doctor visit to lift it out",
+    "grade": "BEST"
+  },
+  {
+    "id": "7bda2a4b-7e1e-403e-912c-f7635bd421ed",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "from_node_id": "fb185a24-1507-4e6f-9004-51cf2162b2d4",
+    "to_node_id": "0cc7c039-1f9b-491c-bd7a-f0594372dca1",
+    "kind": "decision",
+    "choice_label": "One gentle blow, then stop",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "c3021cce-b84e-4c63-a621-fd9648c1339e",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "from_node_id": "fb185a24-1507-4e6f-9004-51cf2162b2d4",
+    "to_node_id": "657130df-db57-40ac-94c1-5ef0dc6494f6",
+    "kind": "decision",
+    "choice_label": "Fish it out with tweezers",
+    "grade": "WRONG"
+  },
+  {
+    "id": "2e5c3d72-079f-4133-a444-0b3412437070",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "from_node_id": "fb185a24-1507-4e6f-9004-51cf2162b2d4",
+    "to_node_id": "330390b8-2a31-4c30-90a7-e34adbe6a88c",
+    "kind": "decision",
+    "choice_label": "Sniff hard to suck it up",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "8e5799b5-6f9e-49c2-a3ee-b728d695a3fe",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "from_node_id": "c15da4c0-bf2f-4b59-9b92-3cbe63303541",
+    "to_node_id": "77d8ce77-e835-4b04-8555-534e75d6347c",
+    "kind": "decision",
+    "choice_label": "Doctor visit to lift it out",
+    "grade": "BEST"
+  },
+  {
+    "id": "1ae2c12c-857f-4576-accc-fea9414e0702",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "from_node_id": "c15da4c0-bf2f-4b59-9b92-3cbe63303541",
+    "to_node_id": "b6e121bc-4573-4b9a-94c0-fe8c57d59b26",
+    "kind": "decision",
+    "choice_label": "One gentle blow, then stop",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "12447c1a-b390-4562-92df-cc3888ebac97",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "from_node_id": "c15da4c0-bf2f-4b59-9b92-3cbe63303541",
+    "to_node_id": "0cd38f38-cc3a-4bfa-99a1-d6c7733114bc",
+    "kind": "decision",
+    "choice_label": "Fish it out with tweezers",
+    "grade": "WRONG"
+  },
+  {
+    "id": "88a431f7-5ca3-4105-a437-d303322bcb59",
+    "patient_id": "9350f95f-b258-4caf-8b32-d58b6fb46d36",
+    "from_node_id": "c15da4c0-bf2f-4b59-9b92-3cbe63303541",
+    "to_node_id": "b2b237c9-00b6-4b3b-96c1-8bef9cf4bddc",
+    "kind": "decision",
+    "choice_label": "Sniff hard to suck it up",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "5f19ffa6-32a5-43da-8155-d6f83604c59b",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "from_node_id": "66b9247e-7a9b-4508-bc94-488a363eabca",
+    "to_node_id": "6b51bf7b-2539-41b4-90f3-b31d3781e22c",
+    "kind": "decision",
+    "choice_label": "Rehydration sips, tiny + often",
+    "grade": "BEST"
+  },
+  {
+    "id": "afc0d343-411a-4173-abef-80766f1fbb61",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "from_node_id": "66b9247e-7a9b-4508-bc94-488a363eabca",
+    "to_node_id": "89e25fd3-ad4a-4d88-974a-d3840aa27a70",
+    "kind": "decision",
+    "choice_label": "Plain crackers and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "be96c153-5655-4372-9ae2-15be59a81c67",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "from_node_id": "66b9247e-7a9b-4508-bc94-488a363eabca",
+    "to_node_id": "f2909ed4-941e-44a8-864b-6ea121fe7e6d",
+    "kind": "decision",
+    "choice_label": "Big greasy meal to settle it",
+    "grade": "WRONG"
+  },
+  {
+    "id": "8b2d50d1-399b-426f-b7c6-5886a5a67141",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "from_node_id": "66b9247e-7a9b-4508-bc94-488a363eabca",
+    "to_node_id": "c2345638-2676-4bc5-9d4f-8828fa387bc2",
+    "kind": "decision",
+    "choice_label": "Chug pure salt water",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "2abd0fe0-163b-4356-8883-aa0440a7de13",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "from_node_id": "6b51bf7b-2539-41b4-90f3-b31d3781e22c",
+    "to_node_id": "b0130af8-abe5-429f-b779-84e5d8d1fa70",
+    "kind": "decision",
+    "choice_label": "Rehydration sips, tiny + often",
+    "grade": "BEST"
+  },
+  {
+    "id": "a5948596-8f78-446b-8dac-e20fd43f5d9e",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "from_node_id": "6b51bf7b-2539-41b4-90f3-b31d3781e22c",
+    "to_node_id": "905093b3-93e7-4aae-a502-8f9c492b4158",
+    "kind": "decision",
+    "choice_label": "Plain crackers and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "6b2b3138-0174-4e1d-bd7a-dec9883f5a6e",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "from_node_id": "6b51bf7b-2539-41b4-90f3-b31d3781e22c",
+    "to_node_id": "4dec8d8b-9ea2-4da6-8ade-80b35674143b",
+    "kind": "decision",
+    "choice_label": "Big greasy meal to settle it",
+    "grade": "WRONG"
+  },
+  {
+    "id": "ed488244-89ed-4884-89ff-405866886477",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "from_node_id": "6b51bf7b-2539-41b4-90f3-b31d3781e22c",
+    "to_node_id": "59907a8e-72b3-436c-ab1e-52066e19b028",
+    "kind": "decision",
+    "choice_label": "Chug pure salt water",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "38ce2d50-0c9f-40a5-b716-354600ee263d",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "from_node_id": "89e25fd3-ad4a-4d88-974a-d3840aa27a70",
+    "to_node_id": "1f9e2f3f-b2b5-42bf-b108-fd6b54490a3d",
+    "kind": "decision",
+    "choice_label": "Rehydration sips, tiny + often",
+    "grade": "BEST"
+  },
+  {
+    "id": "8f1b6650-93fd-41b5-b38a-b133cdf2625c",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "from_node_id": "89e25fd3-ad4a-4d88-974a-d3840aa27a70",
+    "to_node_id": "aa7f3c1b-dc6c-4215-b0f5-7a4b6fd00f5d",
+    "kind": "decision",
+    "choice_label": "Plain crackers and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "fa33c0a0-9c92-4229-98b2-408a1ceec6da",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "from_node_id": "89e25fd3-ad4a-4d88-974a-d3840aa27a70",
+    "to_node_id": "7ccb30b8-1fb4-40d7-98e4-8f0b10c57687",
+    "kind": "decision",
+    "choice_label": "Big greasy meal to settle it",
+    "grade": "WRONG"
+  },
+  {
+    "id": "6e63123f-0b33-45cd-a330-7b1a9546f581",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "from_node_id": "89e25fd3-ad4a-4d88-974a-d3840aa27a70",
+    "to_node_id": "dfee8f2d-b6d4-4302-8f9e-a8a9cbb69959",
+    "kind": "decision",
+    "choice_label": "Chug pure salt water",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "a6cd9357-d9e9-4ac0-a1ff-701dc81b65e4",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "from_node_id": "f2909ed4-941e-44a8-864b-6ea121fe7e6d",
+    "to_node_id": "5e3706f4-a95b-4adf-802a-074482afde6d",
+    "kind": "decision",
+    "choice_label": "Rehydration sips, tiny + often",
+    "grade": "BEST"
+  },
+  {
+    "id": "0d8bf595-8858-454e-a76e-51cbeb4a55c8",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "from_node_id": "f2909ed4-941e-44a8-864b-6ea121fe7e6d",
+    "to_node_id": "e2532d93-2b1a-49b6-b982-32e032694f3f",
+    "kind": "decision",
+    "choice_label": "Plain crackers and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "bcf305ed-80e0-4707-9ef9-e5ae43166639",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "from_node_id": "f2909ed4-941e-44a8-864b-6ea121fe7e6d",
+    "to_node_id": "94d956b8-be80-4c16-8242-a561c95b3eef",
+    "kind": "decision",
+    "choice_label": "Big greasy meal to settle it",
+    "grade": "WRONG"
+  },
+  {
+    "id": "2a15ff19-3cdb-4bc3-8d6a-b2e747c92f00",
+    "patient_id": "ff94fe93-b87d-4ba7-a058-6a9cc8bcc39c",
+    "from_node_id": "f2909ed4-941e-44a8-864b-6ea121fe7e6d",
+    "to_node_id": "ce56a14f-77dc-4dc9-97b3-0610f1f1290b",
+    "kind": "decision",
+    "choice_label": "Chug pure salt water",
+    "grade": "DANGEROUS"
   }
 ];
 
@@ -8852,6 +10568,58 @@ export const FALLBACK_TREATMENTS: FallbackTreatment[] = [
     },
     "conditions": [
       "appendicitis"
+    ]
+  },
+  {
+    "id": "e26c0a01-0000-4000-8000-000000000001",
+    "class_name": "Ear drops",
+    "description": "Antibiotic drops that fight outer-ear germs on the spot.",
+    "wording": {
+      "plain": "ear drops",
+      "gentle": "ear-germ drops",
+      "clinical": "topical otic antibiotics"
+    },
+    "conditions": [
+      "swimmers-ear"
+    ]
+  },
+  {
+    "id": "e26c0a01-0000-4000-8000-000000000002",
+    "class_name": "Weeks of rest",
+    "description": "Long rest and fluids that let mono burn out.",
+    "wording": {
+      "plain": "rest and fluids",
+      "gentle": "lots of rest and sips",
+      "clinical": "supportive rest and hydration"
+    },
+    "conditions": [
+      "mono"
+    ]
+  },
+  {
+    "id": "e26c0a01-0000-4000-8000-000000000003",
+    "class_name": "Clinician removal",
+    "description": "Special tools that lift stuck objects out safely.",
+    "wording": {
+      "plain": "doctor removal",
+      "gentle": "bead-lifting tools",
+      "clinical": "instrumented removal"
+    },
+    "conditions": [
+      "nose-bead"
+    ]
+  },
+  {
+    "id": "e26c0a01-0000-4000-8000-000000000004",
+    "class_name": "Oral rehydration",
+    "description": "Salty-sweet sips that refill lost fluids.",
+    "wording": {
+      "plain": "rehydration sips",
+      "gentle": "special salty-sweet water",
+      "clinical": "oral rehydration therapy"
+    },
+    "conditions": [
+      "gastroenteritis"
     ]
   }
 ];
@@ -9052,6 +10820,82 @@ export const FALLBACK_RESOURCES: FallbackResource[] = [
       "answer": 1,
       "pearl": "Migrating pain + no appetite: appendix."
     }
+  },
+  {
+    "id": "f26c0a01-0000-4000-8000-000000000001",
+    "condition_id": "swimmers-ear",
+    "title": "Swimmer's Ear",
+    "url": "https://medlineplus.gov/ency/article/000622.htm",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "Swimmer's ear infects the outer ear canal — often after swimming — so tugging the ear or pressing the bump in front hurts sharply. Antibiotic ear drops plus keeping water out cure most cases; digging with pins or swabs makes it worse.",
+    "quiz": {
+      "stem": "Tugging the sore ear hurts most with…",
+      "choices": [
+        "A middle-ear cold",
+        "Swimmer's ear",
+        "An itchy scalp"
+      ],
+      "answer": 1,
+      "pearl": "Tug-hurts ear + pool: outer ear."
+    }
+  },
+  {
+    "id": "f26c0a01-0000-4000-8000-000000000002",
+    "condition_id": "mono",
+    "title": "Mononucleosis",
+    "url": "https://medlineplus.gov/infectiousmononucleosis.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "Mono brings weeks of crushing tiredness with sore throat, fever, and big neck glands — kissing and shared cups spread it among teens. Rest and fluids heal it; amoxicillin causes a rash, and contact sports wait until the spleen shrinks.",
+    "quiz": {
+      "stem": "Mono patients must avoid…",
+      "choices": [
+        "Rest and fluids",
+        "Honey tea",
+        "Amoxicillin and tackle football"
+      ],
+      "answer": 2,
+      "pearl": "Amoxicillin rashes mono; spleens need rest."
+    }
+  },
+  {
+    "id": "f26c0a01-0000-4000-8000-000000000003",
+    "condition_id": "nose-bead",
+    "title": "Foreign Body in the Nose",
+    "url": "https://medlineplus.gov/ency/article/000037.htm",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "A bead or toy up the nose causes a stinky discharge from ONE nostril while the other stays clear. Doctors lift it out with tiny tools; tweezers and hard sniffing push it deeper or toward the lungs.",
+    "quiz": {
+      "stem": "One stinky nostril, other fine means…",
+      "choices": [
+        "A common cold",
+        "Something stuck inside",
+        "An ear infection"
+      ],
+      "answer": 1,
+      "pearl": "One-sided stink: peek inside."
+    }
+  },
+  {
+    "id": "f26c0a01-0000-4000-8000-000000000004",
+    "condition_id": "gastroenteritis",
+    "title": "Gastroenteritis",
+    "url": "https://medlineplus.gov/gastroenteritis.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "Stomach bugs cause vomiting plus watery diarrhea with cramps all over — but no single sore spot like appendicitis. Tiny frequent rehydration sips refill losses; most cases clear in days without antibiotics.",
+    "quiz": {
+      "stem": "A tummy bug needs first…",
+      "choices": [
+        "Tiny rehydration sips",
+        "A big greasy meal",
+        "Pure salt water"
+      ],
+      "answer": 0,
+      "pearl": "Tiny sips refill what puking stole."
+    }
   }
 ];
 
@@ -9139,5 +10983,21 @@ export const FALLBACK_EXAM_FINDINGS: FallbackExamFinding[] = [
   { condition_id: 'appendicitis', modality: 'look', gentle: 'Curled up very still; moving hurts.', steady: 'Lying still; movement worsens pain.', clinical: 'Motionless; movement aggravates pain.', expert: 'Lies motionless; peritoneal posturing.' },
   { condition_id: 'appendicitis', modality: 'feel', gentle: 'Lower-right belly jumps when gently pressed.', steady: 'Marked lower-right tenderness; guarding.', clinical: 'Lower-right tenderness with guarding.', expert: 'McBurney point, guarding + rebound.' },
   { condition_id: 'appendicitis', modality: 'tap', gentle: 'Tapping the belly hurts — even bumps in the road.', steady: 'Percussion tenderness over the lower right.', clinical: 'Percussion tenderness, lower right.', expert: 'Percussion tenderness; peritoneal irritation.' },
-  { condition_id: 'appendicitis', modality: 'listen', gentle: 'Belly sounds are extra quiet.', steady: 'Bowel sounds quiet.', clinical: 'Hypoactive bowel sounds.', expert: 'Hypoactive bowel sounds; ileus pattern.' }
+  { condition_id: 'appendicitis', modality: 'listen', gentle: 'Belly sounds are extra quiet.', steady: 'Bowel sounds quiet.', clinical: 'Hypoactive bowel sounds.', expert: 'Hypoactive bowel sounds; ileus pattern.' },
+  { condition_id: 'swimmers-ear', modality: 'look', gentle: 'Outer ear red and puffy; a little ooze.', steady: 'Red swollen outer ear with discharge.', clinical: 'Erythematous edematous canal; otorrhea.', expert: 'Canal edema/erythema; purulent otorrhea.' },
+  { condition_id: 'swimmers-ear', modality: 'feel', gentle: 'Tugging the ear REALLY hurts — ouch!', steady: 'Sharp pain when the ear is tugged.', clinical: 'Exquisite traction tenderness.', expert: 'Exquisite pinna/tragus tenderness.' },
+  { condition_id: 'swimmers-ear', modality: 'tap', gentle: 'Head taps sound normal.', steady: 'Percussion normal.', clinical: 'Percussion unremarkable.', expert: 'No percussive abnormality.' },
+  { condition_id: 'swimmers-ear', modality: 'listen', gentle: 'Hearing a bit muffled on that side.', steady: 'Muffled hearing on the sore side.', clinical: 'Conductive muffling, sore side.', expert: 'Unilateral conductive loss; canal edema.' },
+  { condition_id: 'mono', modality: 'look', gentle: 'Droopy, pale, and SO tired looking.', steady: 'Pale and exhausted; throat red.', clinical: 'Pale, fatigued; pharyngeal erythema.', expert: 'Pallor, lassitude; exudative pharyngitis.' },
+  { condition_id: 'mono', modality: 'feel', gentle: 'Neck glands HUGE and sore, both sides.', steady: 'Huge tender neck glands, both sides.', clinical: 'Bulky bilateral tender nodes.', expert: 'Bulky posterior nodes; splenic tip.' },
+  { condition_id: 'mono', modality: 'tap', gentle: 'Belly taps sound normal.', steady: 'Percussion normal.', clinical: 'Percussion unremarkable.', expert: 'No percussive abnormality.' },
+  { condition_id: 'mono', modality: 'listen', gentle: 'Chest sounds clear — tiredness is the story.', steady: 'Lungs clear; fatigue dominates.', clinical: 'Lungs clear; systemic fatigue.', expert: 'Vesicular; no focal findings.' },
+  { condition_id: 'nose-bead', modality: 'look', gentle: 'Stinky goo from one nostril only.', steady: 'One-sided foul discharge; other clear.', clinical: 'Unilateral foul rhinorrhea.', expert: 'Unilateral fetid rhinorrhea.' },
+  { condition_id: 'nose-bead', modality: 'feel', gentle: 'Nose a little tender on the oozy side.', steady: 'Mild tenderness over the oozy side.', clinical: 'Mild unilateral nasal tenderness.', expert: 'Mild unilateral tenderness; afebrile.' },
+  { condition_id: 'nose-bead', modality: 'tap', gentle: 'Face taps sound normal.', steady: 'Sinus percussion normal.', clinical: 'Sinuses non-tender.', expert: 'No sinus tenderness.' },
+  { condition_id: 'nose-bead', modality: 'listen', gentle: 'Breathing sounds clear on both sides.', steady: 'Lungs clear; nose whistles on one side.', clinical: 'Lungs clear; unilateral nasal whistle.', expert: 'Vesicular; unilateral nasal obstruction.' },
+  { condition_id: 'gastroenteritis', modality: 'look', gentle: 'Pale and droopy; tongue looks dry.', steady: 'Pale, droopy, dry lips.', clinical: 'Pale; dry lips; mild distress.', expert: 'Pallor; dry mucosae; mild distress.' },
+  { condition_id: 'gastroenteritis', modality: 'feel', gentle: 'Belly soft and gurgly all over.', steady: 'Soft belly, gurgly everywhere.', clinical: 'Soft diffuse tenderness; gurgly.', expert: 'Soft diffuse abdomen; non-focal.' },
+  { condition_id: 'gastroenteritis', modality: 'tap', gentle: 'Belly taps sound hollow and gassy.', steady: 'Gassy hollow taps all over.', clinical: 'Diffuse tympany.', expert: 'Diffuse tympany; no focal dullness.' },
+  { condition_id: 'gastroenteritis', modality: 'listen', gentle: 'Belly grumbles and gurgles loudly.', steady: 'Loud gurgly bowel sounds.', clinical: 'Hyperactive bowel sounds.', expert: 'Hyperactive rushing bowel sounds.' }
 ];
