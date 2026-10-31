@@ -1,5 +1,21 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 37 (2026-11-01): About repo link + build date
+
+Branch: `feat/knottin-lab`. Queued next: proxy+client
+(run 38), lab screen (run 39), merge/docs (run 40).
+File ownership (main agent, this run): aboutSheet link row
++ date, auditor about geometry, PROGRESS, CHECKPOINT.
+Display-only.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- About page gains a tappable repo link
+  (github.com/henryweimd/cozy-clinic, new tab) + "Built
+  October 2026"; body copy trimmed 2 lines to fit the
+  card (auditor-proved, zero slack before).
+- Verify: 413/413, tsc clean, build green, auditor 0.
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 36 (2026-11-01): reading-level clarity in Profile
 
 Branch: `feat/knottin-lab`. Queued next: About repo link

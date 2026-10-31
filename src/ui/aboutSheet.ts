@@ -2,8 +2,9 @@ import { THEME } from './chromeTheme';
 
 /**
  * About page: a full-page modal behind the Profile About link —
- * the pitch, how to play, the hackathon context, credits, and
- * the education-only disclaimer — offline-safe (no links out).
+ * the pitch, how to play, the hackathon context, credits, the
+ * repo link + build date, and the education-only disclaimer.
+ * The page renders offline; the repo link opens on tap only.
  * The sound + terminal toggles live at the bottom, next to the
  * project they belong to. Modal over Profile (depth 30);
  * backdrop tap or the × closes it.
@@ -11,10 +12,12 @@ import { THEME } from './chromeTheme';
 
 const TITLE = 'About Cozy Clinic';
 
+const REPO_URL = 'https://github.com/henryweimd/cozy-clinic';
+
 const BODY: readonly string[] = [
-  'Cozy Clinic is a cozy game about caring for patients who remember you. Meet Milo, Mabel, June, and 27 more friends who remember you — ask, examine, diagnose, and treat them across visits while your Living Chart follows every friend.',
+  'Cozy Clinic is a cozy game about caring for patients who remember you. Meet 30 friends — ask, examine, diagnose, and treat them while your Living Chart follows every friend.',
   "How to play: clear each visit's four quiz rounds, earn Care Coins, read Learn topics to get sharper, and spend coins in the Shop. Slide the reading level from Gentle to Expert.",
-  'Made for the Meta AI Developer Hackathon, Indie track. Muse Spark pre-computes patient futures and paraphrases greetings; Muse Image drew the cast; Muse Code built the game.',
+  'Made for the Meta AI Developer Hackathon, Indie track. Muse Spark pre-computes patient futures; Muse Image drew the cast; Muse Code built the game.',
   'Educational simulation only — never medical advice, never real patient data.',
 ];
 
@@ -69,6 +72,27 @@ export class AboutSheet {
         lineSpacing: 6,
       })
       .setOrigin(0, 0);
+    // Repo link + build date (own rows below the body; the
+    // link opens the GitHub repo in a new tab on tap).
+    const repoLink = this.scene.add
+      .text(56, 672, 'Source: github.com/henryweimd/cozy-clinic', {
+        fontFamily: THEME.font,
+        fontStyle: 'bold',
+        fontSize: '16px',
+        color: THEME.cocoa,
+      })
+      .setOrigin(0, 0);
+    const builtDate = this.scene.add
+      .text(56, 698, 'Built October 2026.', {
+        fontFamily: THEME.font,
+        fontSize: '16px',
+        color: THEME.secondary,
+      })
+      .setOrigin(0, 0);
+    const repoZone = this.scene.add
+      .zone(270, 685, 428, 26)
+      .setInteractive({ useHandCursor: true });
+    repoZone.on('pointerdown', () => window.open(REPO_URL, '_blank', 'noopener'));
     const soundLabel = this.scene.add
       .text(56, 756, 'Sound', {
         fontFamily: THEME.font,
@@ -117,6 +141,9 @@ export class AboutSheet {
       close,
       closeZone,
       body,
+      repoLink,
+      builtDate,
+      repoZone,
       soundLabel,
       this.soundBg,
       this.soundText,
