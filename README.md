@@ -168,5 +168,5 @@ Docs map: [`docs/UI_PROTOTYPE.md`](./docs/UI_PROTOTYPE.md) (interface spec),
 [`PROGRESS.md`](./PROGRESS.md) (build log).
 
 ---
-*Last verified 2026-10-31 against `main` @ `81eb15d` (238/238 tests, build green,
-live URL up).*
+*Last verified 2026-11-01 against `main` @ `ffe8946` (368/368 tests, build green,
+live URL up). Firsthand operator paragraph + demo video still to come.*

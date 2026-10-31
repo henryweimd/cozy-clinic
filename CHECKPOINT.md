@@ -1,3 +1,24 @@
+# CHECKPOINT — Run 31: submission prep (2026-11-01)
+
+Phase: agent-side submission truth (counts only). Last of
+operator's 4-phase batch.
+
+Files changed: 5 (SUBMISSION_CHECKLIST, DEMO_SCRIPT,
+README, PROGRESS, CHECKPOINT). Docs-only commit on main.
+
+Test result: auditor 0 findings; `npm test` 368/368; tsc
+clean; build green (pre-commit state; docs-only change).
+
+Deployment URL: `https://cozy-clinic.vercel.app/` (unchanged
+bundle; live 200 confirmed in run 30).
+
+Playtest result: NOT operator-playtested — programmatic
+verification only.
+
+Image spend this run: $0 (ledger ~$2.27 cumulative, STOP at $120).
+
+STOP.
+
 # CHECKPOINT — Run 30: hardening (2026-11-01)
 
 Phase: network hardening — abort timeouts everywhere.

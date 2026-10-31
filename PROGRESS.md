@@ -1,5 +1,20 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 31 (2026-11-01): submission prep (agent-side counts + docs truth)
+
+File ownership (main agent, this run): SUBMISSION_CHECKLIST,
+DEMO_SCRIPT, README counts, PROGRESS, CHECKPOINT. No code,
+no Supabase writes, no image spend. Operator keeps: firsthand
+paragraph, demo video, screenshots, submission form.
+Hands off: src/data/maneuvers.* (other stream).
+
+- SUBMISSION_CHECKLIST: 24 conditions / 26 patients /
+  368 tests; medical-review item widened to runs 20–28.
+- DEMO_SCRIPT failover beat: 32 patients / 544 futures.
+- README last-verified line: 2026-11-01 @ ffe8946, 368/368.
+- Verify (docs-only): 368/368, tsc clean, auditor 0.
+- Spend: $0 (ledger ~$2.27 cumulative).
+
 ## Run 30 (2026-11-01): hardening (offline paths, error states, edge cases)
 
 File ownership (main agent, this run): net helper + cast,

@@ -9,23 +9,23 @@
 
 - [x] Live build at <https://cozy-clinic.vercel.app/> (200, fresh
   bundle each run; offline fallback plays the full demo path)
-- [x] 12 MSD-sourced conditions × 4-round visits; 14 playable
-  patients with 6-expression sprite sets (238/238 tests, `tsc`
+- [x] 24 MSD-sourced conditions × 4-round visits; 26 playable
+  patients with 6-expression sprite sets (368/368 tests, `tsc`
   clean, layout auditor 0 findings, build green)
 - [x] Living Chart persistence, shared care (handoffs/cheers),
   Learn cards with prize quizzes, Shop economy, 10-move undo,
   4 reading tiers, streaks/combos
 - [x] Runtime Muse path: `muse-reword` Edge Function (server-side
   key, engine veto); seed/extend functions in repo
-- [x] README current (238 tests, 4 rounds, 14 patients, honest
+- [x] README current (368 tests, 4 rounds, 26 patients, honest
   tooling table); demo script in-repo + in-game (`› DEMO`)
 - [x] No secrets in repo (`.env` local-only; model key in
   Supabase secrets as `META_API_KEY`)
 
 ## Operator-only (needs a human)
 
-- [ ] **Medical review pen**: run-20/21/22/23/25 content is DRAFT —
-  all 12 conditions' history/exam/dx/treat + Learn summaries.
+- [ ] **Medical review pen**: runs 20–28 content is DRAFT —
+  all 24 conditions' history/exam/dx/treat + Learn summaries.
   Nothing ships as final without this.
 - [ ] **Firsthand README paragraph**: the operator's
   domain paragraph (placeholder in README) — needs approval.
