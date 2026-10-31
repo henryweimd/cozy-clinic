@@ -63,8 +63,8 @@ cast counts, pre-computed futures, engine veto. Close:
 
 ## If something fails live
 
-- **No network**: keep going — the fallback pack (16 patients,
-  272 futures) plays the identical path; say so, it's a feature.
+- **No network**: keep going — the fallback pack (20 patients,
+  340 futures) plays the identical path; say so, it's a feature.
 - **Wrong tap**: every round is recoverable; undo lives in
   Profile; blocked moves show the rescue beat (pick the joke
   card on purpose — judges laugh).

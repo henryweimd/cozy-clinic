@@ -258,7 +258,7 @@ const GRADE_COLOR: Record<ChoiceGrade, number> = {
 };
 
 type ViewName = 'waiting' | 'visit' | 'telemed' | 'portal' | 'learn' | 'profile';
-type Speaker = 'MABEL' | 'JUNE' | 'MILO' | 'THEO' | 'PRIYA' | 'ELLIS' | 'NINA' | 'KAI' | 'ADA' | 'FELIX' | 'YOU';
+type Speaker = 'MABEL' | 'JUNE' | 'MILO' | 'THEO' | 'PRIYA' | 'ELLIS' | 'NINA' | 'KAI' | 'ADA' | 'FELIX' | 'HUGO' | 'IVY' | 'LEO' | 'RUBY' | 'YOU';
 
 
 
@@ -267,7 +267,8 @@ function speakerFor(patientName: string): Speaker {
   if (
     key === 'JUNE' || key === 'MILO' || key === 'MABEL' || key === 'THEO' ||
     key === 'PRIYA' || key === 'ELLIS' || key === 'NINA' || key === 'KAI' ||
-    key === 'ADA' || key === 'FELIX'
+    key === 'ADA' || key === 'FELIX' || key === 'HUGO' || key === 'IVY' ||
+    key === 'LEO' || key === 'RUBY'
   )
     return key;
   return 'MABEL';
@@ -613,7 +614,7 @@ export class ClinicScene extends Phaser.Scene {
     }
     // Learn-card headers: one cozy banner per condition
     // (offline-safe); keys `learn-<condition_id>`.
-    for (const id of ['asthma', 'viral-respiratory', 'dehydration', 'hypertension', 'strep-throat', 'ear-infection', 'eczema', 'pneumonia']) {
+    for (const id of ['asthma', 'viral-respiratory', 'dehydration', 'hypertension', 'strep-throat', 'ear-infection', 'eczema', 'pneumonia', 'croup', 'hand-foot-mouth', 'lyme-disease', 'appendicitis']) {
       this.load.image(`learn-${id}`, `assets/learn/learn-${id}.png`);
     }
     // No prop preloads: the plush P2 props clash with the photoreal
@@ -2218,7 +2219,9 @@ export class ClinicScene extends Phaser.Scene {
       cond === 'asthma' || cond === 'viral-respiratory' ||
       cond === 'dehydration' || cond === 'hypertension' ||
       cond === 'strep-throat' || cond === 'ear-infection' ||
-      cond === 'eczema' || cond === 'pneumonia'
+      cond === 'eczema' || cond === 'pneumonia' ||
+      cond === 'croup' || cond === 'hand-foot-mouth' ||
+      cond === 'lyme-disease' || cond === 'appendicitis'
     ) {
       this.patientState = this.engine.initialState(cond);
     } else {

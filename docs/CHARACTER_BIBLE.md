@@ -152,6 +152,10 @@ body plan, no new species without a bible amendment.
 | Kai (SHIPS 2026-10-30) | Junior drummer, ear-infection case | Sage-taupe `#9AA08C` | Eager bounce (motion: 2.2 rad/s) | Tangerine knit headband (fixed; above face plate) |
 | Ada (SHIPS 2026-10-30) | Garden sketch artist, eczema case | Lilac-grey taupe `#A79BAC` | Calm ease (motion: 1.6 rad/s) | Seafoam sun visor (fixed; above face plate) |
 | Felix (SHIPS 2026-10-30) | Night-shift baker, pneumonia case | Slate-taupe `#7E8A99` | Tired sway (motion: 1.5 rad/s); idle eyes heavy-lidded | White baker kerchief (fixed; cap-restore recipe) |
+| Hugo (SHIPS 2026-10-31) | Blanket-fort napper, croup case | Dusty steel-blue `#7F9AAE` | Sleepy sway (motion: 1.5 rad/s); droopy tired beads | Mustard-yellow sleep cap (fixed; above face plate) |
+| Ivy (SHIPS 2026-10-31) | Sticker collector, hand-foot-mouth case | Warm apricot-sand `#BFA08A` | Bright bounce (motion: 2.0 rad/s); careful small smile | Daisy hair clip (fixed; above face plate, side) |
+| Leo (SHIPS 2026-10-31) | Trail explorer, lyme-disease case | Sage-moss `#93A284` | Eager bounce (motion: 2.1 rad/s); big cheerful closed smile | Olive trail vest (fixed; below face plate) |
+| Ruby (SHIPS 2026-10-31) | Drama-club lead, appendicitis case | Dusty plum `#A87F8E` | Graceful sway (motion: 1.7 rad/s); brave smile | Striped rehearsal scarf (fixed; below face plate) |
 | Dr. Nora (reserved) | Reassuring AI colleague doctor | Rose-taupe `#A2766B` | Reassuring half-smile | White coat + sage scrubs (outfit, same silhouette) |
 
 ## Population mixing system (normative 2026-10-30)

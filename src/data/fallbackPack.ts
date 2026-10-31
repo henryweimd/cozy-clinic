@@ -314,6 +314,58 @@ export const FALLBACK_PATIENTS: FallbackPatient[] = [
     "facial_features": "tired kind bead eyes, warm crooked smile",
     "accessories_clothing": "white baker kerchief",
     "start_stage": 2
+  },
+  {
+    "id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "name": "Hugo",
+    "condition_id": "croup",
+    "age_band": "child",
+    "age_years": 2,
+    "sex": "M",
+    "persona": "blanket-fort napper",
+    "fur_shade": "#7F9AAE",
+    "facial_features": "droopy tired bead eyes, tiny croaky smile",
+    "accessories_clothing": "mustard-yellow sleep cap",
+    "start_stage": 2
+  },
+  {
+    "id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "name": "Ivy",
+    "condition_id": "hand-foot-mouth",
+    "age_band": "child",
+    "age_years": 4,
+    "sex": "F",
+    "persona": "sticker collector",
+    "fur_shade": "#BFA08A",
+    "facial_features": "bright bead eyes, small careful smile",
+    "accessories_clothing": "daisy hair clip",
+    "start_stage": 2
+  },
+  {
+    "id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "name": "Leo",
+    "condition_id": "lyme-disease",
+    "age_band": "child",
+    "age_years": 9,
+    "sex": "M",
+    "persona": "trail explorer",
+    "fur_shade": "#93A284",
+    "facial_features": "eager bead eyes, big cheerful closed smile",
+    "accessories_clothing": "olive trail vest",
+    "start_stage": 2
+  },
+  {
+    "id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "name": "Ruby",
+    "condition_id": "appendicitis",
+    "age_band": "teen",
+    "age_years": 14,
+    "sex": "F",
+    "persona": "drama-club lead",
+    "fur_shade": "#A87F8E",
+    "facial_features": "expressive bead eyes, brave smile",
+    "accessories_clothing": "striped rehearsal scarf",
+    "start_stage": 2
   }
 ];
 
@@ -4669,6 +4721,1094 @@ export const FALLBACK_NODES: FallbackNode[] = [
     "teaching": "Sprinting on sick lungs steals air instead of clearing it.",
     "animation_cue": "worried",
     "memory": "First visit: feverish. Tried \"Hide it and wait alone\" → breathless. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "9a5880fc-3a8a-4699-948e-18545cf443e7",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hugo coughs a seal-bark into his blanket fort. Each breath in rasps and rattles. The cozy clinic feels calm around him.",
+    "teaching": "A seal-bark cough with noisy breathing in points at croup.",
+    "animation_cue": "idle",
+    "memory": "First visit: barky."
+  },
+  {
+    "id": "6c0f2c66-47c8-4b7d-a696-7744b1b4c20a",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 7,
+      "comfort": 8,
+      "breathing": 7
+    },
+    "mood": "perky",
+    "narrative": "Hugo takes the special steroid dose. His voice sounds a little croaky. He looks perky and rests softly in the cozy room.",
+    "teaching": "One steroid dose melts swollen airways open.",
+    "animation_cue": "recovery",
+    "memory": "First visit: barky. Tried \"Steroid dose from the doctor\" → hoarse."
+  },
+  {
+    "id": "9f35d7c3-51b6-4cde-8d41-6c476fb08416",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hugo rests calm in the cool night air. The seal-bark cough keeps coming at night. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Cool calm air soothes — medicine does the real fixing.",
+    "animation_cue": "worried",
+    "memory": "First visit: barky. Tried \"Calm rest in cool night air\" → barky."
+  },
+  {
+    "id": "ac17a7ea-b0e8-4e07-8e0a-e8380899aa37",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hugo swallows leftover antibiotics. Each breath in rasps and costs him. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Antibiotics cannot touch the croup virus.",
+    "animation_cue": "sick",
+    "memory": "First visit: barky. Tried \"Give leftover antibiotics\" → struggling."
+  },
+  {
+    "id": "1be50a33-b942-46ee-91f5-dba129a6c751",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hugo starts to lean over the boiling steam pot, but a helper gently stops him. The seal-bark cough keeps coming at night. He does not get worse.",
+    "teaching": "Boiling steam scalds instead of soothing.",
+    "animation_cue": "worried",
+    "memory": "First visit: barky. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "d2f316fb-6536-40b1-a1bc-4114f22bb668",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 8,
+      "comfort": 10,
+      "breathing": 8
+    },
+    "mood": "perky",
+    "narrative": "Hugo keeps taking the steroid dose on schedule. His breathing is quiet and easy. He looks perky and cozy.",
+    "teaching": "One steroid dose melts swollen airways open.",
+    "animation_cue": "happy",
+    "memory": "First visit: barky. Tried \"Steroid dose from the doctor\" → hoarse. Tried \"Steroid dose from the doctor\" → clear."
+  },
+  {
+    "id": "fe5c841b-685d-4589-9582-b174f1ae8e38",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 7,
+      "comfort": 9,
+      "breathing": 7
+    },
+    "mood": "okay",
+    "narrative": "Hugo keeps resting calm in the cool air. His voice sounds a little croaky. He looks comfortable and cozy.",
+    "teaching": "Cool calm air soothes — medicine does the real fixing.",
+    "animation_cue": "worried",
+    "memory": "First visit: barky. Tried \"Steroid dose from the doctor\" → hoarse. Tried \"Calm rest in cool night air\" → hoarse."
+  },
+  {
+    "id": "e94d21ff-9590-4295-b08d-9f3534ec061b",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 7,
+      "comfort": 7,
+      "breathing": 7
+    },
+    "mood": "droopy",
+    "narrative": "Hugo keeps swallowing leftover antibiotics. The seal-bark cough keeps coming at night. He looks droopy and cozy.",
+    "teaching": "Antibiotics cannot touch the croup virus.",
+    "animation_cue": "sick",
+    "memory": "First visit: barky. Tried \"Steroid dose from the doctor\" → hoarse. Tried \"Give leftover antibiotics\" → barky."
+  },
+  {
+    "id": "7c43bac8-3f6b-4f3a-b5e0-ae42b35a1431",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 7,
+      "comfort": 8,
+      "breathing": 7
+    },
+    "mood": "perky",
+    "narrative": "Hugo starts to lean over the boiling steam pot, but a helper gently stops him. His voice sounds a little croaky. He does not get worse.",
+    "teaching": "Boiling steam scalds instead of soothing.",
+    "animation_cue": "worried",
+    "memory": "First visit: barky. Tried \"Steroid dose from the doctor\" → hoarse. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "167d9d58-ced4-4e11-90d6-a820527d9ae2",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 7,
+      "comfort": 9,
+      "breathing": 7
+    },
+    "mood": "perky",
+    "narrative": "Hugo keeps taking the steroid dose on schedule. His voice sounds a little croaky. He looks perky and cozy.",
+    "teaching": "One steroid dose melts swollen airways open.",
+    "animation_cue": "recovery",
+    "memory": "First visit: barky. Tried \"Calm rest in cool night air\" → barky. Tried \"Steroid dose from the doctor\" → hoarse."
+  },
+  {
+    "id": "0d265cfb-66b3-4c9f-ab66-9be3e2dacde4",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hugo keeps resting calm in the cool air. The seal-bark cough keeps coming at night. He looks droopy and cozy.",
+    "teaching": "Cool calm air soothes — medicine does the real fixing.",
+    "animation_cue": "worried",
+    "memory": "First visit: barky. Tried \"Calm rest in cool night air\" → barky. Tried \"Calm rest in cool night air\" → barky."
+  },
+  {
+    "id": "91bd0a23-54de-46d1-8e6f-13a3d1bc4aff",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hugo keeps swallowing leftover antibiotics. Each breath in rasps and costs him. He looks droopy and cozy.",
+    "teaching": "Antibiotics cannot touch the croup virus.",
+    "animation_cue": "sick",
+    "memory": "First visit: barky. Tried \"Calm rest in cool night air\" → barky. Tried \"Give leftover antibiotics\" → struggling."
+  },
+  {
+    "id": "d273ccd3-ded2-4de4-9753-d8b09005f59c",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hugo starts to lean over the boiling steam pot, but a helper gently stops him. The seal-bark cough keeps coming at night. He does not get worse.",
+    "teaching": "Boiling steam scalds instead of soothing.",
+    "animation_cue": "worried",
+    "memory": "First visit: barky. Tried \"Calm rest in cool night air\" → barky. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "b67fe0f1-7727-4e55-8d1c-9345f9051c7d",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 7,
+      "comfort": 7,
+      "breathing": 7
+    },
+    "mood": "perky",
+    "narrative": "Hugo keeps taking the steroid dose on schedule. The seal-bark cough keeps coming at night. He looks perky and cozy.",
+    "teaching": "One steroid dose melts swollen airways open.",
+    "animation_cue": "recovery",
+    "memory": "First visit: barky. Tried \"Give leftover antibiotics\" → struggling. Tried \"Steroid dose from the doctor\" → barky."
+  },
+  {
+    "id": "2ad1ef9a-3a9c-419e-91c1-7a7545596b7d",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hugo keeps resting calm in the cool air. Each breath in rasps and costs him. He looks droopy and cozy.",
+    "teaching": "Cool calm air soothes — medicine does the real fixing.",
+    "animation_cue": "worried",
+    "memory": "First visit: barky. Tried \"Give leftover antibiotics\" → struggling. Tried \"Calm rest in cool night air\" → struggling."
+  },
+  {
+    "id": "5b44fc5e-5e9a-43bb-96ae-b16c924abb27",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hugo keeps swallowing leftover antibiotics. Each breath in rasps and costs him. He looks droopy and cozy.",
+    "teaching": "Antibiotics cannot touch the croup virus.",
+    "animation_cue": "worried",
+    "memory": "First visit: barky. Tried \"Give leftover antibiotics\" → struggling. Tried \"Give leftover antibiotics\" → struggling."
+  },
+  {
+    "id": "c6678f00-fd2c-46e7-b8fc-90e560b79d61",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Hugo starts to lean over the boiling steam pot, but a helper gently stops him. Each breath in rasps and costs him. He does not get worse.",
+    "teaching": "Boiling steam scalds instead of soothing.",
+    "animation_cue": "worried",
+    "memory": "First visit: barky. Tried \"Give leftover antibiotics\" → struggling. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "f2d05a05-9743-4154-b8e5-f7591b3f50b9",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ivy pushes her snack away untouched. Mouth sores sting and spots dot her palms. The cozy clinic feels calm around her.",
+    "teaching": "Mouth sores plus palm and sole spots spell hand-foot-mouth.",
+    "animation_cue": "idle",
+    "memory": "First visit: ouchy."
+  },
+  {
+    "id": "adcf21de-cb47-423d-8846-43b5b0496a98",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Ivy sips cool drinks with gentle pain relief. Her mouth feels a little ouchy. She looks perky and rests softly in the cozy room.",
+    "teaching": "Cool sips and pain relief soothe till the virus fades.",
+    "animation_cue": "recovery",
+    "memory": "First visit: ouchy. Tried \"Cool sips + gentle pain relief\" → picky."
+  },
+  {
+    "id": "4dac56ce-2147-4919-929a-4643721c0b0d",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ivy rests quietly in bed all day. Mouth sores sting and she will not eat. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Rest helps, but the sore mouth still needs soothing.",
+    "animation_cue": "worried",
+    "memory": "First visit: ouchy. Tried \"Quiet bed rest all day\" → ouchy."
+  },
+  {
+    "id": "84e3e066-d1bc-4789-8395-262b2b86d3b9",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ivy drinks the antibiotic syrup. Fever grips her and everything hurts. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Antibiotics cannot help a virus-caused rash.",
+    "animation_cue": "sick",
+    "memory": "First visit: ouchy. Tried \"Antibiotic syrup\" → miserable."
+  },
+  {
+    "id": "c8bf1284-ae7c-4894-8645-1825fffd88ef",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ivy starts to pop the ouchy blisters, but a helper gently stops her. Mouth sores sting and she will not eat. She does not get worse.",
+    "teaching": "Popped blisters invite germs in.",
+    "animation_cue": "worried",
+    "memory": "First visit: ouchy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "a7420cb2-6189-4bea-9f45-4b498cdb8636",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Ivy keeps sipping cool drinks. Her mouth feels comfy and she munches happily. She looks perky and cozy.",
+    "teaching": "Cool sips and pain relief soothe till the virus fades.",
+    "animation_cue": "happy",
+    "memory": "First visit: ouchy. Tried \"Cool sips + gentle pain relief\" → picky. Tried \"Cool sips + gentle pain relief\" → munching."
+  },
+  {
+    "id": "4535816b-bc6b-4e73-8378-2092aaa8fe0c",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Ivy keeps resting quietly in bed. Her mouth feels a little ouchy. She looks comfortable and cozy.",
+    "teaching": "Rest helps, but the sore mouth still needs soothing.",
+    "animation_cue": "worried",
+    "memory": "First visit: ouchy. Tried \"Cool sips + gentle pain relief\" → picky. Tried \"Quiet bed rest all day\" → picky."
+  },
+  {
+    "id": "eb4f393c-3092-4de3-8629-ca106859394d",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ivy keeps drinking antibiotic syrup. Mouth sores sting and she will not eat. She looks droopy and cozy.",
+    "teaching": "Antibiotics cannot help a virus-caused rash.",
+    "animation_cue": "sick",
+    "memory": "First visit: ouchy. Tried \"Cool sips + gentle pain relief\" → picky. Tried \"Antibiotic syrup\" → ouchy."
+  },
+  {
+    "id": "2e42c27d-1319-4cc0-9834-4add9e9fbf92",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Ivy starts to pop the ouchy blisters, but a helper gently stops her. Her mouth feels a little ouchy. She does not get worse.",
+    "teaching": "Popped blisters invite germs in.",
+    "animation_cue": "worried",
+    "memory": "First visit: ouchy. Tried \"Cool sips + gentle pain relief\" → picky. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "9a9bdbaf-75b0-4c68-8702-dd5470a3ce55",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Ivy keeps sipping cool drinks. Her mouth feels a little ouchy. She looks perky and cozy.",
+    "teaching": "Cool sips and pain relief soothe till the virus fades.",
+    "animation_cue": "recovery",
+    "memory": "First visit: ouchy. Tried \"Quiet bed rest all day\" → ouchy. Tried \"Cool sips + gentle pain relief\" → picky."
+  },
+  {
+    "id": "7930f7f9-0e8e-455b-b2b1-4444e39b5c81",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ivy keeps resting quietly in bed. Mouth sores sting and she will not eat. She looks droopy and cozy.",
+    "teaching": "Rest helps, but the sore mouth still needs soothing.",
+    "animation_cue": "worried",
+    "memory": "First visit: ouchy. Tried \"Quiet bed rest all day\" → ouchy. Tried \"Quiet bed rest all day\" → ouchy."
+  },
+  {
+    "id": "dacd22f2-2617-4e7f-b9b2-e36ff085ca33",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ivy keeps drinking antibiotic syrup. Fever grips her and everything hurts. She looks droopy and cozy.",
+    "teaching": "Antibiotics cannot help a virus-caused rash.",
+    "animation_cue": "sick",
+    "memory": "First visit: ouchy. Tried \"Quiet bed rest all day\" → ouchy. Tried \"Antibiotic syrup\" → miserable."
+  },
+  {
+    "id": "a0e37aad-512a-4b69-8b99-6a2970562f6e",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ivy starts to pop the ouchy blisters, but a helper gently stops her. Mouth sores sting and she will not eat. She does not get worse.",
+    "teaching": "Popped blisters invite germs in.",
+    "animation_cue": "worried",
+    "memory": "First visit: ouchy. Tried \"Quiet bed rest all day\" → ouchy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "f14529f7-2c7b-40d1-a766-23cc3660a2ea",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Ivy keeps sipping cool drinks. Mouth sores sting and she will not eat. She looks perky and cozy.",
+    "teaching": "Cool sips and pain relief soothe till the virus fades.",
+    "animation_cue": "recovery",
+    "memory": "First visit: ouchy. Tried \"Antibiotic syrup\" → miserable. Tried \"Cool sips + gentle pain relief\" → ouchy."
+  },
+  {
+    "id": "24113db0-facf-4e8a-ae74-6e1a314ffebf",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ivy keeps resting quietly in bed. Fever grips her and everything hurts. She looks droopy and cozy.",
+    "teaching": "Rest helps, but the sore mouth still needs soothing.",
+    "animation_cue": "worried",
+    "memory": "First visit: ouchy. Tried \"Antibiotic syrup\" → miserable. Tried \"Quiet bed rest all day\" → miserable."
+  },
+  {
+    "id": "1eca64e9-a88c-4bc8-ba24-62970b3acb1b",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ivy keeps drinking antibiotic syrup. Fever grips her and everything hurts. She looks droopy and cozy.",
+    "teaching": "Antibiotics cannot help a virus-caused rash.",
+    "animation_cue": "worried",
+    "memory": "First visit: ouchy. Tried \"Antibiotic syrup\" → miserable. Tried \"Antibiotic syrup\" → miserable."
+  },
+  {
+    "id": "093d4a9d-d261-4465-bf8d-db3e8d9472f9",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ivy starts to pop the ouchy blisters, but a helper gently stops her. Fever grips her and everything hurts. She does not get worse.",
+    "teaching": "Popped blisters invite germs in.",
+    "animation_cue": "worried",
+    "memory": "First visit: ouchy. Tried \"Antibiotic syrup\" → miserable. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "48154f1b-4995-49ad-884b-d7d00d46bb00",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Leo shows the round rash on his arm. The red ring keeps growing past the old tick bite. The cozy clinic feels calm around him.",
+    "teaching": "A growing bullseye after a tick bite means Lyme.",
+    "animation_cue": "idle",
+    "memory": "First visit: bullseye."
+  },
+  {
+    "id": "341e826f-7167-489c-8072-f9e341615822",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Leo starts the full antibiotic course. A small red spot sits at the old bite. He looks perky and rests softly in the cozy room.",
+    "teaching": "Every finished dose hunts the tick germ down.",
+    "animation_cue": "recovery",
+    "memory": "First visit: bullseye. Tried \"Finish the full antibiotic course\" → spotty."
+  },
+  {
+    "id": "19c47980-07fb-446a-9565-9364c9bdd492",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Leo pulls the tick and cleans the bite. The red bullseye ring keeps growing. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Tick pulling was right — the rash still needs medicine.",
+    "animation_cue": "worried",
+    "memory": "First visit: bullseye. Tried \"Pull the tick + clean the bite\" → bullseye."
+  },
+  {
+    "id": "d05121df-1f8e-47c2-a87c-5e28a6a32e18",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Leo rubs steroid cream on the rash. Fever and aches wear him down. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Cream cannot reach a germ riding the bloodstream.",
+    "animation_cue": "sick",
+    "memory": "First visit: bullseye. Tried \"Steroid cream on the rash\" → worn-out."
+  },
+  {
+    "id": "35f2b367-028f-4572-9cfc-0ab6b3408c56",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Leo starts to burn the tick off with a match, but a helper gently stops him. The red bullseye ring keeps growing. He does not get worse.",
+    "teaching": "Burning a tick drives germs deeper.",
+    "animation_cue": "worried",
+    "memory": "First visit: bullseye. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "e3634041-6384-44bd-9ea1-38259b8edfb4",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Leo keeps finishing every antibiotic dose. The rash is gone and he roams free. He looks perky and cozy.",
+    "teaching": "Every finished dose hunts the tick germ down.",
+    "animation_cue": "happy",
+    "memory": "First visit: bullseye. Tried \"Finish the full antibiotic course\" → spotty. Tried \"Finish the full antibiotic course\" → exploring."
+  },
+  {
+    "id": "d9b5ddfb-633e-4ca1-b1e1-d9063ed376b8",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Leo keeps tending the clean bite. A small red spot sits at the old bite. He looks comfortable and cozy.",
+    "teaching": "Tick pulling was right — the rash still needs medicine.",
+    "animation_cue": "worried",
+    "memory": "First visit: bullseye. Tried \"Finish the full antibiotic course\" → spotty. Tried \"Pull the tick + clean the bite\" → spotty."
+  },
+  {
+    "id": "2b70bdfc-13ae-496f-b869-b27fd5262383",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Leo keeps rubbing steroid cream on the rash. The red bullseye ring keeps growing. He looks droopy and cozy.",
+    "teaching": "Cream cannot reach a germ riding the bloodstream.",
+    "animation_cue": "sick",
+    "memory": "First visit: bullseye. Tried \"Finish the full antibiotic course\" → spotty. Tried \"Steroid cream on the rash\" → bullseye."
+  },
+  {
+    "id": "8cc04c2f-8f7a-4e9b-a9c5-e7c45f21dff0",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Leo starts to burn the tick off with a match, but a helper gently stops him. A small red spot sits at the old bite. He does not get worse.",
+    "teaching": "Burning a tick drives germs deeper.",
+    "animation_cue": "worried",
+    "memory": "First visit: bullseye. Tried \"Finish the full antibiotic course\" → spotty. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "fcc92e6b-3f48-4600-9a5c-5b03c96b698d",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Leo keeps finishing every antibiotic dose. A small red spot sits at the old bite. He looks perky and cozy.",
+    "teaching": "Every finished dose hunts the tick germ down.",
+    "animation_cue": "recovery",
+    "memory": "First visit: bullseye. Tried \"Pull the tick + clean the bite\" → bullseye. Tried \"Finish the full antibiotic course\" → spotty."
+  },
+  {
+    "id": "4603c798-2f46-454b-9aa5-aac00666c20c",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Leo keeps tending the clean bite. The red bullseye ring keeps growing. He looks droopy and cozy.",
+    "teaching": "Tick pulling was right — the rash still needs medicine.",
+    "animation_cue": "worried",
+    "memory": "First visit: bullseye. Tried \"Pull the tick + clean the bite\" → bullseye. Tried \"Pull the tick + clean the bite\" → bullseye."
+  },
+  {
+    "id": "5e07e168-5cf8-4fbe-99ff-20ed97d6ce66",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Leo keeps rubbing steroid cream on the rash. Fever and aches wear him down. He looks droopy and cozy.",
+    "teaching": "Cream cannot reach a germ riding the bloodstream.",
+    "animation_cue": "sick",
+    "memory": "First visit: bullseye. Tried \"Pull the tick + clean the bite\" → bullseye. Tried \"Steroid cream on the rash\" → worn-out."
+  },
+  {
+    "id": "224515b5-e031-4e0b-90a7-8805722f9d62",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Leo starts to burn the tick off with a match, but a helper gently stops him. The red bullseye ring keeps growing. He does not get worse.",
+    "teaching": "Burning a tick drives germs deeper.",
+    "animation_cue": "worried",
+    "memory": "First visit: bullseye. Tried \"Pull the tick + clean the bite\" → bullseye. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "561b371a-e672-476c-8c36-26f6f1ad23ed",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Leo keeps finishing every antibiotic dose. The red bullseye ring keeps growing. He looks perky and cozy.",
+    "teaching": "Every finished dose hunts the tick germ down.",
+    "animation_cue": "recovery",
+    "memory": "First visit: bullseye. Tried \"Steroid cream on the rash\" → worn-out. Tried \"Finish the full antibiotic course\" → bullseye."
+  },
+  {
+    "id": "1ddba45e-b47d-42a0-8fbf-cedab2243e4e",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Leo keeps tending the clean bite. Fever and aches wear him down. He looks droopy and cozy.",
+    "teaching": "Tick pulling was right — the rash still needs medicine.",
+    "animation_cue": "worried",
+    "memory": "First visit: bullseye. Tried \"Steroid cream on the rash\" → worn-out. Tried \"Pull the tick + clean the bite\" → worn-out."
+  },
+  {
+    "id": "7ad0202f-0747-484f-b7c5-f6c9c5ffa2a9",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Leo keeps rubbing steroid cream on the rash. Fever and aches wear him down. He looks droopy and cozy.",
+    "teaching": "Cream cannot reach a germ riding the bloodstream.",
+    "animation_cue": "worried",
+    "memory": "First visit: bullseye. Tried \"Steroid cream on the rash\" → worn-out. Tried \"Steroid cream on the rash\" → worn-out."
+  },
+  {
+    "id": "4fee788b-17df-44a3-9ac9-09139f676d00",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Leo starts to burn the tick off with a match, but a helper gently stops him. Fever and aches wear him down. He does not get worse.",
+    "teaching": "Burning a tick drives germs deeper.",
+    "animation_cue": "worried",
+    "memory": "First visit: bullseye. Tried \"Steroid cream on the rash\" → worn-out. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "02c1c484-2a86-4900-bdf2-2d01d034a65e",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ruby curls around her sore belly. The ache moved from her navel to the lower right. The cozy clinic feels calm around her.",
+    "teaching": "Belly pain that moves to the lower right means the appendix.",
+    "animation_cue": "idle",
+    "memory": "First visit: guarding."
+  },
+  {
+    "id": "827f6ddb-8415-4f8c-84ec-b9fcfe084c35",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Ruby visits the hospital surgeon right away. Her belly feels a little twingey. She looks perky and rests softly in the cozy room.",
+    "teaching": "A sore appendix needs a fast surgeon visit.",
+    "animation_cue": "recovery",
+    "memory": "First visit: guarding. Tried \"Hospital surgeon visit, now\" → twingey."
+  },
+  {
+    "id": "7c09db31-c2ff-4ca3-a416-0137d9a9ea73",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ruby lies very still with nothing to eat. Her lower-right belly aches and food disgusts her. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Still and empty-tummied is right — the surgeon still must come.",
+    "animation_cue": "worried",
+    "memory": "First visit: guarding. Tried \"Lie still, nothing to eat\" → guarding."
+  },
+  {
+    "id": "0af98a88-e68c-4cae-a663-2e09b3c38bfa",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ruby takes painkillers and waits it out. Her belly guards rigid and sore. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Painkillers hide a bursting appendix.",
+    "animation_cue": "sick",
+    "memory": "First visit: guarding. Tried \"Painkillers and wait a week\" → rigid."
+  },
+  {
+    "id": "479a8b59-3c35-47b2-89f7-7f99d17f1eca",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ruby starts to drink the laxative to flush it out, but a helper gently stops her. Her lower-right belly aches and food disgusts her. She does not get worse.",
+    "teaching": "Laxatives can burst a sore appendix.",
+    "animation_cue": "worried",
+    "memory": "First visit: guarding. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "5630ff91-df52-4b0c-9eb1-a123463e52b7",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Ruby keeps seeing the surgeon team. Her belly feels comfy and calm. She looks perky and cozy.",
+    "teaching": "A sore appendix needs a fast surgeon visit.",
+    "animation_cue": "happy",
+    "memory": "First visit: guarding. Tried \"Hospital surgeon visit, now\" → twingey. Tried \"Hospital surgeon visit, now\" → picnic."
+  },
+  {
+    "id": "7ca1c767-a047-4c3b-9c10-0fd7547572d4",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Ruby keeps lying still with an empty tummy. Her belly feels a little twingey. She looks comfortable and cozy.",
+    "teaching": "Still and empty-tummied is right — the surgeon still must come.",
+    "animation_cue": "worried",
+    "memory": "First visit: guarding. Tried \"Hospital surgeon visit, now\" → twingey. Tried \"Lie still, nothing to eat\" → twingey."
+  },
+  {
+    "id": "3bd32b50-e172-49fc-ae31-15525507f3a5",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ruby keeps masking the pain and waiting. Her lower-right belly aches and food disgusts her. She looks droopy and cozy.",
+    "teaching": "Painkillers hide a bursting appendix.",
+    "animation_cue": "sick",
+    "memory": "First visit: guarding. Tried \"Hospital surgeon visit, now\" → twingey. Tried \"Painkillers and wait a week\" → guarding."
+  },
+  {
+    "id": "5cf3568e-ba4a-4896-8ab3-0a1c2881871f",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Ruby starts to drink the laxative to flush it out, but a helper gently stops her. Her belly feels a little twingey. She does not get worse.",
+    "teaching": "Laxatives can burst a sore appendix.",
+    "animation_cue": "worried",
+    "memory": "First visit: guarding. Tried \"Hospital surgeon visit, now\" → twingey. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "64b4d657-39c8-4076-ac17-8632f0c3cdbe",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Ruby keeps seeing the surgeon team. Her belly feels a little twingey. She looks perky and cozy.",
+    "teaching": "A sore appendix needs a fast surgeon visit.",
+    "animation_cue": "recovery",
+    "memory": "First visit: guarding. Tried \"Lie still, nothing to eat\" → guarding. Tried \"Hospital surgeon visit, now\" → twingey."
+  },
+  {
+    "id": "1951d6d9-23f4-4b94-aee5-7cfbdb983b67",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ruby keeps lying still with an empty tummy. Her lower-right belly aches and food disgusts her. She looks droopy and cozy.",
+    "teaching": "Still and empty-tummied is right — the surgeon still must come.",
+    "animation_cue": "worried",
+    "memory": "First visit: guarding. Tried \"Lie still, nothing to eat\" → guarding. Tried \"Lie still, nothing to eat\" → guarding."
+  },
+  {
+    "id": "ad905f0f-f0ba-403d-bb8d-8040baa113b4",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ruby keeps masking the pain and waiting. Her belly guards rigid and sore. She looks droopy and cozy.",
+    "teaching": "Painkillers hide a bursting appendix.",
+    "animation_cue": "sick",
+    "memory": "First visit: guarding. Tried \"Lie still, nothing to eat\" → guarding. Tried \"Painkillers and wait a week\" → rigid."
+  },
+  {
+    "id": "edf6444c-b7ab-489a-a77a-2d054e7e8f41",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ruby starts to drink the laxative to flush it out, but a helper gently stops her. Her lower-right belly aches and food disgusts her. She does not get worse.",
+    "teaching": "Laxatives can burst a sore appendix.",
+    "animation_cue": "worried",
+    "memory": "First visit: guarding. Tried \"Lie still, nothing to eat\" → guarding. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "e70d4cf6-240b-410a-ac63-accdb2aff8fa",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Ruby keeps seeing the surgeon team. Her lower-right belly aches and food disgusts her. She looks perky and cozy.",
+    "teaching": "A sore appendix needs a fast surgeon visit.",
+    "animation_cue": "recovery",
+    "memory": "First visit: guarding. Tried \"Painkillers and wait a week\" → rigid. Tried \"Hospital surgeon visit, now\" → guarding."
+  },
+  {
+    "id": "a4fe29a9-e138-479e-838a-4ac8f5bc2495",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ruby keeps lying still with an empty tummy. Her belly guards rigid and sore. She looks droopy and cozy.",
+    "teaching": "Still and empty-tummied is right — the surgeon still must come.",
+    "animation_cue": "worried",
+    "memory": "First visit: guarding. Tried \"Painkillers and wait a week\" → rigid. Tried \"Lie still, nothing to eat\" → rigid."
+  },
+  {
+    "id": "8cd995cd-2ec3-499a-9a54-8af4cc2933b0",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ruby keeps masking the pain and waiting. Her belly guards rigid and sore. She looks droopy and cozy.",
+    "teaching": "Painkillers hide a bursting appendix.",
+    "animation_cue": "worried",
+    "memory": "First visit: guarding. Tried \"Painkillers and wait a week\" → rigid. Tried \"Painkillers and wait a week\" → rigid."
+  },
+  {
+    "id": "0eb384af-07c1-46a9-9e8e-ac2cae803bb7",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Ruby starts to drink the laxative to flush it out, but a helper gently stops her. Her belly guards rigid and sore. She does not get worse.",
+    "teaching": "Laxatives can burst a sore appendix.",
+    "animation_cue": "worried",
+    "memory": "First visit: guarding. Tried \"Painkillers and wait a week\" → rigid. A risky idea came up; we steered clear."
   }
 ];
 
@@ -6976,6 +8116,582 @@ export const FALLBACK_EDGES: FallbackEdge[] = [
     "kind": "decision",
     "choice_label": "Sprint a race to clear lungs",
     "grade": "DANGEROUS"
+  },
+  {
+    "id": "10c815e5-9fac-46b6-a6c5-f797d3951e0c",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "from_node_id": "9a5880fc-3a8a-4699-948e-18545cf443e7",
+    "to_node_id": "6c0f2c66-47c8-4b7d-a696-7744b1b4c20a",
+    "kind": "decision",
+    "choice_label": "Steroid dose from the doctor",
+    "grade": "BEST"
+  },
+  {
+    "id": "0769621f-1cc7-43de-99cf-8d9ff26bc6b1",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "from_node_id": "9a5880fc-3a8a-4699-948e-18545cf443e7",
+    "to_node_id": "9f35d7c3-51b6-4cde-8d41-6c476fb08416",
+    "kind": "decision",
+    "choice_label": "Calm rest in cool night air",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "12c3f520-7c69-4d92-9ed5-844d9e68c5e3",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "from_node_id": "9a5880fc-3a8a-4699-948e-18545cf443e7",
+    "to_node_id": "ac17a7ea-b0e8-4e07-8e0a-e8380899aa37",
+    "kind": "decision",
+    "choice_label": "Give leftover antibiotics",
+    "grade": "WRONG"
+  },
+  {
+    "id": "44ca65f9-f12a-46ca-8d88-3b6f668cf4a0",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "from_node_id": "9a5880fc-3a8a-4699-948e-18545cf443e7",
+    "to_node_id": "1be50a33-b942-46ee-91f5-dba129a6c751",
+    "kind": "decision",
+    "choice_label": "Lean over boiling steam",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "ff73a7f4-93eb-4017-92e1-70415e4dc4a1",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "from_node_id": "6c0f2c66-47c8-4b7d-a696-7744b1b4c20a",
+    "to_node_id": "d2f316fb-6536-40b1-a1bc-4114f22bb668",
+    "kind": "decision",
+    "choice_label": "Steroid dose from the doctor",
+    "grade": "BEST"
+  },
+  {
+    "id": "2c617f45-136d-48a9-ae7f-602d6d2ab60f",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "from_node_id": "6c0f2c66-47c8-4b7d-a696-7744b1b4c20a",
+    "to_node_id": "fe5c841b-685d-4589-9582-b174f1ae8e38",
+    "kind": "decision",
+    "choice_label": "Calm rest in cool night air",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "03cec13e-c8e1-4527-9a93-ed8093ba23ed",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "from_node_id": "6c0f2c66-47c8-4b7d-a696-7744b1b4c20a",
+    "to_node_id": "e94d21ff-9590-4295-b08d-9f3534ec061b",
+    "kind": "decision",
+    "choice_label": "Give leftover antibiotics",
+    "grade": "WRONG"
+  },
+  {
+    "id": "569efb15-1718-4b5c-88e4-1a22207bb52b",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "from_node_id": "6c0f2c66-47c8-4b7d-a696-7744b1b4c20a",
+    "to_node_id": "7c43bac8-3f6b-4f3a-b5e0-ae42b35a1431",
+    "kind": "decision",
+    "choice_label": "Lean over boiling steam",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "bf163565-3005-49bb-bd2c-119115e767fb",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "from_node_id": "9f35d7c3-51b6-4cde-8d41-6c476fb08416",
+    "to_node_id": "167d9d58-ced4-4e11-90d6-a820527d9ae2",
+    "kind": "decision",
+    "choice_label": "Steroid dose from the doctor",
+    "grade": "BEST"
+  },
+  {
+    "id": "a4ccf284-2b90-4a41-817a-7f6ffe32a705",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "from_node_id": "9f35d7c3-51b6-4cde-8d41-6c476fb08416",
+    "to_node_id": "0d265cfb-66b3-4c9f-ab66-9be3e2dacde4",
+    "kind": "decision",
+    "choice_label": "Calm rest in cool night air",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "0f938c63-3891-4c2a-8819-08b52ca1f1e1",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "from_node_id": "9f35d7c3-51b6-4cde-8d41-6c476fb08416",
+    "to_node_id": "91bd0a23-54de-46d1-8e6f-13a3d1bc4aff",
+    "kind": "decision",
+    "choice_label": "Give leftover antibiotics",
+    "grade": "WRONG"
+  },
+  {
+    "id": "13ede0b6-cc0e-495b-bbe5-2d01c34739bf",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "from_node_id": "9f35d7c3-51b6-4cde-8d41-6c476fb08416",
+    "to_node_id": "d273ccd3-ded2-4de4-9753-d8b09005f59c",
+    "kind": "decision",
+    "choice_label": "Lean over boiling steam",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "01623554-e2eb-4755-ba82-cedbf4e0e12c",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "from_node_id": "ac17a7ea-b0e8-4e07-8e0a-e8380899aa37",
+    "to_node_id": "b67fe0f1-7727-4e55-8d1c-9345f9051c7d",
+    "kind": "decision",
+    "choice_label": "Steroid dose from the doctor",
+    "grade": "BEST"
+  },
+  {
+    "id": "7db12081-6428-446d-b6d0-aa1f95a6aa29",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "from_node_id": "ac17a7ea-b0e8-4e07-8e0a-e8380899aa37",
+    "to_node_id": "2ad1ef9a-3a9c-419e-91c1-7a7545596b7d",
+    "kind": "decision",
+    "choice_label": "Calm rest in cool night air",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "dcd9afe6-5ddd-4542-ac12-5579e2e343b6",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "from_node_id": "ac17a7ea-b0e8-4e07-8e0a-e8380899aa37",
+    "to_node_id": "5b44fc5e-5e9a-43bb-96ae-b16c924abb27",
+    "kind": "decision",
+    "choice_label": "Give leftover antibiotics",
+    "grade": "WRONG"
+  },
+  {
+    "id": "fc1ada72-63e3-4ad8-84e4-a05615af7540",
+    "patient_id": "a7ac7cf2-a6c5-407f-aab8-cd5fb085bcd5",
+    "from_node_id": "ac17a7ea-b0e8-4e07-8e0a-e8380899aa37",
+    "to_node_id": "c6678f00-fd2c-46e7-b8fc-90e560b79d61",
+    "kind": "decision",
+    "choice_label": "Lean over boiling steam",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "9d24d25f-84a7-48be-9239-dc1cb76c37f5",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "from_node_id": "f2d05a05-9743-4154-b8e5-f7591b3f50b9",
+    "to_node_id": "adcf21de-cb47-423d-8846-43b5b0496a98",
+    "kind": "decision",
+    "choice_label": "Cool sips + gentle pain relief",
+    "grade": "BEST"
+  },
+  {
+    "id": "eba4c273-bbfe-4e5c-9b88-f4e30a4730e2",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "from_node_id": "f2d05a05-9743-4154-b8e5-f7591b3f50b9",
+    "to_node_id": "4dac56ce-2147-4919-929a-4643721c0b0d",
+    "kind": "decision",
+    "choice_label": "Quiet bed rest all day",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "7e3e93cc-3ba7-4a3b-8fdc-b65ed511987b",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "from_node_id": "f2d05a05-9743-4154-b8e5-f7591b3f50b9",
+    "to_node_id": "84e3e066-d1bc-4789-8395-262b2b86d3b9",
+    "kind": "decision",
+    "choice_label": "Antibiotic syrup",
+    "grade": "WRONG"
+  },
+  {
+    "id": "800a7fe4-470c-4686-8680-778a1a5e8a6e",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "from_node_id": "f2d05a05-9743-4154-b8e5-f7591b3f50b9",
+    "to_node_id": "c8bf1284-ae7c-4894-8645-1825fffd88ef",
+    "kind": "decision",
+    "choice_label": "Pop the blisters",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "e74cb266-a15c-4aa4-910b-a1c27041284a",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "from_node_id": "adcf21de-cb47-423d-8846-43b5b0496a98",
+    "to_node_id": "a7420cb2-6189-4bea-9f45-4b498cdb8636",
+    "kind": "decision",
+    "choice_label": "Cool sips + gentle pain relief",
+    "grade": "BEST"
+  },
+  {
+    "id": "c00e922e-517e-460f-af94-f7d85ac9389d",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "from_node_id": "adcf21de-cb47-423d-8846-43b5b0496a98",
+    "to_node_id": "4535816b-bc6b-4e73-8378-2092aaa8fe0c",
+    "kind": "decision",
+    "choice_label": "Quiet bed rest all day",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "4c95ab8a-0c89-4406-be87-5e5c74a853fb",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "from_node_id": "adcf21de-cb47-423d-8846-43b5b0496a98",
+    "to_node_id": "eb4f393c-3092-4de3-8629-ca106859394d",
+    "kind": "decision",
+    "choice_label": "Antibiotic syrup",
+    "grade": "WRONG"
+  },
+  {
+    "id": "a74749bf-8e45-4901-b5ec-c6ea8b4d7f0f",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "from_node_id": "adcf21de-cb47-423d-8846-43b5b0496a98",
+    "to_node_id": "2e42c27d-1319-4cc0-9834-4add9e9fbf92",
+    "kind": "decision",
+    "choice_label": "Pop the blisters",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "eb505345-82ea-4a78-b220-c98ab6e1ba51",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "from_node_id": "4dac56ce-2147-4919-929a-4643721c0b0d",
+    "to_node_id": "9a9bdbaf-75b0-4c68-8702-dd5470a3ce55",
+    "kind": "decision",
+    "choice_label": "Cool sips + gentle pain relief",
+    "grade": "BEST"
+  },
+  {
+    "id": "4285f020-6203-4255-9c5f-31b7fbade5b7",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "from_node_id": "4dac56ce-2147-4919-929a-4643721c0b0d",
+    "to_node_id": "7930f7f9-0e8e-455b-b2b1-4444e39b5c81",
+    "kind": "decision",
+    "choice_label": "Quiet bed rest all day",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "945ee878-35df-49ae-9ed1-31ec660903bd",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "from_node_id": "4dac56ce-2147-4919-929a-4643721c0b0d",
+    "to_node_id": "dacd22f2-2617-4e7f-b9b2-e36ff085ca33",
+    "kind": "decision",
+    "choice_label": "Antibiotic syrup",
+    "grade": "WRONG"
+  },
+  {
+    "id": "959bfc49-8cc5-4a86-82ad-3ceae524e82b",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "from_node_id": "4dac56ce-2147-4919-929a-4643721c0b0d",
+    "to_node_id": "a0e37aad-512a-4b69-8b99-6a2970562f6e",
+    "kind": "decision",
+    "choice_label": "Pop the blisters",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "7097730c-4e27-4a4c-82f3-6b32c09686fa",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "from_node_id": "84e3e066-d1bc-4789-8395-262b2b86d3b9",
+    "to_node_id": "f14529f7-2c7b-40d1-a766-23cc3660a2ea",
+    "kind": "decision",
+    "choice_label": "Cool sips + gentle pain relief",
+    "grade": "BEST"
+  },
+  {
+    "id": "35d80719-0ec2-4856-94a6-18dcbcda2ead",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "from_node_id": "84e3e066-d1bc-4789-8395-262b2b86d3b9",
+    "to_node_id": "24113db0-facf-4e8a-ae74-6e1a314ffebf",
+    "kind": "decision",
+    "choice_label": "Quiet bed rest all day",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "fb8a1e9e-c6de-4f38-aa49-5f56b206fa6e",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "from_node_id": "84e3e066-d1bc-4789-8395-262b2b86d3b9",
+    "to_node_id": "1eca64e9-a88c-4bc8-ba24-62970b3acb1b",
+    "kind": "decision",
+    "choice_label": "Antibiotic syrup",
+    "grade": "WRONG"
+  },
+  {
+    "id": "705c6089-25fc-482e-ae83-635efc48cd3c",
+    "patient_id": "a01bc9f5-df58-40cc-a594-43d0133557dd",
+    "from_node_id": "84e3e066-d1bc-4789-8395-262b2b86d3b9",
+    "to_node_id": "093d4a9d-d261-4465-bf8d-db3e8d9472f9",
+    "kind": "decision",
+    "choice_label": "Pop the blisters",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "39047a19-6afe-4977-97e8-373a3421ce8e",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "from_node_id": "48154f1b-4995-49ad-884b-d7d00d46bb00",
+    "to_node_id": "341e826f-7167-489c-8072-f9e341615822",
+    "kind": "decision",
+    "choice_label": "Finish the full antibiotic course",
+    "grade": "BEST"
+  },
+  {
+    "id": "77a5cca7-519a-4c7f-9330-5bbe6997028c",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "from_node_id": "48154f1b-4995-49ad-884b-d7d00d46bb00",
+    "to_node_id": "19c47980-07fb-446a-9565-9364c9bdd492",
+    "kind": "decision",
+    "choice_label": "Pull the tick + clean the bite",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "b41fb9e3-3e6b-4583-8c82-d0f9e595da08",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "from_node_id": "48154f1b-4995-49ad-884b-d7d00d46bb00",
+    "to_node_id": "d05121df-1f8e-47c2-a87c-5e28a6a32e18",
+    "kind": "decision",
+    "choice_label": "Steroid cream on the rash",
+    "grade": "WRONG"
+  },
+  {
+    "id": "8a295b8f-65e0-46ae-91a0-9625be9fb0ca",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "from_node_id": "48154f1b-4995-49ad-884b-d7d00d46bb00",
+    "to_node_id": "35f2b367-028f-4572-9cfc-0ab6b3408c56",
+    "kind": "decision",
+    "choice_label": "Burn the tick off with a match",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "37e54513-3fec-4ce2-8d04-c2b9e09c9cca",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "from_node_id": "341e826f-7167-489c-8072-f9e341615822",
+    "to_node_id": "e3634041-6384-44bd-9ea1-38259b8edfb4",
+    "kind": "decision",
+    "choice_label": "Finish the full antibiotic course",
+    "grade": "BEST"
+  },
+  {
+    "id": "72efabb9-e06e-4040-b8d4-31f2aebecbad",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "from_node_id": "341e826f-7167-489c-8072-f9e341615822",
+    "to_node_id": "d9b5ddfb-633e-4ca1-b1e1-d9063ed376b8",
+    "kind": "decision",
+    "choice_label": "Pull the tick + clean the bite",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "476cdea5-54f1-40d5-8dd2-577d8adb0e8a",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "from_node_id": "341e826f-7167-489c-8072-f9e341615822",
+    "to_node_id": "2b70bdfc-13ae-496f-b869-b27fd5262383",
+    "kind": "decision",
+    "choice_label": "Steroid cream on the rash",
+    "grade": "WRONG"
+  },
+  {
+    "id": "7faf38a9-9492-4f24-bc10-7139729584ff",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "from_node_id": "341e826f-7167-489c-8072-f9e341615822",
+    "to_node_id": "8cc04c2f-8f7a-4e9b-a9c5-e7c45f21dff0",
+    "kind": "decision",
+    "choice_label": "Burn the tick off with a match",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "e824b894-4921-49ca-b264-db4cb7171ae2",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "from_node_id": "19c47980-07fb-446a-9565-9364c9bdd492",
+    "to_node_id": "fcc92e6b-3f48-4600-9a5c-5b03c96b698d",
+    "kind": "decision",
+    "choice_label": "Finish the full antibiotic course",
+    "grade": "BEST"
+  },
+  {
+    "id": "db6bb320-7adb-4e78-95dd-38cf81d9c233",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "from_node_id": "19c47980-07fb-446a-9565-9364c9bdd492",
+    "to_node_id": "4603c798-2f46-454b-9aa5-aac00666c20c",
+    "kind": "decision",
+    "choice_label": "Pull the tick + clean the bite",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "36da6e67-b1dd-47f4-a615-ecb4d93a3b9b",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "from_node_id": "19c47980-07fb-446a-9565-9364c9bdd492",
+    "to_node_id": "5e07e168-5cf8-4fbe-99ff-20ed97d6ce66",
+    "kind": "decision",
+    "choice_label": "Steroid cream on the rash",
+    "grade": "WRONG"
+  },
+  {
+    "id": "5fc104af-2eb0-4c72-87a1-9d9665a94d9d",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "from_node_id": "19c47980-07fb-446a-9565-9364c9bdd492",
+    "to_node_id": "224515b5-e031-4e0b-90a7-8805722f9d62",
+    "kind": "decision",
+    "choice_label": "Burn the tick off with a match",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "1bbff5a1-a661-4ee9-81af-8b8bfe4d0d3c",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "from_node_id": "d05121df-1f8e-47c2-a87c-5e28a6a32e18",
+    "to_node_id": "561b371a-e672-476c-8c36-26f6f1ad23ed",
+    "kind": "decision",
+    "choice_label": "Finish the full antibiotic course",
+    "grade": "BEST"
+  },
+  {
+    "id": "4e883d05-5a9d-40ed-b7e4-4a61529246a2",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "from_node_id": "d05121df-1f8e-47c2-a87c-5e28a6a32e18",
+    "to_node_id": "1ddba45e-b47d-42a0-8fbf-cedab2243e4e",
+    "kind": "decision",
+    "choice_label": "Pull the tick + clean the bite",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "1a7df847-a7d3-4863-874a-15a3d54b9372",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "from_node_id": "d05121df-1f8e-47c2-a87c-5e28a6a32e18",
+    "to_node_id": "7ad0202f-0747-484f-b7c5-f6c9c5ffa2a9",
+    "kind": "decision",
+    "choice_label": "Steroid cream on the rash",
+    "grade": "WRONG"
+  },
+  {
+    "id": "072ffd87-89f9-4db8-9b28-1fea08511b0e",
+    "patient_id": "bd404ad6-baec-470c-80e3-3be3f93e87b3",
+    "from_node_id": "d05121df-1f8e-47c2-a87c-5e28a6a32e18",
+    "to_node_id": "4fee788b-17df-44a3-9ac9-09139f676d00",
+    "kind": "decision",
+    "choice_label": "Burn the tick off with a match",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "f6ae8e78-3e8d-4694-b333-d59795e5bf1d",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "from_node_id": "02c1c484-2a86-4900-bdf2-2d01d034a65e",
+    "to_node_id": "827f6ddb-8415-4f8c-84ec-b9fcfe084c35",
+    "kind": "decision",
+    "choice_label": "Hospital surgeon visit, now",
+    "grade": "BEST"
+  },
+  {
+    "id": "93b8e947-2503-48db-bf06-944fa256e84a",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "from_node_id": "02c1c484-2a86-4900-bdf2-2d01d034a65e",
+    "to_node_id": "7c09db31-c2ff-4ca3-a416-0137d9a9ea73",
+    "kind": "decision",
+    "choice_label": "Lie still, nothing to eat",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "4cbf03a3-2b6d-44ba-8363-f3620d28a547",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "from_node_id": "02c1c484-2a86-4900-bdf2-2d01d034a65e",
+    "to_node_id": "0af98a88-e68c-4cae-a663-2e09b3c38bfa",
+    "kind": "decision",
+    "choice_label": "Painkillers and wait a week",
+    "grade": "WRONG"
+  },
+  {
+    "id": "801223a2-36bb-4d93-b797-11fc3bf1e74d",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "from_node_id": "02c1c484-2a86-4900-bdf2-2d01d034a65e",
+    "to_node_id": "479a8b59-3c35-47b2-89f7-7f99d17f1eca",
+    "kind": "decision",
+    "choice_label": "Laxative to flush it out",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "e487ee55-5bec-4edf-9f68-9425cc6b2ec1",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "from_node_id": "827f6ddb-8415-4f8c-84ec-b9fcfe084c35",
+    "to_node_id": "5630ff91-df52-4b0c-9eb1-a123463e52b7",
+    "kind": "decision",
+    "choice_label": "Hospital surgeon visit, now",
+    "grade": "BEST"
+  },
+  {
+    "id": "a819d87c-84fc-4f1f-907e-c18031202ab5",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "from_node_id": "827f6ddb-8415-4f8c-84ec-b9fcfe084c35",
+    "to_node_id": "7ca1c767-a047-4c3b-9c10-0fd7547572d4",
+    "kind": "decision",
+    "choice_label": "Lie still, nothing to eat",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "3486e7d8-ebbb-4466-8695-9ceda8fd604e",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "from_node_id": "827f6ddb-8415-4f8c-84ec-b9fcfe084c35",
+    "to_node_id": "3bd32b50-e172-49fc-ae31-15525507f3a5",
+    "kind": "decision",
+    "choice_label": "Painkillers and wait a week",
+    "grade": "WRONG"
+  },
+  {
+    "id": "6a9c9392-3765-4802-b4d3-61d82b4bf14c",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "from_node_id": "827f6ddb-8415-4f8c-84ec-b9fcfe084c35",
+    "to_node_id": "5cf3568e-ba4a-4896-8ab3-0a1c2881871f",
+    "kind": "decision",
+    "choice_label": "Laxative to flush it out",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "f71e1cd4-e726-418f-b628-444f203af617",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "from_node_id": "7c09db31-c2ff-4ca3-a416-0137d9a9ea73",
+    "to_node_id": "64b4d657-39c8-4076-ac17-8632f0c3cdbe",
+    "kind": "decision",
+    "choice_label": "Hospital surgeon visit, now",
+    "grade": "BEST"
+  },
+  {
+    "id": "8f09946d-f571-4726-bf03-4e78395e92bb",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "from_node_id": "7c09db31-c2ff-4ca3-a416-0137d9a9ea73",
+    "to_node_id": "1951d6d9-23f4-4b94-aee5-7cfbdb983b67",
+    "kind": "decision",
+    "choice_label": "Lie still, nothing to eat",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "a3d92624-7bd1-4f47-bf13-f6238984c605",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "from_node_id": "7c09db31-c2ff-4ca3-a416-0137d9a9ea73",
+    "to_node_id": "ad905f0f-f0ba-403d-bb8d-8040baa113b4",
+    "kind": "decision",
+    "choice_label": "Painkillers and wait a week",
+    "grade": "WRONG"
+  },
+  {
+    "id": "140fee61-ac80-40e7-b8fb-ab5027818763",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "from_node_id": "7c09db31-c2ff-4ca3-a416-0137d9a9ea73",
+    "to_node_id": "edf6444c-b7ab-489a-a77a-2d054e7e8f41",
+    "kind": "decision",
+    "choice_label": "Laxative to flush it out",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "17f54650-1ac5-47e5-ad61-d5dfabf3a0aa",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "from_node_id": "0af98a88-e68c-4cae-a663-2e09b3c38bfa",
+    "to_node_id": "e70d4cf6-240b-410a-ac63-accdb2aff8fa",
+    "kind": "decision",
+    "choice_label": "Hospital surgeon visit, now",
+    "grade": "BEST"
+  },
+  {
+    "id": "20424d8f-7450-478b-9420-64d90e7c8324",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "from_node_id": "0af98a88-e68c-4cae-a663-2e09b3c38bfa",
+    "to_node_id": "a4fe29a9-e138-479e-838a-4ac8f5bc2495",
+    "kind": "decision",
+    "choice_label": "Lie still, nothing to eat",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "881907ab-c223-43e8-85e4-8ccb173c29d6",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "from_node_id": "0af98a88-e68c-4cae-a663-2e09b3c38bfa",
+    "to_node_id": "8cd995cd-2ec3-499a-9a54-8af4cc2933b0",
+    "kind": "decision",
+    "choice_label": "Painkillers and wait a week",
+    "grade": "WRONG"
+  },
+  {
+    "id": "615fbcda-5129-4f84-8ae1-2e8be3507a5a",
+    "patient_id": "1f12ac0e-fee6-463c-84e7-c09d7ab4b8ed",
+    "from_node_id": "0af98a88-e68c-4cae-a663-2e09b3c38bfa",
+    "to_node_id": "0eb384af-07c1-46a9-9e8e-ac2cae803bb7",
+    "kind": "decision",
+    "choice_label": "Laxative to flush it out",
+    "grade": "DANGEROUS"
   }
 ];
 
@@ -7084,6 +8800,58 @@ export const FALLBACK_TREATMENTS: FallbackTreatment[] = [
     },
     "conditions": [
       "pneumonia"
+    ]
+  },
+  {
+    "id": "c25c0a01-0000-4000-8000-000000000001",
+    "class_name": "Steroid medicines",
+    "description": "Quick doses that melt swelling inside airways.",
+    "wording": {
+      "plain": "steroid dose",
+      "gentle": "swelling-melting medicine",
+      "clinical": "systemic corticosteroids"
+    },
+    "conditions": [
+      "croup"
+    ]
+  },
+  {
+    "id": "c25c0a01-0000-4000-8000-000000000002",
+    "class_name": "Cool fluids and rest",
+    "description": "Gentle sips and quiet days that carry viral illnesses through.",
+    "wording": {
+      "plain": "fluids and rest",
+      "gentle": "cool sips and naps",
+      "clinical": "supportive hydration and rest"
+    },
+    "conditions": [
+      "hand-foot-mouth"
+    ]
+  },
+  {
+    "id": "c25c0a01-0000-4000-8000-000000000003",
+    "class_name": "Tick-germ antibiotics",
+    "description": "Full courses that hunt down the Lyme germ.",
+    "wording": {
+      "plain": "antibiotic course",
+      "gentle": "tick-germ medicine",
+      "clinical": "antibiotic therapy for borreliosis"
+    },
+    "conditions": [
+      "lyme-disease"
+    ]
+  },
+  {
+    "id": "c25c0a01-0000-4000-8000-000000000004",
+    "class_name": "Surgeon care",
+    "description": "Fast operations that remove a sore appendix.",
+    "wording": {
+      "plain": "surgeon visit",
+      "gentle": "belly-fixing operation",
+      "clinical": "surgical consultation"
+    },
+    "conditions": [
+      "appendicitis"
     ]
   }
 ];
@@ -7208,6 +8976,82 @@ export const FALLBACK_RESOURCES: FallbackResource[] = [
       "answer": 1,
       "pearl": "Fever + crackles means the lungs need a doctor."
     }
+  },
+  {
+    "id": "d25c0a01-0000-4000-8000-000000000001",
+    "condition_id": "croup",
+    "title": "Croup",
+    "url": "https://medlineplus.gov/croup.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "Croup turns a cold into a seal-bark cough with noisy breathing in, usually at night — swelling just below the vocal cords. One steroid dose plus calm, cool air settles most cases; struggling to breathe in needs urgent care.",
+    "quiz": {
+      "stem": "Croup sounds scary because the cough is…",
+      "choices": [
+        "A seal-like bark, worse at night",
+        "A quiet sniffle",
+        "A happy giggle"
+      ],
+      "answer": 0,
+      "pearl": "Seal-bark cough + noisy breathing in: croup."
+    }
+  },
+  {
+    "id": "d25c0a01-0000-4000-8000-000000000002",
+    "condition_id": "hand-foot-mouth",
+    "title": "Hand-Foot-Mouth Disease",
+    "url": "https://medlineplus.gov/ency/article/000965.htm",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "Hand-foot-mouth spreads easily among young kids: fever, mouth sores that make eating hurt, and spots on palms and soles. Cool fluids and pain relief carry them through; antibiotics cannot help because a virus causes it.",
+    "quiz": {
+      "stem": "Hand-foot-mouth spots show up on…",
+      "choices": [
+        "Elbows and knees only",
+        "Palms, soles, and mouth",
+        "The nose and ears"
+      ],
+      "answer": 1,
+      "pearl": "Mouth sores + palm/sole spots: HFMD."
+    }
+  },
+  {
+    "id": "d25c0a01-0000-4000-8000-000000000003",
+    "condition_id": "lyme-disease",
+    "title": "Lyme Disease",
+    "url": "https://medlineplus.gov/lymedisease.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "A tick bite can leave Lyme disease: an expanding round bullseye rash, sometimes with fever and aches. Early antibiotics cure it completely; without treatment it can later reach joints, heart, or nerves.",
+    "quiz": {
+      "stem": "The Lyme rash looks like…",
+      "choices": [
+        "Tiny water blisters",
+        "Dry flaky patches",
+        "A growing bullseye ring"
+      ],
+      "answer": 2,
+      "pearl": "Growing bullseye after a tick bite: Lyme."
+    }
+  },
+  {
+    "id": "d25c0a01-0000-4000-8000-000000000004",
+    "condition_id": "appendicitis",
+    "title": "Appendicitis",
+    "url": "https://medlineplus.gov/appendicitis.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "Appendicitis starts as a vague ache near the belly button, then moves to the lower right with loss of appetite and often vomiting. It needs a prompt surgeon visit — waiting risks a burst appendix.",
+    "quiz": {
+      "stem": "Appendicitis pain classically…",
+      "choices": [
+        "Stays all over with diarrhea",
+        "Moves to the lower right",
+        "Comes only after meals"
+      ],
+      "answer": 1,
+      "pearl": "Migrating pain + no appetite: appendix."
+    }
   }
 ];
 
@@ -7280,4 +9124,20 @@ export const FALLBACK_EXAM_FINDINGS: FallbackExamFinding[] = [
   { condition_id: 'pneumonia', modality: 'feel', gentle: 'Chest moving fast; forehead hot with fever.', steady: 'Fast pulse; chest moves a little unevenly.', clinical: 'Tachycardic; asymmetric expansion.', expert: 'Tachycardia; asymmetric expansion; increased fremitus.' },
   { condition_id: 'pneumonia', modality: 'tap', gentle: 'One chest spot thuds dull instead of hollow.', steady: 'One spot sounds dull — fluid where air should be.', clinical: 'Focal dullness to percussion.', expert: 'Focal dullness; consolidation pattern.' },
   { condition_id: 'pneumonia', modality: 'listen', gentle: 'Crackly sounds in one lung spot, like bubble wrap.', steady: 'Crackles in one lung area.', clinical: 'Focal crackles.', expert: 'Focal late-inspiratory crackles; bronchial breath sounds.' },
+  { condition_id: 'croup', modality: 'look', gentle: 'Breathing in looks noisy and hard — neck pulls with each breath.', steady: 'Labored breathing in; neck muscles pull.', clinical: 'Inspiratory effort; accessory-muscle use.', expert: 'Inspiratory distress; accessory recruitment; no drooling.' },
+  { condition_id: 'croup', modality: 'feel', gentle: 'Chest moves fast; forehead a little warm.', steady: 'Fast pulse; mild fever.', clinical: 'Tachycardic; low-grade fever.', expert: 'Tachycardia; low-grade pyrexia.' },
+  { condition_id: 'croup', modality: 'tap', gentle: 'Chest taps sound normal — the trouble sits higher up.', steady: 'Chest normal; obstruction is above the chest.', clinical: 'Chest resonant; upper-airway obstruction.', expert: 'Resonant; subglottic process, no consolidation.' },
+  { condition_id: 'croup', modality: 'listen', gentle: 'Harsh raspy noise breathing IN — not out.', steady: 'Harsh inspiratory stridor.', clinical: 'Inspiratory stridor; barking cough.', expert: 'Inspiratory stridor; barky cough; no wheeze.' },
+  { condition_id: 'hand-foot-mouth', modality: 'look', gentle: 'Drooly and feverish; will not touch snacks.', steady: 'Feverish, drooling, refusing food.', clinical: 'Febrile; drooling; refusing intake.', expert: 'Febrile; sialorrhea; anorexia.' },
+  { condition_id: 'hand-foot-mouth', modality: 'feel', gentle: 'Forehead feels hot; tiny bumps on palms.', steady: 'Fever; small bumps on palms and soles.', clinical: 'Febrile; palmar and plantar papules.', expert: 'Febrile; palmar/plantar papulovesicles.' },
+  { condition_id: 'hand-foot-mouth', modality: 'tap', gentle: 'Belly and chest taps sound normal.', steady: 'Percussion normal throughout.', clinical: 'Percussion unremarkable.', expert: 'No percussive abnormality.' },
+  { condition_id: 'hand-foot-mouth', modality: 'listen', gentle: 'Chest sounds clear — spots are the story.', steady: 'Lungs clear; findings are skin and mouth.', clinical: 'Lungs clear; cutaneous and oral findings.', expert: 'Vesicular; disease is mucocutaneous.' },
+  { condition_id: 'lyme-disease', modality: 'look', gentle: 'A round red ring on the skin, getting bigger.', steady: 'Expanding red ring rash with a clear center.', clinical: 'Expanding annular rash, central clearing.', expert: 'Expanding annular EM; central clearing.' },
+  { condition_id: 'lyme-disease', modality: 'feel', gentle: 'The ring feels flat and warm, not scaly.', steady: 'Flat warm ring; no scale or crust.', clinical: 'Non-scaly annular plaque.', expert: 'Non-scaly expanding annular plaque.' },
+  { condition_id: 'lyme-disease', modality: 'tap', gentle: 'Taps sound normal everywhere.', steady: 'Percussion normal.', clinical: 'Percussion unremarkable.', expert: 'No percussive abnormality.' },
+  { condition_id: 'lyme-disease', modality: 'listen', gentle: 'Chest sounds clear; heart sounds normal.', steady: 'Lungs and heart sound normal.', clinical: 'Heart and lungs normal.', expert: 'Normal cardiopulmonary exam.' },
+  { condition_id: 'appendicitis', modality: 'look', gentle: 'Curled up very still; moving hurts.', steady: 'Lying still; movement worsens pain.', clinical: 'Motionless; movement aggravates pain.', expert: 'Lies motionless; peritoneal posturing.' },
+  { condition_id: 'appendicitis', modality: 'feel', gentle: 'Lower-right belly jumps when gently pressed.', steady: 'Marked lower-right tenderness; guarding.', clinical: 'Lower-right tenderness with guarding.', expert: 'McBurney point, guarding + rebound.' },
+  { condition_id: 'appendicitis', modality: 'tap', gentle: 'Tapping the belly hurts — even bumps in the road.', steady: 'Percussion tenderness over the lower right.', clinical: 'Percussion tenderness, lower right.', expert: 'Percussion tenderness; peritoneal irritation.' },
+  { condition_id: 'appendicitis', modality: 'listen', gentle: 'Belly sounds are extra quiet.', steady: 'Bowel sounds quiet.', clinical: 'Hypoactive bowel sounds.', expert: 'Hypoactive bowel sounds; ileus pattern.' }
 ];

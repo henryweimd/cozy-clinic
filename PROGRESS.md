@@ -1,5 +1,16 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 25 (in progress): content pack 2 — croup, HFM, Lyme, appendicitis + Hugo/Ivy/Leo/Ruby
+
+File ownership (main agent, this run): src/clinical/types.ts,
+src/clinical/conditions.ts, src/data/fallbackPack.ts (+tests),
+src/data/examFindings.ts, src/ui/mockData.ts, src/game/sprites.ts
+(+test), src/scenes/ClinicScene.ts (Speaker only),
+src/ui/aboutSheet.ts (cast line), src/ui/learnList.ts (if needed),
+docs/CHARACTER_BIBLE.md, docs/SCENARIO_PLAYBOOK.md (§1 list),
+art/manifest.json, README.md (counts), PROGRESS.md, CHECKPOINT.md.
+Hands off: src/data/maneuvers.* (other stream).
+
 ## Run 24 (2026-10-30): demo packaging
 
 - README rewritten to verified truth (198 tests, 4 rounds, 10

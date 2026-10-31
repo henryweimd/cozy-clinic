@@ -42,7 +42,7 @@ path. Never real patient data.
 
 ```bash
 npm install
-npm test        # full suite — must pass (198 tests, green at last update)
+npm test        # full suite — must pass (238 tests, green at last update)
 npm run dev     # serves at http://localhost:5173 — open in a browser
 npm run build   # production build into dist/
 ```
@@ -94,8 +94,8 @@ this script plus the tooling table in-game.
   gone wrong and why) and returns the choice to the player.
 - **Runtime AI path:** browser game → Supabase Edge Function → Meta Model API.
   The browser NEVER calls Meta directly and NEVER holds a model key.
-- **Offline by design.** A fallback snapshot (16 patients, 272 nodes,
-  32 tiered exam findings, 8 Learn topics) ships in
+- **Offline by design.** A fallback snapshot (20 patients, 340 nodes,
+  48 tiered exam findings, 12 Learn topics) ships in
   `src/data/fallbackPack.ts`; live reads fall back to it seamlessly.
 
 ## Meta AI tooling
@@ -121,25 +121,26 @@ sponsor's models; this one was raised by them: the agentic build log is a
 second demonstration of the model family, not just process documentation.
 
 Simulation at this scale is only sustainable because of Contributor-tier
-economics. Seeding a 16-patient persistent world with 272 pre-reviewed futures
+economics. Seeding a 20-patient persistent world with 340 pre-reviewed futures
 costs cents, and gameplay traverses stored nodes instead of billing per
 decision in the hot loop. Persistent patients with real branching futures —
 the core of the game — are only possible because generation is this cheap.
 
 ## Current build
 
-- **10 playable patients** (Mabel, June, Milo, Theo, Priya, Ellis, Nina,
-  Kai, Ada, Felix — each with a 6-expression set, per-patient visits and
-  quotes) plus a waiting-room list with queue reorder; Milo opens
-  onboarding as an existing-patient sick visit.
+- **14 playable patients** (Mabel, June, Milo, Theo, Priya, Ellis, Nina,
+  Kai, Ada, Felix, Hugo, Ivy, Leo, Ruby — each with a 6-expression set,
+  per-patient visits and quotes) plus a waiting-room list with queue
+  reorder; Milo opens onboarding as an existing-patient sick visit.
 - **4-round quiz visits:** ask → examine → diagnose → treat, each round
   asking its question first (tier-worded Gentle/Steady/Clinical/Expert);
   endings praise the player with an N-of-4 score line, never claiming
   the patient better/worse.
-- **8 conditions** as tested state transitions, sourced from the MSD
+- **12 conditions** as tested state transitions, sourced from the MSD
   Manual Professional Edition: asthma, sniffly cold (viral
   respiratory), dehydration, hypertension, strep throat, ear
-  infection, eczema, pneumonia.
+  infection, eczema, pneumonia, croup, hand-foot-mouth disease,
+  Lyme disease, appendicitis.
 - **Living Chart** memory beads, **Learning List** (accumulating
   art-header cards, MedlinePlus-backed, +2 coins per first read, +5
   inline prize quiz each), **Clinic Shop** (Care Coins
@@ -164,5 +165,5 @@ Docs map: [`docs/UI_PROTOTYPE.md`](./docs/UI_PROTOTYPE.md) (interface spec),
 [`PROGRESS.md`](./PROGRESS.md) (build log).
 
 ---
-*Last verified 2026-10-30 against `main` @ `88af2cf` (198/198 tests, build green,
+*Last verified 2026-10-31 against `main` @ `RUN25HASH` (238/238 tests, build green,
 live URL up).*

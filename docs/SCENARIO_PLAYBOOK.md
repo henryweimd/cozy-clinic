@@ -21,6 +21,10 @@
    - ear → Otitis Media (Acute)
    - eczema → Atopic Dermatitis (Eczema)
    - pneumonia → Community-Acquired Pneumonia
+   - croup → Croup
+   - hand-foot-mouth → Hand-Foot-and-Mouth Disease
+   - lyme-disease → Lyme Disease
+   - appendicitis → Appendicitis
    (all at `msdmanuals.com/professional/…`)
 2. **NIH MedlinePlus** — patient-facing links for Learn cards only.
 3. **Operator (physician) pen** — final review; new content ships

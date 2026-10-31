@@ -10,8 +10,9 @@
 
 /**
  * Launch four (brief Section 6) + run-20 pack (strep-throat,
- * ear-infection, eczema, pneumonia — DRAFT, pending operator
- * medical review).
+ * ear-infection, eczema, pneumonia) + run-25 pack (croup,
+ * hand-foot-mouth, lyme-disease, appendicitis) — DRAFT, pending
+ * operator medical review.
  */
 export type ConditionId =
   | 'asthma'
@@ -21,7 +22,11 @@ export type ConditionId =
   | 'strep-throat'
   | 'ear-infection'
   | 'eczema'
-  | 'pneumonia';
+  | 'pneumonia'
+  | 'croup'
+  | 'hand-foot-mouth'
+  | 'lyme-disease'
+  | 'appendicitis';
 
 /** Ordered stage within a condition. Lower index = healthier. */
 export type StageId = string;
