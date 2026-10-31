@@ -178,7 +178,7 @@ export class PeptideLab {
   }
 
   private backButton(y: number): Phaser.GameObjects.Container {
-    return this.button(y, 'Back to visit', null, () => {
+    return this.button(y, 'Back to Exam Room', null, () => {
       this.hide();
       this.onClose();
     });

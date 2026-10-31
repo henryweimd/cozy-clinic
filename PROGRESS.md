@@ -1,5 +1,21 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 48 (2026-11-01): Exam Room first, Waiting second
+
+Branch: `feat/knottin-lab`. Operator playtesting in parallel.
+File ownership (main agent, this run): tab order + label,
+lab back button, auditor labels, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- Operator direction: toolbar is now Exam Room (x68) +
+  Waiting (x202) + Learn + Profile. Pill, icons, badges,
+  and the lab pill-pin follow via TAB_X (no coordinate
+  edits beyond the map). Lab "Back to visit" → "Back to
+  Exam Room" for coherence ("Visit #N" encounter numbering
+  untouched).
+- Verify: 429/429, tsc clean, build green, auditor 0.
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 47 (2026-11-01): tempered-telling law in playbook + prompts
 
 Branch: `feat/knottin-lab`. Operator playtesting in parallel.

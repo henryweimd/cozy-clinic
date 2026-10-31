@@ -1,3 +1,24 @@
+# CHECKPOINT — Run 48: toolbar order (2026-11-01)
+
+Phase: tab swap + rename on `feat/knottin-lab`. `main`
+untouched (still run 31).
+
+Files changed: 5 (scene tabs, lab button, auditor,
+PROGRESS, CHECKPOINT).
+
+Test result: `npm test` 429/429; tsc clean; build green;
+auditor 0 findings.
+
+Deployment URL: branch preview (SSO-gated); prod
+unchanged on main.
+
+Playtest result: operator playtesting in parallel (this
+run answers their toolbar note).
+
+Image spend this run: $0 (ledger ~$2.62 cumulative).
+
+STOP.
+
 # CHECKPOINT — Run 47: prompt law (2026-11-01)
 
 Phase: authoring law + redeploy. `main` untouched (still

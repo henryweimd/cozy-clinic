@@ -318,12 +318,12 @@ const MEMORY_KEY = 'cozy-visit-memory-v1';
 type LineKind = 'say' | 'tell';
 
 const TAB_X: Record<ViewName, number> = {
-  waiting: 68,
-  visit: 202,
+  visit: 68,
+  waiting: 202,
   learn: 338,
   profile: 472,
-  // The lab is a visit sub-screen (no tab): the pill stays on Visit.
-  lab: 202,
+  // The lab is a visit sub-screen (no tab): the pill stays on Exam Room.
+  lab: 68,
   // Telemed + Portal tabs are parked (views kept dormant, code
   // intact) — the bar is Waiting + Visit + Learn + Profile.
   telemed: 337,
@@ -3657,8 +3657,8 @@ export class ClinicScene extends Phaser.Scene {
     nav.setDepth(20);
 
     const tabs: { view: ViewName; label: string }[] = [
+      { view: 'visit', label: 'Exam Room' },
       { view: 'waiting', label: 'Waiting' },
-      { view: 'visit', label: 'Visit' },
       { view: 'learn', label: 'Learn' },
       { view: 'profile', label: 'Profile' },
     ];
