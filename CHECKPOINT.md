@@ -356,3 +356,21 @@ Image spend this run: $0 (ledger ~$1.14 cumulative, cap $10;
 STOP at $120).
 
 STOP.
+
+## Run 23 — MSD-sourced history + playbook (2026-10-30)
+
+Phase: operator revision — history content grounded in MSD
+Manual Professional Edition per condition, plus a durable
+scenario-generation playbook with a future-use prompt.
+
+Files: conditions.ts (history blocks), SCENARIO_PLAYBOOK.md.
+
+Test result: auditor 0 findings; `npm test` 198/198; tsc
+clean; build green; live 200 (bundle BPwMSfc5).
+
+Playtest result: NOT operator-playtested — programmatic only.
+
+Image spend this run: $0 (ledger ~$1.14 cumulative, cap $10;
+STOP at $120).
+
+STOP.

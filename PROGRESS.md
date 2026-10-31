@@ -1,8 +1,18 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
-> Run 23 ownership (main agent): conditions.ts (history blocks),
-> docs/SCENARIO_PLAYBOOK.md (new). No other stream may touch
-> these files.
+## Run 23 (2026-10-30): MSD-sourced history + playbook
+
+- All 8 history rounds re-grounded in MSD Manual Professional
+  (Symptoms/Signs + Diagnosis): loss-route+oliguria, cold onset
+  sequence, asthma variability, silent-HTN myth-bust, abrupt
+  Centor history, acute recumbent AOM, pruritus-led atopy,
+  pleurisy + productive cough. Still DRAFT pending pen.
+- New docs/SCENARIO_PLAYBOOK.md: source hierarchy, round
+  recipes, tier rules, budgets, anti-patterns, generation
+  prompt for future model-assisted scenarios + trajectories.
+- Verdicts: 198/198 tests, tsc clean, auditor 0, build green,
+  live 200. Spend $0 (~$1.14).
+
 
 ## Run 22 (2026-10-30): history rounds sharpened (operator revision)
 
