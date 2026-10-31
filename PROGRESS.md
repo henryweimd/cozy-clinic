@@ -1,8 +1,19 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
-> Run 24 ownership (main agent): README.md, docs/DEMO_SCRIPT.md
-> (new), docs/SUBMISSION_CHECKLIST.md (new), ClinicScene.ts demo
-> steps (2 lines). No other stream may touch these files.
+## Run 24 (2026-10-30): demo packaging
+
+- README rewritten to verified truth (198 tests, 4 rounds, 10
+  patients, 8 MSD-sourced conditions, honest tooling table —
+  exam illustrations + 20s sync claims removed as unverified).
+- New docs/DEMO_SCRIPT.md (2-min judge path) +
+  docs/SUBMISSION_CHECKLIST.md (freeze Nov 3 noon ET, judging
+  Nov 4-8; operator vs agent items split).
+- In-game › DEMO steps updated. Treat-4 idea scoped and KILLED:
+  4-card labels don't fit w114 and canonical labels can't move
+  (trajectory choice_label matching) — recorded, not attempted.
+- Verdicts: 198/198 tests, tsc clean, auditor 0, build green,
+  live 200. Spend $0 (~$1.14).
+
 
 ## Run 23 (2026-10-30): MSD-sourced history + playbook
 

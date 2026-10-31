@@ -374,3 +374,23 @@ Image spend this run: $0 (ledger ~$1.14 cumulative, cap $10;
 STOP at $120).
 
 STOP.
+
+## Run 24 — demo packaging (2026-10-30)
+
+Phase: operator "go" — demo packaging with every claim
+verified against code (README + demo script + submission
+checklist). Treat-4 scoped and rejected (label geometry +
+frozen canonical labels).
+
+Files: README, DEMO_SCRIPT.md, SUBMISSION_CHECKLIST.md,
+ClinicScene demo steps (2 lines).
+
+Test result: auditor 0 findings; `npm test` 198/198; tsc
+clean; build green; live 200 (bundle D2AGxf0_).
+
+Playtest result: NOT operator-playtested — programmatic only.
+
+Image spend this run: $0 (ledger ~$1.14 cumulative, cap $10;
+STOP at $120).
+
+STOP.
