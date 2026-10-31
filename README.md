@@ -183,7 +183,7 @@ Docs map: [`docs/UI_PROTOTYPE.md`](./docs/UI_PROTOTYPE.md) (interface spec),
 [`PROGRESS.md`](./PROGRESS.md) (build log).
 
 ---
-*Last verified 2026-11-01 on `feat/knottin-lab` @ `fa4c72e` (429/429 tests,
+*Last verified 2026-11-01 on `feat/knottin-lab` @ `2e8e4e6` (430/430 tests,
 `tsc` clean, build green, auditor 0 findings, branch preview up;
 `main` holds run 31 until the merge call). Firsthand operator
 paragraph + demo video still to come.*
