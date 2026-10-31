@@ -1,13 +1,24 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
-> Run 20 ownership (2026-10-30, main agent): types.ts,
-> conditions.ts, fallbackPack.ts, ClinicScene.ts (gate/preload/
-> speaker), sprites.ts, mockData.ts, CHARACTER_BIBLE.md,
-> ART_BIBLE.md, art/manifest.json, public/assets/characters/*,
-> public/assets/learn/learn-{strep-throat,ear-infection,eczema,
-> pneumonia}.png, art/contact-sheets/*run20*, fallbackPack.test.ts
-> counts, Supabase patients/nodes/edges/resources/findings/
-> treatments rows. No other stream may touch these files.
+## Run 20 (2026-10-30): content pack — 4 conditions + 4 patients + art
+
+- Conditions (DRAFT, pending operator medical review): strep-throat
+  (Centor-high contrast to Milo's Centor-0 cold), ear-infection,
+  eczema, pneumonia. Full defs: exam trios, tiered findings,
+  dx options/pearls, 4 stages, 4 tiered actions.
+- Patients Nina/Kai/Ada/Felix with engine-generated 17-node trees
+  (68 nodes, 64 edges, 0 veto fails; /tmp/h2/gen-trees.ts recipe).
+- Supabase mirrors: patients 16, nodes 272, edges 256, resources 8
+  (MedlinePlus 4/4 200), findings 32, treatments 8; widened the
+  patients.condition_id CHECK via migration.
+- Art: 4 sprites x6 frames via identity-edit pipeline (all validate
+  PASS, contact sheets reviewed; Ada pained re-asked once for ><;
+  Felix kerchief via Ellis cap-restore) + 4 Block-U headers.
+- Wiring: gate/preload/speaker/sprites/roster/bible/manifest/
+  auditor (incl. comma-in-choice parse fix). Verdicts: 190/190
+  tests, tsc clean, auditor 0, build green, live 200 + assets 200.
+- Spend: $0.29 (ledger ~$1.14; operator cap $10).
+
 
 ## Run 19 (2026-10-30): learn cards — art headers, inline quiz, coin pill
 

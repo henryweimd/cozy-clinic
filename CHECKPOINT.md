@@ -294,3 +294,25 @@ manifest ledger was $0.81, supersedes $0.74 in older CHECKPOINT
 notes; STOP at $120).
 
 STOP.
+
+## Run 20 — content pack: 4 conditions + patients + art (2026-10-30)
+
+Phase: operator-ordered new conditions/patients/trajectories/art
+(strep-throat, ear-infection, eczema, pneumonia; Nina/Kai/Ada/
+Felix). All content DRAFT pending operator medical review.
+
+Files: types, conditions, fallbackPack(+test counts), ClinicScene
+(gate/preload/speaker), sprites, mockData, CHARACTER_BIBLE,
+manifest, process_character (4 CHARACTERS rows), 24 sprites,
+4 headers, 5 contact sheets.
+
+Test result: auditor 0 findings; `npm test` 190/190; tsc
+clean; build green; live 200 + sprite/header 200 (bundle
+DAE7aPL3). Supabase: 16/272/256/8/32/8, 0 dangling.
+
+Playtest result: NOT operator-playtested — programmatic only.
+
+Image spend this run: $0.29 (ledger ~$1.14 cumulative, cap $10;
+STOP at $120).
+
+STOP.
