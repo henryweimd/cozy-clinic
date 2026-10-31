@@ -42,7 +42,7 @@ path. Never real patient data.
 
 ```bash
 npm install
-npm test        # full suite — must pass (428 tests, green at last update)
+npm test        # full suite — must pass (429 tests, green at last update)
 npm run dev     # serves at http://localhost:5173 — open in a browser
 npm run build   # production build into dist/
 ```

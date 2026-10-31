@@ -1,5 +1,25 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 44 (2026-11-01): answered rounds look locked
+
+Branch: `feat/knottin-lab`. Operator playtesting in parallel.
+File ownership (main agent, this run): card-lock helper +
+test, 6 scene call sites, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- Operator note: after answering, other options still look
+  tappable. (Taps were already ignored — the guard predates
+  this batch; the CARDS lied about it.) Answered rounds now
+  dim unpicked cards to the veto 0.55; the pick keeps full
+  alpha with its spine + stamp.
+- Pure `lockedAlpha` in visit.ts (+ test); `syncCardLock`
+  runs on all 4 resolves, undo rewind, and tier rebuild.
+  Veto path untouched (round stays open, veto dims only
+  its own card as before).
+- Verify: 429/429 (+1 lock test), tsc clean, build green,
+  auditor 0 (alpha-only, no geometry change).
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 43 (2026-11-01): compulsion loop (ranks + nudges + joy)
 
 Branch: `feat/knottin-lab`. Operator playtesting in parallel.

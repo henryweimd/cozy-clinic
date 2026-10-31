@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { chooseFrame, examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from './visit';
+import { chooseFrame, examQuestion, isPerfectVisit, lockedAlpha, resultCopy, roundQuestion, scoreCount, visitOutcome } from './visit';
+
+describe('lockedAlpha', () => {
+  it('dims only the unpicked cards of answered rounds', () => {
+    expect(lockedAlpha(false, false)).toBe(1);
+    expect(lockedAlpha(false, true)).toBe(1);
+    expect(lockedAlpha(true, true)).toBe(1);
+    expect(lockedAlpha(true, false)).toBe(0.55);
+  });
+});
 
 describe('chooseFrame', () => {
   it('names the choice type ahead at every round and tier', () => {

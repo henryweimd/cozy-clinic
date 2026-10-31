@@ -45,7 +45,7 @@ import type { Cheer, CheerDraft, HandoffDraft, HandoffNote } from '../data/share
 import { HandoffSheet } from '../ui/handoffSheet';
 import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
-import { chooseFrame, examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
+import { chooseFrame, examQuestion, isPerfectVisit, lockedAlpha, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
 import { reword } from '../game/reword';
 import { isMemoryMap, memoryLine, recordMemory } from '../game/memory';
 import type { MemoryMap } from '../game/memory';
@@ -1479,6 +1479,7 @@ export class ClinicScene extends Phaser.Scene {
       this.drawSpine(card, card.revealed);
       this.drawStamp(card, card.revealed);
     });
+    this.syncCardLock();
     this.patient.setTexture(this.steadyFace());
     this.refreshChart();
     this.refreshHud();
@@ -1562,6 +1563,7 @@ export class ClinicScene extends Phaser.Scene {
       this.drawSpine(card, card.revealed);
       this.drawStamp(card, card.revealed);
     });
+    this.syncCardLock();
   }
 
   /** (Re)builds the tappable cards; the corral is re-added by drawCorral. */
@@ -1780,6 +1782,17 @@ export class ClinicScene extends Phaser.Scene {
     });
   }
 
+  /**
+   * Answered rounds look locked: the pick keeps full alpha,
+   * the rest dim to the veto 0.55 (taps were already ignored
+   * — this stops the LOOK of still choosing). Vetoed rounds
+   * stay open, so the veto path never calls this.
+   */
+  private syncCardLock(): void {
+    const answered = this.cards.some((c) => c.revealed !== null);
+    this.cards.forEach((c) => c.root.setAlpha(lockedAlpha(answered, c.revealed !== null)));
+  }
+
   /** Captures the pre-move snapshot (every round pushes undo). */
   private snapPreMove(): UndoSnapshot {
     return {
@@ -1978,6 +1991,7 @@ export class ClinicScene extends Phaser.Scene {
     card.revealed = grade;
     this.drawSpine(card, grade);
     this.drawStamp(card, grade);
+    this.syncCardLock();
     if (best) {
       this.roundScore.hxBest = true;
       const hxPay = this.correctPayout();
@@ -2030,6 +2044,7 @@ export class ClinicScene extends Phaser.Scene {
     card.revealed = grade;
     this.drawSpine(card, grade);
     this.drawStamp(card, grade);
+    this.syncCardLock();
     if (best) {
       this.roundScore.examBest = true;
       const examPay = this.correctPayout();
@@ -2084,6 +2099,7 @@ export class ClinicScene extends Phaser.Scene {
     card.revealed = grade;
     this.drawSpine(card, grade);
     this.drawStamp(card, grade);
+    this.syncCardLock();
     if (correct) {
       this.roundScore.dxCorrect = true;
       const dxPay = this.correctPayout();
@@ -2166,6 +2182,7 @@ export class ClinicScene extends Phaser.Scene {
     card.revealed = grade;
     this.drawSpine(card, grade);
     this.drawStamp(card, grade);
+    this.syncCardLock();
     // Right/wrong reads three ways: stamp + face + toast.
     const txPay = this.correctPayout();
     const txExtra = grade === 'BEST' ? this.awardCombo() : 0;

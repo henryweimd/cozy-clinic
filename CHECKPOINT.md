@@ -1,3 +1,24 @@
+# CHECKPOINT — Run 44: card lock look (2026-11-01)
+
+Phase: answer-lock visuals on `feat/knottin-lab`. `main`
+untouched (still run 31).
+
+Files changed: 5 (visit helper + test, scene wiring,
+PROGRESS, CHECKPOINT). No geometry touched.
+
+Test result: `npm test` 429/429; tsc clean; build green;
+auditor 0 findings.
+
+Deployment URL: branch preview (SSO-gated); prod
+unchanged on main.
+
+Playtest result: operator playtesting in parallel (this
+run answers their lock note).
+
+Image spend this run: $0 (ledger ~$2.62 cumulative).
+
+STOP.
+
 # CHECKPOINT — Run 43: compulsion loop (2026-11-01)
 
 Phase: ranks + nudges on `feat/knottin-lab`. `main`
