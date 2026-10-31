@@ -60,6 +60,44 @@ export function roundQuestion(
   return ROUND_QUESTIONS[round][tier].replace('{name}', name);
 }
 
+export type ChooseRound = 'history' | 'examine' | 'diagnose' | 'treat';
+
+/**
+ * The explicit Choose cue, prepended to every round question:
+ * names the choice type ahead ("Choose the best question…").
+ * Tier-worded so gentle stays plain and expert stays expert.
+ */
+const CHOOSE_FRAME: Record<ChooseRound, Record<QuizTier, string>> = {
+  history: {
+    gentle: 'Choose the best question to ask your patient.',
+    steady: 'Choose the best question to ask.',
+    clinical: 'Choose the best history question.',
+    expert: 'Select the highest-yield history question.',
+  },
+  examine: {
+    gentle: 'Choose the best check to examine your patient.',
+    steady: 'Choose the best examination.',
+    clinical: 'Choose the best examination maneuver.',
+    expert: 'Select the highest-yield examination.',
+  },
+  diagnose: {
+    gentle: 'Choose the best diagnosis for your patient.',
+    steady: 'Choose the best diagnosis.',
+    clinical: 'Choose the best clinical diagnosis.',
+    expert: 'Select the most likely diagnosis.',
+  },
+  treat: {
+    gentle: 'Choose the best care for your patient.',
+    steady: 'Choose the best action for your patient.',
+    clinical: 'Choose the best management.',
+    expert: 'Select the best intervention.',
+  },
+};
+
+export function chooseFrame(round: ChooseRound, tier: QuizTier): string {
+  return CHOOSE_FRAME[round][tier];
+}
+
 /** Fills {name} + {demo} (8yF-style) in an exam quiz template. */
 export function examQuestion(template: string, name: string, demo: string): string {
   return template.replace('{name}', name).replace('{demo}', demo);

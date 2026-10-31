@@ -1,5 +1,26 @@
 import { describe, expect, it } from 'vitest';
-import { examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from './visit';
+import { chooseFrame, examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from './visit';
+
+describe('chooseFrame', () => {
+  it('names the choice type ahead at every round and tier', () => {
+    expect(chooseFrame('history', 'gentle')).toContain('question');
+    expect(chooseFrame('examine', 'gentle')).toContain('check');
+    expect(chooseFrame('diagnose', 'gentle')).toContain('diagnosis');
+    expect(chooseFrame('treat', 'gentle')).toContain('care');
+    for (const tier of ['gentle', 'steady', 'clinical', 'expert'] as const) {
+      for (const round of ['history', 'examine', 'diagnose', 'treat'] as const) {
+        const frame = chooseFrame(round, tier);
+        expect(frame.length).toBeGreaterThan(0);
+        expect(frame).toMatch(/^(Choose|Select) the /);
+      }
+    }
+  });
+
+  it('speaks expert at the expert tier', () => {
+    expect(chooseFrame('history', 'expert')).toContain('highest-yield');
+    expect(chooseFrame('treat', 'expert')).toContain('intervention');
+  });
+});
 
 describe('visitOutcome', () => {
   it('takes the right diagnosis AND the right treatment', () => {

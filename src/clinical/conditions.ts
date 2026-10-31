@@ -2335,9 +2335,9 @@ export const CONDITIONS: Record<string, ConditionDef> = {
       expert: 'Diffuse cramping; watery diarrhea; febrile post-antibiotics.',
     },
     historyOptions: [
-      { id: 'antibiotics-runs', label: 'Antibiotics, then the runs?' },
-      { id: 'ice-cream-gassy', label: 'Gassy after ice cream?' },
-      { id: 'pain-moved-right', label: 'Pain moved to lower right?' },
+      { id: 'antibiotics-runs', label: 'Ask: "Did you take antibiotics lately?"' },
+      { id: 'ice-cream-gassy', label: 'Ask: "Do you get gassy after ice cream?"' },
+      { id: 'pain-moved-right', label: 'Ask: "Pain moved to the lower right?"' },
     ],
     historyBestId: 'antibiotics-runs',
     bestHistory: {

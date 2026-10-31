@@ -1,5 +1,30 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 34 (2026-11-01): choice framing + history voice + exam floor
+
+Branch: `feat/knottin-lab`. Renumber: proxy+client moves to
+run 35, lab screen to run 36, merge/docs to run 37.
+File ownership (main agent, this run): visit.ts frame table
++ test, ClinicScene prompt prepend + card font, conditions
+(Bram history labels only), exam-b overlay analysis,
+auditor quiz samples, PROGRESS, CHECKPOINT. No engine, no
+Supabase writes.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- Every round question now opens with a tier-worded Choose
+  cue ("Choose the best question to ask your patient" …
+  "Select the highest-yield history question"); the corral
+  legend keeps its short step marker (a full sentence can't
+  fit the 200px no-point-at-middle-card rule).
+- Bram's history options rewritten in Ask-voice (quoted
+  patient questions, ≤40 chars); card labels 15→13px so
+  two-line labels fit the 44px truncate budget.
+- Exam floor: UI-zone overlay on exam-b shows nametag /
+  corral / nav already land on clean floor — no plate
+  regeneration needed ($0 image spend).
+- Verify: 412/412, tsc clean, build green, auditor 0.
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 33 (2026-11-01): gut-first reorder for testing
 
 Branch: `feat/knottin-lab`. Renumber: proxy+client moves to

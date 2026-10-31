@@ -1,3 +1,26 @@
+# CHECKPOINT — Run 34: choice framing + history voice (2026-11-01)
+
+Phase: explicit Choose cues + Bram Ask-voice on
+`feat/knottin-lab`. `main` untouched (still run 31).
+
+Files changed: 6 (visit.ts frame table + test,
+ClinicScene prepend + card font, conditions Bram labels,
+auditor samples, PROGRESS, CHECKPOINT). Display-only; no
+engine, content-count, art, or DB change.
+
+Test result: auditor 0 findings; `npm test` 412/412; tsc
+clean; build green.
+
+Deployment URL: branch preview (SSO-gated); prod
+unchanged on main.
+
+Playtest result: NOT operator-playtested — programmatic
+verification only.
+
+Image spend this run: $0 (ledger ~$2.62 cumulative).
+
+STOP.
+
 # CHECKPOINT — Run 33: gut-first reorder (2026-11-01)
 
 Phase: onboarding reorder for gut-pack testing on

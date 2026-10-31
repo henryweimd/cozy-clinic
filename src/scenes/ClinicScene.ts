@@ -44,7 +44,7 @@ import type { Cheer, CheerDraft, HandoffDraft, HandoffNote } from '../data/share
 import { HandoffSheet } from '../ui/handoffSheet';
 import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
-import { examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
+import { chooseFrame, examQuestion, isPerfectVisit, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
 import { reword } from '../game/reword';
 import { isMemoryMap, memoryLine, recordMemory } from '../game/memory';
 import type { MemoryMap } from '../game/memory';
@@ -1509,7 +1509,7 @@ export class ClinicScene extends Phaser.Scene {
         .text(0, 0, label, {
           fontFamily: FONT_FAMILY,
           fontStyle: 'bold',
-          fontSize: '15px',
+          fontSize: '13px',
           color: COCOA,
           align: 'center',
           wordWrap: { width: w - 12 },
@@ -1755,8 +1755,11 @@ export class ClinicScene extends Phaser.Scene {
         : round === 'examine'
           ? examQuestion(def.examQuiz[tier], this.activeName, this.demoTag())
           : roundQuestion(round, tier, this.activeName);
-    this.lastQuestion = q;
-    this.setConversation(speakerFor(this.activeName), q, 'tell');
+    // The explicit Choose cue: frame the question with the
+    // choice type ahead ("Choose the best question…").
+    const framed = `${chooseFrame(round, tier)} ${q}`;
+    this.lastQuestion = framed;
+    this.setConversation(speakerFor(this.activeName), framed, 'tell');
     // One-shot coaches, at most one toast per question (the
     // toast replaces, so ordering is the priority). First quiz
     // ever: teach the tap. First question with a rewindable
