@@ -1,5 +1,19 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 35 (2026-11-01): wordmark vertical positioning
+
+Branch: `feat/knottin-lab`. Renumber: proxy+client moves to
+run 36, lab screen to run 37, merge/docs to run 38.
+File ownership (main agent, this run): ClinicScene
+wordmark + trigger, auditor wordmark band, PROGRESS,
+CHECKPOINT. Display-only.
+Hands off: src/data/maneuvers.* (other stream); `main`.
+
+- Visit wordmark + dev trigger moved y90 → y56, into the
+  empty top wall band; size/alpha/rules untouched.
+- Verify: 412/412, tsc clean, build green, auditor 0.
+- Spend: $0 (ledger ~$2.62 cumulative).
+
 ## Run 34 (2026-11-01): choice framing + history voice + exam floor
 
 Branch: `feat/knottin-lab`. Renumber: proxy+client moves to

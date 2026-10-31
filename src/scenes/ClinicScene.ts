@@ -843,7 +843,7 @@ export class ClinicScene extends Phaser.Scene {
    * Wordmark + admin trigger. The visit plate lost its painted
    * sign (it sat too low once the top strip went away), so the
    * header is a UI element now: small-caps cocoa text with thin
-   * rules, floating in the calm wall band (y58–122), visit-only.
+   * rules, floating in the calm wall band (y24–88), visit-only.
    * Waiting keeps its painted sign. The invisible 5-tap trigger
    * rides the same band on wall-plate views as before.
    */
@@ -851,7 +851,7 @@ export class ClinicScene extends Phaser.Scene {
     const trigger = this.add.zone(0, 0, 240, 64);
     trigger.setInteractive({ useHandCursor: false });
     trigger.on('pointerdown', () => this.onDevTrigger());
-    this.devTrigger = this.add.container(270, 90, [trigger]);
+    this.devTrigger = this.add.container(270, 56, [trigger]);
     this.devTrigger.setDepth(4);
     const rules = this.add.graphics();
     rules.lineStyle(2, OUTLINE, 0.5);
@@ -866,7 +866,7 @@ export class ClinicScene extends Phaser.Scene {
       })
       .setOrigin(0.5, 0.5)
       .setAlpha(0.75);
-    this.wordmark = this.add.container(270, 90, [rules, word]);
+    this.wordmark = this.add.container(270, 56, [rules, word]);
     this.wordmark.setDepth(4);
   }
 
