@@ -1,7 +1,15 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
-> Run 22 ownership (main agent): conditions.ts (history blocks
-> only), HX_OTHER_FINDING. No other stream may touch these files.
+## Run 22 (2026-10-30): history rounds sharpened (operator revision)
+
+- All 8 history trios rewritten around discriminating, teachable
+  features: oliguria kept; cold onset pattern (+flu negatives);
+  nocturnal asthma; silent-HTN myth-bust (salt dropped as the
+  cause-frame); Centor-from-history; recumbent AOM worsening;
+  atopic triad; focal pleurisy. Dead ends are head-shake negatives.
+- Still DRAFT pending operator pen. Verdicts: 198/198 tests, tsc
+  clean, auditor 0, build green, live 200. Spend $0 (~$1.14).
+
 
 ## Run 21 (2026-10-30): 4-round visits — history ask round
 

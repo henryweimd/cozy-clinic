@@ -337,3 +337,22 @@ Image spend this run: $0 (ledger ~$1.14 cumulative, cap $10;
 STOP at $120).
 
 STOP.
+
+## Run 22 — discriminating history content (2026-10-30)
+
+Phase: operator revision — history clinchers were soft calls;
+rewrote all 8 around pathognomonic-leaning, educational history
+(silent HTN, Centor history, pleurisy, atopic triad, recumbent
+AOM, nocturnal asthma, cold onset, oliguria). DRAFT pending pen.
+
+Files: conditions.ts only (+PROGRESS ownership note).
+
+Test result: auditor 0 findings; `npm test` 198/198; tsc
+clean; build green; live 200 (bundle B-_iCDyc).
+
+Playtest result: NOT operator-playtested — programmatic only.
+
+Image spend this run: $0 (ledger ~$1.14 cumulative, cap $10;
+STOP at $120).
+
+STOP.
