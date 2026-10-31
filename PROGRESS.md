@@ -1,6 +1,6 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
-## Run 28 (in progress): content pack 5 — chickenpox, UTI, stye, nosebleed + Poppy/Maya/Eli/Max
+## Run 28 (2026-11-01): content pack 5 — chickenpox, UTI, stye, nosebleed + Poppy/Maya/Eli/Max
 
 File ownership (main agent, this run): same content-pack set
 as runs 25-27 (types, conditions, fallbackPack+tests, mockData,
@@ -8,6 +8,27 @@ sprites, ClinicScene Speaker/guard/preload, aboutSheet cast,
 CHARACTER_BIBLE, playbook §1, manifest, process_character,
 README/docs counts, PROGRESS, CHECKPOINT).
 Hands off: src/data/maneuvers.* (other stream).
+
+- Conditions (DRAFT, pending operator medical review):
+  chickenpox (crops, varied stages, oatmeal/calamine;
+  aspirin DANGEROUS), UTI (burning pee tiny+often, pee test,
+  antibiotics; guessed adult doses DANGEROUS), stye ↔ pink
+  eye reverse-mimicker (single lid-edge bump, warm compress;
+  needle DANGEROUS), nosebleed ↔ nose-bead (one-side drip
+  after picking, pinch+lean; bead plug DANGEROUS).
+  MSD-grounded, 4 rounds x 4 tiers.
+- Pack: 32 patients / 24 conditions / 544 nodes / 512 edges /
+  24 resources; Supabase mirrors exactly (28→32 patients,
+  476→544 nodes, 448→512 edges, resources 20→24, findings
+  80→96, treatments 20→24, 0 dangling); CHECK widened to 24.
+- Art: Poppy (Willow-base, pajama top), Maya (Cleo-base,
+  leg warmers), Eli (Finn-base, marble necklace), Max
+  (Hazel-base, acorn); 24 sprites + 4 Block-U headers,
+  all contact sheets reviewed, zero re-asks (nosebleed v1
+  blocked by moderation, v2 blood-free ships).
+- Verify: auditor 0 findings (pins 20→24); npm test 358/358;
+  tsc clean; build green; live 200 + new assets 200.
+- Spend: $0.28 (ledger ~$2.27 cumulative).
 
 ## Run 27 (2026-11-01): content pack 4 — hay-fever, ringworm, pink-eye, ankle-sprain + Willow/Jasper/Hazel/Finn
 

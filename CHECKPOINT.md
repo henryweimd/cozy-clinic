@@ -1,3 +1,29 @@
+# CHECKPOINT — Run 28: content pack 5 (2026-11-01)
+
+Phase: 4 MSD-grounded conditions (chickenpox, UTI, stye,
+nosebleed) + Poppy/Maya/Eli/Max via SCENARIO_PLAYBOOK
+pipeline. First of operator's 4-phase batch.
+
+Files changed: 47 (types, conditions, fallbackPack+tests,
+mockData, sprites, ClinicScene Speaker/guard/preload,
+aboutSheet cast, CHARACTER_BIBLE, playbook §1, manifest,
+process_character, contact sheets x5, 24 sprites, 4 headers,
+README/docs counts, PROGRESS). Commit `456aa5c` on main.
+
+Test result: auditor 0 findings (pins 20→24); `npm test`
+358/358; tsc clean; build green. Supabase: 32/544/512,
+resources 24, findings 96, treatments 24, 0 dangling.
+
+Deployment URL: `https://cozy-clinic.vercel.app/` (live-polled
+200 + new assets 200 after push).
+
+Playtest result: NOT operator-playtested this run —
+programmatic verification only.
+
+Image spend this run: $0.28 (ledger ~$2.27 cumulative, STOP at $120).
+
+STOP.
+
 # CHECKPOINT — Run 27: content pack 4 (2026-11-01)
 
 Phase: 4 MSD-grounded conditions (hay fever, ringworm,
