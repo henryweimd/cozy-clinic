@@ -1,5 +1,13 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 29 (in progress): judging-rubric loop (Indie: creativity, technical ambition, whether-it-works)
+
+File ownership (main agent, this run): ClinicScene arch/DEMO
+readout, aboutSheet copy, README Meta-AI-tooling section,
+PROGRESS, CHECKPOINT. No content-pack files, no Supabase
+writes, no image spend.
+Hands off: src/data/maneuvers.* (other stream).
+
 ## Run 28 (2026-11-01): content pack 5 — chickenpox, UTI, stye, nosebleed + Poppy/Maya/Eli/Max
 
 File ownership (main agent, this run): same content-pack set

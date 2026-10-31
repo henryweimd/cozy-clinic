@@ -4244,7 +4244,7 @@ export class ClinicScene extends Phaser.Scene {
     const steps = [
       '1 Meet Milo — visit #2, he remembers you',
       '2 Ask/exam/dx/treat — clues accumulate',
-      '3 Next patient (10 now); tray = exam',
+      `3 Next patient (${this.waitingOrder.length} waiting); tray = exam`,
       '4 Leave a care note (2nd tab = doctor 2)',
       '5 Learn (+2), Shop boosts, Profile, About',
       '6 Cheer a colleague from any care note',
