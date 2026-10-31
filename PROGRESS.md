@@ -1,5 +1,14 @@
 # PROGRESS.md — Little Lives: Cozy Clinic
 
+## Run 28 (in progress): content pack 5 — chickenpox, UTI, stye, nosebleed + Poppy/Maya/Eli/Max
+
+File ownership (main agent, this run): same content-pack set
+as runs 25-27 (types, conditions, fallbackPack+tests, mockData,
+sprites, ClinicScene Speaker/guard/preload, aboutSheet cast,
+CHARACTER_BIBLE, playbook §1, manifest, process_character,
+README/docs counts, PROGRESS, CHECKPOINT).
+Hands off: src/data/maneuvers.* (other stream).
+
 ## Run 27 (2026-11-01): content pack 4 — hay-fever, ringworm, pink-eye, ankle-sprain + Willow/Jasper/Hazel/Finn
 
 File ownership (main agent, this run): same content-pack set

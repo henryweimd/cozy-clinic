@@ -1260,5 +1260,15 @@
   "finn_note": "Finn SHIPS 2026-11-01: muted-grass soccer striker, white jersey green stripe (fixed, below face); 6-frame set via Remy-identity edit, paste_x=22; eager bounce 2.3",
   "finn_contact_sheet": "art/contact-sheets/plate-finn.png",
   "run27_learn_headers_contact_sheet": "art/contact-sheets/learn-headers27.png",
-  "run27_spend_note": "24 character images + 4 Block-U headers x $0.01 = $0.28; ledger ~$1.99 cumulative; at >= $120 STOP - not reached"
+  "run27_spend_note": "24 character images + 4 Block-U headers x $0.01 = $0.28; ledger ~$1.99 cumulative; at >= $120 STOP - not reached",
+  "poppy_note": "Poppy SHIPS 2026-11-01: dusty-brick pajama planner, cloud pajama top (fixed, below face); 6-frame set via Willow-identity edit, paste_x=22; sleepy bounce 1.9",
+  "poppy_contact_sheet": "art/contact-sheets/plate-poppy.png",
+  "maya_note": "Maya SHIPS 2026-11-01: soft-periwinkle dancer, rose leg warmers (fixed, below face); 6-frame set via Cleo-identity edit, paste_x=22; graceful bounce 2.0",
+  "maya_contact_sheet": "art/contact-sheets/plate-maya.png",
+  "eli_note": "Eli SHIPS 2026-11-01: deep-pine marble champ, marble necklace (fixed, below face); 6-frame set via Finn-identity edit, paste_x=22; steady sway 1.8",
+  "eli_contact_sheet": "art/contact-sheets/plate-eli.png",
+  "max_note": "Max SHIPS 2026-11-01: bronze-amber daredevil, acorn behind ear (fixed, side); 6-frame set via Hazel-identity edit, paste_x=22; daring bounce 2.2",
+  "max_contact_sheet": "art/contact-sheets/plate-max.png",
+  "run28_learn_headers_contact_sheet": "art/contact-sheets/learn-headers28.png",
+  "run28_spend_note": "24 character images + 4 Block-U headers x $0.01 = $0.28 (nosebleed v1 blocked by moderation, no charge; v2 blood-free ships); ledger ~$2.27 cumulative; at >= $120 STOP - not reached"
 }

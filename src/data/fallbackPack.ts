@@ -470,6 +470,58 @@ export const FALLBACK_PATIENTS: FallbackPatient[] = [
     "facial_features": "eager bead eyes, big sporty grin",
     "accessories_clothing": "white soccer jersey with green stripe",
     "start_stage": 2
+  },
+  {
+    "id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "name": "Poppy",
+    "condition_id": "chickenpox",
+    "age_band": "child",
+    "age_years": 6,
+    "sex": "F",
+    "persona": "pajama-party planner",
+    "fur_shade": "#B26A5E",
+    "facial_features": "sleepy bead eyes, sweet party smile",
+    "accessories_clothing": "cloud-print pajama top",
+    "start_stage": 2
+  },
+  {
+    "id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "name": "Maya",
+    "condition_id": "uti",
+    "age_band": "child",
+    "age_years": 8,
+    "sex": "F",
+    "persona": "dance-class regular",
+    "fur_shade": "#8494B8",
+    "facial_features": "graceful bead eyes, poised twirl smile",
+    "accessories_clothing": "rose-pink leg warmers",
+    "start_stage": 2
+  },
+  {
+    "id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "name": "Eli",
+    "condition_id": "stye",
+    "age_band": "child",
+    "age_years": 7,
+    "sex": "M",
+    "persona": "marble champion",
+    "fur_shade": "#5F7A6B",
+    "facial_features": "sharp bead eyes, sly marble-shooter grin",
+    "accessories_clothing": "cord necklace with a green marble",
+    "start_stage": 2
+  },
+  {
+    "id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "name": "Max",
+    "condition_id": "nosebleed",
+    "age_band": "child",
+    "age_years": 9,
+    "sex": "M",
+    "persona": "climbing-tree daredevil",
+    "fur_shade": "#A8823F",
+    "facial_features": "daring bead eyes, brave gap-tooth grin",
+    "accessories_clothing": "tiny acorn tucked behind ear",
+    "start_stage": 2
   }
 ];
 
@@ -8089,6 +8141,1094 @@ export const FALLBACK_NODES: FallbackNode[] = [
     "teaching": "A tourniquet starves the foot of blood.",
     "animation_cue": "worried",
     "memory": "First visit: swollen. Tried \"Play through the soccer game\" → ballooned. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "a44a5184-1cfa-4f2f-8a8a-939ca7ac457e",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Poppy scratches at the itchy spots on her arms. Blister bunches popped up after her friend got sick. The cozy clinic feels calm around her.",
+    "teaching": "Itchy blisters in bunches plus a sick friend means chickenpox.",
+    "animation_cue": "idle",
+    "memory": "First visit: blistery."
+  },
+  {
+    "id": "a4391c0d-4291-4d71-862a-1d16c15b6b04",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Poppy soaks in an oatmeal bath with pink lotion. A few spots feel a little itchy. She looks perky and rests softly in the cozy room.",
+    "teaching": "Oatmeal baths and pink lotion calm the itch.",
+    "animation_cue": "recovery",
+    "memory": "First visit: blistery. Tried \"Oatmeal bath + calamine\" → spotty."
+  },
+  {
+    "id": "3007d5eb-d832-4d21-9192-7f179b693e8c",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Poppy pulls on mittens and rests. Blisters itch everywhere. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Mittens guard — baths truly soothe.",
+    "animation_cue": "worried",
+    "memory": "First visit: blistery. Tried \"Mittens on, wait it out\" → blistery."
+  },
+  {
+    "id": "69a44037-d629-489e-b96e-cf7dc59fd0ef",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Poppy takes a long hot scratchy bath. She is covered in scratchy spots. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Hot water and scratching spread the misery.",
+    "animation_cue": "sick",
+    "memory": "First visit: blistery. Tried \"Long hot scratchy bath\" → crusty."
+  },
+  {
+    "id": "891bb468-0079-4934-9f31-57cfb08bd48c",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Poppy starts to take aspirin for the fever, but a helper gently stops her. Blisters itch everywhere. She does not get worse.",
+    "teaching": "Aspirin can harm kids fighting pox.",
+    "animation_cue": "worried",
+    "memory": "First visit: blistery. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "650e1611-982a-47c0-a1f2-c8b08f0f629e",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Poppy keeps taking oatmeal baths with lotion. Her skin is smooth and clear again. She looks perky and cozy.",
+    "teaching": "Oatmeal baths and pink lotion calm the itch.",
+    "animation_cue": "happy",
+    "memory": "First visit: blistery. Tried \"Oatmeal bath + calamine\" → spotty. Tried \"Oatmeal bath + calamine\" → clear."
+  },
+  {
+    "id": "72db3f35-3f8d-4e20-843c-604702ccffd5",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Poppy keeps resting in scratch mittens. A few spots feel a little itchy. She looks comfortable and cozy.",
+    "teaching": "Mittens guard — baths truly soothe.",
+    "animation_cue": "worried",
+    "memory": "First visit: blistery. Tried \"Oatmeal bath + calamine\" → spotty. Tried \"Mittens on, wait it out\" → spotty."
+  },
+  {
+    "id": "9a8e9625-0086-4b2e-8edd-d21090b14156",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Poppy keeps taking long hot baths. Blisters itch everywhere. She looks droopy and cozy.",
+    "teaching": "Hot water and scratching spread the misery.",
+    "animation_cue": "sick",
+    "memory": "First visit: blistery. Tried \"Oatmeal bath + calamine\" → spotty. Tried \"Long hot scratchy bath\" → blistery."
+  },
+  {
+    "id": "62ff5523-5977-4c13-b9f3-0764a350b1d0",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Poppy starts to take aspirin for the fever, but a helper gently stops her. A few spots feel a little itchy. She does not get worse.",
+    "teaching": "Aspirin can harm kids fighting pox.",
+    "animation_cue": "worried",
+    "memory": "First visit: blistery. Tried \"Oatmeal bath + calamine\" → spotty. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "7722fc6c-724d-47ff-b209-19255e1651bf",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Poppy keeps taking oatmeal baths with lotion. A few spots feel a little itchy. She looks perky and cozy.",
+    "teaching": "Oatmeal baths and pink lotion calm the itch.",
+    "animation_cue": "recovery",
+    "memory": "First visit: blistery. Tried \"Mittens on, wait it out\" → blistery. Tried \"Oatmeal bath + calamine\" → spotty."
+  },
+  {
+    "id": "2a5a0b8e-4c9b-40d1-981e-0cd3abca61bd",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Poppy keeps resting in scratch mittens. Blisters itch everywhere. She looks droopy and cozy.",
+    "teaching": "Mittens guard — baths truly soothe.",
+    "animation_cue": "worried",
+    "memory": "First visit: blistery. Tried \"Mittens on, wait it out\" → blistery. Tried \"Mittens on, wait it out\" → blistery."
+  },
+  {
+    "id": "d5779d21-4158-49de-88f3-70da4204067a",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Poppy keeps taking long hot baths. She is covered in scratchy spots. She looks droopy and cozy.",
+    "teaching": "Hot water and scratching spread the misery.",
+    "animation_cue": "sick",
+    "memory": "First visit: blistery. Tried \"Mittens on, wait it out\" → blistery. Tried \"Long hot scratchy bath\" → crusty."
+  },
+  {
+    "id": "a73d8419-c17b-4283-9c0d-796a8fb151a1",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Poppy starts to take aspirin for the fever, but a helper gently stops her. Blisters itch everywhere. She does not get worse.",
+    "teaching": "Aspirin can harm kids fighting pox.",
+    "animation_cue": "worried",
+    "memory": "First visit: blistery. Tried \"Mittens on, wait it out\" → blistery. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "221f93c0-4a55-4b0a-a8cc-19f8f29fd25f",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Poppy keeps taking oatmeal baths with lotion. Blisters itch everywhere. She looks perky and cozy.",
+    "teaching": "Oatmeal baths and pink lotion calm the itch.",
+    "animation_cue": "recovery",
+    "memory": "First visit: blistery. Tried \"Long hot scratchy bath\" → crusty. Tried \"Oatmeal bath + calamine\" → blistery."
+  },
+  {
+    "id": "7d339e1d-5999-42fb-b75e-9af245b4be02",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Poppy keeps resting in scratch mittens. She is covered in scratchy spots. She looks droopy and cozy.",
+    "teaching": "Mittens guard — baths truly soothe.",
+    "animation_cue": "worried",
+    "memory": "First visit: blistery. Tried \"Long hot scratchy bath\" → crusty. Tried \"Mittens on, wait it out\" → crusty."
+  },
+  {
+    "id": "856babbd-06a8-4fcf-aadd-3369182f1c88",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Poppy keeps taking long hot baths. She is covered in scratchy spots. She looks droopy and cozy.",
+    "teaching": "Hot water and scratching spread the misery.",
+    "animation_cue": "worried",
+    "memory": "First visit: blistery. Tried \"Long hot scratchy bath\" → crusty. Tried \"Long hot scratchy bath\" → crusty."
+  },
+  {
+    "id": "988f9c3e-bc67-4c80-b5d1-6808b6861b03",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Poppy starts to take aspirin for the fever, but a helper gently stops her. She is covered in scratchy spots. She does not get worse.",
+    "teaching": "Aspirin can harm kids fighting pox.",
+    "animation_cue": "worried",
+    "memory": "First visit: blistery. Tried \"Long hot scratchy bath\" → crusty. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "58fd0475-7776-4663-9294-0b6c84faec04",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Maya squirms in her seat before dance class. Peeing burns and she keeps running to the bathroom. The cozy clinic feels calm around her.",
+    "teaching": "Burning pee in tiny amounts, all the time, means a bladder infection.",
+    "animation_cue": "idle",
+    "memory": "First visit: burny."
+  },
+  {
+    "id": "8ee9ed98-6711-4341-9286-0c1fd34d1cd7",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Maya starts antibiotics with lots of fluids. Peeing feels a little funny. She looks perky and rests softly in the cozy room.",
+    "teaching": "Antibiotics chase the bladder germs out.",
+    "animation_cue": "recovery",
+    "memory": "First visit: burny. Tried \"Antibiotics + lots of fluids\" → twingey."
+  },
+  {
+    "id": "2d746cef-481e-441b-9ab3-205350b54ed7",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Maya sips cranberry juice and rests. Peeing burns every trip. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Juice and rest comfort — medicine cures.",
+    "animation_cue": "worried",
+    "memory": "First visit: burny. Tried \"Cranberry juice and rest\" → burny."
+  },
+  {
+    "id": "7c21267e-31e8-4868-8001-36a795ee433f",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Maya holds her pee all day. Every bathroom trip hurts. She looks droopy and rests softly in the cozy room.",
+    "teaching": "Holding pee lets the germs party on.",
+    "animation_cue": "sick",
+    "memory": "First visit: burny. Tried \"Hold the pee all day\" → ouchy."
+  },
+  {
+    "id": "1fd66644-3a04-4eb3-8b5c-91f79f9259bc",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Maya starts to take grown-up pills and guess the dose, but a helper gently stops her. Peeing burns every trip. She does not get worse.",
+    "teaching": "Guessed pill doses harm instead of healing.",
+    "animation_cue": "worried",
+    "memory": "First visit: burny. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "198ddd98-15e4-4cf0-8a45-b7b557fe3901",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Maya keeps taking antibiotics with fluids. Peeing feels easy and fine. She looks perky and cozy.",
+    "teaching": "Antibiotics chase the bladder germs out.",
+    "animation_cue": "happy",
+    "memory": "First visit: burny. Tried \"Antibiotics + lots of fluids\" → twingey. Tried \"Antibiotics + lots of fluids\" → clear."
+  },
+  {
+    "id": "26d5a9c0-48da-4289-94cf-829738939b86",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Maya keeps resting with cranberry juice. Peeing feels a little funny. She looks comfortable and cozy.",
+    "teaching": "Juice and rest comfort — medicine cures.",
+    "animation_cue": "worried",
+    "memory": "First visit: burny. Tried \"Antibiotics + lots of fluids\" → twingey. Tried \"Cranberry juice and rest\" → twingey."
+  },
+  {
+    "id": "bf7b8e44-d0bf-4996-9084-3084476f3024",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Maya keeps holding her pee in. Peeing burns every trip. She looks droopy and cozy.",
+    "teaching": "Holding pee lets the germs party on.",
+    "animation_cue": "sick",
+    "memory": "First visit: burny. Tried \"Antibiotics + lots of fluids\" → twingey. Tried \"Hold the pee all day\" → burny."
+  },
+  {
+    "id": "aef80f1b-26bc-4925-8421-a5907d2e47bc",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Maya starts to take grown-up pills and guess the dose, but a helper gently stops her. Peeing feels a little funny. She does not get worse.",
+    "teaching": "Guessed pill doses harm instead of healing.",
+    "animation_cue": "worried",
+    "memory": "First visit: burny. Tried \"Antibiotics + lots of fluids\" → twingey. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "2353d457-4064-4171-adce-8b2abaabf7f7",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Maya keeps taking antibiotics with fluids. Peeing feels a little funny. She looks perky and cozy.",
+    "teaching": "Antibiotics chase the bladder germs out.",
+    "animation_cue": "recovery",
+    "memory": "First visit: burny. Tried \"Cranberry juice and rest\" → burny. Tried \"Antibiotics + lots of fluids\" → twingey."
+  },
+  {
+    "id": "0921bd32-e636-4782-ad77-c838b00938f2",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Maya keeps resting with cranberry juice. Peeing burns every trip. She looks droopy and cozy.",
+    "teaching": "Juice and rest comfort — medicine cures.",
+    "animation_cue": "worried",
+    "memory": "First visit: burny. Tried \"Cranberry juice and rest\" → burny. Tried \"Cranberry juice and rest\" → burny."
+  },
+  {
+    "id": "ed2f4492-6678-4675-95ab-7127ea779f2e",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Maya keeps holding her pee in. Every bathroom trip hurts. She looks droopy and cozy.",
+    "teaching": "Holding pee lets the germs party on.",
+    "animation_cue": "sick",
+    "memory": "First visit: burny. Tried \"Cranberry juice and rest\" → burny. Tried \"Hold the pee all day\" → ouchy."
+  },
+  {
+    "id": "66b2e423-a36e-4987-894c-8d9c09cbde54",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Maya starts to take grown-up pills and guess the dose, but a helper gently stops her. Peeing burns every trip. She does not get worse.",
+    "teaching": "Guessed pill doses harm instead of healing.",
+    "animation_cue": "worried",
+    "memory": "First visit: burny. Tried \"Cranberry juice and rest\" → burny. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "91800a97-3f43-4933-8e0c-52c3010f3ad2",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Maya keeps taking antibiotics with fluids. Peeing burns every trip. She looks perky and cozy.",
+    "teaching": "Antibiotics chase the bladder germs out.",
+    "animation_cue": "recovery",
+    "memory": "First visit: burny. Tried \"Hold the pee all day\" → ouchy. Tried \"Antibiotics + lots of fluids\" → burny."
+  },
+  {
+    "id": "c15f1f0e-ecad-45ea-8c4f-1e4303e598bf",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Maya keeps resting with cranberry juice. Every bathroom trip hurts. She looks droopy and cozy.",
+    "teaching": "Juice and rest comfort — medicine cures.",
+    "animation_cue": "worried",
+    "memory": "First visit: burny. Tried \"Hold the pee all day\" → ouchy. Tried \"Cranberry juice and rest\" → ouchy."
+  },
+  {
+    "id": "07c8fa1c-76cb-4639-a53e-b11728e5b80c",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Maya keeps holding her pee in. Every bathroom trip hurts. She looks droopy and cozy.",
+    "teaching": "Holding pee lets the germs party on.",
+    "animation_cue": "worried",
+    "memory": "First visit: burny. Tried \"Hold the pee all day\" → ouchy. Tried \"Hold the pee all day\" → ouchy."
+  },
+  {
+    "id": "11593695-40b2-4994-a8e6-1585bcb67e47",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Maya starts to take grown-up pills and guess the dose, but a helper gently stops her. Every bathroom trip hurts. She does not get worse.",
+    "teaching": "Guessed pill doses harm instead of healing.",
+    "animation_cue": "worried",
+    "memory": "First visit: burny. Tried \"Hold the pee all day\" → ouchy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "aa5fc1a2-1af9-4873-bdc7-41e12964484e",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Eli rubs the sore bump on his eyelid. The red lump popped up after marble games with dusty hands. The cozy clinic feels calm around him.",
+    "teaching": "One sore red bump on the eyelid edge means a stye.",
+    "animation_cue": "idle",
+    "memory": "First visit: bumpy."
+  },
+  {
+    "id": "f01f2bd4-46dc-4330-b2b3-02af2ca2fee8",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Eli holds a warm cloth and keeps hands off. His eyelid feels a little puffy. He looks perky and rests softly in the cozy room.",
+    "teaching": "Warm cloths melt the stye away.",
+    "animation_cue": "recovery",
+    "memory": "First visit: bumpy. Tried \"Warm compress, hands off\" → puffy."
+  },
+  {
+    "id": "ce0cbb82-bbc2-429e-96ba-f2e125a9241d",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Eli rests a cool spoon on his eye. The sore bump throbs on his lid. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Cool soothes — warmth truly heals.",
+    "animation_cue": "worried",
+    "memory": "First visit: bumpy. Tried \"Cool spoon rest\" → bumpy."
+  },
+  {
+    "id": "f336aa5a-624a-4370-9110-fb46f280cb1a",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Eli squeezes the bump to pop it. His eyelid really throbs. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Squeezing spreads the eyelid germs.",
+    "animation_cue": "sick",
+    "memory": "First visit: bumpy. Tried \"Squeeze and pop it\" → throbby."
+  },
+  {
+    "id": "41a13a97-d7aa-486b-811b-b7d75101c641",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Eli starts to pop it with a pin, but a helper gently stops him. The sore bump throbs on his lid. He does not get worse.",
+    "teaching": "Pins near eyes can blind instead.",
+    "animation_cue": "worried",
+    "memory": "First visit: bumpy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "e489f82e-437a-4b09-91ab-b9206e089dcb",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Eli keeps using warm cloths, hands off. His eyelids feel smooth and calm. He looks perky and cozy.",
+    "teaching": "Warm cloths melt the stye away.",
+    "animation_cue": "happy",
+    "memory": "First visit: bumpy. Tried \"Warm compress, hands off\" → puffy. Tried \"Warm compress, hands off\" → clear."
+  },
+  {
+    "id": "1c529981-aaa3-466c-b1e6-27a675f1344c",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Eli keeps resting with a cool spoon. His eyelid feels a little puffy. He looks comfortable and cozy.",
+    "teaching": "Cool soothes — warmth truly heals.",
+    "animation_cue": "worried",
+    "memory": "First visit: bumpy. Tried \"Warm compress, hands off\" → puffy. Tried \"Cool spoon rest\" → puffy."
+  },
+  {
+    "id": "531c3b98-948e-414c-955b-6530e5ac6ee9",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Eli keeps squeezing the sore bump. The sore bump throbs on his lid. He looks droopy and cozy.",
+    "teaching": "Squeezing spreads the eyelid germs.",
+    "animation_cue": "sick",
+    "memory": "First visit: bumpy. Tried \"Warm compress, hands off\" → puffy. Tried \"Squeeze and pop it\" → bumpy."
+  },
+  {
+    "id": "31a01292-8558-4eef-bc21-153eeb81d5c5",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Eli starts to pop it with a pin, but a helper gently stops him. His eyelid feels a little puffy. He does not get worse.",
+    "teaching": "Pins near eyes can blind instead.",
+    "animation_cue": "worried",
+    "memory": "First visit: bumpy. Tried \"Warm compress, hands off\" → puffy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "24223af8-38a3-4211-a424-f764f8feac5e",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Eli keeps using warm cloths, hands off. His eyelid feels a little puffy. He looks perky and cozy.",
+    "teaching": "Warm cloths melt the stye away.",
+    "animation_cue": "recovery",
+    "memory": "First visit: bumpy. Tried \"Cool spoon rest\" → bumpy. Tried \"Warm compress, hands off\" → puffy."
+  },
+  {
+    "id": "b97bbf68-2bab-49d9-af92-13679a69a36f",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Eli keeps resting with a cool spoon. The sore bump throbs on his lid. He looks droopy and cozy.",
+    "teaching": "Cool soothes — warmth truly heals.",
+    "animation_cue": "worried",
+    "memory": "First visit: bumpy. Tried \"Cool spoon rest\" → bumpy. Tried \"Cool spoon rest\" → bumpy."
+  },
+  {
+    "id": "073a9125-dba4-4c10-a2f2-559daf2aa3f6",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Eli keeps squeezing the sore bump. His eyelid really throbs. He looks droopy and cozy.",
+    "teaching": "Squeezing spreads the eyelid germs.",
+    "animation_cue": "sick",
+    "memory": "First visit: bumpy. Tried \"Cool spoon rest\" → bumpy. Tried \"Squeeze and pop it\" → throbby."
+  },
+  {
+    "id": "f086d911-cd81-4653-8abf-c8805a40b65b",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Eli starts to pop it with a pin, but a helper gently stops him. The sore bump throbs on his lid. He does not get worse.",
+    "teaching": "Pins near eyes can blind instead.",
+    "animation_cue": "worried",
+    "memory": "First visit: bumpy. Tried \"Cool spoon rest\" → bumpy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "ce664ad1-7114-43b8-beb6-3fec42075e30",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Eli keeps using warm cloths, hands off. The sore bump throbs on his lid. He looks perky and cozy.",
+    "teaching": "Warm cloths melt the stye away.",
+    "animation_cue": "recovery",
+    "memory": "First visit: bumpy. Tried \"Squeeze and pop it\" → throbby. Tried \"Warm compress, hands off\" → bumpy."
+  },
+  {
+    "id": "2d109a21-929e-430e-a4cd-e4e2c30bc7d4",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Eli keeps resting with a cool spoon. His eyelid really throbs. He looks droopy and cozy.",
+    "teaching": "Cool soothes — warmth truly heals.",
+    "animation_cue": "worried",
+    "memory": "First visit: bumpy. Tried \"Squeeze and pop it\" → throbby. Tried \"Cool spoon rest\" → throbby."
+  },
+  {
+    "id": "62bad2a3-38aa-4a2e-b681-26c8250d71aa",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Eli keeps squeezing the sore bump. His eyelid really throbs. He looks droopy and cozy.",
+    "teaching": "Squeezing spreads the eyelid germs.",
+    "animation_cue": "worried",
+    "memory": "First visit: bumpy. Tried \"Squeeze and pop it\" → throbby. Tried \"Squeeze and pop it\" → throbby."
+  },
+  {
+    "id": "bb1bf3bd-5562-4d6b-9923-f792a10f577f",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Eli starts to pop it with a pin, but a helper gently stops him. His eyelid really throbs. He does not get worse.",
+    "teaching": "Pins near eyes can blind instead.",
+    "animation_cue": "worried",
+    "memory": "First visit: bumpy. Tried \"Squeeze and pop it\" → throbby. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "75533a06-caff-470a-99a0-f3acf21c0b48",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "depth": 0,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Max holds a tissue to his drippy nose. Picking started the drip after climbing down the oak. The cozy clinic feels calm around him.",
+    "teaching": "A one-side drip after picking, with no injury, is a nosebleed.",
+    "animation_cue": "idle",
+    "memory": "First visit: drippy."
+  },
+  {
+    "id": "056458b5-d292-40db-9b1c-7969f05cf6b7",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "depth": 1,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Max pinches his nose and leans forward. A little spot of blood shows. He looks perky and rests softly in the cozy room.",
+    "teaching": "Pinch and lean — the drip stops.",
+    "animation_cue": "recovery",
+    "memory": "First visit: drippy. Tried \"Pinch nose, lean forward\" → spotty."
+  },
+  {
+    "id": "0e3f943d-d8d7-49da-b90c-d55ca0526ea5",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Max plugs a tissue and rests. His nose keeps dripping. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Tissues catch — pinching truly stops.",
+    "animation_cue": "worried",
+    "memory": "First visit: drippy. Tried \"Tissue plug and rest\" → drippy."
+  },
+  {
+    "id": "aaac1ce3-aa7a-4567-8cb1-5ad518e59667",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "depth": 1,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Max tilts his head way back. Blood keeps coming out. He looks droopy and rests softly in the cozy room.",
+    "teaching": "Tilting back sends blood down the throat.",
+    "animation_cue": "sick",
+    "memory": "First visit: drippy. Tried \"Tilt head way back\" → gushy."
+  },
+  {
+    "id": "b6a96aa5-2c02-41da-be1f-2ac52427c45f",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "depth": 1,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Max starts to plug his nose with a bead, but a helper gently stops him. His nose keeps dripping. He does not get worse.",
+    "teaching": "Beads belong in pockets, not noses.",
+    "animation_cue": "worried",
+    "memory": "First visit: drippy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "78fc14f0-1f04-415a-9cbc-a7e21622f157",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "depth": 2,
+    "stage_index": 0,
+    "vitals": {
+      "energy": 10,
+      "comfort": 10,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Max keeps pinching and leaning forward. His nose is dry and calm. He looks perky and cozy.",
+    "teaching": "Pinch and lean — the drip stops.",
+    "animation_cue": "happy",
+    "memory": "First visit: drippy. Tried \"Pinch nose, lean forward\" → spotty. Tried \"Pinch nose, lean forward\" → clear."
+  },
+  {
+    "id": "ec4191a8-a65c-4109-ae79-c82b19f032e6",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "okay",
+    "narrative": "Max keeps resting with a tissue plug. A little spot of blood shows. He looks comfortable and cozy.",
+    "teaching": "Tissues catch — pinching truly stops.",
+    "animation_cue": "worried",
+    "memory": "First visit: drippy. Tried \"Pinch nose, lean forward\" → spotty. Tried \"Tissue plug and rest\" → spotty."
+  },
+  {
+    "id": "bd29fbb2-3650-4adc-a360-7b8aee3f3b0b",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Max keeps tilting his head back. His nose keeps dripping. He looks droopy and cozy.",
+    "teaching": "Tilting back sends blood down the throat.",
+    "animation_cue": "sick",
+    "memory": "First visit: drippy. Tried \"Pinch nose, lean forward\" → spotty. Tried \"Tilt head way back\" → drippy."
+  },
+  {
+    "id": "5286f402-83b0-4574-b275-8ed901101497",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Max starts to plug his nose with a bead, but a helper gently stops him. A little spot of blood shows. He does not get worse.",
+    "teaching": "Beads belong in pockets, not noses.",
+    "animation_cue": "worried",
+    "memory": "First visit: drippy. Tried \"Pinch nose, lean forward\" → spotty. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "78110378-479a-40b9-be52-55579b83b97a",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "depth": 2,
+    "stage_index": 1,
+    "vitals": {
+      "energy": 8,
+      "comfort": 9,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Max keeps pinching and leaning forward. A little spot of blood shows. He looks perky and cozy.",
+    "teaching": "Pinch and lean — the drip stops.",
+    "animation_cue": "recovery",
+    "memory": "First visit: drippy. Tried \"Tissue plug and rest\" → drippy. Tried \"Pinch nose, lean forward\" → spotty."
+  },
+  {
+    "id": "463600d9-c137-4a53-852c-d5e88d9ac914",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 8,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Max keeps resting with a tissue plug. His nose keeps dripping. He looks droopy and cozy.",
+    "teaching": "Tissues catch — pinching truly stops.",
+    "animation_cue": "worried",
+    "memory": "First visit: drippy. Tried \"Tissue plug and rest\" → drippy. Tried \"Tissue plug and rest\" → drippy."
+  },
+  {
+    "id": "40a1ee6d-dd57-4863-a867-773a99011afc",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Max keeps tilting his head back. Blood keeps coming out. He looks droopy and cozy.",
+    "teaching": "Tilting back sends blood down the throat.",
+    "animation_cue": "sick",
+    "memory": "First visit: drippy. Tried \"Tissue plug and rest\" → drippy. Tried \"Tilt head way back\" → gushy."
+  },
+  {
+    "id": "33b62145-9188-4003-8d1d-fe416261e266",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 6,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Max starts to plug his nose with a bead, but a helper gently stops him. His nose keeps dripping. He does not get worse.",
+    "teaching": "Beads belong in pockets, not noses.",
+    "animation_cue": "worried",
+    "memory": "First visit: drippy. Tried \"Tissue plug and rest\" → drippy. A risky idea came up; we steered clear."
+  },
+  {
+    "id": "1db61e44-87fa-4c97-9d4a-601fefdcd960",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "depth": 2,
+    "stage_index": 2,
+    "vitals": {
+      "energy": 8,
+      "comfort": 7,
+      "breathing": 6
+    },
+    "mood": "perky",
+    "narrative": "Max keeps pinching and leaning forward. His nose keeps dripping. He looks perky and cozy.",
+    "teaching": "Pinch and lean — the drip stops.",
+    "animation_cue": "recovery",
+    "memory": "First visit: drippy. Tried \"Tilt head way back\" → gushy. Tried \"Pinch nose, lean forward\" → drippy."
+  },
+  {
+    "id": "7ece92d9-9c78-49f2-9c34-51bc3dbb2b51",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 6,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Max keeps resting with a tissue plug. Blood keeps coming out. He looks droopy and cozy.",
+    "teaching": "Tissues catch — pinching truly stops.",
+    "animation_cue": "worried",
+    "memory": "First visit: drippy. Tried \"Tilt head way back\" → gushy. Tried \"Tissue plug and rest\" → gushy."
+  },
+  {
+    "id": "a3aa5b4e-2ceb-4dd5-969d-119802b3428a",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 4,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Max keeps tilting his head back. Blood keeps coming out. He looks droopy and cozy.",
+    "teaching": "Tilting back sends blood down the throat.",
+    "animation_cue": "worried",
+    "memory": "First visit: drippy. Tried \"Tilt head way back\" → gushy. Tried \"Tilt head way back\" → gushy."
+  },
+  {
+    "id": "a8bd85b7-b009-46e1-8693-36e0a0b3fc73",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "depth": 2,
+    "stage_index": 3,
+    "vitals": {
+      "energy": 6,
+      "comfort": 5,
+      "breathing": 6
+    },
+    "mood": "droopy",
+    "narrative": "Max starts to plug his nose with a bead, but a helper gently stops him. Blood keeps coming out. He does not get worse.",
+    "teaching": "Beads belong in pockets, not noses.",
+    "animation_cue": "worried",
+    "memory": "First visit: drippy. Tried \"Tilt head way back\" → gushy. A risky idea came up; we steered clear."
   }
 ];
 
@@ -12124,6 +13264,582 @@ export const FALLBACK_EDGES: FallbackEdge[] = [
     "kind": "decision",
     "choice_label": "Belt tourniquet on the leg",
     "grade": "DANGEROUS"
+  },
+  {
+    "id": "6478cf69-56a4-486e-977b-cd41f5e1c5a6",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "from_node_id": "a44a5184-1cfa-4f2f-8a8a-939ca7ac457e",
+    "to_node_id": "a4391c0d-4291-4d71-862a-1d16c15b6b04",
+    "kind": "decision",
+    "choice_label": "Oatmeal bath + calamine",
+    "grade": "BEST"
+  },
+  {
+    "id": "0bec745f-0fd1-46d1-ad54-bfa8e627b467",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "from_node_id": "a44a5184-1cfa-4f2f-8a8a-939ca7ac457e",
+    "to_node_id": "3007d5eb-d832-4d21-9192-7f179b693e8c",
+    "kind": "decision",
+    "choice_label": "Mittens on, wait it out",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "cc2f0ca6-c7e4-4c63-9c70-8470b0f4b5da",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "from_node_id": "a44a5184-1cfa-4f2f-8a8a-939ca7ac457e",
+    "to_node_id": "69a44037-d629-489e-b96e-cf7dc59fd0ef",
+    "kind": "decision",
+    "choice_label": "Long hot scratchy bath",
+    "grade": "WRONG"
+  },
+  {
+    "id": "a4f4d30d-50c4-4d3f-b701-49242918df24",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "from_node_id": "a44a5184-1cfa-4f2f-8a8a-939ca7ac457e",
+    "to_node_id": "891bb468-0079-4934-9f31-57cfb08bd48c",
+    "kind": "decision",
+    "choice_label": "Aspirin for the fever",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "a7f2cda5-cebd-4c82-b279-0a6d56a411c0",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "from_node_id": "a4391c0d-4291-4d71-862a-1d16c15b6b04",
+    "to_node_id": "650e1611-982a-47c0-a1f2-c8b08f0f629e",
+    "kind": "decision",
+    "choice_label": "Oatmeal bath + calamine",
+    "grade": "BEST"
+  },
+  {
+    "id": "8482e1f9-7439-4bd1-9379-94b1fb46fa4d",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "from_node_id": "a4391c0d-4291-4d71-862a-1d16c15b6b04",
+    "to_node_id": "72db3f35-3f8d-4e20-843c-604702ccffd5",
+    "kind": "decision",
+    "choice_label": "Mittens on, wait it out",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "2d00ba4d-bc73-47a6-a276-5630e791298d",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "from_node_id": "a4391c0d-4291-4d71-862a-1d16c15b6b04",
+    "to_node_id": "9a8e9625-0086-4b2e-8edd-d21090b14156",
+    "kind": "decision",
+    "choice_label": "Long hot scratchy bath",
+    "grade": "WRONG"
+  },
+  {
+    "id": "00b3b955-9b5b-4d3c-a568-ccd5595b77b3",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "from_node_id": "a4391c0d-4291-4d71-862a-1d16c15b6b04",
+    "to_node_id": "62ff5523-5977-4c13-b9f3-0764a350b1d0",
+    "kind": "decision",
+    "choice_label": "Aspirin for the fever",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "cb2cbd7d-dce4-4f91-b990-3a79ec24ec77",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "from_node_id": "3007d5eb-d832-4d21-9192-7f179b693e8c",
+    "to_node_id": "7722fc6c-724d-47ff-b209-19255e1651bf",
+    "kind": "decision",
+    "choice_label": "Oatmeal bath + calamine",
+    "grade": "BEST"
+  },
+  {
+    "id": "f287fdea-dd79-4ed8-b877-e7894ad8ee4a",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "from_node_id": "3007d5eb-d832-4d21-9192-7f179b693e8c",
+    "to_node_id": "2a5a0b8e-4c9b-40d1-981e-0cd3abca61bd",
+    "kind": "decision",
+    "choice_label": "Mittens on, wait it out",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "19312a5d-4087-43ec-96ec-ae013101b5c2",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "from_node_id": "3007d5eb-d832-4d21-9192-7f179b693e8c",
+    "to_node_id": "d5779d21-4158-49de-88f3-70da4204067a",
+    "kind": "decision",
+    "choice_label": "Long hot scratchy bath",
+    "grade": "WRONG"
+  },
+  {
+    "id": "64885f8c-cc3b-49f3-8cc0-36bc07403ad3",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "from_node_id": "3007d5eb-d832-4d21-9192-7f179b693e8c",
+    "to_node_id": "a73d8419-c17b-4283-9c0d-796a8fb151a1",
+    "kind": "decision",
+    "choice_label": "Aspirin for the fever",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "556ef3d4-5bd0-4943-944f-3dd51d28deb4",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "from_node_id": "69a44037-d629-489e-b96e-cf7dc59fd0ef",
+    "to_node_id": "221f93c0-4a55-4b0a-a8cc-19f8f29fd25f",
+    "kind": "decision",
+    "choice_label": "Oatmeal bath + calamine",
+    "grade": "BEST"
+  },
+  {
+    "id": "be68ad6d-06d3-4804-a938-e384d19b1c9f",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "from_node_id": "69a44037-d629-489e-b96e-cf7dc59fd0ef",
+    "to_node_id": "7d339e1d-5999-42fb-b75e-9af245b4be02",
+    "kind": "decision",
+    "choice_label": "Mittens on, wait it out",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "cce15209-4c62-4ae1-abc3-f2264ccdb728",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "from_node_id": "69a44037-d629-489e-b96e-cf7dc59fd0ef",
+    "to_node_id": "856babbd-06a8-4fcf-aadd-3369182f1c88",
+    "kind": "decision",
+    "choice_label": "Long hot scratchy bath",
+    "grade": "WRONG"
+  },
+  {
+    "id": "8ecaf81e-a904-4aad-9daf-df19a9059be1",
+    "patient_id": "0cb3f6b8-255f-4a9b-a26c-52b3399b22c9",
+    "from_node_id": "69a44037-d629-489e-b96e-cf7dc59fd0ef",
+    "to_node_id": "988f9c3e-bc67-4c80-b5d1-6808b6861b03",
+    "kind": "decision",
+    "choice_label": "Aspirin for the fever",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "eeb678da-14f3-42f0-b74c-13fe71874e47",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "from_node_id": "58fd0475-7776-4663-9294-0b6c84faec04",
+    "to_node_id": "8ee9ed98-6711-4341-9286-0c1fd34d1cd7",
+    "kind": "decision",
+    "choice_label": "Antibiotics + lots of fluids",
+    "grade": "BEST"
+  },
+  {
+    "id": "f62e2f62-fe78-4a1e-9986-4b2143188f06",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "from_node_id": "58fd0475-7776-4663-9294-0b6c84faec04",
+    "to_node_id": "2d746cef-481e-441b-9ab3-205350b54ed7",
+    "kind": "decision",
+    "choice_label": "Cranberry juice and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "a1e0785c-7ac6-4f24-80fc-880ef5e3204d",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "from_node_id": "58fd0475-7776-4663-9294-0b6c84faec04",
+    "to_node_id": "7c21267e-31e8-4868-8001-36a795ee433f",
+    "kind": "decision",
+    "choice_label": "Hold the pee all day",
+    "grade": "WRONG"
+  },
+  {
+    "id": "bd9fce1f-4ddb-4137-997f-84a760dba26f",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "from_node_id": "58fd0475-7776-4663-9294-0b6c84faec04",
+    "to_node_id": "1fd66644-3a04-4eb3-8b5c-91f79f9259bc",
+    "kind": "decision",
+    "choice_label": "Grown-up pills, guess dose",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "04e57b7d-476a-45c8-b5e0-f671ab4a04e6",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "from_node_id": "8ee9ed98-6711-4341-9286-0c1fd34d1cd7",
+    "to_node_id": "198ddd98-15e4-4cf0-8a45-b7b557fe3901",
+    "kind": "decision",
+    "choice_label": "Antibiotics + lots of fluids",
+    "grade": "BEST"
+  },
+  {
+    "id": "561188a2-2c18-4535-aef3-c587d59a533f",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "from_node_id": "8ee9ed98-6711-4341-9286-0c1fd34d1cd7",
+    "to_node_id": "26d5a9c0-48da-4289-94cf-829738939b86",
+    "kind": "decision",
+    "choice_label": "Cranberry juice and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "9a728ba6-f70f-41a6-a31a-b86d42aa9724",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "from_node_id": "8ee9ed98-6711-4341-9286-0c1fd34d1cd7",
+    "to_node_id": "bf7b8e44-d0bf-4996-9084-3084476f3024",
+    "kind": "decision",
+    "choice_label": "Hold the pee all day",
+    "grade": "WRONG"
+  },
+  {
+    "id": "facb0c03-db95-47b0-95e8-eb6f85bb1fbd",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "from_node_id": "8ee9ed98-6711-4341-9286-0c1fd34d1cd7",
+    "to_node_id": "aef80f1b-26bc-4925-8421-a5907d2e47bc",
+    "kind": "decision",
+    "choice_label": "Grown-up pills, guess dose",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "ff44e2b1-5f7b-4e54-a8f3-47daaf194e96",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "from_node_id": "2d746cef-481e-441b-9ab3-205350b54ed7",
+    "to_node_id": "2353d457-4064-4171-adce-8b2abaabf7f7",
+    "kind": "decision",
+    "choice_label": "Antibiotics + lots of fluids",
+    "grade": "BEST"
+  },
+  {
+    "id": "56a42ded-c54e-4e3f-b01b-fc92ed2dc20c",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "from_node_id": "2d746cef-481e-441b-9ab3-205350b54ed7",
+    "to_node_id": "0921bd32-e636-4782-ad77-c838b00938f2",
+    "kind": "decision",
+    "choice_label": "Cranberry juice and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "d7e98d80-531e-467b-8c97-e7212a69bbca",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "from_node_id": "2d746cef-481e-441b-9ab3-205350b54ed7",
+    "to_node_id": "ed2f4492-6678-4675-95ab-7127ea779f2e",
+    "kind": "decision",
+    "choice_label": "Hold the pee all day",
+    "grade": "WRONG"
+  },
+  {
+    "id": "9ab36730-6392-4f89-b796-af044a7b3fde",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "from_node_id": "2d746cef-481e-441b-9ab3-205350b54ed7",
+    "to_node_id": "66b2e423-a36e-4987-894c-8d9c09cbde54",
+    "kind": "decision",
+    "choice_label": "Grown-up pills, guess dose",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "7a5785f8-364d-47ae-903d-e422b9a483cb",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "from_node_id": "7c21267e-31e8-4868-8001-36a795ee433f",
+    "to_node_id": "91800a97-3f43-4933-8e0c-52c3010f3ad2",
+    "kind": "decision",
+    "choice_label": "Antibiotics + lots of fluids",
+    "grade": "BEST"
+  },
+  {
+    "id": "09260c79-742b-4fd9-a45f-13f65e9044ba",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "from_node_id": "7c21267e-31e8-4868-8001-36a795ee433f",
+    "to_node_id": "c15f1f0e-ecad-45ea-8c4f-1e4303e598bf",
+    "kind": "decision",
+    "choice_label": "Cranberry juice and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "388ff73d-0f1f-44da-afe4-3ae4cb28648c",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "from_node_id": "7c21267e-31e8-4868-8001-36a795ee433f",
+    "to_node_id": "07c8fa1c-76cb-4639-a53e-b11728e5b80c",
+    "kind": "decision",
+    "choice_label": "Hold the pee all day",
+    "grade": "WRONG"
+  },
+  {
+    "id": "a5037552-31cd-4f22-aec4-278970be80ae",
+    "patient_id": "95ceb0e5-75b3-4405-8325-ccdb2c467d17",
+    "from_node_id": "7c21267e-31e8-4868-8001-36a795ee433f",
+    "to_node_id": "11593695-40b2-4994-a8e6-1585bcb67e47",
+    "kind": "decision",
+    "choice_label": "Grown-up pills, guess dose",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "06943d6c-c84e-4f10-8a79-178b67e39969",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "from_node_id": "aa5fc1a2-1af9-4873-bdc7-41e12964484e",
+    "to_node_id": "f01f2bd4-46dc-4330-b2b3-02af2ca2fee8",
+    "kind": "decision",
+    "choice_label": "Warm compress, hands off",
+    "grade": "BEST"
+  },
+  {
+    "id": "44165710-2d80-4552-884c-b9b43ddbaff3",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "from_node_id": "aa5fc1a2-1af9-4873-bdc7-41e12964484e",
+    "to_node_id": "ce0cbb82-bbc2-429e-96ba-f2e125a9241d",
+    "kind": "decision",
+    "choice_label": "Cool spoon rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "a015a301-6fc0-46eb-8287-6afcc661aa7c",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "from_node_id": "aa5fc1a2-1af9-4873-bdc7-41e12964484e",
+    "to_node_id": "f336aa5a-624a-4370-9110-fb46f280cb1a",
+    "kind": "decision",
+    "choice_label": "Squeeze and pop it",
+    "grade": "WRONG"
+  },
+  {
+    "id": "b28737de-84d6-4973-849f-58431f14a60f",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "from_node_id": "aa5fc1a2-1af9-4873-bdc7-41e12964484e",
+    "to_node_id": "41a13a97-d7aa-486b-811b-b7d75101c641",
+    "kind": "decision",
+    "choice_label": "Pop it with a needle",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "c3a0375b-c986-4453-85c0-3a17a97a94df",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "from_node_id": "f01f2bd4-46dc-4330-b2b3-02af2ca2fee8",
+    "to_node_id": "e489f82e-437a-4b09-91ab-b9206e089dcb",
+    "kind": "decision",
+    "choice_label": "Warm compress, hands off",
+    "grade": "BEST"
+  },
+  {
+    "id": "a8d5e793-42cf-4b6a-a651-a9738a95921a",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "from_node_id": "f01f2bd4-46dc-4330-b2b3-02af2ca2fee8",
+    "to_node_id": "1c529981-aaa3-466c-b1e6-27a675f1344c",
+    "kind": "decision",
+    "choice_label": "Cool spoon rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "af41539d-e52a-4d8f-a194-8ffcbc104adf",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "from_node_id": "f01f2bd4-46dc-4330-b2b3-02af2ca2fee8",
+    "to_node_id": "531c3b98-948e-414c-955b-6530e5ac6ee9",
+    "kind": "decision",
+    "choice_label": "Squeeze and pop it",
+    "grade": "WRONG"
+  },
+  {
+    "id": "13fde853-94d2-410b-9a58-0479ad631595",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "from_node_id": "f01f2bd4-46dc-4330-b2b3-02af2ca2fee8",
+    "to_node_id": "31a01292-8558-4eef-bc21-153eeb81d5c5",
+    "kind": "decision",
+    "choice_label": "Pop it with a needle",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "27680ca2-7fe1-469f-b835-081828a1b396",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "from_node_id": "ce0cbb82-bbc2-429e-96ba-f2e125a9241d",
+    "to_node_id": "24223af8-38a3-4211-a424-f764f8feac5e",
+    "kind": "decision",
+    "choice_label": "Warm compress, hands off",
+    "grade": "BEST"
+  },
+  {
+    "id": "ccd11a01-01b2-418d-9193-9ba06b544c54",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "from_node_id": "ce0cbb82-bbc2-429e-96ba-f2e125a9241d",
+    "to_node_id": "b97bbf68-2bab-49d9-af92-13679a69a36f",
+    "kind": "decision",
+    "choice_label": "Cool spoon rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "334bb981-7f5e-4a6e-85e9-ef8bbbed12dd",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "from_node_id": "ce0cbb82-bbc2-429e-96ba-f2e125a9241d",
+    "to_node_id": "073a9125-dba4-4c10-a2f2-559daf2aa3f6",
+    "kind": "decision",
+    "choice_label": "Squeeze and pop it",
+    "grade": "WRONG"
+  },
+  {
+    "id": "c65ecbf0-3c4f-4c37-8642-f97cd88b6e54",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "from_node_id": "ce0cbb82-bbc2-429e-96ba-f2e125a9241d",
+    "to_node_id": "f086d911-cd81-4653-8abf-c8805a40b65b",
+    "kind": "decision",
+    "choice_label": "Pop it with a needle",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "cba8480c-c73b-4551-9ad9-258d4b124865",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "from_node_id": "f336aa5a-624a-4370-9110-fb46f280cb1a",
+    "to_node_id": "ce664ad1-7114-43b8-beb6-3fec42075e30",
+    "kind": "decision",
+    "choice_label": "Warm compress, hands off",
+    "grade": "BEST"
+  },
+  {
+    "id": "a101199e-52e4-4144-81b6-f48fda953343",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "from_node_id": "f336aa5a-624a-4370-9110-fb46f280cb1a",
+    "to_node_id": "2d109a21-929e-430e-a4cd-e4e2c30bc7d4",
+    "kind": "decision",
+    "choice_label": "Cool spoon rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "7665831f-8107-4cf3-b27f-895ce2ea908d",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "from_node_id": "f336aa5a-624a-4370-9110-fb46f280cb1a",
+    "to_node_id": "62bad2a3-38aa-4a2e-b681-26c8250d71aa",
+    "kind": "decision",
+    "choice_label": "Squeeze and pop it",
+    "grade": "WRONG"
+  },
+  {
+    "id": "7f5d8e30-2f30-4a5e-8a25-15f54a913221",
+    "patient_id": "94afb669-f908-4742-bf3a-3692a2a78250",
+    "from_node_id": "f336aa5a-624a-4370-9110-fb46f280cb1a",
+    "to_node_id": "bb1bf3bd-5562-4d6b-9923-f792a10f577f",
+    "kind": "decision",
+    "choice_label": "Pop it with a needle",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "0461d38f-0958-4c7f-8a0a-221ab73400e0",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "from_node_id": "75533a06-caff-470a-99a0-f3acf21c0b48",
+    "to_node_id": "056458b5-d292-40db-9b1c-7969f05cf6b7",
+    "kind": "decision",
+    "choice_label": "Pinch nose, lean forward",
+    "grade": "BEST"
+  },
+  {
+    "id": "bb4b370a-39be-4747-9a86-7eed2b3c9b07",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "from_node_id": "75533a06-caff-470a-99a0-f3acf21c0b48",
+    "to_node_id": "0e3f943d-d8d7-49da-b90c-d55ca0526ea5",
+    "kind": "decision",
+    "choice_label": "Tissue plug and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "08827b57-19a8-4a4e-b9f1-e6ff7391d522",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "from_node_id": "75533a06-caff-470a-99a0-f3acf21c0b48",
+    "to_node_id": "aaac1ce3-aa7a-4567-8cb1-5ad518e59667",
+    "kind": "decision",
+    "choice_label": "Tilt head way back",
+    "grade": "WRONG"
+  },
+  {
+    "id": "37f81974-edc5-49b9-be31-1d18a9eb9a7a",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "from_node_id": "75533a06-caff-470a-99a0-f3acf21c0b48",
+    "to_node_id": "b6a96aa5-2c02-41da-be1f-2ac52427c45f",
+    "kind": "decision",
+    "choice_label": "Plug it with a bead",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "c2cd5306-8d8c-4312-8b7e-d2da3b935113",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "from_node_id": "056458b5-d292-40db-9b1c-7969f05cf6b7",
+    "to_node_id": "78fc14f0-1f04-415a-9cbc-a7e21622f157",
+    "kind": "decision",
+    "choice_label": "Pinch nose, lean forward",
+    "grade": "BEST"
+  },
+  {
+    "id": "f5cc210b-d1e1-4176-af67-75e9c140aee3",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "from_node_id": "056458b5-d292-40db-9b1c-7969f05cf6b7",
+    "to_node_id": "ec4191a8-a65c-4109-ae79-c82b19f032e6",
+    "kind": "decision",
+    "choice_label": "Tissue plug and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "7eb61e57-5555-49d9-8334-0a90740c295a",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "from_node_id": "056458b5-d292-40db-9b1c-7969f05cf6b7",
+    "to_node_id": "bd29fbb2-3650-4adc-a360-7b8aee3f3b0b",
+    "kind": "decision",
+    "choice_label": "Tilt head way back",
+    "grade": "WRONG"
+  },
+  {
+    "id": "31e8aa44-10ca-4f68-a302-b2620afb978b",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "from_node_id": "056458b5-d292-40db-9b1c-7969f05cf6b7",
+    "to_node_id": "5286f402-83b0-4574-b275-8ed901101497",
+    "kind": "decision",
+    "choice_label": "Plug it with a bead",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "d7755779-8b0b-4c93-96ac-dfc37ae0b5d6",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "from_node_id": "0e3f943d-d8d7-49da-b90c-d55ca0526ea5",
+    "to_node_id": "78110378-479a-40b9-be52-55579b83b97a",
+    "kind": "decision",
+    "choice_label": "Pinch nose, lean forward",
+    "grade": "BEST"
+  },
+  {
+    "id": "47fb9382-347b-41bb-9882-da98d86d2d12",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "from_node_id": "0e3f943d-d8d7-49da-b90c-d55ca0526ea5",
+    "to_node_id": "463600d9-c137-4a53-852c-d5e88d9ac914",
+    "kind": "decision",
+    "choice_label": "Tissue plug and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "7faeb5e3-4baf-472d-8fbb-eac845df4b66",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "from_node_id": "0e3f943d-d8d7-49da-b90c-d55ca0526ea5",
+    "to_node_id": "40a1ee6d-dd57-4863-a867-773a99011afc",
+    "kind": "decision",
+    "choice_label": "Tilt head way back",
+    "grade": "WRONG"
+  },
+  {
+    "id": "c11069cb-3bf8-4944-94e5-de260657e997",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "from_node_id": "0e3f943d-d8d7-49da-b90c-d55ca0526ea5",
+    "to_node_id": "33b62145-9188-4003-8d1d-fe416261e266",
+    "kind": "decision",
+    "choice_label": "Plug it with a bead",
+    "grade": "DANGEROUS"
+  },
+  {
+    "id": "60e8e889-97eb-4818-ae8d-5d56dfd1868a",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "from_node_id": "aaac1ce3-aa7a-4567-8cb1-5ad518e59667",
+    "to_node_id": "1db61e44-87fa-4c97-9d4a-601fefdcd960",
+    "kind": "decision",
+    "choice_label": "Pinch nose, lean forward",
+    "grade": "BEST"
+  },
+  {
+    "id": "1f96c047-89d9-45e7-a7e1-998e8d112687",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "from_node_id": "aaac1ce3-aa7a-4567-8cb1-5ad518e59667",
+    "to_node_id": "7ece92d9-9c78-49f2-9c34-51bc3dbb2b51",
+    "kind": "decision",
+    "choice_label": "Tissue plug and rest",
+    "grade": "NOT_GREAT"
+  },
+  {
+    "id": "6f54a048-2457-472d-ad6d-e8124e812d13",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "from_node_id": "aaac1ce3-aa7a-4567-8cb1-5ad518e59667",
+    "to_node_id": "a3aa5b4e-2ceb-4dd5-969d-119802b3428a",
+    "kind": "decision",
+    "choice_label": "Tilt head way back",
+    "grade": "WRONG"
+  },
+  {
+    "id": "64ee0ab0-be5f-48ff-b394-3a9037d8b3bf",
+    "patient_id": "bfc6ddd2-fc59-4417-9d08-d920ff445838",
+    "from_node_id": "aaac1ce3-aa7a-4567-8cb1-5ad518e59667",
+    "to_node_id": "a8bd85b7-b009-46e1-8693-36e0a0b3fc73",
+    "kind": "decision",
+    "choice_label": "Plug it with a bead",
+    "grade": "DANGEROUS"
   }
 ];
 
@@ -12388,6 +14104,58 @@ export const FALLBACK_TREATMENTS: FallbackTreatment[] = [
     },
     "conditions": [
       "ankle-sprain"
+    ]
+  },
+  {
+    "id": "e28c0a01-0000-4000-8000-000000000001",
+    "class_name": "Oatmeal + calamine",
+    "description": "Oatmeal baths and pink lotion that calm pox itch.",
+    "wording": {
+      "plain": "oatmeal bath + lotion",
+      "gentle": "oatmeal bath + pink lotion",
+      "clinical": "oatmeal bath + calamine"
+    },
+    "conditions": [
+      "chickenpox"
+    ]
+  },
+  {
+    "id": "e28c0a01-0000-4000-8000-000000000002",
+    "class_name": "Bladder antibiotics",
+    "description": "Antibiotics with fluids that chase bladder germs out.",
+    "wording": {
+      "plain": "antibiotics + fluids",
+      "gentle": "germ-fighting syrup + sips",
+      "clinical": "antibiotics + hydration"
+    },
+    "conditions": [
+      "uti"
+    ]
+  },
+  {
+    "id": "e28c0a01-0000-4000-8000-000000000003",
+    "class_name": "Warm compress care",
+    "description": "Warm cloths, hands off, that melt styes away.",
+    "wording": {
+      "plain": "warm compress",
+      "gentle": "warm cloth, no touching",
+      "clinical": "warm compress + lid hygiene"
+    },
+    "conditions": [
+      "stye"
+    ]
+  },
+  {
+    "id": "e28c0a01-0000-4000-8000-000000000004",
+    "class_name": "Pinch and lean",
+    "description": "Pinching the nose and leaning forward to stop drips.",
+    "wording": {
+      "plain": "pinch + lean forward",
+      "gentle": "pinch and lean forward",
+      "clinical": "alar pressure + upright lean"
+    },
+    "conditions": [
+      "nosebleed"
     ]
   }
 ];
@@ -12740,6 +14508,82 @@ export const FALLBACK_RESOURCES: FallbackResource[] = [
       "answer": 0,
       "pearl": "Rolled ankle, walks: sprain."
     }
+  },
+  {
+    "id": "f28c0a01-0000-4000-8000-000000000001",
+    "condition_id": "chickenpox",
+    "title": "Chickenpox",
+    "url": "https://medlineplus.gov/chickenpox.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "Chickenpox makes super-itchy blister spots in bunches — bumps, blisters, and scabs all at once — often caught from a sick friend. Oatmeal baths plus pink lotion calm the itch; aspirin can harm kids with pox.",
+    "quiz": {
+      "stem": "Blisters plus scabs all at once means…",
+      "choices": [
+        "Chickenpox",
+        "A skinned knee",
+        "Dry skin"
+      ],
+      "answer": 0,
+      "pearl": "Crops, varied stages: pox."
+    }
+  },
+  {
+    "id": "f28c0a01-0000-4000-8000-000000000002",
+    "condition_id": "uti",
+    "title": "Bladder Infection (UTI)",
+    "url": "https://medlineplus.gov/urinarytractinfections.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "A bladder infection makes peeing burn, with constant urges that pass only tiny squirts. A pee test finds the germs; antibiotics plus lots of fluids cure it, while holding pee lets germs party on.",
+    "quiz": {
+      "stem": "Burning pee, tiny plus often means…",
+      "choices": [
+        "Drinking too much",
+        "A bladder infection",
+        "Growing pains"
+      ],
+      "answer": 1,
+      "pearl": "Burning pee, often: UTI."
+    }
+  },
+  {
+    "id": "f28c0a01-0000-4000-8000-000000000003",
+    "condition_id": "stye",
+    "title": "Stye",
+    "url": "https://medlineplus.gov/eyeliddisorders.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "A stye is one sore red bump on the eyelid edge, often after rubbing eyes with dirty hands. Warm cloths with hands off melt it away; squeezing or needles spread germs and can blind.",
+    "quiz": {
+      "stem": "One sore eyelid bump needs…",
+      "choices": [
+        "Squeezing to pop it",
+        "Warm cloth, hands off",
+        "A needle pop"
+      ],
+      "answer": 1,
+      "pearl": "One sore lid bump: stye."
+    }
+  },
+  {
+    "id": "f28c0a01-0000-4000-8000-000000000004",
+    "condition_id": "nosebleed",
+    "title": "Nosebleed",
+    "url": "https://medlineplus.gov/noseinjuriesanddisorders.html",
+    "source": "NIH MedlinePlus",
+    "audience": "layperson",
+    "summary": "Most nosebleeds drip from the front of the nose after picking, with no injury at all. Pinching the soft part for 10 minutes while leaning forward stops them; tilting back sends blood down the throat.",
+    "quiz": {
+      "stem": "A picked-nose front drip needs…",
+      "choices": [
+        "Pinch + lean forward",
+        "Tilt head way back",
+        "A bead plug"
+      ],
+      "answer": 0,
+      "pearl": "Front drip: pinch 10 min."
+    }
   }
 ];
 
@@ -12859,5 +14703,21 @@ export const FALLBACK_EXAM_FINDINGS: FallbackExamFinding[] = [
   { condition_id: 'ankle-sprain', modality: 'look', gentle: 'Ankle puffy on the outside.', steady: 'Swollen outside of ankle.', clinical: 'Lateral ankle swelling.', expert: 'Lateral swelling; no deformity.' },
   { condition_id: 'ankle-sprain', modality: 'feel', gentle: 'Sore outside; ankle bones feel fine.', steady: 'Tender ligaments; bones fine.', clinical: 'Ligament tenderness; no bony pain.', expert: 'ATFL tenderness; Ottawa negative.' },
   { condition_id: 'ankle-sprain', modality: 'tap', gentle: 'Toe taps wiggle fine.', steady: 'Toes move fine; foot warm.', clinical: 'Distal neurovascular intact.', expert: 'Neurovascularly intact distally.' },
-  { condition_id: 'ankle-sprain', modality: 'listen', gentle: 'No crackle sounds; just ouch.', steady: 'No crepitus; just pain.', clinical: 'No crepitus on motion.', expert: 'No crepitus; stable syndesmosis.' }
+  { condition_id: 'ankle-sprain', modality: 'listen', gentle: 'No crackle sounds; just ouch.', steady: 'No crepitus; just pain.', clinical: 'No crepitus on motion.', expert: 'No crepitus; stable syndesmosis.' },
+  { condition_id: 'chickenpox', modality: 'look', gentle: 'Itchy spots all over: bumps AND scabs.', steady: 'Spots in every stage at once.', clinical: 'Polymorphic lesions in crops.', expert: 'Vesicles plus crusts; varied stages.' },
+  { condition_id: 'chickenpox', modality: 'feel', gentle: 'Bumpy and crusty to the touch.', steady: 'Bumpy spots; some crusty.', clinical: 'Palpable vesicles and crusts.', expert: 'Vesiculopapular; crusting present.' },
+  { condition_id: 'chickenpox', modality: 'tap', gentle: 'Taps sound normal everywhere.', steady: 'Percussion normal.', clinical: 'Percussion unremarkable.', expert: 'No percussive abnormality.' },
+  { condition_id: 'chickenpox', modality: 'listen', gentle: 'Chest sounds clear; skin is the story.', steady: 'Lungs clear; rash dominates.', clinical: 'Lungs clear; exanthem dominates.', expert: 'Vesicular; no pulmonary findings.' },
+  { condition_id: 'uti', modality: 'look', gentle: 'Fidgety and hurrying to the bathroom.', steady: 'Fidgety; frequent bathroom trips.', clinical: 'Restless; frequent voiding.', expert: 'Frequency with small volumes.' },
+  { condition_id: 'uti', modality: 'feel', gentle: 'Low belly a little sore to press.', steady: 'Mild low-belly tenderness.', clinical: 'Mild suprapubic tenderness.', expert: 'Suprapubic tenderness; afebrile.' },
+  { condition_id: 'uti', modality: 'tap', gentle: 'Belly taps sound normal.', steady: 'Percussion normal.', clinical: 'Percussion unremarkable.', expert: 'No percussive abnormality.' },
+  { condition_id: 'uti', modality: 'listen', gentle: 'Breathing sounds fine all over.', steady: 'Lungs clear.', clinical: 'Cardiopulmonary exam normal.', expert: 'No systemic findings.' },
+  { condition_id: 'stye', modality: 'look', gentle: 'Red bump sitting on the eyelid edge.', steady: 'Red bump on the lid margin.', clinical: 'Erythematous lid-margin nodule.', expert: 'Lid-margin abscess; localized.' },
+  { condition_id: 'stye', modality: 'feel', gentle: 'Bump feels sore and puffy.', steady: 'Tender puffy lid bump.', clinical: 'Tender edematous nodule.', expert: 'Acute tenderness; fluctuant center.' },
+  { condition_id: 'stye', modality: 'tap', gentle: 'Head taps sound normal.', steady: 'Percussion normal.', clinical: 'Percussion unremarkable.', expert: 'No percussive abnormality.' },
+  { condition_id: 'stye', modality: 'listen', gentle: 'Eyes watery; breathing sounds fine.', steady: 'Lungs clear; eye waters a bit.', clinical: 'Lungs clear; mild tearing.', expert: 'Vesicular; mild epiphora.' },
+  { condition_id: 'nosebleed', modality: 'look', gentle: 'Red drip coming from one nostril.', steady: 'One-sided front nose drip.', clinical: 'Unilateral anterior drip.', expert: 'Anterior unilateral epistaxis.' },
+  { condition_id: 'nosebleed', modality: 'feel', gentle: 'Nose tip soft; pinching feels fine.', steady: 'Soft nose tip; no fracture feel.', clinical: 'No step-off; septum midline.', expert: 'No deformity; Kiesselbach source.' },
+  { condition_id: 'nosebleed', modality: 'tap', gentle: 'Face taps sound normal.', steady: 'Sinus percussion normal.', clinical: 'Sinuses non-tender.', expert: 'No sinus tenderness.' },
+  { condition_id: 'nosebleed', modality: 'listen', gentle: 'Breathing sounds fine; sniffly drip.', steady: 'Lungs clear; nose sniffly.', clinical: 'Lungs clear; mild congestion.', expert: 'Vesicular; no distress.' }
 ];

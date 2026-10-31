@@ -33,6 +33,10 @@
    - ringworm → Tinea Corporis
    - pink-eye → Conjunctivitis Overview
    - ankle-sprain → Sprains Overview
+   - chickenpox → Chickenpox (Varicella)
+   - uti → UTI in Children
+   - stye → Chalazion and Hordeolum
+   - nosebleed → Epistaxis
    (all at `msdmanuals.com/professional/…`)
 2. **NIH MedlinePlus** — patient-facing links for Learn cards only.
 3. **Operator (physician) pen** — final review; new content ships

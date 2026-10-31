@@ -241,6 +241,26 @@ CHARACTERS = {
         "feet": ([(565, 750), (885, 1055)], 1395, 1432),
         "cap": None,
     },
+    "poppy": {
+        "paste_x": 22,
+        "feet": ([(555, 745), (870, 1050)], 1395, 1432),
+        "cap": None,
+    },
+    "maya": {
+        "paste_x": 22,
+        "feet": ([(550, 775), (850, 1070)], 1395, 1432),
+        "cap": None,
+    },
+    "eli": {
+        "paste_x": 22,
+        "feet": ([(565, 745), (885, 1050)], 1395, 1432),
+        "cap": None,
+    },
+    "max": {
+        "paste_x": 22,
+        "feet": ([(545, 770), (855, 1075)], 1395, 1432),
+        "cap": None,
+    },
 }
 
 FRAMES = ("idle", "blink", "happy", "sick", "pained", "relieved")

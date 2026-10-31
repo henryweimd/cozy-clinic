@@ -164,6 +164,10 @@ body plan, no new species without a bible amendment.
 | Jasper (SHIPS 2026-11-01) | Wrestling-club rookie, ringworm case | Fired clay `#A9714B` | Tough bounce (motion: 2.1 rad/s); determined beads, tough grin | Navy wristband (fixed; below face plate) |
 | Hazel (SHIPS 2026-11-01) | Library bookworm, pink-eye case | Deep warm greige `#6E6259` | Sleepy sway (motion: 1.5 rad/s); thoughtful beads, bookish smile | Teal felt bookmark behind ear (fixed; above face plate, side) |
 | Finn (SHIPS 2026-11-01) | Soccer striker, ankle-sprain case | Muted grass `#6F9A5E` | Eager bounce (motion: 2.3 rad/s); eager beads, sporty grin | White soccer jersey w/ green stripe (fixed; below face plate) |
+| Poppy (SHIPS 2026-11-01) | Pajama-party planner, chickenpox case | Dusty brick `#B26A5E` | Sleepy bounce (motion: 1.9 rad/s); sleepy beads, party smile | Cloud-print pajama top (fixed; below face plate) |
+| Maya (SHIPS 2026-11-01) | Dance-class regular, uti case | Soft periwinkle `#8494B8` | Graceful bounce (motion: 2.0 rad/s); graceful beads, twirl smile | Rose-pink leg warmers (fixed; below face plate) |
+| Eli (SHIPS 2026-11-01) | Marble champion, stye case | Deep pine `#5F7A6B` | Steady sway (motion: 1.8 rad/s); sharp beads, shooter grin | Cord necklace w/ green marble (fixed; below face plate) |
+| Max (SHIPS 2026-11-01) | Climbing-tree daredevil, nosebleed case | Bronze amber `#A8823F` | Daring bounce (motion: 2.2 rad/s); daring beads, gap-tooth grin | Tiny acorn behind ear (fixed; above face plate, side) |
 | Dr. Nora (reserved) | Reassuring AI colleague doctor | Rose-taupe `#A2766B` | Reassuring half-smile | White coat + sage scrubs (outfit, same silhouette) |
 
 ## Population mixing system (normative 2026-10-30)

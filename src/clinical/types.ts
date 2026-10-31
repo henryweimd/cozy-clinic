@@ -13,7 +13,8 @@
  * ear-infection, eczema, pneumonia) + run-25 pack (croup,
  * hand-foot-mouth, lyme-disease, appendicitis) + run-26 pack
  * (swimmers-ear, mono, nose-bead, gastroenteritis) + run-27 pack
- * (hay-fever, ringworm, pink-eye, ankle-sprain) — DRAFT,
+ * (hay-fever, ringworm, pink-eye, ankle-sprain) + run-28 pack
+ * (chickenpox, uti, stye, nosebleed) — DRAFT,
  * pending operator medical review.
  */
 export type ConditionId =
@@ -36,7 +37,11 @@ export type ConditionId =
   | 'hay-fever'
   | 'ringworm'
   | 'pink-eye'
-  | 'ankle-sprain';
+  | 'ankle-sprain'
+  | 'chickenpox'
+  | 'uti'
+  | 'stye'
+  | 'nosebleed';
 
 /** Ordered stage within a condition. Lower index = healthier. */
 export type StageId = string;

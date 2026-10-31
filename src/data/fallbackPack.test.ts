@@ -13,22 +13,22 @@ import {
  * loudly instead of shipping a broken offline demo.
  */
 describe('fallback pack (H2 seed snapshot)', () => {
-  it('holds the full 28-patient cast', () => {
-    expect(FALLBACK_PATIENTS).toHaveLength(28);
+  it('holds the full 32-patient cast', () => {
+    expect(FALLBACK_PATIENTS).toHaveLength(32);
     const names = FALLBACK_PATIENTS.map((p) => p.name);
     expect(names).toContain('Mabel');
-    expect(new Set(names).size).toBe(28);
+    expect(new Set(names).size).toBe(32);
   });
 
-  it('covers 3 age bands x 20 conditions', () => {
+  it('covers 3 age bands x 24 conditions', () => {
     const bands = new Set(FALLBACK_PATIENTS.map((p) => p.age_band));
     const conds = new Set(FALLBACK_PATIENTS.map((p) => p.condition_id));
     expect(bands.size).toBe(3);
-    expect(conds.size).toBe(20);
+    expect(conds.size).toBe(24);
   });
 
-  it('holds 476 nodes with valid stages and vitals', () => {
-    expect(FALLBACK_NODES).toHaveLength(476);
+  it('holds 544 nodes with valid stages and vitals', () => {
+    expect(FALLBACK_NODES).toHaveLength(544);
     const patientIds = new Set(FALLBACK_PATIENTS.map((p) => p.id));
     for (const n of FALLBACK_NODES) {
       expect(patientIds.has(n.patient_id)).toBe(true);
@@ -45,8 +45,8 @@ describe('fallback pack (H2 seed snapshot)', () => {
     }
   });
 
-  it('holds 448 edges that resolve to real nodes', () => {
-    expect(FALLBACK_EDGES).toHaveLength(448);
+  it('holds 512 edges that resolve to real nodes', () => {
+    expect(FALLBACK_EDGES).toHaveLength(512);
     const nodeIds = new Set(FALLBACK_NODES.map((n) => n.id));
     for (const e of FALLBACK_EDGES) {
       expect(nodeIds.has(e.from_node_id)).toBe(true);
@@ -56,7 +56,7 @@ describe('fallback pack (H2 seed snapshot)', () => {
 
   it('ships treatments + learning resources offline', () => {
     expect(FALLBACK_TREATMENTS.length).toBeGreaterThanOrEqual(4);
-    expect(FALLBACK_RESOURCES).toHaveLength(20);
+    expect(FALLBACK_RESOURCES).toHaveLength(24);
     for (const r of FALLBACK_RESOURCES) {
       expect(r.url).toMatch(/^https:\/\/medlineplus\.gov\//);
     }

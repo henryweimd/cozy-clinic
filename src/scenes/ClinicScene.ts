@@ -258,7 +258,7 @@ const GRADE_COLOR: Record<ChoiceGrade, number> = {
 };
 
 type ViewName = 'waiting' | 'visit' | 'telemed' | 'portal' | 'learn' | 'profile';
-type Speaker = 'MABEL' | 'JUNE' | 'MILO' | 'THEO' | 'PRIYA' | 'ELLIS' | 'NINA' | 'KAI' | 'ADA' | 'FELIX' | 'HUGO' | 'IVY' | 'LEO' | 'RUBY' | 'OTTO' | 'CLEO' | 'REMY' | 'WILLA' | 'WILLOW' | 'JASPER' | 'HAZEL' | 'FINN' | 'YOU';
+type Speaker = 'MABEL' | 'JUNE' | 'MILO' | 'THEO' | 'PRIYA' | 'ELLIS' | 'NINA' | 'KAI' | 'ADA' | 'FELIX' | 'HUGO' | 'IVY' | 'LEO' | 'RUBY' | 'OTTO' | 'CLEO' | 'REMY' | 'WILLA' | 'WILLOW' | 'JASPER' | 'HAZEL' | 'FINN' | 'POPPY' | 'MAYA' | 'ELI' | 'MAX' | 'YOU';
 
 
 
@@ -270,7 +270,8 @@ function speakerFor(patientName: string): Speaker {
     key === 'ADA' || key === 'FELIX' || key === 'HUGO' || key === 'IVY' ||
     key === 'LEO' || key === 'RUBY' || key === 'OTTO' || key === 'CLEO' ||
     key === 'REMY' || key === 'WILLA' || key === 'WILLOW' || key === 'JASPER' ||
-    key === 'HAZEL' || key === 'FINN'
+    key === 'HAZEL' || key === 'FINN' || key === 'POPPY' || key === 'MAYA' ||
+    key === 'ELI' || key === 'MAX'
   )
     return key;
   return 'MABEL';
@@ -604,7 +605,7 @@ export class ClinicScene extends Phaser.Scene {
     }
     // Learn-card headers: one cozy banner per condition
     // (offline-safe); keys `learn-<condition_id>`.
-    for (const id of ['asthma', 'viral-respiratory', 'dehydration', 'hypertension', 'strep-throat', 'ear-infection', 'eczema', 'pneumonia', 'croup', 'hand-foot-mouth', 'lyme-disease', 'appendicitis', 'swimmers-ear', 'mono', 'nose-bead', 'gastroenteritis', 'hay-fever', 'ringworm', 'pink-eye', 'ankle-sprain']) {
+    for (const id of ['asthma', 'viral-respiratory', 'dehydration', 'hypertension', 'strep-throat', 'ear-infection', 'eczema', 'pneumonia', 'croup', 'hand-foot-mouth', 'lyme-disease', 'appendicitis', 'swimmers-ear', 'mono', 'nose-bead', 'gastroenteritis', 'hay-fever', 'ringworm', 'pink-eye', 'ankle-sprain', 'chickenpox', 'uti', 'stye', 'nosebleed']) {
       this.load.image(`learn-${id}`, `assets/learn/learn-${id}.png`);
     }
     // No prop preloads: the plush P2 props clash with the photoreal
@@ -2214,7 +2215,9 @@ export class ClinicScene extends Phaser.Scene {
       cond === 'swimmers-ear' || cond === 'mono' ||
       cond === 'nose-bead' || cond === 'gastroenteritis' ||
       cond === 'hay-fever' || cond === 'ringworm' ||
-      cond === 'pink-eye' || cond === 'ankle-sprain'
+      cond === 'pink-eye' || cond === 'ankle-sprain' ||
+      cond === 'chickenpox' || cond === 'uti' ||
+      cond === 'stye' || cond === 'nosebleed'
     ) {
       this.patientState = this.engine.initialState(cond);
     } else {
