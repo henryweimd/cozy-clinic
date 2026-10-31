@@ -302,13 +302,6 @@ const TEAM_STORAGE_KEY = 'cozy-team-tag-v1';
 const OUTBOX_STORAGE_KEY = 'cozy-handoff-outbox-v1';
 const CHEER_OUTBOX_KEY = 'cozy-cheer-outbox-v1';
 const MEMORY_KEY = 'cozy-visit-memory-v1';
-const ONBOARD_KEY = 'cozy-onboard-v1';
-/** First-visit coach beats (skippable, once ever). */
-const ONBOARD_STEPS: readonly string[] = [
-  'Your patient says hello — then a quiz appears below.',
-  'Tap the best answer. Streaks pay combo coins!',
-  'Clear all 3 rounds, then meet the next patient.',
-];
 /**
  * SAY vs TELL (chrome-3): 'say' = direct speech in the speaker's
  * own voice (quoted + tagged); 'tell' = third-person narration
@@ -561,11 +554,6 @@ export class ClinicScene extends Phaser.Scene {
   private museNoted = false;
   /** What each patient remembers about your last visit (persisted). */
   private visitMemory: MemoryMap = {};
-  /** First-visit coach overlay state (-1 = done/hidden). */
-  private onboardStep = -1;
-  private onboardRoot!: Phaser.GameObjects.Container;
-  private onboardText!: Phaser.GameObjects.Text;
-  private onboardNext!: Phaser.GameObjects.Text;
   /** Respects the OS: infinite pulses + idle bob go static. */
   private reducedMotion = false;
 
@@ -661,7 +649,6 @@ export class ClinicScene extends Phaser.Scene {
     this.drawMonitor();
     this.drawToast();
     this.drawResultCard();
-    this.drawOnboard();
     this.drawSneeze();
     this.scheduleBlink();
     this.lastCardTapMs = this.time.now;
@@ -3776,8 +3763,6 @@ export class ClinicScene extends Phaser.Scene {
         this.greetThenQuiz(returning);
         if (returning && entry) void this.warmGreeting(gkey, local, entry.complaint);
       }
-      // First-visit coach (visit only, once ever, skippable).
-      if (next === 'visit') this.maybeShowOnboard();
     }
     // The day-bonus toast waits for a modal-free arrival.
     if (next !== 'visit' && next !== 'telemed' && this.pendingStreak) {
@@ -3814,7 +3799,6 @@ export class ClinicScene extends Phaser.Scene {
       this.learnList.hide();
     }
     this.nametag.setVisible(next === 'visit');
-    if (next !== 'visit') this.onboardRoot.setVisible(false);
     // The exam patient never leaks into Waiting/Learn/Profile.
     this.patient.setVisible(next === 'visit' || next === 'telemed');
     this.patientShadow.setVisible(next === 'visit' || next === 'telemed');
@@ -4500,94 +4484,6 @@ export class ClinicScene extends Phaser.Scene {
   }
 
   // -- visit-end result overlay (depth 44, topmost) --
-
-  /**
-   * First-visit coach overlay: three beats under the panel,
-   * Skip always visible, once ever (flagged). Depth 25 wins
-   * over drawers while it shows — it is a 3-tap transient.
-   */
-  private drawOnboard(): void {
-    const bg = this.add.graphics();
-    bg.fillStyle(CARD_FILL, 1);
-    bg.lineStyle(2, OUTLINE, 1);
-    bg.fillRoundedRect(48, 368, 444, 116, 16);
-    bg.strokeRoundedRect(48, 368, 444, 116, 16);
-    this.onboardText = this.add
-      .text(68, 384, '', {
-        fontFamily: FONT_FAMILY,
-        fontSize: '16px',
-        color: COCOA,
-        wordWrap: { width: 404 },
-      })
-      .setOrigin(0, 0);
-    const skip = this.add
-      .text(68, 458, 'Skip', {
-        fontFamily: FONT_FAMILY,
-        fontStyle: 'bold',
-        fontSize: '17px',
-        color: SECONDARY,
-      })
-      .setOrigin(0, 0.5);
-    const skipZone = this.add
-      .zone(118, 458, 100, 44)
-      .setInteractive({ useHandCursor: true });
-    skipZone.on('pointerdown', () => this.finishOnboard());
-    this.onboardNext = this.add
-      .text(472, 458, 'Next ›', {
-        fontFamily: FONT_FAMILY,
-        fontStyle: 'bold',
-        fontSize: '17px',
-        color: COCOA,
-      })
-      .setOrigin(1, 0.5);
-    const nextZone = this.add
-      .zone(422, 458, 100, 44)
-      .setInteractive({ useHandCursor: true });
-    nextZone.on('pointerdown', () => this.advanceOnboard());
-    this.onboardRoot = this.add.container(0, 0, [bg, this.onboardText, skip, skipZone, this.onboardNext, nextZone]);
-    this.onboardRoot.setDepth(25).setVisible(false);
-  }
-
-  private paintOnboard(): void {
-    this.onboardText.setText(ONBOARD_STEPS[this.onboardStep] ?? '');
-    const last = this.onboardStep >= ONBOARD_STEPS.length - 1;
-    this.onboardNext.setText(last ? 'Done' : 'Next ›');
-  }
-
-  private maybeShowOnboard(): void {
-    if (this.onboardStep !== -1) {
-      this.onboardRoot.setVisible(true);
-      return;
-    }
-    let seen = true;
-    try {
-      seen = window.localStorage.getItem(ONBOARD_KEY) === '1';
-    } catch {
-      seen = true;
-    }
-    if (seen || this.visitEnded || this.lastOutcome !== null) return;
-    this.onboardStep = 0;
-    this.paintOnboard();
-    this.onboardRoot.setVisible(true);
-  }
-
-  private advanceOnboard(): void {
-    if (this.onboardStep >= ONBOARD_STEPS.length - 1) this.finishOnboard();
-    else {
-      this.onboardStep += 1;
-      this.paintOnboard();
-    }
-  }
-
-  private finishOnboard(): void {
-    this.onboardStep = -1;
-    this.onboardRoot.setVisible(false);
-    try {
-      window.localStorage.setItem(ONBOARD_KEY, '1');
-    } catch {
-      /* blocked storage already implies seen */
-    }
-  }
 
   private drawResultCard(): void {
     // Fullscreen dim zone FIRST (bottom): swallows every tap
