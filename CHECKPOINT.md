@@ -1,3 +1,28 @@
+# CHECKPOINT — Run 53: P1 Daily Rituals core (2026-11-01)
+
+Phase: loop-revamp P1 on `feat/p1-daily-rituals` (`54cea73`).
+`main` untouched.
+
+Files changed: 9 (day clock module + tests, memory pearl
+thread + tests, scene day wiring, revamp plan, PROGRESS,
+CHECKPOINT).
+
+Test result: `npm test` 441/441 (11 new); tsc clean; build
+green.
+
+Deployment URL: branch preview (Vercel check success,
+SSO-gated); prod unchanged on main.
+
+Playtest result: headless playtest at 540x960, zero
+console/page errors — returning-patient open, day-1 capped
+queue with live day label, clock turns once per visit, Day
+2 reopens the full queue, pearl recall beat renders on
+revisit. Operator phone playtest still needed before merge.
+
+Image spend this run: $0.
+
+STOP.
+
 # CHECKPOINT — Run 52: rename (2026-11-01)
 
 Phase: "Little Lives" removal on `main`.

@@ -13,7 +13,26 @@ Hands off: src/data/maneuvers.* (other stream).
 - P1 of loop-revamp-plan.md: fast game-day clock, follow-up
   greeting thread from memory, gentle day-one queue (2
   friends), waiting title day label. No new art.
-- (Results land here before STOP.)
+- New: src/game/day.ts (clock, beats, day lengths, queue
+  cap, guard) + 8 tests. Memory gains the pearl thread
+  (recordMemory 4th arg, followupLine) + 3 tests; old saves
+  still guard-clean (pearl optional, no migration needed).
+- Scene: day persist/advance in resolveVisit (once-only —
+  showResult re-runs on revisit), day-turn toast + full
+  queue restore, waiting title day label, recall greeting
+  beat for pearl-holding returners.
+- Verify: 441/441 (11 new), tsc clean, build green.
+  Headless playtest at 540x960, zero console/page errors:
+  Bram #2 open, day-1 capped queue, clock {1,1} after visit
+  1, day turns to {2,0} after visit 2, full queue on Day 2,
+  recall beat renders on Bram revisit.
+- Branch preview built (Vercel check success, SSO-gated).
+  `main` untouched. P1 acceptance ticks; merge needs
+  operator phone playtest per law.
+- Spend: $0.
+- Next: operator playtest of the preview; then merge to
+  `main`, then P2 (branching stories surfacing) as its own
+  run. P2-P6 stay roadmap until then.
 
 ## Run 52 (2026-11-01): Cozy Clinic only, everywhere
 
