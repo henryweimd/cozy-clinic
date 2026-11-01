@@ -80,3 +80,31 @@ describe('fallback pack (H2 seed snapshot)', () => {
     expect(answers.size).toBeGreaterThan(1);
   });
 });
+
+/**
+ * Branch budget (docs/BRANCH_BUDGET.md): anti-sprawl caps the
+ * content pipeline must hold. Depth target (>= 3 for arc
+ * conditions) is recorded in the doc; this test pins the
+ * current reality (max depth 2) until the pipeline lands it.
+ */
+describe('branch budget', () => {
+  it('holds every patient within the node/edge/depth caps', () => {
+    const nodesByPatient = new Map<string, number>();
+    for (const n of FALLBACK_NODES) {
+      nodesByPatient.set(n.patient_id, (nodesByPatient.get(n.patient_id) ?? 0) + 1);
+      expect(n.depth).toBeLessThanOrEqual(4);
+    }
+    const edgesByPatient = new Map<string, number>();
+    for (const e of FALLBACK_EDGES) {
+      edgesByPatient.set(e.patient_id, (edgesByPatient.get(e.patient_id) ?? 0) + 1);
+    }
+    for (const [id, count] of nodesByPatient) {
+      expect(count, `nodes for ${id}`).toBeLessThanOrEqual(64);
+    }
+    for (const [id, count] of edgesByPatient) {
+      expect(count, `edges for ${id}`).toBeLessThanOrEqual(64);
+    }
+    const maxDepth = Math.max(...FALLBACK_NODES.map((n) => n.depth));
+    expect(maxDepth).toBeGreaterThanOrEqual(2);
+  });
+});
