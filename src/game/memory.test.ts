@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isMemoryMap, memoryLine, recordMemory } from './memory';
+import { followupLine, isMemoryMap, memoryLine, recordMemory } from './memory';
 
 describe('memoryLine', () => {
   it('stays silent with no memory', () => {
@@ -28,14 +28,35 @@ describe('recordMemory', () => {
     expect(map).toEqual({ Milo: { score: 4, perfect: true } });
     expect(next.June).toEqual({ score: 3, perfect: false });
   });
+
+  it('keeps the visit pearl as the follow-up thread when given', () => {
+    const map = recordMemory({}, 'Milo', 3, 'Cough + sniffles: a virus');
+    expect(map.Milo).toEqual({ score: 3, perfect: false, pearl: 'Cough + sniffles: a virus' });
+  });
+});
+
+describe('followupLine', () => {
+  it('stays silent without a remembered pearl', () => {
+    expect(followupLine(undefined)).toBeNull();
+    expect(followupLine({ score: 3, perfect: false })).toBeNull();
+    expect(followupLine({ score: 3, perfect: false, pearl: '' })).toBeNull();
+  });
+
+  it('recalls the thread, never claiming health states', () => {
+    const line = followupLine({ score: 3, perfect: false, pearl: 'Cough + sniffles: a virus' });
+    expect(line).toBe('Last time we learned: Cough + sniffles: a virus');
+    expect('Last time we learned: ').not.toMatch(/better|worse|cured|sick/i);
+  });
 });
 
 describe('isMemoryMap', () => {
   it('accepts saved shapes, rejects junk', () => {
     expect(isMemoryMap({})).toBe(true);
     expect(isMemoryMap({ Milo: { score: 2, perfect: false } })).toBe(true);
+    expect(isMemoryMap({ Milo: { score: 2, perfect: false, pearl: 'a virus' } })).toBe(true);
     expect(isMemoryMap(null)).toBe(false);
     expect(isMemoryMap([])).toBe(false);
     expect(isMemoryMap({ Milo: { score: 'x', perfect: false } })).toBe(false);
+    expect(isMemoryMap({ Milo: { score: 2, perfect: false, pearl: 7 } })).toBe(false);
   });
 });

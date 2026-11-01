@@ -1,5 +1,20 @@
 # PROGRESS.md — Cozy Clinic
 
+## Run 53 (2026-11-01): P1 Daily Rituals core (IN PROGRESS)
+
+Branch: `feat/p1-daily-rituals` (from `main` @ `b2e4951`;
+rollback tag `pre-loop-revamp-20261101`).
+File ownership (main agent, this run): day clock module +
+tests, memory pearl thread + tests, scene day wiring
+(greeting beat, queue cap, waiting title), PROGRESS,
+CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream).
+
+- P1 of loop-revamp-plan.md: fast game-day clock, follow-up
+  greeting thread from memory, gentle day-one queue (2
+  friends), waiting title day label. No new art.
+- (Results land here before STOP.)
+
 ## Run 52 (2026-11-01): Cozy Clinic only, everywhere
 
 Branch: `main`. Operator playtesting in parallel.
