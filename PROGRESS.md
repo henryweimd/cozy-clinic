@@ -23,7 +23,9 @@ Hands off: src/data/maneuvers.* (other stream).
   why-line renders, gift 1→2 on flawless, shop buy
   2→3 with wallet -8, Full state at cap.
 - Spend: $0.
-- Next: merge, then P4 (patient meters).
+- Merged as PR #4; prod live 200 with the new bundle
+  (`cozy-consults-v1` in served JS).
+- Next: P4 (patient meters).
 
 ## Run 55 (2026-11-01): P2 branching arcs (IN PROGRESS)
 

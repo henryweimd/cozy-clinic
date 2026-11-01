@@ -8,7 +8,8 @@ scene wiring, PROGRESS, CHECKPOINT).
 Test result: `npm test` 456/456 (5 new); tsc clean;
 build green.
 
-Deployment URL: (filled after merge.)
+Deployment URL: https://cozy-clinic.vercel.app/ (PR #4
+merged; 200, new bundle verified in the served JS).
 
 Playtest result: headless at 540x960, zero console/page
 errors — pill use + why-line, flawless gift, shop buy
