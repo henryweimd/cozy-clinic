@@ -51,6 +51,15 @@ import { reword } from '../game/reword';
 import { followupLine, isMemoryMap, memoryLine, recordMemory } from '../game/memory';
 import { advanceDay, dayLabel, EMPTY_DAY, isDayState, queueForDay } from '../game/day';
 import type { DayState } from '../game/day';
+import {
+  awardConsult,
+  buyConsult,
+  CONSULT_CAP,
+  CONSULT_COST,
+  CONSULT_START,
+  isConsultState,
+  useConsult,
+} from '../game/consults';
 import type { MemoryMap } from '../game/memory';
 import { COIN_GOLD, drawBook, drawCoin, drawTeamBadge } from '../ui/icons';
 import { EMPTY_STREAK, earnsDailyBonus, nextStreak, streakBonus } from '../game/streak';
@@ -318,6 +327,7 @@ const CHEER_OUTBOX_KEY = 'cozy-cheer-outbox-v1';
 const MEMORY_KEY = 'cozy-visit-memory-v1';
 const DAY_KEY = 'cozy-clinic-day-v1';
 const ARC_KEY = 'cozy-arc-cursors-v1';
+const CONSULTS_KEY = 'cozy-consults-v1';
 /**
  * SAY vs TELL (chrome-3): 'say' = direct speech in the speaker's
  * own voice (quoted + tagged); 'tell' = third-person narration
@@ -446,6 +456,7 @@ export class ClinicScene extends Phaser.Scene {
   /** Monotonic guard: stale delayed advances never fire. */
   private roundToken = 0;
   private legend!: Phaser.GameObjects.Container;
+  private consultLabel!: Phaser.GameObjects.Text;
   private lastCardTapMs = 0;
   private nudging = false;
   private chartDrawer!: ChartDrawer;
@@ -667,6 +678,7 @@ export class ClinicScene extends Phaser.Scene {
     this.loadMemory();
     this.loadDay();
     this.loadArc();
+    this.loadConsults();
     // Gentle day one: the queue opens with two friends; the
     // full queue returns when day two dawns (resolveVisit).
     if (this.day.day <= 1) this.waitingOrder = queueForDay(this.waitingOrder, 1);
@@ -1324,6 +1336,28 @@ export class ClinicScene extends Phaser.Scene {
     }
   }
 
+  /** Held consults (power-up counts, not own-once stock). */
+  private consults = CONSULT_START;
+
+  private loadConsults(): void {
+    try {
+      const raw = window.localStorage.getItem(CONSULTS_KEY);
+      if (!raw) return;
+      const parsed: unknown = JSON.parse(raw);
+      if (isConsultState(parsed)) this.consults = parsed;
+    } catch {
+      this.consults = CONSULT_START;
+    }
+  }
+
+  private saveConsults(): void {
+    try {
+      window.localStorage.setItem(CONSULTS_KEY, JSON.stringify(this.consults));
+    } catch {
+      /* private-mode play: the session keeps the consults */
+    }
+  }
+
   /**
    * Seats the trajectory cursor for the active patient: a saved
    * mid-arc cursor resumes, anything else starts fresh at the
@@ -1763,6 +1797,37 @@ export class ClinicScene extends Phaser.Scene {
     frame.strokePath();
     frame.lineBetween(16, 838, 16, 782);
     this.cardRow.add([frame, this.legend]);
+    // Consult pill: right-aligned fieldset mirror of the
+    // legend — the held count reads live, taps spend one.
+    // drawCorral always runs on a cleared row, so the old
+    // pill is gone and the handle simply re-seats.
+    this.consultLabel = this.add
+      .text(0, 0, `Consult (${this.consults})`, {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '12px',
+        color: COCOA,
+      })
+      .setOrigin(0.5, 0.5);
+    const consultStrip = this.add.graphics();
+    consultStrip.fillStyle(CARD_FILL, 0.32);
+    consultStrip.fillRoundedRect(
+      -this.consultLabel.width / 2 - 8,
+      -8,
+      this.consultLabel.width + 16,
+      16,
+      8,
+    );
+    const consultZone = this.add
+      .zone(0, 0, this.consultLabel.width + 16, 26)
+      .setInteractive({ useHandCursor: true });
+    consultZone.on('pointerdown', () => this.onConsultTap());
+    const consultPill = this.add.container(
+      498 - this.consultLabel.width / 2,
+      764,
+      [consultStrip, this.consultLabel, consultZone],
+    );
+    this.cardRow.add(consultPill);
   }
 
   /**
@@ -1890,6 +1955,77 @@ export class ClinicScene extends Phaser.Scene {
   private syncCardLock(): void {
     const answered = this.cards.some((c) => c.revealed !== null);
     this.cards.forEach((c) => c.root.setAlpha(lockedAlpha(answered, c.revealed !== null)));
+  }
+
+  /** Best card for the live round (-1 when none reads best). */
+  private bestCardIndex(): number {
+    const def = CONDITIONS[this.patientState.conditionId];
+    if (this.round === 'history') {
+      return this.cards.findIndex((c) => c.actionId === `hx:${def.historyBestId}`);
+    }
+    if (this.round === 'examine') {
+      return this.cards.findIndex((c) => c.actionId === `exam:${def.examBestId}`);
+    }
+    if (this.round === 'diagnose') {
+      return this.cards.findIndex((c) => c.actionId === `dx:${def.id}`);
+    }
+    return this.cards.findIndex(
+      (c) => this.engine.gradeAction(this.patientState, c.actionId) === 'BEST',
+    );
+  }
+
+  /** The consult why-line: same sources as the round confirmations. */
+  private consultWhy(bestIdx: number): string {
+    const def = CONDITIONS[this.patientState.conditionId];
+    const tier = this.tier();
+    if (this.round === 'history') return def.bestHistory[tier];
+    if (this.round === 'examine') return def.bestFinding[tier];
+    if (this.round === 'diagnose') {
+      const pick = this.cards[bestIdx]?.actionId.replace('dx:', '') ?? '';
+      const label = CONDITION_TIER_NAMES[pick as ConditionId]?.[tier] ?? pick;
+      return `${label} it is — ${def.dxPearl.right}`;
+    }
+    const actionId = this.cards[bestIdx]?.actionId ?? '';
+    try {
+      return this.engine.applyAction(this.patientState, actionId).node.teaching;
+    } catch {
+      return def.visitPearl;
+    }
+  }
+
+  /**
+   * Call a Consult: spends one held consult, pulses the strong
+   * pick, and tells the why (the pick alone would be a skip
+   * button). Guarded: live rounds only, unanswered only.
+   */
+  private onConsultTap(): void {
+    if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
+    if (this.visitEnded || this.tapping) return;
+    if (this.cards.some((c) => c.revealed !== null)) {
+      this.showToast("Round's over — consults help before you pick");
+      return;
+    }
+    const left = useConsult(this.consults);
+    if (left === null) {
+      this.showToast('No consults left — the shop sells more');
+      return;
+    }
+    const best = this.bestCardIndex();
+    const card = best >= 0 ? this.cards[best] : undefined;
+    if (!card) return;
+    this.consults = left;
+    this.saveConsults();
+    this.consultLabel.setText(`Consult (${this.consults})`);
+    this.tweens.add({
+      targets: card.root,
+      scaleX: 1.06,
+      scaleY: 1.06,
+      duration: 150,
+      yoyo: true,
+      repeat: 1,
+      ease: 'Sine.easeInOut',
+    });
+    this.setConversation('YOU', `Consult: ${this.consultWhy(best)}`, 'tell');
   }
 
   /** Captures the pre-move snapshot (every round pushes undo). */
@@ -2378,6 +2514,9 @@ export class ClinicScene extends Phaser.Scene {
       this.saveStreak();
       this.pendingStreak = { day: this.streak.streak, bonus };
     }
+    // Flawless visits gift a consult (silent at the cap —
+    // an empty gift would feel like a bug).
+    let consultGifted = false;
     if (isPerfectVisit(this.roundScore)) {
       // Flawless 4/4: the perfect-visit bonus lands before the
       // ending modal so its coins-earned line includes it.
@@ -2386,6 +2525,10 @@ export class ClinicScene extends Phaser.Scene {
       this.visitEarned += perfectPay;
       this.saveWallet();
       playSfx('fanfare');
+      const award = awardConsult(this.consults);
+      this.consults = award.count;
+      this.saveConsults();
+      consultGifted = award.granted;
     }
     const outcome = visitOutcome(this.roundScore);
     // Career rank: recovered visits earn XP (struggling earns
@@ -2439,6 +2582,11 @@ export class ClinicScene extends Phaser.Scene {
       if (unlocked.length > 0) {
         this.showToast(`You can afford the ${unlocked[0].name}!`);
       }
+    }
+    // The gift toast wins: a gifted consult is the rarest
+    // ending event (level-ups keep their fanfare + chip).
+    if (consultGifted) {
+      this.showToast('Flawless! A senior doctor gifted you a consult');
     }
   }
 
@@ -3379,7 +3527,7 @@ export class ClinicScene extends Phaser.Scene {
       .zone(153, py + 60, 210, 120)
       .setInteractive({ useHandCursor: true });
     coinZone.on('pointerdown', () => {
-      if (!this.shop.open) this.shop.show(this.wallet.balance, this.ownedIds);
+      if (!this.shop.open) this.shop.show(this.wallet.balance, this.ownedIds, this.consults);
     });
     this.profileRows.add(coinZone);
     // Affordability badge: an unowned item is in reach — the
@@ -4114,13 +4262,39 @@ export class ClinicScene extends Phaser.Scene {
       this.ownedIds = res.owned;
       this.saveShop();
       this.refreshHud();
-      this.shop.refresh(this.wallet.balance, this.ownedIds);
+      this.shop.refresh(this.wallet.balance, this.ownedIds, this.consults);
       // Acquisition joy: coins for gear, fanfare for the hire.
       if (item.id === 'nurse-birch') playSfx('fanfare');
       else playSfx('coin');
       this.showToast(
         item.id === 'nurse-birch' ? 'Nurse Birch joined your clinic!' : `${item.name} is yours!`,
       );
+    };
+    // Consults are counted stock: the cap and the wallet gate
+    // the buy, and the sheet re-renders the held count.
+    this.shop.onConsult = () => {
+      const res = buyConsult(this.consults, this.wallet.balance);
+      if (!res) {
+        this.showToast(
+          this.consults >= CONSULT_CAP
+            ? 'Consult pouch is full (3)'
+            : 'Not enough coins yet — earn more in visits',
+        );
+        return;
+      }
+      const paid = spend(this.wallet, CONSULT_COST, 'spend:consult');
+      if (!paid) {
+        this.showToast('Not enough coins yet — earn more in visits');
+        return;
+      }
+      this.wallet = paid;
+      this.saveWallet();
+      this.consults = res.count;
+      this.saveConsults();
+      this.refreshHud();
+      this.shop.refresh(this.wallet.balance, this.ownedIds, this.consults);
+      playSfx('coin');
+      this.showToast('Consult ready — tap it in any round');
     };
     // Purchases spend coins: the Profile row re-reads on close.
     this.shop.onClose = () => {

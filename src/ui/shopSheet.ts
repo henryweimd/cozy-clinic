@@ -2,6 +2,7 @@ import { THEME } from './chromeTheme';
 import { drawCoin } from './icons';
 import { itemsFor } from '../game/shop';
 import type { ShopCategory, ShopItem } from '../game/shop';
+import { CONSULT_CAP, CONSULT_COST } from '../game/consults';
 
 /**
  * Clinic Shop sheet: tabbed Tools / Medicines / Practice store
@@ -18,6 +19,7 @@ const TABS: { id: ShopCategory; label: string }[] = [
 
 export class ShopSheet {
   onBuy: (item: ShopItem) => void = () => {};
+  onConsult: () => void = () => {};
   onClose: () => void = () => {};
 
   private root: Phaser.GameObjects.Container;
@@ -118,10 +120,12 @@ export class ShopSheet {
 
   private balance = 0;
   private owned: readonly string[] = [];
+  private consults = 0;
 
-  show(balance: number, owned: readonly string[]): void {
+  show(balance: number, owned: readonly string[], consults = 0): void {
     this.balance = balance;
     this.owned = owned;
+    this.consults = consults;
     this.paintTabs();
     this.renderRows();
     this.isOpen = true;
@@ -135,9 +139,10 @@ export class ShopSheet {
     });
   }
 
-  refresh(balance: number, owned: readonly string[]): void {
+  refresh(balance: number, owned: readonly string[], consults = this.consults): void {
     this.balance = balance;
     this.owned = owned;
+    this.consults = consults;
     if (this.isOpen) this.renderRows();
   }
 
@@ -219,5 +224,58 @@ export class ShopSheet {
       }
       this.rows.add(row);
     });
+    // Pinned consult strip (always visible, outside the tabs —
+    // consults are counted stock, not own-once rows).
+    const full = this.consults >= CONSULT_CAP;
+    const cy = 728;
+    const divider = this.scene.add.graphics();
+    divider.lineStyle(2, THEME.outline, 0.4);
+    divider.lineBetween(48, 714, 492, 714);
+    const cName = this.scene.add
+      .text(48, cy, 'Call a Consult', {
+        fontFamily: THEME.font,
+        fontStyle: 'bold',
+        fontSize: '18px',
+        color: THEME.cocoa,
+      })
+      .setOrigin(0, 0);
+    const cBlurb = this.scene.add
+      .text(48, cy + 26, 'Stuck? A senior doctor points at the strong pick and says why.', {
+        fontFamily: THEME.font,
+        fontSize: '14px',
+        color: THEME.secondary,
+        wordWrap: { width: 300 },
+      })
+      .setOrigin(0, 0);
+    const cHold = this.scene.add
+      .text(48, cy + 88, `Hold ${this.consults} of ${CONSULT_CAP}`, {
+        fontFamily: THEME.font,
+        fontStyle: 'bold',
+        fontSize: '13px',
+        color: THEME.leaf,
+      })
+      .setOrigin(0, 0);
+    const cBtnBg = this.scene.add.graphics();
+    cBtnBg.fillStyle(full ? THEME.cardFill : THEME.sage, 1);
+    cBtnBg.lineStyle(2, THEME.outline, 1);
+    cBtnBg.fillRoundedRect(382, cy, 110, 36, 18);
+    cBtnBg.strokeRoundedRect(382, cy, 110, 36, 18);
+    const cBtnText = this.scene.add
+      .text(437, cy + 18, full ? 'Full' : `${CONSULT_COST} coins`, {
+        fontFamily: THEME.font,
+        fontStyle: 'bold',
+        fontSize: '14px',
+        color: THEME.cocoa,
+      })
+      .setOrigin(0.5, 0.5);
+    const cRow = this.scene.add.container(0, 0, [divider, cName, cBlurb, cHold, cBtnBg, cBtnText]);
+    if (!full) {
+      const cZone = this.scene.add
+        .zone(437, cy + 18, 110, 36)
+        .setInteractive({ useHandCursor: true });
+      cZone.on('pointerdown', () => this.onConsult());
+      cRow.add(cZone);
+    }
+    this.rows.add(cRow);
   }
 }
