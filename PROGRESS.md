@@ -1,5 +1,30 @@
 # PROGRESS.md — Cozy Clinic
 
+## Run 56 (2026-11-01): P3 Call a Consult (IN PROGRESS)
+
+Branch: `feat/p3-consults` (from `main` @ `e22b10f`).
+File ownership (main agent, this run): consults module +
+tests, shop catalog + sheet count-item, economy spend
+reason, scene round wiring, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream).
+
+- P3 of loop-revamp-plan.md: expendable consult
+  power-ups (start 2, cap 3, coin buys, perfect-visit
+  surprise awards); use highlights the strong pick plus
+  a one-line why. No new art.
+- New consults.ts (start 2, cap 3, cost 8; use/buy/
+  award + guard) + 5 tests. Shop gains a pinned consult
+  strip (counted stock sits outside the 4-row tabs by
+  geometry law). Scene: round pill, best-pick pulse +
+  why-line from confirmation sources, shop buy path
+  (`spend:consult`), flawless-visit gift.
+- Verify: 456/456 (5 new), tsc clean, build green.
+  Headless playtest, zero errors: pill 2→1 on use,
+  why-line renders, gift 1→2 on flawless, shop buy
+  2→3 with wallet -8, Full state at cap.
+- Spend: $0.
+- Next: merge, then P4 (patient meters).
+
 ## Run 55 (2026-11-01): P2 branching arcs (IN PROGRESS)
 
 Branch: `feat/p2-branching-arcs` (from `main` @ `1916882`).

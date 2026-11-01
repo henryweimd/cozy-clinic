@@ -1,3 +1,23 @@
+# CHECKPOINT — Run 56: P3 Call a Consult (2026-11-01)
+
+Phase: loop-revamp P3 on `feat/p3-consults`.
+
+Files changed: 6 (consults module + tests, shop strip,
+scene wiring, PROGRESS, CHECKPOINT).
+
+Test result: `npm test` 456/456 (5 new); tsc clean;
+build green.
+
+Deployment URL: (filled after merge.)
+
+Playtest result: headless at 540x960, zero console/page
+errors — pill use + why-line, flawless gift, shop buy
+to cap with Full state. Operator playtests in parallel.
+
+Image spend this run: $0.
+
+STOP.
+
 # CHECKPOINT — Run 55: P2 branching arcs (2026-11-01)
 
 Phase: loop-revamp P2 on `feat/p2-branching-arcs`.
