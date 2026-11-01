@@ -1,5 +1,31 @@
 # PROGRESS.md — Cozy Clinic
 
+## Run 57 (2026-11-01): P4 patient meters (IN PROGRESS)
+
+Branch: `feat/p4-meters` (from `main` @ `2f00b91`).
+File ownership (main agent, this run): meters module +
+tests, memory ease field + tests, chart drawer meter
+lines, scene meter wiring, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream).
+
+- P4 of loop-revamp-plan.md: physical meter (derived
+  live from engine vitals/stage) + emotional meter
+  (persistent ease per patient, moves on grades) as
+  pips-plus-words lines in the Medical Chart drawer.
+  No new art.
+- New meters.ts (physical from vitals/stage, pips,
+  body/heart words, ease transitions/persist) + 7 tests.
+  Memory gains ease (preserved by recordMemory) + 1 test.
+  Drawer renders pip dots + words; scene feeds meters
+  live and updates ease in all four resolvers.
+- Verify: 464/464 (8 new), tsc clean, build green.
+  Headless playtest, zero errors: boot meters render
+  (Body Fair, Heart Happy), mid-visit Heart rises to
+  Glad on BESTs, mixed-grade visit ends ease 7, no
+  drawer overflow on the wordiest signout.
+- Spend: $0.
+- Next: merge, then P5 (saga map).
+
 ## Run 56 (2026-11-01): P3 Call a Consult (IN PROGRESS)
 
 Branch: `feat/p3-consults` (from `main` @ `e22b10f`).

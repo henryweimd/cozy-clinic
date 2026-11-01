@@ -1,3 +1,24 @@
+# CHECKPOINT — Run 57: P4 patient meters (2026-11-01)
+
+Phase: loop-revamp P4 on `feat/p4-meters`.
+
+Files changed: 8 (meters module + tests, memory ease +
+tests, drawer pips, scene wiring, PROGRESS, CHECKPOINT).
+
+Test result: `npm test` 464/464 (8 new); tsc clean;
+build green.
+
+Deployment URL: (filled after merge.)
+
+Playtest result: headless at 540x960, zero console/page
+errors — meters render in the drawer, ease tracks
+grades live (6 to 7 across a mixed visit), no overflow.
+Operator playtests in parallel.
+
+Image spend this run: $0.
+
+STOP.
+
 # CHECKPOINT — Run 56: P3 Call a Consult (2026-11-01)
 
 Phase: loop-revamp P3 on `feat/p3-consults`.
