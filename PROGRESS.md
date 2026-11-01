@@ -24,7 +24,9 @@ Hands off: src/data/maneuvers.* (other stream).
   Glad on BESTs, mixed-grade visit ends ease 7, no
   drawer overflow on the wordiest signout.
 - Spend: $0.
-- Next: merge, then P5 (saga map).
+- Merged as PR #5; prod live 200 with the new bundle
+  (`Heart · ` meter string in served JS).
+- Next: P5 (saga map).
 
 ## Run 56 (2026-11-01): P3 Call a Consult (IN PROGRESS)
 

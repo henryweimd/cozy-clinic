@@ -8,7 +8,8 @@ tests, drawer pips, scene wiring, PROGRESS, CHECKPOINT).
 Test result: `npm test` 464/464 (8 new); tsc clean;
 build green.
 
-Deployment URL: (filled after merge.)
+Deployment URL: https://cozy-clinic.vercel.app/ (PR #5
+merged; 200, new bundle verified in the served JS).
 
 Playtest result: headless at 540x960, zero console/page
 errors — meters render in the drawer, ease tracks
