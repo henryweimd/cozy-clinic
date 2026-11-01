@@ -1,3 +1,25 @@
+# CHECKPOINT — Run 54: merged P1 to main (2026-11-01)
+
+Phase: production merge. `main` @ `1fd72b4` — PR #2
+(`feat/p1-daily-rituals`) is LIVE.
+
+Files changed: 2 docs post-merge (PROGRESS, CHECKPOINT).
+No code.
+
+Test result: 441/441, tsc clean, build green (all from
+the branch; docs-only on top).
+
+Deployment URL: https://cozy-clinic.vercel.app/ (200,
+new bundle verified in the served JS).
+
+Playtest result: operator playtesting in parallel
+(backtrack accepted); headless playtest clean on the
+branch.
+
+Image spend this run: $0.
+
+STOP.
+
 # CHECKPOINT — Run 53: P1 Daily Rituals core (2026-11-01)
 
 Phase: loop-revamp P1 on `feat/p1-daily-rituals` (`54cea73`).

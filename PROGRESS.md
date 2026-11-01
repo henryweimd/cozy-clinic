@@ -1,5 +1,25 @@
 # PROGRESS.md — Cozy Clinic
 
+## Run 54 (2026-11-01): MERGED — P1 via automated PR flow
+
+Branch: `main` @ `1fd72b4` (merge of #2 from
+`feat/p1-daily-rituals`). Standing automation adopted:
+commit → PR → merge; operator playtests in parallel,
+backtrack accepted.
+File ownership (main agent, this run): PR #2, merge,
+prod verify, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream).
+
+- PR #2 opened and merged (merge commit). Note: GitHub
+  forbids self-approval of own PRs; `main` is
+  unprotected so merges proceed without it.
+- Prod verified live 200 with the new bundle
+  (`cozy-clinic-day-v1` in the served JS).
+- P1 live: day clock, recall beat, gentle day one.
+- Spend: $0.
+- Next: P2 (branching stories surfacing) as its own run
+  when ordered.
+
 ## Run 53 (2026-11-01): P1 Daily Rituals core (IN PROGRESS)
 
 Branch: `feat/p1-daily-rituals` (from `main` @ `b2e4951`;
