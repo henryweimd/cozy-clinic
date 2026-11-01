@@ -66,14 +66,17 @@ import { AssetBrowser } from '../ui/assetBrowser';
 import { RAIL_SLOTS, RAIL_X, TAB_H, TAB_W, ChartDrawer } from '../ui/chartDrawer';
 import {
   childFor,
+  childrenOf,
   childSpecs,
   extendTree,
+  isArcMap,
   loadCast,
   mergeExtension,
   patientByName,
-  rootNode,
+  resumeCursor,
+  trailToRoot,
 } from '../data/patients';
-import type { CastData } from '../data/patients';
+import type { ArcMap, CastData } from '../data/patients';
 import { FALLBACK_EXAM_FINDINGS, FALLBACK_PATIENTS } from '../data/fallbackPack';
 import type { ExamModality, FallbackExamFinding } from '../data/fallbackPack';
 import { findingFor, loadExamFindings } from '../data/examFindings';
@@ -314,6 +317,7 @@ const OUTBOX_STORAGE_KEY = 'cozy-handoff-outbox-v1';
 const CHEER_OUTBOX_KEY = 'cozy-cheer-outbox-v1';
 const MEMORY_KEY = 'cozy-visit-memory-v1';
 const DAY_KEY = 'cozy-clinic-day-v1';
+const ARC_KEY = 'cozy-arc-cursors-v1';
 /**
  * SAY vs TELL (chrome-3): 'say' = direct speech in the speaker's
  * own voice (quoted + tagged); 'tell' = third-person narration
@@ -662,6 +666,7 @@ export class ClinicScene extends Phaser.Scene {
     this.loadTicker();
     this.loadMemory();
     this.loadDay();
+    this.loadArc();
     // Gentle day one: the queue opens with two friends; the
     // full queue returns when day two dawns (resolveVisit).
     if (this.day.day <= 1) this.waitingOrder = queueForDay(this.waitingOrder, 1);
@@ -1295,6 +1300,68 @@ export class ClinicScene extends Phaser.Scene {
     } catch {
       /* private-mode play: the session keeps the day */
     }
+  }
+
+  /** Arc cursors by patient name (names survive fallback/live swaps). */
+  private arcCursors: ArcMap = {};
+
+  private loadArc(): void {
+    try {
+      const raw = window.localStorage.getItem(ARC_KEY);
+      if (!raw) return;
+      const parsed: unknown = JSON.parse(raw);
+      if (isArcMap(parsed)) this.arcCursors = parsed;
+    } catch {
+      this.arcCursors = {};
+    }
+  }
+
+  private saveArc(): void {
+    try {
+      window.localStorage.setItem(ARC_KEY, JSON.stringify(this.arcCursors));
+    } catch {
+      /* private-mode play: the session keeps the arcs */
+    }
+  }
+
+  /**
+   * Seats the trajectory cursor for the active patient: a saved
+   * mid-arc cursor resumes, anything else starts fresh at the
+   * root. True when an arc continues (the caller may say so).
+   */
+  private applyArcCursor(): boolean {
+    if (!this.cast) {
+      this.currentNodeId = null;
+      this.currentDepth = 0;
+      return false;
+    }
+    const me = patientByName(this.cast, this.activeName);
+    const savedId = this.arcCursors[this.activeName];
+    const found = me ? resumeCursor(this.cast, me.id, savedId) : null;
+    if (!found) {
+      this.currentNodeId = null;
+      this.currentDepth = 0;
+      return false;
+    }
+    this.currentNodeId = found.node.id;
+    this.currentDepth = found.node.depth;
+    // A spent leaf cursor is rewritten to the fresh root so the
+    // map never pins a finished arc.
+    if (!found.resumed && savedId !== undefined && savedId !== found.node.id) {
+      this.arcCursors[this.activeName] = found.node.id;
+      this.saveArc();
+    }
+    return found.resumed;
+  }
+
+  /** Arc beads for the Living Chart, or undefined for legacy memory. */
+  private arcForChart(): { trail: string[]; ahead: number } | undefined {
+    if (!this.cast || !this.currentNodeId) return undefined;
+    const trail = trailToRoot(this.cast, this.currentNodeId)
+      .map((n) => n.memory)
+      .filter((m) => m.length > 0);
+    if (trail.length === 0) return undefined;
+    return { trail, ahead: childrenOf(this.cast, this.currentNodeId).length };
   }
 
   private loadStreak(): void {
@@ -2267,6 +2334,8 @@ export class ClinicScene extends Phaser.Scene {
     if (stored) {
       this.currentNodeId = stored.node.id;
       this.currentDepth = stored.node.depth;
+      this.arcCursors[this.activeName] = stored.node.id;
+      this.saveArc();
       this.setConversation(
         speakerFor(this.activeName),
         `${stored.node.narrative} ${stored.node.teaching}`,
@@ -2455,9 +2524,11 @@ export class ClinicScene extends Phaser.Scene {
     this.revealedStage = this.patientState.stageIndex;
     this.undoStack = clearUndo();
     this.activePatientId = row?.id ?? null;
-    const root = row && this.cast ? rootNode(this.cast, row.id) : null;
-    this.currentNodeId = root?.id ?? null;
-    this.currentDepth = 0;
+    // The arc resumes mid-story when one was saved (leaf arcs
+    // restart fresh inside the helper).
+    if (this.applyArcCursor()) {
+      this.showToast(`${name}'s story continues`);
+    }
     this.patient.setTexture(this.steadyFace());
     this.nametag.setText(`${name} · ${row?.persona ?? fb?.persona ?? 'first patient'}`);
     this.cardRow.removeAll(true);
@@ -3890,7 +3961,7 @@ export class ClinicScene extends Phaser.Scene {
       if (this.adminOpen) return;
       if (this.currentView !== 'visit') return;
       if (this.chart.open) this.chart.hide();
-      else this.chart.show(this.activeName, this.patientState.memory);
+      else this.chart.show(this.activeName, this.patientState.memory, this.arcForChart());
     });
 
     // Learning List: full-screen behind the Learn tab (the old
@@ -4066,9 +4137,7 @@ export class ClinicScene extends Phaser.Scene {
       this.cast = cast;
       const me = patientByName(cast, this.activeName);
       this.activePatientId = me?.id ?? null;
-      const root = me ? rootNode(cast, me.id) : null;
-      this.currentNodeId = root?.id ?? null;
-      this.currentDepth = 0;
+      this.applyArcCursor();
       this.ticker.setLines([
         `${cast.source}: ${cast.patients.length} patients \u00b7 ${cast.nodes.length} nodes`,
         'trajectories: 2 turns ahead \u00b7 instant reads',

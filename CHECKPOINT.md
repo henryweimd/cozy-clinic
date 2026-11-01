@@ -1,3 +1,27 @@
+# CHECKPOINT — Run 55: P2 branching arcs (2026-11-01)
+
+Phase: loop-revamp P2 on `feat/p2-branching-arcs`.
+`main` untouched until merge below.
+
+Files changed: 9 (arc helpers + tests, chart beads +
+tests, budget doc + test, scene arc wiring, PROGRESS,
+CHECKPOINT).
+
+Test result: `npm test` 451/451 (10 new); tsc clean;
+build green.
+
+Deployment URL: branch preview (pending at write time);
+prod unchanged on main until merge.
+
+Playtest result: headless 3-visit arc at 540x960, zero
+console/page errors — resume, leaf restart, chart trail
+and ahead count all render. Operator playtests in
+parallel.
+
+Image spend this run: $0.
+
+STOP.
+
 # CHECKPOINT — Run 54: merged P1 to main (2026-11-01)
 
 Phase: production merge. `main` @ `1fd72b4` — PR #2

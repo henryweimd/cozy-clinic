@@ -7,12 +7,17 @@ import {
 } from './fallbackPack';
 import {
   childFor,
+  childrenOf,
   childSpecs,
   extendTree,
+  isArcMap,
   loadCast,
   mergeExtension,
+  nodeById,
   patientByName,
+  resumeCursor,
   rootNode,
+  trailToRoot,
 } from './patients';
 import type { CastData } from './patients';
 
@@ -124,5 +129,65 @@ describe('patients network hardening', () => {
       timeoutMs: 20,
     });
     expect(out).toBeNull();
+  });
+});
+
+/** P2 arc resume + trail (offline-safe: tested on the pack). */
+describe('arc cursors', () => {
+  const mabelId = patientByName(CAST, 'Mabel')?.id ?? '';
+  const root = rootNode(CAST, mabelId);
+
+  it('looks nodes up by id', () => {
+    expect(nodeById(CAST, root?.id ?? '')?.depth).toBe(0);
+    expect(nodeById(CAST, 'missing')).toBeNull();
+  });
+
+  it('lists children, empty at leaves', () => {
+    const kids = childrenOf(CAST, root?.id ?? '');
+    expect(kids).toHaveLength(4);
+    const grandkids = childrenOf(CAST, kids[0].node.id);
+    expect(grandkids.length).toBeGreaterThan(0);
+    const leaf = grandkids[0].node;
+    expect(childrenOf(CAST, leaf.id)).toEqual([]);
+  });
+
+  it('walks the trail from the root to the cursor', () => {
+    expect(trailToRoot(CAST, root?.id ?? '').map((n) => n.depth)).toEqual([0]);
+    const kid = childrenOf(CAST, root?.id ?? '')[0].node;
+    expect(trailToRoot(CAST, kid.id).map((n) => n.depth)).toEqual([0, 1]);
+    const leaf = childrenOf(CAST, kid.id)[0].node;
+    expect(trailToRoot(CAST, leaf.id)).toHaveLength(3);
+    expect(trailToRoot(CAST, 'missing')).toEqual([]);
+  });
+
+  it('starts fresh arcs at the root', () => {
+    expect(resumeCursor(CAST, mabelId, undefined)).toEqual({ node: root, resumed: false });
+    expect(resumeCursor(CAST, mabelId, 'missing')).toEqual({ node: root, resumed: false });
+    expect(resumeCursor(CAST, 'nobody', undefined)).toBeNull();
+  });
+
+  it('resumes mid-arc cursors, restarts finished leaves', () => {
+    const kid = childrenOf(CAST, root?.id ?? '')[0].node;
+    expect(resumeCursor(CAST, mabelId, kid.id)).toEqual({ node: kid, resumed: true });
+    const leaf = childrenOf(CAST, kid.id)[0].node;
+    expect(resumeCursor(CAST, mabelId, leaf.id)).toEqual({ node: root, resumed: false });
+  });
+
+  it('rejects cursors from another patient', () => {
+    const foreign = FALLBACK_NODES.find((n) => n.depth === 1 && n.patient_id !== mabelId);
+    expect(foreign).toBeDefined();
+    if (foreign) {
+      expect(resumeCursor(CAST, mabelId, foreign.id)).toEqual({ node: root, resumed: false });
+    }
+  });
+});
+
+describe('isArcMap', () => {
+  it('accepts saved shapes, rejects junk', () => {
+    expect(isArcMap({})).toBe(true);
+    expect(isArcMap({ Bram: 'node-1' })).toBe(true);
+    expect(isArcMap(null)).toBe(false);
+    expect(isArcMap([])).toBe(false);
+    expect(isArcMap({ Bram: 7 })).toBe(false);
   });
 });

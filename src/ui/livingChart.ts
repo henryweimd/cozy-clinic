@@ -20,6 +20,21 @@ export function memoryBeads(memory: string, max = 5): string[] {
   return lines.slice(Math.max(0, lines.length - max));
 }
 
+/** Pure: the paths-ahead line — a count, never a spoiler (unit-tested). */
+export function aheadLine(ahead: number): string {
+  if (ahead <= 0) return 'This path ends here';
+  return ahead === 1 ? '1 path ahead' : `${ahead} paths ahead`;
+}
+
+/**
+ * Pure: arc beads — the trail plus the ahead line, at most 5
+ * (the sheet's succinctness law holds for arcs too).
+ */
+export function arcBeads(trail: readonly string[], ahead: number): string[] {
+  const kept = trail.filter((s) => s.length > 0).slice(-4);
+  return [...kept, aheadLine(ahead)];
+}
+
 export class LivingChart {
   private root: Phaser.GameObjects.Container;
   private sheet: Phaser.GameObjects.Graphics;
@@ -66,8 +81,11 @@ export class LivingChart {
     this.root.setDepth(24).setVisible(false).setAlpha(0);
   }
 
-  show(patientName: string, memory: string): void {
-    const beads = memoryBeads(memory);
+  show(patientName: string, memory: string, arc?: { trail: string[]; ahead: number }): void {
+    const beads =
+      arc !== undefined && arc.trail.length > 0
+        ? arcBeads(arc.trail, arc.ahead)
+        : memoryBeads(memory);
     this.title.setText(`${patientName} remembers`);
     this.lines.setText(beads.map((b) => `\u2022  ${b}`).join('\n'));
     this.beads.clear();

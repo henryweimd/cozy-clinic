@@ -1,5 +1,34 @@
 # PROGRESS.md — Cozy Clinic
 
+## Run 55 (2026-11-01): P2 branching arcs (IN PROGRESS)
+
+Branch: `feat/p2-branching-arcs` (from `main` @ `1916882`).
+File ownership (main agent, this run): arc resume +
+trail helpers + tests, Living Chart arc beads + tests,
+branch budget doc + test, scene arc wiring, PROGRESS,
+CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream).
+
+- P2 of loop-revamp-plan.md: per-patient arc cursors
+  persist across visits (resume, leaf restarts), Living
+  Chart shows trail + paths-ahead, branch budget held by
+  test. Data reality: 36 arcs x 17 nodes, max depth 2 —
+  mechanism verified across visits; deeper arcs need the
+  content pipeline (budget doc records the target).
+- New pure helpers in patients.ts (nodeById, childrenOf,
+  trailToRoot, resumeCursor, isArcMap) + 7 tests. Chart
+  gains aheadLine/arcBeads + optional arc param + 2 tests.
+  Budget doc + enforcing test (64/64/4 caps).
+- Scene: arc cursors persist per patient name, resume
+  mid-arc, restart finished leaves (leaf id rewritten to
+  root); chart shows trail + ahead count; resume toast.
+- Verify: 451/451 (10 new), tsc clean, build green.
+  Headless 3-visit playtest, zero errors: v1 cursor
+  saved, v2 resumed, v2 ended at depth 2, v3 restarted
+  at root, chart beads match each step.
+- Spend: $0.
+- Next: merge, then P3 (Call a Consult).
+
 ## Run 54 (2026-11-01): MERGED — P1 via automated PR flow
 
 Branch: `main` @ `1fd72b4` (merge of #2 from

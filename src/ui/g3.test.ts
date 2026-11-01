@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { EXAM_TOOLS } from './toolTrays';
 import { MOCK_FEED, nextFeedLine, tickerVisible } from './ticker';
-import { memoryBeads } from './livingChart';
+import { aheadLine, arcBeads, memoryBeads } from './livingChart';
 import { resourcesFor } from './learnList';
 
 /** G3 pure-logic tests (the Phaser shells verify in-game). */
@@ -49,5 +49,23 @@ describe('G3 modules', () => {
       for (const r of rows) expect(r.condition_id).toBe(id);
     }
     expect(resourcesFor('nope')).toEqual([]);
+  });
+
+  it('counts paths ahead without spoiling them', () => {
+    expect(aheadLine(0)).toBe('This path ends here');
+    expect(aheadLine(1)).toBe('1 path ahead');
+    expect(aheadLine(3)).toBe('3 paths ahead');
+  });
+
+  it('shows the arc trail plus the ahead line, at most 5 beads', () => {
+    expect(arcBeads([], 2)).toEqual(['2 paths ahead']);
+    expect(arcBeads(['a', 'b'], 1)).toEqual(['a', 'b', '1 path ahead']);
+    expect(arcBeads(['a', '', 'b', 'c', 'd', 'e'], 0)).toEqual([
+      'b',
+      'c',
+      'd',
+      'e',
+      'This path ends here',
+    ]);
   });
 });
