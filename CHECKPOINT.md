@@ -10,8 +10,9 @@ CHECKPOINT).
 Test result: `npm test` 451/451 (10 new); tsc clean;
 build green.
 
-Deployment URL: branch preview (pending at write time);
-prod unchanged on main until merge.
+Deployment URL: https://cozy-clinic.vercel.app/ (PR #3
+merged @ `c38b402`; 200, new bundle verified in the
+served JS).
 
 Playtest result: headless 3-visit arc at 540x960, zero
 console/page errors — resume, leaf restart, chart trail

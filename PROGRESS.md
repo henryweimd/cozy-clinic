@@ -27,7 +27,10 @@ Hands off: src/data/maneuvers.* (other stream).
   saved, v2 resumed, v2 ended at depth 2, v3 restarted
   at root, chart beads match each step.
 - Spend: $0.
-- Next: merge, then P3 (Call a Consult).
+- Merged as PR #3 (`c38b402`); prod live 200 with the
+  new bundle (`cozy-arc-cursors-v1` in served JS). Note:
+  prod-poll grep must allow dashes in bundle hashes.
+- Next: P3 (Call a Consult).
 
 ## Run 54 (2026-11-01): MERGED — P1 via automated PR flow
 
