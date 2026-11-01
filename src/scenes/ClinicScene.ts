@@ -48,7 +48,9 @@ import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
 import { chooseFrame, examQuestion, isPerfectVisit, lockedAlpha, resultCopy, roundQuestion, scoreCount, visitOutcome } from '../game/visit';
 import { reword } from '../game/reword';
-import { isMemoryMap, memoryLine, recordMemory } from '../game/memory';
+import { followupLine, isMemoryMap, memoryLine, recordMemory } from '../game/memory';
+import { advanceDay, dayLabel, EMPTY_DAY, isDayState, queueForDay } from '../game/day';
+import type { DayState } from '../game/day';
 import type { MemoryMap } from '../game/memory';
 import { COIN_GOLD, drawBook, drawCoin, drawTeamBadge } from '../ui/icons';
 import { EMPTY_STREAK, earnsDailyBonus, nextStreak, streakBonus } from '../game/streak';
@@ -311,6 +313,7 @@ const TEAM_STORAGE_KEY = 'cozy-team-tag-v1';
 const OUTBOX_STORAGE_KEY = 'cozy-handoff-outbox-v1';
 const CHEER_OUTBOX_KEY = 'cozy-cheer-outbox-v1';
 const MEMORY_KEY = 'cozy-visit-memory-v1';
+const DAY_KEY = 'cozy-clinic-day-v1';
 /**
  * SAY vs TELL (chrome-3): 'say' = direct speech in the speaker's
  * own voice (quoted + tagged); 'tell' = third-person narration
@@ -527,6 +530,7 @@ export class ClinicScene extends Phaser.Scene {
   private profileRows!: Phaser.GameObjects.Container;
   private levelSlider!: Phaser.GameObjects.Container;
   private waitingRows!: Phaser.GameObjects.Container;
+  private waitingTitle!: Phaser.GameObjects.Text;
   /** Queue order (names); the player reorders with the chevrons. */
   private waitingOrder: string[] = introNames(MOCK_ROSTER.map((e) => e.name));
   private telemedView!: Phaser.GameObjects.Container;
@@ -584,6 +588,8 @@ export class ClinicScene extends Phaser.Scene {
   private museNoted = false;
   /** What each patient remembers about your last visit (persisted). */
   private visitMemory: MemoryMap = {};
+  /** Clinic-day clock (Daily Rituals): persisted, advanced per visit. */
+  private day: DayState = { ...EMPTY_DAY };
   /** Respects the OS: infinite pulses + idle bob go static. */
   private reducedMotion = false;
 
@@ -655,6 +661,10 @@ export class ClinicScene extends Phaser.Scene {
     this.loadSfx();
     this.loadTicker();
     this.loadMemory();
+    this.loadDay();
+    // Gentle day one: the queue opens with two friends; the
+    // full queue returns when day two dawns (resolveVisit).
+    if (this.day.day <= 1) this.waitingOrder = queueForDay(this.waitingOrder, 1);
     // Audio unlocks on the first tap (autoplay policy); every
     // cue after that just plays.
     this.input.once('pointerdown', () => unlockSfx());
@@ -1265,6 +1275,25 @@ export class ClinicScene extends Phaser.Scene {
       window.localStorage.setItem(MEMORY_KEY, JSON.stringify(this.visitMemory));
     } catch {
       /* private-mode play: the session keeps the memories */
+    }
+  }
+
+  private loadDay(): void {
+    try {
+      const raw = window.localStorage.getItem(DAY_KEY);
+      if (!raw) return;
+      const parsed: unknown = JSON.parse(raw);
+      if (isDayState(parsed)) this.day = parsed;
+    } catch {
+      this.day = { ...EMPTY_DAY };
+    }
+  }
+
+  private saveDay(): void {
+    try {
+      window.localStorage.setItem(DAY_KEY, JSON.stringify(this.day));
+    } catch {
+      /* private-mode play: the session keeps the day */
     }
   }
 
@@ -1929,12 +1958,18 @@ export class ClinicScene extends Phaser.Scene {
    * tab change cancels the handoff). Re-asking on return trips
    * re-orients the player mid-visit.
    */
-  private greetThenQuiz(returning: boolean): void {
+  private greetThenQuiz(returning: boolean, recall: string | null = null): void {
     const token = this.roundToken;
     const askLive = (): void => {
       if (token !== this.roundToken) return;
       if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
       this.showQuestion(this.round);
+    };
+    const showOpener = (): void => {
+      if (token !== this.roundToken) return;
+      if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
+      this.setConversation(speakerFor(this.activeName), this.openerText(), 'say');
+      this.time.delayedCall(2000, askLive);
     };
     this.time.delayedCall(2000, () => {
       if (token !== this.roundToken) return;
@@ -1943,10 +1978,15 @@ export class ClinicScene extends Phaser.Scene {
         this.showQuestion(this.round);
         return;
       }
-      // Returning patients: recognition first, then the symptom
+      // Returning patients: recognition first, then the
+      // remembered thread when one was kept, then the symptom
       // opener, then the quiz (each beat token-guarded).
-      this.setConversation(speakerFor(this.activeName), this.openerText(), 'say');
-      this.time.delayedCall(2000, askLive);
+      if (recall !== null) {
+        this.setConversation(speakerFor(this.activeName), recall, 'say');
+        this.time.delayedCall(2000, showOpener);
+        return;
+      }
+      showOpener();
     });
   }
 
@@ -2305,6 +2345,17 @@ export class ClinicScene extends Phaser.Scene {
     // The visit's over — the trial tab leaves with the round.
     this.refreshRailTabs();
     this.showResult(outcome);
+    // The clinic day turns once per finished visit. The clock
+    // lives here (resolveVisit runs once) and not in
+    // showResult (which re-runs on every revisit).
+    const dayBefore = this.day.day;
+    this.day = advanceDay(this.day);
+    this.saveDay();
+    if (this.day.day !== dayBefore) {
+      // A fresh day reopens the full queue for everyone.
+      this.waitingOrder = introNames(MOCK_ROSTER.map((e) => e.name));
+      this.showToast(`Day ${this.day.day} — a fresh clinic day`);
+    }
     // Ending toasts ride OVER the modal (toast depth 46): the
     // level-up names its bonus; else the affordability nudge —
     // this visit's earnings just unlocked a shop item.
@@ -2626,7 +2677,7 @@ export class ClinicScene extends Phaser.Scene {
     sheet.lineStyle(3, OUTLINE, 1);
     sheet.fillRoundedRect(24, 136, 492, 740, 24);
     sheet.strokeRoundedRect(24, 136, 492, 740, 24);
-    const title = this.add
+    this.waitingTitle = this.add
       .text(48, 172, 'Waiting Room', {
         fontFamily: FONT_FAMILY,
         fontStyle: 'bold',
@@ -2642,7 +2693,7 @@ export class ClinicScene extends Phaser.Scene {
       })
       .setOrigin(0, 0.5);
     this.waitingRows = this.add.container(0, 0, []);
-    this.waitingView = this.add.container(0, 0, [sheet, title, hint, this.waitingRows]);
+    this.waitingView = this.add.container(0, 0, [sheet, this.waitingTitle, hint, this.waitingRows]);
     this.waitingView.setDepth(10).setVisible(false).setAlpha(0);
   }
 
@@ -2655,6 +2706,8 @@ export class ClinicScene extends Phaser.Scene {
    * showView), no cards, no tray, no drawer.
    */
   private refreshWaitingRows(): void {
+    // The day label rides the title (rebuilt every arrival).
+    this.waitingTitle.setText(`Waiting Room · ${dayLabel(this.day)}`);
     this.waitingRows.removeAll(true);
     const names = waitingNames(this.waitingOrder, this.activeName);
     // Waiting-2: a real room accumulates — two friends on screen,
@@ -4085,11 +4138,12 @@ export class ClinicScene extends Phaser.Scene {
         // this patient remembers your last visit (same beat, no
         // extra timing — the Muse variant may still paraphrase).
         const remembered = returning ? memoryLine(this.visitMemory[this.activeName]) : null;
+        const recall = returning ? followupLine(this.visitMemory[this.activeName]) : null;
         const local =
           remembered ?? (returning && entry ? entry.welcomeBack : this.openerText());
         const greet = returning ? (this.greetCache.get(gkey) ?? local) : local;
         this.setConversation(speakerFor(this.activeName), greet, 'say');
-        this.greetThenQuiz(returning);
+        this.greetThenQuiz(returning, recall);
         if (returning && entry) void this.warmGreeting(gkey, local, entry.complaint);
       }
     }
@@ -4943,7 +4997,12 @@ export class ClinicScene extends Phaser.Scene {
     });
     // The patient remembers YOUR score for next time (subtle,
     // player-praising; memory.ts owns the wording law).
-    this.visitMemory = recordMemory(this.visitMemory, this.activeName, scoreCount(this.roundScore));
+    this.visitMemory = recordMemory(
+      this.visitMemory,
+      this.activeName,
+      scoreCount(this.roundScore),
+      def.visitPearl,
+    );
     this.saveMemory();
     this.resultTitle.setText(copy.title);
     this.resultLines.setText(copy.lines.join('\n'));

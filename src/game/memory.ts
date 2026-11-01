@@ -8,6 +8,8 @@
 export interface VisitMemory {
   score: number;
   perfect: boolean;
+  /** Last visit's takeaway (the follow-up thread). Absent on old saves. */
+  pearl?: string;
 }
 
 export type MemoryMap = Record<string, VisitMemory>;
@@ -21,18 +23,42 @@ export function memoryLine(mem: VisitMemory | undefined): string | null {
 }
 
 /** Pure: records one finished visit (immutable update). */
-export function recordMemory(map: MemoryMap, name: string, score: number): MemoryMap {
-  return { ...map, [name]: { score, perfect: score >= 4 } };
+export function recordMemory(
+  map: MemoryMap,
+  name: string,
+  score: number,
+  pearl?: string,
+): MemoryMap {
+  return {
+    ...map,
+    [name]: { score, perfect: score >= 4, ...(pearl !== undefined ? { pearl } : {}) },
+  };
+}
+
+/**
+ * Pure: the follow-up thread, or null when nothing was kept.
+ * Recalls the teaching, never the patient state (the endings
+ * rule applies to memory too).
+ */
+export function followupLine(mem: VisitMemory | undefined): string | null {
+  if (mem?.pearl === undefined || mem.pearl === '') return null;
+  return `Last time we learned: ${mem.pearl}`;
 }
 
 /** Shape guard for the persisted map (unit-tested). */
 export function isMemoryMap(v: unknown): v is MemoryMap {
   if (typeof v !== 'object' || v === null || Array.isArray(v)) return false;
-  return Object.values(v as Record<string, unknown>).every(
-    (m) =>
-      typeof m === 'object' &&
-      m !== null &&
-      typeof (m as { score?: unknown }).score === 'number' &&
-      typeof (m as { perfect?: unknown }).perfect === 'boolean',
-  );
+  return Object.values(v as Record<string, unknown>).every((m) => {
+    if (typeof m !== 'object' || m === null) return false;
+    const { score, perfect, pearl } = m as {
+      score?: unknown;
+      perfect?: unknown;
+      pearl?: unknown;
+    };
+    return (
+      typeof score === 'number' &&
+      typeof perfect === 'boolean' &&
+      (pearl === undefined || typeof pearl === 'string')
+    );
+  });
 }
