@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { THEME } from './chromeTheme';
+import { bodyWord, heartWord, meterPips } from '../game/meters';
 
 /**
  * Medical Chart drawer: the patient's SIGNOUT (tier-aware lines
@@ -30,6 +31,8 @@ export const RAIL_SLOTS = { chart: 362, exam: 426, notes: 490, lab: 554 } as con
 export interface ChartContent {
   /** Signout lines (visit/who, complaint, history+meds, observation). */
   lines: string[];
+  /** Body + heart meters 0-10 (pips plus words, never color alone). */
+  meters?: { body: number; heart: number };
 }
 
 export class ChartDrawer {
@@ -38,6 +41,8 @@ export class ChartDrawer {
   private tabZone!: Phaser.GameObjects.Zone;
   private tabIcon: Phaser.GameObjects.Graphics;
   private lineTexts: Phaser.GameObjects.Text[] = [];
+  private meterDots: Phaser.GameObjects.Graphics;
+  private meterWords: Phaser.GameObjects.Text[] = [];
   private open = false;
   onToggle: (open: boolean) => void = () => {};
 
@@ -81,7 +86,18 @@ export class ChartDrawer {
         mk(DRAWER_TOP + 60, '14px', i === 0, i === 0 ? THEME.secondary : THEME.cocoa),
       );
     }
-    this.panel = this.scene.add.container(PANEL_CLOSED_X, 0, [bg, ...this.lineTexts]);
+    // Meter rows (body + heart): pip dots plus one plain word
+    // each, positioned after the signout lines in setContent.
+    this.meterDots = this.scene.add.graphics();
+    for (let i = 0; i < 2; i += 1) {
+      this.meterWords.push(mk(DRAWER_TOP + 60, '12px', true, THEME.cocoa));
+    }
+    this.panel = this.scene.add.container(PANEL_CLOSED_X, 0, [
+      bg,
+      ...this.lineTexts,
+      this.meterDots,
+      ...this.meterWords,
+    ]);
     this.panel.setDepth(22);
 
     const tabBg = this.scene.add.graphics();
@@ -127,6 +143,37 @@ export class ChartDrawer {
       text.setText(content.lines[i] ?? '');
       text.setY(y);
       y += text.height + 6;
+    });
+    this.meterDots.clear();
+    const meters = content.meters;
+    const rows =
+      meters === undefined
+        ? []
+        : [
+            { pips: meterPips(meters.body), word: `Body · ${bodyWord(meters.body)}` },
+            { pips: meterPips(meters.heart), word: `Heart · ${heartWord(meters.heart)}` },
+          ];
+    this.meterWords.forEach((text, i) => {
+      const row = rows[i];
+      text.setVisible(row !== undefined);
+      if (!row) return;
+      text.setText(row.word);
+      text.setY(y);
+      text.setX(100);
+      for (let p = 0; p < 5; p += 1) {
+        const cx = 40 + p * 12;
+        const cy = y + 8;
+        if (p < row.pips) {
+          this.meterDots.fillStyle(THEME.sage, 1);
+          this.meterDots.fillCircle(cx, cy, 4);
+        } else {
+          this.meterDots.fillStyle(THEME.cardFill, 1);
+          this.meterDots.fillCircle(cx, cy, 4);
+        }
+        this.meterDots.lineStyle(2, THEME.outline, 1);
+        this.meterDots.strokeCircle(cx, cy, 4);
+      }
+      y += 22;
     });
   }
 

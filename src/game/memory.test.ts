@@ -33,6 +33,11 @@ describe('recordMemory', () => {
     const map = recordMemory({}, 'Milo', 3, 'Cough + sniffles: a virus');
     expect(map.Milo).toEqual({ score: 3, perfect: false, pearl: 'Cough + sniffles: a virus' });
   });
+
+  it('keeps held ease across visits', () => {
+    const map = recordMemory({ Milo: { score: 2, perfect: false, ease: 8 } }, 'Milo', 4);
+    expect(map.Milo).toEqual({ score: 4, perfect: true, ease: 8 });
+  });
 });
 
 describe('followupLine', () => {

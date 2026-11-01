@@ -60,6 +60,7 @@ import {
   isConsultState,
   useConsult,
 } from '../game/consults';
+import { easeOf, easeOnGrade, physicalHealth, updateEase } from '../game/meters';
 import type { MemoryMap } from '../game/memory';
 import { COIN_GOLD, drawBook, drawCoin, drawTeamBadge } from '../ui/icons';
 import { EMPTY_STREAK, earnsDailyBonus, nextStreak, streakBonus } from '../game/streak';
@@ -2239,6 +2240,7 @@ export class ClinicScene extends Phaser.Scene {
     const pickId = card.actionId.replace('hx:', '');
     const best = pickId === def.historyBestId;
     const grade: ChoiceGrade = best ? 'BEST' : 'NOT_GREAT';
+    this.feelGrade(grade);
     card.revealed = grade;
     this.drawSpine(card, grade);
     this.drawStamp(card, grade);
@@ -2292,6 +2294,7 @@ export class ClinicScene extends Phaser.Scene {
     const pickId = card.actionId.replace('exam:', '');
     const best = pickId === def.examBestId;
     const grade: ChoiceGrade = best ? 'BEST' : 'NOT_GREAT';
+    this.feelGrade(grade);
     card.revealed = grade;
     this.drawSpine(card, grade);
     this.drawStamp(card, grade);
@@ -2347,6 +2350,7 @@ export class ClinicScene extends Phaser.Scene {
     const tier = this.tier();
     const pickLabel = CONDITION_TIER_NAMES[pick]?.[tier] ?? pick;
     const grade: ChoiceGrade = correct ? 'BEST' : 'WRONG';
+    this.feelGrade(grade);
     card.revealed = grade;
     this.drawSpine(card, grade);
     this.drawStamp(card, grade);
@@ -2402,6 +2406,7 @@ export class ClinicScene extends Phaser.Scene {
     const result = this.engine.applyAction(this.patientState, card.actionId);
     if (!result.blocked) {
       this.undoStack = pushMove(this.undoStack, preMove);
+      this.feelGrade(grade);
     }
     if (result.blocked) {
       // Engine veto: your training stops you. Dim + shake + the
@@ -2875,7 +2880,24 @@ export class ClinicScene extends Phaser.Scene {
       },
       tier,
     );
-    this.chartDrawer.setContent({ lines });
+    const vitals = this.patientState.vitals;
+    this.chartDrawer.setContent({
+      lines,
+      meters: {
+        body: physicalHealth(vitals, this.patientState.stageIndex),
+        heart: easeOf(this.visitMemory[this.activeName]),
+      },
+    });
+  }
+
+  /**
+   * Ease follows grades (BEST reassures, WRONG shakes); the
+   * chart reads it live on every refresh.
+   */
+  private feelGrade(grade: ChoiceGrade): void {
+    const next = easeOnGrade(easeOf(this.visitMemory[this.activeName]), grade);
+    this.visitMemory = updateEase(this.visitMemory, this.activeName, next);
+    this.saveMemory();
   }
 
   private refreshHud(): void {

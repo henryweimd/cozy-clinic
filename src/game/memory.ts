@@ -10,6 +10,8 @@ export interface VisitMemory {
   perfect: boolean;
   /** Last visit's takeaway (the follow-up thread). Absent on old saves. */
   pearl?: string;
+  /** Persistent heart ease 0-10. Absent means a newcomer. */
+  ease?: number;
 }
 
 export type MemoryMap = Record<string, VisitMemory>;
@@ -29,9 +31,15 @@ export function recordMemory(
   score: number,
   pearl?: string,
 ): MemoryMap {
+  const prevEase = map[name]?.ease;
   return {
     ...map,
-    [name]: { score, perfect: score >= 4, ...(pearl !== undefined ? { pearl } : {}) },
+    [name]: {
+      score,
+      perfect: score >= 4,
+      ...(pearl !== undefined ? { pearl } : {}),
+      ...(prevEase !== undefined ? { ease: prevEase } : {}),
+    },
   };
 }
 
@@ -50,15 +58,17 @@ export function isMemoryMap(v: unknown): v is MemoryMap {
   if (typeof v !== 'object' || v === null || Array.isArray(v)) return false;
   return Object.values(v as Record<string, unknown>).every((m) => {
     if (typeof m !== 'object' || m === null) return false;
-    const { score, perfect, pearl } = m as {
+    const { score, perfect, pearl, ease } = m as {
       score?: unknown;
       perfect?: unknown;
       pearl?: unknown;
+      ease?: unknown;
     };
     return (
       typeof score === 'number' &&
       typeof perfect === 'boolean' &&
-      (pearl === undefined || typeof pearl === 'string')
+      (pearl === undefined || typeof pearl === 'string') &&
+      (ease === undefined || typeof ease === 'number')
     );
   });
 }
