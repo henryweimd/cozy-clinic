@@ -61,6 +61,16 @@ import {
   useConsult,
 } from '../game/consults';
 import { easeOf, easeOnGrade, physicalHealth, updateEase } from '../game/meters';
+import {
+  bumpSaga,
+  EMPTY_SAGA,
+  isSagaProgress,
+  newlyDone,
+  nodeStates,
+  SAGA_NODES,
+} from '../game/saga';
+import type { SagaInput, SagaProgress } from '../game/saga';
+import { SagaMap } from '../ui/sagaMap';
 import type { MemoryMap } from '../game/memory';
 import { COIN_GOLD, drawBook, drawCoin, drawTeamBadge } from '../ui/icons';
 import { EMPTY_STREAK, earnsDailyBonus, nextStreak, streakBonus } from '../game/streak';
@@ -329,6 +339,7 @@ const MEMORY_KEY = 'cozy-visit-memory-v1';
 const DAY_KEY = 'cozy-clinic-day-v1';
 const ARC_KEY = 'cozy-arc-cursors-v1';
 const CONSULTS_KEY = 'cozy-consults-v1';
+const SAGA_KEY = 'cozy-saga-v1';
 /**
  * SAY vs TELL (chrome-3): 'say' = direct speech in the speaker's
  * own voice (quoted + tagged); 'tell' = third-person narration
@@ -546,6 +557,7 @@ export class ClinicScene extends Phaser.Scene {
   private profileRows!: Phaser.GameObjects.Container;
   private levelSlider!: Phaser.GameObjects.Container;
   private waitingRows!: Phaser.GameObjects.Container;
+  private journeyCount!: Phaser.GameObjects.Text;
   private waitingTitle!: Phaser.GameObjects.Text;
   /** Queue order (names); the player reorders with the chevrons. */
   private waitingOrder: string[] = introNames(MOCK_ROSTER.map((e) => e.name));
@@ -677,9 +689,11 @@ export class ClinicScene extends Phaser.Scene {
     this.loadSfx();
     this.loadTicker();
     this.loadMemory();
+    this.visitStartedWithMemory = this.activeName in this.visitMemory;
     this.loadDay();
     this.loadArc();
     this.loadConsults();
+    this.loadSaga();
     // Gentle day one: the queue opens with two friends; the
     // full queue returns when day two dawns (resolveVisit).
     if (this.day.day <= 1) this.waitingOrder = queueForDay(this.waitingOrder, 1);
@@ -1340,6 +1354,12 @@ export class ClinicScene extends Phaser.Scene {
   /** Held consults (power-up counts, not own-once stock). */
   private consults = CONSULT_START;
 
+  /** Journey progress store (visits, flawless, followups, consults). */
+  private saga: SagaProgress = { ...EMPTY_SAGA };
+  private sagaMap!: SagaMap;
+  /** True when this visit started with a held memory (a revisit). */
+  private visitStartedWithMemory = false;
+
   private loadConsults(): void {
     try {
       const raw = window.localStorage.getItem(CONSULTS_KEY);
@@ -1357,6 +1377,35 @@ export class ClinicScene extends Phaser.Scene {
     } catch {
       /* private-mode play: the session keeps the consults */
     }
+  }
+
+  private loadSaga(): void {
+    try {
+      const raw = window.localStorage.getItem(SAGA_KEY);
+      if (!raw) return;
+      const parsed: unknown = JSON.parse(raw);
+      if (isSagaProgress(parsed)) this.saga = parsed;
+    } catch {
+      this.saga = { ...EMPTY_SAGA };
+    }
+  }
+
+  private saveSaga(): void {
+    try {
+      window.localStorage.setItem(SAGA_KEY, JSON.stringify(this.saga));
+    } catch {
+      /* private-mode play: the session keeps the journey */
+    }
+  }
+
+  /** Live journey input (store + memory + filed + career). */
+  private sagaInput(): SagaInput {
+    return {
+      saga: this.saga,
+      gladAny: Object.values(this.visitMemory).some((m) => easeOf(m) >= 8),
+      filed: this.filedConds.length,
+      recovered: this.careerRecovered,
+    };
   }
 
   /**
@@ -2017,6 +2066,15 @@ export class ClinicScene extends Phaser.Scene {
     this.consults = left;
     this.saveConsults();
     this.consultLabel.setText(`Consult (${this.consults})`);
+    // Journey counts the consult (a quiet coin, not a fanfare —
+    // the why-line is the moment here).
+    const consultBefore = nodeStates(this.sagaInput());
+    this.saga = bumpSaga(this.saga, 'consult');
+    this.saveSaga();
+    if (newlyDone(consultBefore, nodeStates(this.sagaInput())).length > 0) {
+      playSfx('coin');
+      this.showToast('Journey: Helping Hand complete!');
+    }
     this.tweens.add({
       targets: card.root,
       scaleX: 1.06,
@@ -2593,6 +2651,19 @@ export class ClinicScene extends Phaser.Scene {
     if (consultGifted) {
       this.showToast('Flawless! A senior doctor gifted you a consult');
     }
+    // Journey: count the visit, then fan the first newly
+    // finished node (the map keeps the full story).
+    const sagaBefore = nodeStates(this.sagaInput());
+    this.saga = bumpSaga(this.saga, 'visit');
+    if (isPerfectVisit(this.roundScore)) this.saga = bumpSaga(this.saga, 'flawless');
+    if (this.visitStartedWithMemory) this.saga = bumpSaga(this.saga, 'followup');
+    this.saveSaga();
+    const freshDone = newlyDone(sagaBefore, nodeStates(this.sagaInput()));
+    if (freshDone.length > 0) {
+      const label = SAGA_NODES.find((n) => n.id === freshDone[0])?.label ?? 'Journey';
+      playSfx('fanfare');
+      this.showToast(`Journey: ${label} complete!`);
+    }
   }
 
   /**
@@ -2628,6 +2699,7 @@ export class ClinicScene extends Phaser.Scene {
   private switchPatient(name: string): void {
     if (SPRITE_PREFIX[name] === undefined) return;
     this.activeName = name;
+    this.visitStartedWithMemory = name in this.visitMemory;
     // The room narrates the handoff (waiting-2: most friends are
     // on the way, not on screen).
     const waiting = roomWaiting(this.waitingOrder, name).length;
@@ -2934,7 +3006,47 @@ export class ClinicScene extends Phaser.Scene {
       })
       .setOrigin(0, 0.5);
     this.waitingRows = this.add.container(0, 0, []);
-    this.waitingView = this.add.container(0, 0, [sheet, this.waitingTitle, hint, this.waitingRows]);
+    // Journey card (fixed y700-748, below the capped rows):
+    // opens the saga map. Count refreshes every arrival.
+    const journeyBg = this.add.graphics();
+    journeyBg.fillStyle(CARD_FILL, 1);
+    journeyBg.lineStyle(2, OUTLINE, 1);
+    journeyBg.fillRoundedRect(48, 700, 444, 48, 16);
+    journeyBg.strokeRoundedRect(48, 700, 444, 48, 16);
+    const journeyLabel = this.add
+      .text(68, 724, 'Your Journey', {
+        fontFamily: FONT_FAMILY,
+        fontStyle: 'bold',
+        fontSize: '16px',
+        color: COCOA,
+      })
+      .setOrigin(0, 0.5);
+    this.journeyCount = this.add
+      .text(472, 724, '', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '16px',
+        color: SECONDARY,
+      })
+      .setOrigin(1, 0.5);
+    const journeyZone = this.add
+      .zone(270, 724, 444, 48)
+      .setInteractive({ useHandCursor: true });
+    journeyZone.on('pointerdown', () => {
+      if (!this.sagaMap.open) this.sagaMap.show(nodeStates(this.sagaInput()));
+    });
+    const journeyCard = this.add.container(0, 0, [
+      journeyBg,
+      journeyLabel,
+      this.journeyCount,
+      journeyZone,
+    ]);
+    this.waitingView = this.add.container(0, 0, [
+      sheet,
+      this.waitingTitle,
+      hint,
+      this.waitingRows,
+      journeyCard,
+    ]);
     this.waitingView.setDepth(10).setVisible(false).setAlpha(0);
   }
 
@@ -2949,6 +3061,8 @@ export class ClinicScene extends Phaser.Scene {
   private refreshWaitingRows(): void {
     // The day label rides the title (rebuilt every arrival).
     this.waitingTitle.setText(`Waiting Room · ${dayLabel(this.day)}`);
+    const journeyDone = nodeStates(this.sagaInput()).filter((s) => s.state === 'done').length;
+    this.journeyCount.setText(`${journeyDone} of 8`);
     this.waitingRows.removeAll(true);
     const names = waitingNames(this.waitingOrder, this.activeName);
     // Waiting-2: a real room accumulates — two friends on screen,
@@ -4218,6 +4332,15 @@ export class ClinicScene extends Phaser.Scene {
 
     // Clinic Shop: the coin meter opens it (visit-only HUD).
     this.shop = new ShopSheet(this);
+    // Journey map: tap a node for its story (read-only).
+    this.sagaMap = new SagaMap(this);
+    this.sagaMap.onNode = (node, state) => {
+      if (state === 'locked') {
+        this.showToast(node.id === 'shared-care' ? 'Shared care arrives soon' : 'Finish earlier stops first');
+        return;
+      }
+      this.showToast(`${node.label}: ${node.blurb}`);
+    };
     // About sheet: the Profile About row opens it.
     this.about = new AboutSheet(this);
     this.about.onSoundToggle = (muted: boolean) => {
@@ -4437,6 +4560,7 @@ export class ClinicScene extends Phaser.Scene {
     // except Learn, which IS the Learning List full-screen.
     this.chart.hide();
     this.shop.hide();
+    this.sagaMap.hide();
     this.about.hide();
     this.editor.hide();
     this.handoffSheet.hide();

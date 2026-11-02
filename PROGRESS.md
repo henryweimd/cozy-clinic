@@ -1,5 +1,31 @@
 # PROGRESS.md — Cozy Clinic
 
+## Run 58 (2026-11-01): P5 saga map (IN PROGRESS)
+
+Branch: `feat/p5-saga-map` (from `main` @ `e5cf8fb`).
+File ownership (main agent, this run): saga store +
+tests, map sheet, Profile entry, scene progress
+wiring, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream).
+
+- P5 of loop-revamp-plan.md: Journey map (8 nodes,
+  linear unlock, read-only + toasts), progress store
+  (visits/flawless/followups/consults), completion
+  fanfare at visit end, Profile row entry. No new art.
+- New saga.ts (8 nodes, linear unlock, bumps, guard)
+  + 6 tests. New sagaMap.ts sheet (winding path, done
+  rings/checks, node toasts). Scene: progress store,
+  visit/consult counting, completion fanfare, journey
+  card in Waiting (Profile had no room under the
+  ticker). Earned nodes show done wherever earned;
+  current pointer marks next.
+- Verify: 470/470 (6 new), tsc clean, build green.
+  Headless playtest, zero errors: map opens 0 of 8,
+  one flawless visit drives 3 of 8 with checks on
+  First Steps, Flawless Care, Glad Hearts.
+- Spend: $0.
+- Next: merge, then P6 (async co-op).
+
 ## Run 57 (2026-11-01): P4 patient meters (IN PROGRESS)
 
 Branch: `feat/p4-meters` (from `main` @ `2f00b91`).
