@@ -6,9 +6,11 @@ import {
   TEAM_TAGS,
   cleanHandle,
   cleanTeam,
+  coverOutcomePreset,
   doctorByline,
   handoffSummary,
   handoffText,
+  incomingOnly,
   latestHandoff,
   loadCheers,
   loadHandoffs,
@@ -167,6 +169,26 @@ describe('teams + cheers', () => {
     ]);
   });
 
+  it('hides your own notes from the incoming sheet (never self-cover)', () => {
+    const mk = (id: string, from: string): HandoffNote => ({
+      id,
+      patient_id: 'p',
+      from_handle: from,
+      team_tag: 'Sun',
+      preset_id: 'keep-fluids',
+      encounter_summary: 's',
+      outcome: 'recovered',
+      score: 3,
+      created_at: '2026-10-28T10:00:00Z',
+    });
+    const notes = [mk('mine', 'Demo'), mk('theirs', 'Wren')];
+    expect(incomingOnly(notes, 'Demo').map((n) => n.id)).toEqual(['theirs']);
+    expect(incomingOnly(notes, 'Fox').map((n) => n.id)).toEqual([
+      'mine',
+      'theirs',
+    ]);
+  });
+
   it('addresses fallback cheers to real handles with known presets', () => {
     for (const c of FALLBACK_CHEERS) {
       expect(DOCTOR_HANDLES).toContain(c.from_handle);
@@ -235,5 +257,12 @@ describe('shared-care network hardening', () => {
         OPTS,
       ),
     ).rejects.toThrow();
+  });
+});
+
+describe('coverOutcomePreset', () => {
+  it('closes the loop on recovery, echoes the ask when struggling', () => {
+    expect(coverOutcomePreset('recovered', 'watch-fever')).toBe('all-clear');
+    expect(coverOutcomePreset('struggling', 'watch-fever')).toBe('watch-fever');
   });
 });

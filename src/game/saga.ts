@@ -12,9 +12,16 @@ export interface SagaProgress {
   flawless: number;
   followups: number;
   consultsUsed: number;
+  covers: number;
 }
 
-export const EMPTY_SAGA: SagaProgress = { visits: 0, flawless: 0, followups: 0, consultsUsed: 0 };
+export const EMPTY_SAGA: SagaProgress = {
+  visits: 0,
+  flawless: 0,
+  followups: 0,
+  consultsUsed: 0,
+  covers: 0,
+};
 
 export interface SagaInput {
   saga: SagaProgress;
@@ -88,9 +95,9 @@ export const SAGA_NODES: readonly SagaNode[] = [
   {
     id: 'shared-care',
     label: 'Shared Care',
-    blurb: 'Cover a teammate\u2019s patient — coming soon.',
-    need: 'Soon',
-    check: () => false,
+    blurb: 'Cover a teammate\u2019s patient, loop closed.',
+    need: 'Cover 1 visit',
+    check: (p) => p.saga.covers >= 1,
   },
 ];
 
@@ -101,7 +108,7 @@ export function nodeStates(input: SagaInput): { node: SagaNode; state: SagaNodeS
   let opened = false;
   return SAGA_NODES.map((node) => {
     if (node.check(input)) return { node, state: 'done' as const };
-    if (!opened && node.id !== 'shared-care') {
+    if (!opened) {
       opened = true;
       return { node, state: 'current' as const };
     }
@@ -120,7 +127,7 @@ export function newlyDone(
     .map((s) => s.node.id);
 }
 
-export type SagaEvent = 'visit' | 'flawless' | 'followup' | 'consult';
+export type SagaEvent = 'visit' | 'flawless' | 'followup' | 'consult' | 'cover';
 
 /** Pure: count one event (immutable update). */
 export function bumpSaga(prev: SagaProgress, event: SagaEvent): SagaProgress {
@@ -133,14 +140,18 @@ export function bumpSaga(prev: SagaProgress, event: SagaEvent): SagaProgress {
       return { ...prev, followups: prev.followups + 1 };
     case 'consult':
       return { ...prev, consultsUsed: prev.consultsUsed + 1 };
+    case 'cover':
+      return { ...prev, covers: prev.covers + 1 };
   }
 }
 
 /** Shape guard for the persisted store (unit-tested). */
 export function isSagaProgress(v: unknown): v is SagaProgress {
   if (typeof v !== 'object' || v === null || Array.isArray(v)) return false;
-  const { visits, flawless, followups, consultsUsed } = v as Record<string, unknown>;
-  return [visits, flawless, followups, consultsUsed].every(
+  const { visits, flawless, followups, consultsUsed, covers } = v as Record<string, unknown>;
+  // Covers arrived in P6: older saves without the key load as 0.
+  const rest = covers === undefined ? 0 : covers;
+  return [visits, flawless, followups, consultsUsed, rest].every(
     (n) => typeof n === 'number' && Number.isInteger(n) && n >= 0,
   );
 }

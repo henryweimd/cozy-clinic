@@ -147,7 +147,7 @@ export class SagaMap {
         })
         .setOrigin(leftSide ? 0 : 1, 0.5);
       const need = this.scene.add
-        .text(leftSide ? x + 30 : x - 30, y + 10, s.state === 'locked' && s.node.id === 'shared-care' ? 'Soon' : s.node.need, {
+        .text(leftSide ? x + 30 : x - 30, y + 10, s.node.need, {
           fontFamily: THEME.font,
           fontSize: '12px',
           color: THEME.secondary,

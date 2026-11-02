@@ -41,4 +41,41 @@ describe('net timeouts', () => {
     vi.stubGlobal('fetch', hangOnAbort());
     await expect(postJson('/t', {}, 'k', 'https://x', 20)).rejects.toThrow();
   });
+
+  it('postJson resolves on empty 201 bodies (Supabase insert)', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        async () =>
+          ({
+            ok: true,
+            status: 201,
+            json: async () => {
+              throw new SyntaxError('Unexpected end of JSON input');
+            },
+            text: async () => '',
+          }) as unknown as Response,
+      ),
+    );
+    await expect(
+      postJson('/rest/v1/handoffs', {}, 'k', 'https://x', 50),
+    ).resolves.toBeUndefined();
+  });
+
+  it('postJson still parses JSON bodies when present', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        async () =>
+          ({
+            ok: true,
+            status: 201,
+            text: async () => '{"a":1}',
+          }) as unknown as Response,
+      ),
+    );
+    await expect(postJson('/t', {}, 'k', 'https://x', 50)).resolves.toEqual({
+      a: 1,
+    });
+  });
 });

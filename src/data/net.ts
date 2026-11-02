@@ -59,6 +59,10 @@ export async function postJson<T>(
       signal,
     });
     if (!res.ok) throw new Error(`${path}: ${res.status}`);
-    return (await res.json()) as T;
+    // Supabase inserts answer 201 with an empty body; res.json()
+    // throws on those, so read text first and parse only when
+    // a body is actually there (empty reads as undefined).
+    const text = await res.text();
+    return (text ? JSON.parse(text) : undefined) as T;
   }, timeoutMs);
 }

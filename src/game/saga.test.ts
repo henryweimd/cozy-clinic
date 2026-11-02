@@ -43,7 +43,7 @@ describe('saga nodes', () => {
     ]);
     const mid = nodeStates({
       ...FRESH,
-      saga: { visits: 2, flawless: 1, followups: 1, consultsUsed: 1 },
+      saga: { visits: 2, flawless: 1, followups: 1, consultsUsed: 1, covers: 0 },
     });
     expect(mid.map((s) => s.state)).toEqual([
       'done',
@@ -59,14 +59,16 @@ describe('saga nodes', () => {
 
   it('reads glad hearts, filed topics, and recoveries', () => {
     const input: SagaInput = {
-      saga: { visits: 9, flawless: 2, followups: 3, consultsUsed: 2 },
+      saga: { visits: 9, flawless: 2, followups: 3, consultsUsed: 2, covers: 0 },
       gladAny: true,
       filed: 3,
       recovered: 9,
     };
     const states = nodeStates(input);
     expect(states.slice(0, 7).every((s) => s.state === 'done')).toBe(true);
-    expect(states[7].state).toBe('locked');
+    expect(states[7].state).toBe('current');
+    const covered = nodeStates({ ...input, saga: { ...input.saga, covers: 1 } });
+    expect(covered.every((s) => s.state === 'done')).toBe(true);
   });
 
   it('names newly finished nodes for the fanfare', () => {
@@ -78,28 +80,43 @@ describe('saga nodes', () => {
 });
 
 describe('bumpSaga', () => {
-  it('counts visits, flawless, followups, and consults (immutable)', () => {
+  it('counts visits, flawless, followups, consults, and covers (immutable)', () => {
     expect(bumpSaga(EMPTY_SAGA, 'visit')).toEqual({
       visits: 1,
       flawless: 0,
       followups: 0,
       consultsUsed: 0,
+      covers: 0,
     });
-    expect(EMPTY_SAGA).toEqual({ visits: 0, flawless: 0, followups: 0, consultsUsed: 0 });
-    const s = { visits: 2, flawless: 1, followups: 1, consultsUsed: 0 };
+    expect(EMPTY_SAGA).toEqual({
+      visits: 0,
+      flawless: 0,
+      followups: 0,
+      consultsUsed: 0,
+      covers: 0,
+    });
+    const s = { visits: 2, flawless: 1, followups: 1, consultsUsed: 0, covers: 0 };
     expect(bumpSaga(s, 'flawless').flawless).toBe(2);
     expect(bumpSaga(s, 'followup').followups).toBe(2);
     expect(bumpSaga(s, 'consult').consultsUsed).toBe(1);
+    expect(bumpSaga(s, 'cover').covers).toBe(1);
   });
 });
 
 describe('isSagaProgress', () => {
   it('accepts saved shapes, rejects junk', () => {
     expect(isSagaProgress(EMPTY_SAGA)).toBe(true);
+    expect(
+      isSagaProgress({ visits: 3, flawless: 1, followups: 0, consultsUsed: 2, covers: 1 }),
+    ).toBe(true);
     expect(isSagaProgress({ visits: 3, flawless: 1, followups: 0, consultsUsed: 2 })).toBe(true);
     expect(isSagaProgress(null)).toBe(false);
     expect(isSagaProgress({})).toBe(false);
-    expect(isSagaProgress({ visits: -1, flawless: 0, followups: 0, consultsUsed: 0 })).toBe(false);
-    expect(isSagaProgress({ visits: 1, flawless: 0, followups: 0, consultsUsed: 'x' })).toBe(false);
+    expect(
+      isSagaProgress({ visits: -1, flawless: 0, followups: 0, consultsUsed: 0, covers: 0 }),
+    ).toBe(false);
+    expect(
+      isSagaProgress({ visits: 1, flawless: 0, followups: 0, consultsUsed: 'x', covers: 0 }),
+    ).toBe(false);
   });
 });

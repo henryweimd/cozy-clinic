@@ -32,8 +32,11 @@ import {
   teammatesFirst,
 } from '../data/sharedCare';
 import {
+  coverOutcomePreset,
   doctorByline,
   handoffSummary,
+  handoffText,
+  incomingOnly,
   loadCheers,
   loadHandoffs,
   nextCheer,
@@ -1359,6 +1362,8 @@ export class ClinicScene extends Phaser.Scene {
   private sagaMap!: SagaMap;
   /** True when this visit started with a held memory (a revisit). */
   private visitStartedWithMemory = false;
+  /** Active cover (session-only): whose note brought us to this visit. */
+  private coverFor: { noteId: string; fromHandle: string; presetId: string } | null = null;
 
   private loadConsults(): void {
     try {
@@ -1384,7 +1389,7 @@ export class ClinicScene extends Phaser.Scene {
       const raw = window.localStorage.getItem(SAGA_KEY);
       if (!raw) return;
       const parsed: unknown = JSON.parse(raw);
-      if (isSagaProgress(parsed)) this.saga = parsed;
+      if (isSagaProgress(parsed)) this.saga = { ...EMPTY_SAGA, ...parsed };
     } catch {
       this.saga = { ...EMPTY_SAGA };
     }
@@ -2220,35 +2225,53 @@ export class ClinicScene extends Phaser.Scene {
    * tab change cancels the handoff). Re-asking on return trips
    * re-orients the player mid-visit.
    */
-  private greetThenQuiz(returning: boolean, recall: string | null = null): void {
+  private greetThenQuiz(
+    returning: boolean,
+    recall: string | null = null,
+    cover: string | null = null,
+  ): void {
     const token = this.roundToken;
+    const liveView = (): boolean => this.currentView === 'visit' || this.currentView === 'telemed';
     const askLive = (): void => {
-      if (token !== this.roundToken) return;
-      if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
+      if (token !== this.roundToken || !liveView()) return;
       this.showQuestion(this.round);
     };
     const showOpener = (): void => {
-      if (token !== this.roundToken) return;
-      if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
+      if (token !== this.roundToken || !liveView()) return;
       this.setConversation(speakerFor(this.activeName), this.openerText(), 'say');
       this.time.delayedCall(2000, askLive);
     };
-    this.time.delayedCall(2000, () => {
-      if (token !== this.roundToken) return;
-      if (this.currentView !== 'visit' && this.currentView !== 'telemed') return;
-      if (!returning) {
-        this.showQuestion(this.round);
-        return;
-      }
-      // Returning patients: recognition first, then the
-      // remembered thread when one was kept, then the symptom
-      // opener, then the quiz (each beat token-guarded).
+    const showRecall = (): void => {
+      if (token !== this.roundToken || !liveView()) return;
       if (recall !== null) {
         this.setConversation(speakerFor(this.activeName), recall, 'say');
         this.time.delayedCall(2000, showOpener);
         return;
       }
       showOpener();
+    };
+    this.time.delayedCall(2000, () => {
+      if (token !== this.roundToken || !liveView()) return;
+      // Cover asks read first (any patient), then the thread
+      // and opener (returners), then the quiz. First-seen
+      // covers skip straight from the ask to the quiz.
+      if (cover !== null) {
+        this.setConversation('YOU', cover, 'say');
+        this.time.delayedCall(2000, () => {
+          if (token !== this.roundToken || !liveView()) return;
+          if (!returning) {
+            this.showQuestion(this.round);
+            return;
+          }
+          showRecall();
+        });
+        return;
+      }
+      if (!returning) {
+        this.showQuestion(this.round);
+        return;
+      }
+      showRecall();
     });
   }
 
@@ -2664,6 +2687,37 @@ export class ClinicScene extends Phaser.Scene {
       playSfx('fanfare');
       this.showToast(`Journey: ${label} complete!`);
     }
+    // Cover loop: the outcome note goes back to the colleague
+    // (live, else queued); the saga counts the finished cover.
+    const cover = this.coverFor;
+    this.coverFor = null;
+    if (cover !== null) {
+      this.saga = bumpSaga(this.saga, 'cover');
+      this.saveSaga();
+      const coverOutcome = visitOutcome(this.roundScore);
+      const coverScore = scoreCount(this.roundScore);
+      const coverPatientId = this.patientIdsFor(this.activeName)[0] ?? null;
+      if (coverPatientId !== null) {
+        const draft: HandoffDraft = {
+          patient_id: coverPatientId,
+          from_handle: this.doctorHandle,
+          team_tag: this.teamTag,
+          preset_id: coverOutcomePreset(coverOutcome, cover.presetId),
+          encounter_summary: handoffSummary(this.visitNo(), coverScore, true),
+          outcome: coverOutcome,
+          score: coverScore,
+        };
+        void sendHandoff(draft).then(
+          () => this.showToast(`Outcome sent to Doctor ${cover.fromHandle}`),
+          () => {
+            this.outbox = pushOutbox(this.outbox, draft);
+            this.saveOutbox();
+            this.showToast('Outcome queued — sends when online');
+          },
+        );
+        void this.refreshInbox('switch');
+      }
+    }
   }
 
   /**
@@ -2698,6 +2752,9 @@ export class ClinicScene extends Phaser.Scene {
    */
   private switchPatient(name: string): void {
     if (SPRITE_PREFIX[name] === undefined) return;
+    // Any switch abandons an open cover (covers complete in
+    // one sitting; onCover re-seats after its own switch).
+    this.coverFor = null;
     this.activeName = name;
     this.visitStartedWithMemory = name in this.visitMemory;
     // The room narrates the handoff (waiting-2: most friends are
@@ -3750,9 +3807,13 @@ export class ClinicScene extends Phaser.Scene {
   /** Newest-first inbox notes for one roster name. */
   private notesFor(name: string): HandoffNote[] {
     const ids = this.patientIdsFor(name);
-    // Own-practice notes head the list (cheers ride along).
+    // Incoming mail only (never cover yourself), then
+    // own-practice notes head the list (cheers ride along).
     return teammatesFirst(
-      this.inbox.filter((n) => ids.includes(n.patient_id)),
+      incomingOnly(
+        this.inbox.filter((n) => ids.includes(n.patient_id)),
+        this.doctorHandle,
+      ),
       this.teamTag,
     );
   }
@@ -4268,6 +4329,19 @@ export class ClinicScene extends Phaser.Scene {
     this.handoffSheet.onCheer = (toHandle) => {
       void this.sendCheerTo(toHandle);
     };
+    // Cover: switch to the note's patient with the ask pinned;
+    // the outcome note goes back at visit end (resolveVisit).
+    this.handoffSheet.onCover = (note) => {
+      const name = this.patientNameFor(note.patient_id);
+      if (!name || SPRITE_PREFIX[name] === undefined) {
+        this.showToast("That patient isn't in this clinic");
+        return;
+      }
+      this.handoffSheet.hide();
+      this.switchPatient(name);
+      this.coverFor = { noteId: note.id, fromHandle: note.from_handle, presetId: note.preset_id };
+      this.showToast(`Covering ${name} for Doctor ${note.from_handle}`);
+    };
     this.handoffSheet.onClose = () => {
       this.refreshRailTabs();
     };
@@ -4527,11 +4601,15 @@ export class ClinicScene extends Phaser.Scene {
         // extra timing — the Muse variant may still paraphrase).
         const remembered = returning ? memoryLine(this.visitMemory[this.activeName]) : null;
         const recall = returning ? followupLine(this.visitMemory[this.activeName]) : null;
+        const cover =
+          this.coverFor !== null
+            ? `Covering for Doctor ${this.coverFor.fromHandle}: ${handoffText(this.coverFor.presetId, this.tier())}`
+            : null;
         const local =
           remembered ?? (returning && entry ? entry.welcomeBack : this.openerText());
         const greet = returning ? (this.greetCache.get(gkey) ?? local) : local;
         this.setConversation(speakerFor(this.activeName), greet, 'say');
-        this.greetThenQuiz(returning, recall);
+        this.greetThenQuiz(returning, recall, cover);
         if (returning && entry) void this.warmGreeting(gkey, local, entry.complaint);
       }
     }
