@@ -125,6 +125,89 @@ export function incomingOnly(
   return notes.filter((n) => n.from_handle !== selfHandle);
 }
 
+/** One note rendered as a real SBAR handoff (unit-tested). */
+export interface SbarLines {
+  situation: string;
+  background: string;
+  assessment: string;
+  recommendation: string;
+}
+
+/**
+ * Pure: SBAR lines from a stored note — Situation (who +
+ * which visit), Background (how they've been doing),
+ * Assessment (recovering or needs watching),
+ * Recommendation (the preset, tier-worded). The game
+ * authors every line; players only pick the preset.
+ */
+export function sbarLines(
+  note: HandoffNote,
+  patientName: string,
+  tier: CareTier,
+): SbarLines {
+  const clipped = tier === 'clinical' || tier === 'expert';
+  const better = note.outcome === 'recovered';
+  return {
+    situation: `${patientName} · ${note.encounter_summary}`,
+    background: better
+      ? clipped
+        ? `Improving — ${note.score}/4 last visit`
+        : `Getting better — ${note.score} of 4 right last time`
+      : clipped
+        ? `Not improving — ${note.score}/4 last visit`
+        : `Still poorly — ${note.score} of 4 right last time`,
+    assessment: better
+      ? clipped
+        ? 'Recovering'
+        : 'Recovering well'
+      : clipped
+        ? 'Watch closely'
+        : 'Needs watching',
+    recommendation: handoffText(note.preset_id, tier),
+  };
+}
+
+/**
+ * The AI colleague's handle — outside the player presets so
+ * Alder's overnight notes never collide with your own.
+ */
+export const AI_COLLEAGUE_HANDLE = 'Alder';
+
+/**
+ * Pure: Alder's overnight recommendation. Rotates sensible
+ * picks by outcome; every third note is the lovable miss —
+ * always in the SAFE direction (extra caution, never false
+ * reassurance): rest for the struggling, fluids for the
+ * recovering. Colleagues miss things — you still check.
+ */
+export function alderPresetFor(
+  outcome: 'recovered' | 'struggling',
+  noteIndex: number,
+): string {
+  const slot = ((noteIndex % 3) + 3) % 3;
+  if (outcome === 'recovered') {
+    return ['all-clear', 'finish-meds', 'keep-fluids'][slot] ?? 'all-clear';
+  }
+  return ['recheck-breathing', 'watch-fever', 'rest-up'][slot] ?? 'watch-fever';
+}
+
+/** Shape guard for persisted notes (Alder's live locally). */
+export function isHandoffNote(v: unknown): v is HandoffNote {
+  if (typeof v !== 'object' || v === null || Array.isArray(v)) return false;
+  const n = v as Record<string, unknown>;
+  return (
+    typeof n.id === 'string' &&
+    typeof n.patient_id === 'string' &&
+    typeof n.from_handle === 'string' &&
+    (typeof n.team_tag === 'string' || n.team_tag === null) &&
+    typeof n.preset_id === 'string' &&
+    typeof n.encounter_summary === 'string' &&
+    (n.outcome === 'recovered' || n.outcome === 'struggling') &&
+    typeof n.score === 'number' &&
+    typeof n.created_at === 'string'
+  );
+}
+
 /** Pure: tier wording for a preset (kind fallback for unknown ids). */
 export function handoffText(presetId: string, tier: CareTier): string {
   return (
@@ -325,6 +408,66 @@ export async function sendHandoff(
   }
   await postJson<unknown>(
     '/rest/v1/handoffs',
+    draft,
+    key,
+    url,
+    opts.timeoutMs ?? 10000,
+  );
+}
+
+/** One read-back receipt: who closed the loop on which note. */
+export interface ReadReceipt {
+  id: string;
+  note_id: string;
+  reader_handle: string;
+  created_at: string;
+}
+
+export interface ReadInbox {
+  reads: ReadReceipt[];
+  source: 'live' | 'fallback';
+}
+
+/**
+ * Newest-first read-back receipts (live; offline there are
+ * none — read-back is a live closed loop, never queued).
+ */
+export async function loadReads(opts: NetOpts = {}): Promise<ReadInbox> {
+  const url = opts.url ?? SUPABASE_URL;
+  const key = opts.key ?? SUPABASE_ANON_KEY;
+  if (url === undefined || key === undefined) {
+    return { reads: [], source: 'fallback' };
+  }
+  try {
+    const rows = await getJson<ReadReceipt[]>(
+      '/rest/v1/handoff_reads?select=*&order=created_at.desc&limit=100',
+      key,
+      url,
+      opts.timeoutMs ?? 10000,
+    );
+    return { reads: rows, source: 'live' };
+  } catch {
+    return { reads: [], source: 'fallback' };
+  }
+}
+
+export interface ReadDraft {
+  note_id: string;
+  reader_handle: string;
+}
+
+/** Shares one read-back (throws offline — the caller toasts). */
+export async function sendRead(
+  draft: ReadDraft,
+  opts: NetOpts = {},
+): Promise<void> {
+  const url = opts.url ?? SUPABASE_URL;
+  const key = opts.key ?? SUPABASE_ANON_KEY;
+  if (url === undefined || key === undefined) {
+    throw new Error('offline');
+  }
+  await postJson<unknown>(
+    '/rest/v1/handoff_reads',
     draft,
     key,
     url,

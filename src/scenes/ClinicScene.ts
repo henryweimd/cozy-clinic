@@ -32,20 +32,25 @@ import {
   teammatesFirst,
 } from '../data/sharedCare';
 import {
+  AI_COLLEAGUE_HANDLE,
+  alderPresetFor,
   coverOutcomePreset,
   doctorByline,
   handoffSummary,
   handoffText,
   incomingOnly,
+  isHandoffNote,
   loadCheers,
   loadHandoffs,
+  loadReads,
   nextCheer,
   pushOutbox,
   sendCheer,
   sendHandoff,
+  sendRead,
   shiftOutbox,
 } from '../data/sharedCare';
-import type { Cheer, CheerDraft, HandoffDraft, HandoffNote } from '../data/sharedCare';
+import type { Cheer, CheerDraft, HandoffDraft, HandoffNote, ReadReceipt } from '../data/sharedCare';
 import { HandoffSheet } from '../ui/handoffSheet';
 import { LivingChart } from '../ui/livingChart';
 import { signoutLines } from '../ui/signout';
@@ -337,6 +342,7 @@ const TICKER_KEY = 'cozy-ticker-v1';
 const HANDLE_STORAGE_KEY = 'cozy-doctor-handle-v1';
 const TEAM_STORAGE_KEY = 'cozy-team-tag-v1';
 const OUTBOX_STORAGE_KEY = 'cozy-handoff-outbox-v1';
+const AI_NOTES_KEY = 'cozy-ai-notes-v1';
 const CHEER_OUTBOX_KEY = 'cozy-cheer-outbox-v1';
 const MEMORY_KEY = 'cozy-visit-memory-v1';
 const DAY_KEY = 'cozy-clinic-day-v1';
@@ -1170,6 +1176,34 @@ export class ClinicScene extends Phaser.Scene {
     }
   }
 
+  private loadAiNotes(): void {
+    try {
+      const raw = window.localStorage.getItem(AI_NOTES_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as { notes?: unknown; issued?: unknown };
+      if (Array.isArray(parsed.notes)) {
+        this.aiNotes = parsed.notes.filter(isHandoffNote);
+      }
+      if (typeof parsed.issued === 'number' && Number.isInteger(parsed.issued) && parsed.issued >= 0) {
+        this.alderIssued = parsed.issued;
+      }
+    } catch {
+      this.aiNotes = [];
+      this.alderIssued = 0;
+    }
+  }
+
+  private saveAiNotes(): void {
+    try {
+      window.localStorage.setItem(
+        AI_NOTES_KEY,
+        JSON.stringify({ notes: this.aiNotes, issued: this.alderIssued }),
+      );
+    } catch {
+      /* private-mode play keeps the session notes */
+    }
+  }
+
   private loadTeam(): void {
     try {
       const raw = window.localStorage.getItem(TEAM_STORAGE_KEY);
@@ -1364,6 +1398,14 @@ export class ClinicScene extends Phaser.Scene {
   private visitStartedWithMemory = false;
   /** Active cover (session-only): whose note brought us to this visit. */
   private coverFor: { noteId: string; fromHandle: string; presetId: string } | null = null;
+  /** Live read-back receipts (closed-loop handoffs). */
+  private reads: ReadReceipt[] = [];
+  private seenReadKeys = new Set<string>();
+  /** Notes read back this session (instant ✓ before reload). */
+  private localReadIds = new Set<string>();
+  /** Alder's overnight notes (local-only, never synced). */
+  private aiNotes: HandoffNote[] = [];
+  private alderIssued = 0;
 
   private loadConsults(): void {
     try {
@@ -2653,6 +2695,8 @@ export class ClinicScene extends Phaser.Scene {
       // A fresh day reopens the full queue for everyone.
       this.waitingOrder = introNames(MOCK_ROSTER.map((e) => e.name));
       this.showToast(`Day ${this.day.day} — a fresh clinic day`);
+      // Overnight, Alder rechecked the day's last chart.
+      this.leaveAlderNote(this.activeName);
     }
     // Ending toasts ride OVER the modal (toast depth 46): the
     // level-up names its bonus; else the affordability nudge —
@@ -3807,15 +3851,35 @@ export class ClinicScene extends Phaser.Scene {
   /** Newest-first inbox notes for one roster name. */
   private notesFor(name: string): HandoffNote[] {
     const ids = this.patientIdsFor(name);
-    // Incoming mail only (never cover yourself), then
+    // Alder's overnight notes ride with the live inbox, then
+    // incoming mail only (never cover yourself), then
     // own-practice notes head the list (cheers ride along).
+    const pooled = [...this.inbox, ...this.aiNotes.filter((n) => ids.includes(n.patient_id))];
     return teammatesFirst(
       incomingOnly(
-        this.inbox.filter((n) => ids.includes(n.patient_id)),
+        pooled.filter((n) => ids.includes(n.patient_id)),
         this.doctorHandle,
       ),
       this.teamTag,
     );
+  }
+
+  /** Sender side: who read back your last note on this patient. */
+  private sentStatusFor(name: string): string | null {
+    const ids = this.patientIdsFor(name);
+    const mine = this.inbox
+      .filter((n) => n.from_handle === this.doctorHandle && ids.includes(n.patient_id))
+      .sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
+    const last = mine[0];
+    if (!last) return null;
+    const readers = this.reads.filter(
+      (r) => r.note_id === last.id && r.reader_handle !== this.doctorHandle,
+    );
+    if (readers.length === 0) return 'Your last note: waiting for read-back…';
+    if (readers.length === 1) {
+      return `Your last note: read back by Doctor ${readers[0]?.reader_handle} ✓`;
+    }
+    return `Your last note: read back by ${readers.length} doctors ✓`;
   }
 
   /**
@@ -3828,13 +3892,15 @@ export class ClinicScene extends Phaser.Scene {
     if (this.refreshingInbox) return;
     this.refreshingInbox = true;
     try {
-      const [{ notes, source }, cheerInbox] = await Promise.all([
+      const [{ notes, source }, cheerInbox, readInbox] = await Promise.all([
         loadHandoffs(),
         loadCheers(this.doctorHandle),
+        loadReads(),
       ]);
       this.inbox = notes;
       this.inboxSource = source;
       this.cheers = cheerInbox.cheers;
+      this.reads = readInbox.reads;
       if (reason !== 'boot') {
         const fresh = notes.find(
           (n) => !this.seenNoteIds.has(n.id) && n.from_handle !== this.doctorHandle,
@@ -3848,9 +3914,22 @@ export class ClinicScene extends Phaser.Scene {
         if (freshCheer) {
           this.showToast(`${doctorByline(freshCheer.from_handle, null)}: ${freshCheer.preset_id}`);
         }
+        const freshRead = this.reads.find((r) => {
+          if (r.reader_handle === this.doctorHandle) return false;
+          if (this.seenReadKeys.has(`${r.note_id}:${r.reader_handle}`)) return false;
+          return notes.find((n) => n.id === r.note_id)?.from_handle === this.doctorHandle;
+        });
+        if (freshRead) {
+          const note = notes.find((n) => n.id === freshRead.note_id);
+          const who = note ? this.patientNameFor(note.patient_id) : null;
+          this.showToast(
+            `Doctor ${freshRead.reader_handle} read back your note${who ? ` on ${who}` : ''} ✓`,
+          );
+        }
       }
       for (const n of notes) this.seenNoteIds.add(n.id);
       for (const c of this.cheers) this.seenCheerIds.add(c.id);
+      for (const r of this.reads) this.seenReadKeys.add(`${r.note_id}:${r.reader_handle}`);
       if (source === 'live') await this.flushOutbox();
       this.syncNotesBadge();
       if (this.currentView === 'waiting') this.refreshWaitingRows();
@@ -4081,12 +4160,17 @@ export class ClinicScene extends Phaser.Scene {
     this.chartDrawer.setOpen(false, true);
     this.tray.setOpen(false, true);
     const tier = this.tier();
+    const liveReadIds = this.reads
+      .filter((r) => r.reader_handle === this.doctorHandle)
+      .map((r) => r.note_id);
     this.handoffSheet.show({
       patientName: this.activeName,
       notes: this.notesFor(this.activeName),
       tier,
       selected: this.selectedPreset,
       offline: this.inboxSource === 'fallback',
+      readIds: [...new Set([...this.localReadIds, ...liveReadIds])],
+      sentStatus: this.sentStatusFor(this.activeName),
     });
     this.refreshRailTabs();
   }
@@ -4118,6 +4202,71 @@ export class ClinicScene extends Phaser.Scene {
       this.showToast('Saved — sends when online');
     }
     void this.refreshInbox('switch');
+  }
+
+  /** Read-back ("Got it"): the closed loop back to the sender. */
+  private async sendReadback(note: HandoffNote): Promise<void> {
+    const already =
+      this.localReadIds.has(note.id) ||
+      this.reads.some(
+        (r) => r.note_id === note.id && r.reader_handle === this.doctorHandle,
+      );
+    if (already) {
+      this.showToast('Already read back ✓');
+      return;
+    }
+    // Alder works down the hall: read back in person, no network.
+    if (note.from_handle === AI_COLLEAGUE_HANDLE) {
+      this.localReadIds.add(note.id);
+      this.showToast(`Read back ✓ — Doctor Alder knows you're on it`);
+      this.showHandoffSheet();
+      return;
+    }
+    if (this.inboxSource === 'fallback') {
+      this.showToast('Connect to read back');
+      return;
+    }
+    try {
+      await sendRead({ note_id: note.id, reader_handle: this.doctorHandle });
+      this.localReadIds.add(note.id);
+      this.showToast(`Read back ✓ — Doctor ${note.from_handle} knows you're on it`);
+      void this.refreshInbox('switch');
+    } catch {
+      this.showToast(`Read-back didn't send`);
+    }
+  }
+
+  /**
+   * Alder's overnight note: the AI colleague rechecks the
+   * day's last chart and leaves one SBAR note for morning.
+   * Local-only (never synced); one per patient (replaced
+   * nightly); imperfect on rotation (see alderPresetFor).
+   */
+  private leaveAlderNote(name: string): void {
+    const patientId = this.patientIdsFor(name)[0] ?? null;
+    if (patientId === null) return;
+    const mem = this.visitMemory[name];
+    const outcome = mem !== undefined && (mem.perfect || mem.score >= 3) ? 'recovered' : 'struggling';
+    const note: HandoffNote = {
+      id: `ai-${Date.now().toString(36)}-${this.alderIssued}`,
+      patient_id: patientId,
+      from_handle: AI_COLLEAGUE_HANDLE,
+      team_tag: 'Star',
+      preset_id: alderPresetFor(outcome, this.alderIssued),
+      encounter_summary: 'Overnight chart check',
+      outcome,
+      score: mem?.score ?? 0,
+      created_at: new Date().toISOString(),
+    };
+    this.alderIssued += 1;
+    this.aiNotes = [
+      ...this.aiNotes.filter(
+        (n) => !(n.from_handle === AI_COLLEAGUE_HANDLE && n.patient_id === patientId),
+      ),
+      note,
+    ];
+    this.saveAiNotes();
+    this.showToast(`Overnight note from Doctor Alder on ${name}`);
   }
 
   // -- nav bar (persistent, all views) --
@@ -4317,6 +4466,7 @@ export class ClinicScene extends Phaser.Scene {
     this.loadOutbox();
     this.loadTeam();
     this.loadCheerOutbox();
+    this.loadAiNotes();
     // Care-notes sheet: incoming continuity + preset compose.
     this.handoffSheet = new HandoffSheet(this);
     this.handoffSheet.onSelect = (presetId) => {
@@ -4341,6 +4491,10 @@ export class ClinicScene extends Phaser.Scene {
       this.switchPatient(name);
       this.coverFor = { noteId: note.id, fromHandle: note.from_handle, presetId: note.preset_id };
       this.showToast(`Covering ${name} for Doctor ${note.from_handle}`);
+    };
+    // Read-back: close the loop so the sender knows you're on it.
+    this.handoffSheet.onReadback = (note) => {
+      void this.sendReadback(note);
     };
     this.handoffSheet.onClose = () => {
       this.refreshRailTabs();

@@ -1,9 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
+  AI_COLLEAGUE_HANDLE,
   CHEER_PRESETS,
   DOCTOR_HANDLES,
   HANDOFF_PRESETS,
   TEAM_TAGS,
+  alderPresetFor,
   cleanHandle,
   cleanTeam,
   coverOutcomePreset,
@@ -11,11 +13,13 @@ import {
   handoffSummary,
   handoffText,
   incomingOnly,
+  isHandoffNote,
   latestHandoff,
   loadCheers,
   loadHandoffs,
   nextCheer,
   pushOutbox,
+  sbarLines,
   sendCheer,
   sendHandoff,
   shiftOutbox,
@@ -187,6 +191,68 @@ describe('teams + cheers', () => {
       'mine',
       'theirs',
     ]);
+  });
+
+  it('renders SBAR lines from a stored note (gentle + clipped)', () => {
+    const mk = (outcome: 'recovered' | 'struggling'): HandoffNote => ({
+      id: 'n',
+      patient_id: 'p',
+      from_handle: 'Wren',
+      team_tag: 'Moon',
+      preset_id: 'keep-fluids',
+      encounter_summary: 'Visit #2 · 4 of 4 right',
+      outcome,
+      score: 4,
+      created_at: '2026-10-28T10:00:00Z',
+    });
+    const gentle = sbarLines(mk('struggling'), 'Bram', 'gentle');
+    expect(gentle.situation).toBe('Bram · Visit #2 · 4 of 4 right');
+    expect(gentle.background).toContain('Still poorly');
+    expect(gentle.assessment).toBe('Needs watching');
+    expect(gentle.recommendation).toBe('Keep up the fluids');
+    const expert = sbarLines(mk('recovered'), 'Bram', 'expert');
+    expect(expert.background).toBe('Improving — 4/4 last visit');
+    expect(expert.assessment).toBe('Recovering');
+    expect(expert.recommendation).toBe('Maintain PO hydration');
+  });
+
+  it('rotates Alder picks with a safe-direction miss every third', () => {
+    expect(AI_COLLEAGUE_HANDLE).not.toContain('Demo');
+    expect(DOCTOR_HANDLES).not.toContain(AI_COLLEAGUE_HANDLE);
+    expect([0, 1, 2].map((i) => alderPresetFor('struggling', i))).toEqual([
+      'recheck-breathing',
+      'watch-fever',
+      'rest-up',
+    ]);
+    expect([0, 1, 2].map((i) => alderPresetFor('recovered', i))).toEqual([
+      'all-clear',
+      'finish-meds',
+      'keep-fluids',
+    ]);
+    // Never false reassurance for the struggling.
+    for (let i = 0; i < 9; i++) {
+      expect(alderPresetFor('struggling', i)).not.toBe('all-clear');
+    }
+  });
+
+  it('guards persisted note shapes', () => {
+    const good: HandoffNote = {
+      id: 'ai-1',
+      patient_id: 'p',
+      from_handle: 'Alder',
+      team_tag: 'Star',
+      preset_id: 'rest-up',
+      encounter_summary: 'Overnight chart check',
+      outcome: 'struggling',
+      score: 0,
+      created_at: '2026-10-28T10:00:00Z',
+    };
+    expect(isHandoffNote(good)).toBe(true);
+    expect(isHandoffNote({ ...good, team_tag: null })).toBe(true);
+    expect(isHandoffNote({ ...good, outcome: 'fine' })).toBe(false);
+    expect(isHandoffNote({ ...good, id: 7 })).toBe(false);
+    expect(isHandoffNote(null)).toBe(false);
+    expect(isHandoffNote([])).toBe(false);
   });
 
   it('addresses fallback cheers to real handles with known presets', () => {
