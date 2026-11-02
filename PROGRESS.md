@@ -24,7 +24,9 @@ Hands off: src/data/maneuvers.* (other stream).
   one flawless visit drives 3 of 8 with checks on
   First Steps, Flawless Care, Glad Hearts.
 - Spend: $0.
-- Next: merge, then P6 (async co-op).
+- Merged as PR #6; prod live 200 with the new bundle
+  (`cozy-saga-v1` in served JS).
+- Next: P6 (async co-op).
 
 ## Run 57 (2026-11-01): P4 patient meters (IN PROGRESS)
 
