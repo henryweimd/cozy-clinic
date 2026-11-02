@@ -1,3 +1,24 @@
+# CHECKPOINT — Run 58: P5 saga map (2026-11-01)
+
+Phase: loop-revamp P5 on `feat/p5-saga-map`.
+
+Files changed: 6 (saga store + tests, map sheet,
+scene wiring, PROGRESS, CHECKPOINT).
+
+Test result: `npm test` 470/470 (6 new); tsc clean;
+build green.
+
+Deployment URL: (filled after merge.)
+
+Playtest result: headless at 540x960, zero console/page
+errors — map opens from Waiting, node toasts fire,
+one visit drives 0 to 3 of 8 with checks. Operator
+playtests in parallel.
+
+Image spend this run: $0.
+
+STOP.
+
 # CHECKPOINT — Run 57: P4 patient meters (2026-11-01)
 
 Phase: loop-revamp P4 on `feat/p4-meters`.
