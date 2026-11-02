@@ -34,6 +34,7 @@ export class HandoffSheet {
   onSelect: (presetId: string) => void = () => {};
   onSend: () => void = () => {};
   onCheer: (toHandle: string) => void = () => {};
+  onCover: (note: HandoffNote) => void = () => {};
   /** Fired only by the × button (programmatic hide() stays silent). */
   onClose: () => void = () => {};
 
@@ -121,20 +122,35 @@ export class HandoffSheet {
         .setOrigin(0, 0);
       const cheerBg = this.scene.add.graphics();
       cheerBg.fillStyle(THEME.amber, 1);
-      cheerBg.fillRoundedRect(372, y + 22, 108, 40, 20);
+      cheerBg.fillRoundedRect(372, y + 6, 108, 34, 17);
       const cheerText = this.scene.add
-        .text(426, y + 42, 'Cheer!', {
+        .text(426, y + 23, 'Cheer!', {
           fontFamily: THEME.font,
           fontStyle: 'bold',
-          fontSize: '15px',
+          fontSize: '14px',
           color: '#ffffff',
         })
         .setOrigin(0.5, 0.5);
       const cheerZone = this.scene.add
-        .zone(426, y + 42, 108, 40)
+        .zone(426, y + 23, 108, 34)
         .setInteractive({ useHandCursor: true });
       cheerZone.on('pointerdown', () => this.onCheer(n.from_handle));
-      this.body.add([bg, line, sub, cheerBg, cheerText, cheerZone]);
+      const coverBg = this.scene.add.graphics();
+      coverBg.fillStyle(THEME.sage, 1);
+      coverBg.fillRoundedRect(372, y + 44, 108, 34, 17);
+      const coverText = this.scene.add
+        .text(426, y + 61, 'Cover', {
+          fontFamily: THEME.font,
+          fontStyle: 'bold',
+          fontSize: '14px',
+          color: '#ffffff',
+        })
+        .setOrigin(0.5, 0.5);
+      const coverZone = this.scene.add
+        .zone(426, y + 61, 108, 34)
+        .setInteractive({ useHandCursor: true });
+      coverZone.on('pointerdown', () => this.onCover(n));
+      this.body.add([bg, line, sub, cheerBg, cheerText, cheerZone, coverBg, coverText, coverZone]);
       y += 94;
     }
     // Compose header.

@@ -1,5 +1,20 @@
 # PROGRESS.md — Cozy Clinic
 
+## Run 59 (2026-11-01): P6 async co-op (IN PROGRESS)
+
+Branch: `feat/p6-coop` (from `main` @ `7e82f5e`).
+File ownership (main agent, this run): co-op loop slice
+(scoped after research) + tests, scene wiring,
+PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream).
+
+- P6 of loop-revamp-plan.md: cover a teammate's patient
+  for one visit, preset handoff note, outcome back.
+  Scoping against existing shared-care infra first;
+  slice will be the honest one-run gap (request +
+  inbox + accept + outcome note, offline-first).
+- (Results land here before merge.)
+
 ## Run 58 (2026-11-01): P5 saga map (IN PROGRESS)
 
 Branch: `feat/p5-saga-map` (from `main` @ `e5cf8fb`).

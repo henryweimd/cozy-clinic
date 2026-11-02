@@ -113,6 +113,18 @@ export function teammatesFirst(
   });
 }
 
+/**
+ * Pure: the care-notes sheet is incoming mail — your own
+ * notes are already known, so covering yourself is never
+ * offered. Filters by author handle only.
+ */
+export function incomingOnly(
+  notes: readonly HandoffNote[],
+  selfHandle: string,
+): HandoffNote[] {
+  return notes.filter((n) => n.from_handle !== selfHandle);
+}
+
 /** Pure: tier wording for a preset (kind fallback for unknown ids). */
 export function handoffText(presetId: string, tier: CareTier): string {
   return (
@@ -277,6 +289,18 @@ export function pushOutbox<T>(outbox: readonly T[], draft: T): T[] {
 /** Pure: drop the first n flushed drafts (unit-tested). */
 export function shiftOutbox<T>(outbox: readonly T[], n: number): T[] {
   return outbox.slice(Math.max(0, n));
+}
+
+/**
+ * Pure: the outcome preset for a finished cover (unit-tested).
+ * Recovery closes the loop; struggling echoes the colleague's
+ * ask with the new score attached.
+ */
+export function coverOutcomePreset(
+  outcome: 'recovered' | 'struggling',
+  incomingPresetId: string,
+): string {
+  return outcome === 'recovered' ? 'all-clear' : incomingPresetId;
 }
 
 /** Pure: auto-written encounter summary (unit-tested). */
