@@ -1,5 +1,40 @@
 # PROGRESS.md — Cozy Clinic
 
+## Run 60 (2026-11-01): SBAR care notes + read-back + Alder (SHIPPED)
+
+Branch: `feat/sbar-notes`, PR #9 merged to `main` @
+`86d8e9d`, live on prod.
+File ownership (main agent, this run): sharedCare
+(+test), handoffSheet, ClinicScene notes/inbox/day,
+migration, PROGRESS, CHECKPOINT.
+Hands off: src/data/maneuvers.* (other stream).
+
+- Care Notes+ per operator steer (deepen async notes,
+  players + AI mix, SBAR + read-back anchor): incoming
+  notes render as real SBAR handoffs (S/B/A auto-
+  written, R = picked preset, tier-worded); "Got it"
+  read-back closes the loop live via new
+  `handoff_reads` table (unique note+reader, anon
+  read/insert like handoffs); sender gets a toast
+  ("Doctor Owl read back your note on Bram ✓") + a
+  sent-note status line (waiting / read back by X ✓).
+- AI colleague Alder (handle outside player presets):
+  one local-only overnight SBAR note on the day's
+  last patient per rollover; pure rotation with a
+  safe-direction miss every third (never false
+  reassurance — tested); read back in person
+  (no network).
+- Verification: 477/477 (3 new); tsc clean; build
+  green; two-doctor live loop playtested (Wren sends
+  → Demo/Owl read → toast + status flip); Alder note
+  verified in storage + sheet + local read; test
+  notes/receipts cleaned (seed only remains).
+- Bundle `assets/index-DwfpJv-m.js` live with run-60
+  strings. Operator phone-playtests in parallel.
+- What is next: freeze Nov 3 noon ET; deeper co-op
+  (curbsides, referrals, agree/disagree on Alder)
+  is post-freeze follow-up.
+
 ## Run 59 (2026-11-01): P6 async co-op (SHIPPED)
 
 Branch: `feat/p6-coop` (from `main` @ `7e82f5e`),

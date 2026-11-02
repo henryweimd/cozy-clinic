@@ -1,3 +1,28 @@
+# CHECKPOINT — Run 60: SBAR care notes (2026-11-01)
+
+Phase: Care Notes+ (SBAR + read-back + Alder) on
+`feat/sbar-notes`.
+
+Files changed: 4 code (+3 tests) + migration
+`handoff_reads_receipts` + PROGRESS.
+
+Test result: `npm test` 477/477 (3 new); tsc clean;
+build green.
+
+Deployment URL: https://cozy-clinic.vercel.app/ (PR #9
+merged to `86d8e9d`; 200, bundle
+`assets/index-DwfpJv-m.js` with run-60 strings).
+
+Playtest result: headless at 540x960, two contexts —
+SBAR cards render (S/B/A/R), Got it flips to ✓ Read
+with a live receipt row, sender toast + status line
+flip on refresh, Alder overnight note lands on
+rollover and reads back locally. Test data cleaned.
+
+Image spend this run: $0.
+
+STOP.
+
 # CHECKPOINT — Run 59: P6 async co-op (2026-11-01)
 
 Phase: loop-revamp P6 on `feat/p6-coop`.
