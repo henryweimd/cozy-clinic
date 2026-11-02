@@ -1,3 +1,28 @@
+# CHECKPOINT — Run 59: P6 async co-op (2026-11-01)
+
+Phase: loop-revamp P6 on `feat/p6-coop`.
+
+Files changed: 10 (cover flow + tests, outcome send,
+saga covers, self-filter, postJson fix, PROGRESS).
+
+Test result: `npm test` 474/474 (3 new); tsc clean;
+build green.
+
+Deployment URL: https://cozy-clinic.vercel.app/ (PR #7
+merged to `8323587`; 200, bundle
+`assets/index-yZfKXB2l.js` with P6 strings verified).
+
+Playtest result: headless at 540x960 — sheet opens
+from Notes rail, Cover starts Wren's Bram visit,
+4-round flawless completion drives covers:1 with
+exactly one live outcome row and an empty outbox;
+own notes hidden from the sheet. Operator playtests
+the full P1–P6 loop in parallel.
+
+Image spend this run: $0.
+
+STOP.
+
 # CHECKPOINT — Run 58: P5 saga map (2026-11-01)
 
 Phase: loop-revamp P5 on `feat/p5-saga-map`.

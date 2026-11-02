@@ -1,19 +1,33 @@
 # PROGRESS.md — Cozy Clinic
 
-## Run 59 (2026-11-01): P6 async co-op (IN PROGRESS)
+## Run 59 (2026-11-01): P6 async co-op (SHIPPED)
 
-Branch: `feat/p6-coop` (from `main` @ `7e82f5e`).
+Branch: `feat/p6-coop` (from `main` @ `7e82f5e`),
+PR #7 merged to `main` @ `8323587`, live on prod.
 File ownership (main agent, this run): co-op loop slice
-(scoped after research) + tests, scene wiring,
-PROGRESS, CHECKPOINT.
++ tests, scene wiring, PROGRESS, CHECKPOINT.
 Hands off: src/data/maneuvers.* (other stream).
 
-- P6 of loop-revamp-plan.md: cover a teammate's patient
-  for one visit, preset handoff note, outcome back.
-  Scoping against existing shared-care infra first;
-  slice will be the honest one-run gap (request +
-  inbox + accept + outcome note, offline-first).
-- (Results land here before merge.)
+- P6 of loop-revamp-plan.md, shipped: Cover button on
+  care-notes rows starts a one-sitting visit for a
+  colleague's patient (toast + greeting beat name the
+  colleague); the outcome note returns live (queued in
+  `cozy-handoff-outbox-v1` offline); saga counts the
+  finished cover (`covers`, journey node "Cover 1").
+- Bug found by live playtest, fixed in-run: postJson
+  threw on Supabase's empty 201 bodies, so every send
+  inserted AND queued + re-sent duplicates. Now parses
+  text-tolerantly; 2 accidental dup rows deleted.
+- Sheet shows incoming mail only (`incomingOnly`):
+  your own notes never offer self-cover.
+- Verification: 474/474 (3 new); tsc clean; build
+  green; headless cover drive: covers:1, exactly one
+  live outcome row, empty outbox; bundle
+  `assets/index-yZfKXB2l.js` live with P6 strings.
+- Seed note kept for operator playtest: Wren/Moon
+  `recheck-breathing` on Bram (`8736b459…`).
+- What is next: operator phone playtest of the full
+  revamped loop (P1–P6); freeze Nov 3 noon ET.
 
 ## Run 58 (2026-11-01): P5 saga map (IN PROGRESS)
 
